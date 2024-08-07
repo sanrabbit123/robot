@@ -1390,7 +1390,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       background: colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: !entireMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
-      paddingTop: entireMode ? "" : String(innerPadding) + ea,
+      paddingTop: String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
@@ -1441,9 +1441,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: entireMode ? withOut(0 * 2) : withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
-      marginLeft: entireMode ? String(0) + ea : (desktop ? "" : String(innerPadding) + ea),
+      marginLeft: (desktop ? "" : String(innerPadding) + ea),
       paddingTop: desktop ? "" : String(1) + ea,
     }
   });
