@@ -1386,11 +1386,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(desktop ? contentsAreaMarginTop : policyAreaMarginTop) + ea,
+      marginTop: entireMode ? "" : String(desktop ? contentsAreaMarginTop : policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: !entireMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
-      paddingTop: String(innerPadding) + ea,
+      paddingTop: entireMode ? "" : String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
