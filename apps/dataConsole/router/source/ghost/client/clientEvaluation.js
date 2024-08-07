@@ -1386,7 +1386,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: entireMode ? "" : String(desktop ? contentsAreaMarginTop : policyAreaMarginTop) + ea,
+      marginTop: String(desktop ? contentsAreaMarginTop : policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: !entireMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
@@ -1441,9 +1441,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: entireMode ? withOut(0 * 2) : withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
-      marginLeft: (desktop ? "" : String(innerPadding) + ea),
+      marginLeft: entireMode ? String(0) + ea : (desktop ? "" : String(innerPadding) + ea),
       paddingTop: desktop ? "" : String(1) + ea,
     }
   });
