@@ -709,9 +709,6 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       {
         title: "카드 결제",
       },
-      {
-        title: "상담부터 원해요!",
-      },
     ];
 
     paymentMatrix = [
@@ -1258,47 +1255,6 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
           fontSize: String(payTextSize) + ea,
           fontWeight: String(payTextWeight),
           color: colorExtended.darkBlack,
-          display: "inline-block",
-          position: "relative",
-          top: String(payTextTextTop) + ea,
-        }
-      }
-    });
-
-    createNode({
-      mother: buttonBase,
-      event: {
-        click: async function (e) {
-          try {
-            GeneralJs.alert("영업일 기준 2일 안에 전화드리겠습니다 :)", true, true);
-            await GeneralJs.ajaxJson({ mode: "consulting", name: instance.client.name, cliid: instance.client.cliid }, BACKHOST + "/blackButtonsClick");
-            GeneralJs.setQueue(() => {
-              GeneralJs.selfHref(FRONTHOST + "/proposal.php?proid=" + instance.project.proid);
-            }, 2000);
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: String(payButtonWidth * (<&& 1.2 | 1.3 | 1.3 | 1.3 | 1.3 &&>)) + ea,
-        height: String(payButtonHeight) + ea,
-        marginLeft: String(payButtonBetween) + ea,
-        borderRadius: String(10) + "px",
-        background: colorExtended.white,
-        cursor: "pointer",
-      },
-      child: {
-        text: payButtonContents[2].title,
-        style: {
-          fontSize: String(payTextSize) + ea,
-          fontWeight: String(payTextWeight),
-          color: colorExtended.mainBlue,
           display: "inline-block",
           position: "relative",
           top: String(payTextTextTop) + ea,

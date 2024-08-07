@@ -7541,6 +7541,8 @@ ProjectJs.prototype.evalutaionStatusView = function (proid) {
             src: BACKHOST + "/middle/clientEvaluation?proid=" + proid + "&entire=true",
           },
           style: {
+            border: 0,
+            outline: 0,
             display: "flex",
             position: "relative",
             width: withOut(0 * 2, ea),

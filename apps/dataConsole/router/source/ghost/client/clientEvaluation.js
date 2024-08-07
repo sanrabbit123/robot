@@ -1386,11 +1386,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: entireMode ? "" : String(desktop ?contentsAreaMarginTop : policyAreaMarginTop) + ea,
+      marginTop: entireMode ? "" : String(desktop ? contentsAreaMarginTop : policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: !entireMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
-      paddingTop: String(innerPadding) + ea,
+      paddingTop: entireMode ? "" : String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
@@ -1441,9 +1441,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: entireMode ? withOut(innerPadding * 2) : withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: entireMode ? withOut(0 * 2) : withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
-      marginLeft: entireMode ? String(innerPadding) + ea : (desktop ? "" : String(innerPadding) + ea),
+      marginLeft: entireMode ? String(0) + ea : (desktop ? "" : String(innerPadding) + ea),
       paddingTop: desktop ? "" : String(1) + ea,
     }
   });
@@ -4556,8 +4556,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginLeft: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
+      marginLeft: entireMode ? "" : String(innerPadding) + ea,
+      width: entireMode ? withOut(0) : withOut(innerPadding * 2, ea),
       height: String(policyGrayHeight) + ea,
       background: colorChip.gray1,
       borderRadius: String(3) + "px",
