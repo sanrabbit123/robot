@@ -3533,33 +3533,40 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
         }
 
         finalResult = {};
-
         ({ proid } = req.body);
-        contentsArr = await back.getContentsArrByQuery({ proid }, { selfMongo });
 
-        finalResult.proid = proid;
-        finalResult.raw = { exist: false, link: "" };
-        finalResult.portfolio = { exist: false, link: "" };
-        finalResult.review = { exist: false, link: "" };
-
-        temp = firstResult.find((obj) => { return obj.proid === proid });
-        if (temp !== undefined) {
-          thisPid = temp.pid;
-          finalResult.raw.exist = true;
-          finalResult.raw.link = "https://" + address.officeinfo.ghost.host + folderConst + "/" + proid + token + thisPid + ".zip";
-        }
-
-        if (contentsArr.length > 0) {
-          [ { contents: { portfolio: { pid: thisPid } } } ] = contentsArr;
-          finalResult.portfolio.exist = true;
-          finalResult.portfolio.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
-          if (contentsArr[0].contents.review.rid !== "" && !/re999/gi.test(contentsArr[0].contents.review.rid)) {
-            finalResult.review.exist = true;
-            finalResult.review.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;
+        try {
+          contentsArr = await back.getContentsArrByQuery({ proid }, { selfMongo });
+  
+          finalResult.proid = proid;
+          finalResult.raw = { exist: false, link: "" };
+          finalResult.portfolio = { exist: false, link: "" };
+          finalResult.review = { exist: false, link: "" };
+  
+          temp = firstResult.find((obj) => { return obj.proid === proid });
+          if (temp !== undefined) {
+            thisPid = temp.pid;
+            finalResult.raw.exist = true;
+            finalResult.raw.link = "https://" + address.officeinfo.ghost.host + folderConst + "/" + proid + token + thisPid + ".zip";
+          } else {
+            finalResult.raw.exist = true;
+            finalResult.raw.link = "";
           }
-        }
+  
+          if (contentsArr.length > 0) {
+            [ { contents: { portfolio: { pid: thisPid } } } ] = contentsArr;
+            finalResult.portfolio.exist = true;
+            finalResult.portfolio.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
+            if (contentsArr[0].contents.review.rid !== "" && !/re999/gi.test(contentsArr[0].contents.review.rid)) {
+              finalResult.review.exist = true;
+              finalResult.review.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;
+            }
+          }
+          res.send(JSON.stringify(finalResult));
 
-        res.send(JSON.stringify(finalResult));
+        } catch {
+          res.send(JSON.stringify({ proid, raw: { exist: true, link: "" }, portfolio: { exist: false, link: "" }, review: { exist: false, link: "" } }));
+        }
 
       } else {
         throw new Error("invalid mode");
