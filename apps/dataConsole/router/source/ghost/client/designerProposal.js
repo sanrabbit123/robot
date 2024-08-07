@@ -5536,7 +5536,7 @@ DesignerProposalJs.prototype.styleTextParsing = function (text, sourceMode = fal
         throw new Error("invaild css string");
       }
       if (/url\(/gi.test(tempArr[1].trim())) {
-        imageSource = BRIDGEHOST.replace(/\:3000$/gi, '') + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '');
+        imageSource = S3HOST + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '');
         finalObj[tempArr[0].trim()] = "url(\"" + imageSource + "\")";
       } else {
         finalObj[tempArr[0].trim()] = tempArr[1].trim();
@@ -6253,6 +6253,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                     justifyContent: "start",
                     alignItems: "center",
                     background: colorExtended.white,
+                    flexDirection: "row",
                   },
                   child: {
                     text: title,
@@ -6280,6 +6281,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                     background: colorExtended.white,
                     borderRight: num === values.length - 1 ? "" : "1px dashed " + colorExtended.mainBlue,
                     paddingRight: String(titleTextIndent) + ea,
+                    flexDirection: "row",
                   },
                   child: {
                     text: value,
@@ -6318,6 +6320,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                     justifyContent: "start",
                     alignItems: "center",
                     background: colorExtended.white,
+                    flexDirection: "row",
                   },
                   child: {
                     text: title,
@@ -6345,6 +6348,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                     background: colorExtended.white,
                     borderRight: num === values.length - 1 ? "" : "1px dashed " + colorExtended.mainBlue,
                     paddingRight: String(titleTextIndent) + ea,
+                    flexDirection: "row",
                   },
                   children: value.map(({ title, value: valueNumber }, index) => {
                     if (index !== value.length - 1) {
@@ -6417,6 +6421,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
             width: withOut(unitBlockIndent * 2, ea),
             marginLeft: String(unitBlockIndent) + ea,
             height: String(unitBlockHeightSmall) + ea,
+            flexDirection: "row",
             boxSizing: "border-box",
             justifyContent: "start",
             alignItems: "center",
@@ -6434,6 +6439,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 marginRight: String(moneyCircleMargin) + ea,
                 opacity: blur ? String(deactiveOpacity) : String(1),
                 top: String(priceCircleVisualTop) + ea,
+                flexDirection: "row",
               }
             },
             {
@@ -6459,6 +6465,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 justifyContent: "end",
                 alignItems: "center",
                 opacity: blur ? String(deactiveOpacity) : String(1),
+                flexDirection: "row",
               },
               children: [
                 {
@@ -7027,6 +7034,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
           text: "Designer " + char,
           style: {
             display: "flex",
+            flexDirection: "row",
             position: "relative",
             fontSize: String(designerCharSize) + ea,
             fontWeight: String(designerCharWeight),
@@ -7660,6 +7668,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
           mother: portfolioMiddleMother,
           style: {
             display: "flex",
+            flexDirection: "row",
             position: "relative",
             width: desktop ? withOut(unitBlockIndent * 2, ea) : "",
             marginLeft: desktop ? String(unitBlockIndent) + ea : "",
