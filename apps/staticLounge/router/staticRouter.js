@@ -9745,6 +9745,50 @@ StaticRouter.prototype.rou_post_updateImagesOrder = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_updateReviewInfo = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateReviewInfo" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, words, mode } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, updateQuery;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+
+      if (mode === "title") {
+        updateQuery["contents.review.title.main"] = words.trim();
+        updateQuery["contents.review.title.sub"] = words.trim();
+      } else if (mode === "story") {
+        updateQuery["contents.portfolio.contents.detail.0.contents"] = words.trim();
+      }
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateImagesOrder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_updateAddressRegion = function () {
   const instance = this;
   const back = this.back;

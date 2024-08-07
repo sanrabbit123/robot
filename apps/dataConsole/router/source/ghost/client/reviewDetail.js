@@ -2773,7 +2773,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma, setQueue, selectByClass, fireEvent } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth, evaluation, version } = this;
-  const { contentsArr } = this;
+  const { contentsArr, editable } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
@@ -3263,9 +3263,57 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       }
     }
   });
+  if (editable) {
+    titleBox.addEventListener("click", async (e) => {
+      let words, tempArr;
+      words = null;
+      while (typeof words !== "string") {
+        words = await GeneralJs.promtLong("새로운 고객 리뷰를 적어주세요! (중간에 쉼표가 있어야 합니다)");
+        if (typeof words === "string") {
+          if (words === "") {
+            words = null;
+          } else if (!/, /gi.test(words)) {
+            words = null;
+          } else {
+            tempArr = words.split(", ");
+            if (tempArr.length !== "2") {
+              tempArr = tempArr.map((s) => { return s.trim() });
+              if (tempArr[0].length < 5 || tempArr[1].length < 5) {
+                words = null;
+              } else {
+                words = tempArr[0] + ", " + tempArr[1];
+              }
+            } else {
+              words = null;
+            }
+          }
+        }
+      }
+      await GeneralJs.ajaxJson({ mode: "title", words, pid }, S3HOST + ":3000/updateReviewInfo");
+      window.location.reload();
+    })
+  }
 
   createNode({
     mother: descriptionBox,
+    event: {
+      click: async function (e) {
+        let words;
+        if (editable) {
+          words = null;
+          while (typeof words !== "string") {
+            words = await GeneralJs.promptVeryLong("새로운 이야기를 적어주세요!\n" + thisContents, thisContents);
+            if (typeof words === "string") {
+              if (words === "") {
+                words = null;
+              }
+            }
+          }
+          await GeneralJs.ajaxJson({ mode: "story", words, pid }, S3HOST + ":3000/updateReviewInfo");
+          window.location.reload();
+        }
+      }
+    },
     style: {
       display: "flex",
       position: "relative",
@@ -3279,6 +3327,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       paddingTop: desktop ? String(grayLineBoxPaddingTop) + ea : "",
       paddingBottom: desktop ? String(grayLineBoxPaddingTop) + ea : "",
       flexDirection: "column",
+      cursor: "pointer",
     },
     children: [
       {
@@ -5191,6 +5240,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
 
     const getObj = returnGet();
     const { pid } = getObj;
+    const editable = (typeof getObj.edit === "string");
     let response;
     let thisVersion;
 
@@ -5198,6 +5248,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
       throw new Error("invaild pid");
     }
     this.pid = pid;
+    this.editable = editable;
 
     response = await ajaxJson({ mode: "review", pid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
