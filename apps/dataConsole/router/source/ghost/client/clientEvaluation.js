@@ -4848,10 +4848,6 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
                 instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
                 await downloadFile(raw.link, null, loading.progress.firstChild);
                 loading.remove();
-                setTimeout(() => {
-                  window.alert("평가가 완료되었습니다! 감사합니다 :)");
-                  selfHref(FRONTHOST);
-                }, 3000);
               } else {
                 window.alert("평가가 완료되었습니다! 감사합니다 :)");
                 selfHref(FRONTHOST);
