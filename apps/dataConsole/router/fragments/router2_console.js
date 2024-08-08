@@ -665,6 +665,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_searchDocuments): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
