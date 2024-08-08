@@ -602,7 +602,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const back = this.back;
   const address = this.address;
   const image = this.image;
-  const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongoinfo } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongoinfo } = this.mother;
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const notePath = process.env.HOME + "/note/portfolio";
   const photoFolderConst = "사진_등록_포트폴리오";
@@ -612,7 +612,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const kakaoInstance = new KakaoTalk();
   const collection = "foreContents";
   const selfCoreMongo = new mongo(mongoinfo);
-  const selfMongo = new mongo(mongocontentsinfo);
+  const selfMongo = new mongo(mongoofficeinfo);
   const garoseroParser = new GaroseroParser();
   let nextPid;
 
@@ -736,6 +736,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
       await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+      await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "store", cliid: clientObj.cliid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
 
     } else {
 
@@ -796,10 +797,10 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   const address = this.address;
   const hangul = this.hangul;
   const options = this.options;
-  const { mongo, mongoinfo, mongocontentsinfo, fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
+  const { mongo, mongoinfo, mongoofficeinfo, fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
   const errorMessage = `argument must be => [ { client: "", designer: "" } ... ]`;
   const selfMongo = new mongo(mongoinfo);
-  const selfContentsMongo = new mongo(mongocontentsinfo);
+  const selfContentsMongo = new mongo(mongoofficeinfo);
   const collection = "foreContents";
   const splitToken = "__split__";
   const corePortfolio = "corePortfolio";
@@ -952,8 +953,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
-  const selfMongo = new mongo(mongocontentsinfo);
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongosecondinfo } = this.mother;
+  const selfMongo = new mongo(mongoofficeinfo);
   const selfCoreMongo = new mongo(mongoinfo);
   const selfSecondMongo = new mongo(mongosecondinfo);
   try {
@@ -1207,9 +1208,9 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   const back = this.back;
   const address = this.address;
   const image = this.image;
-  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongosecondinfo } = this.mother;
   const notePath = process.env.HOME + "/note/portfolio";
-  const selfMongo = new mongo(mongocontentsinfo);
+  const selfMongo = new mongo(mongoofficeinfo);
   const selfCoreMongo = new mongo(mongoinfo);
   const selfSecondMongo = new mongo(mongosecondinfo);
   const photoFolderConst = "사진_등록_포트폴리오";
@@ -1626,7 +1627,7 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
 
 PortfolioFilter.prototype.chmodReload = async function () {
   const instance = this;
-  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongosecondinfo } = this.mother;
   try {
     await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/corePortfolio" ]);
     await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/list_image" ]);

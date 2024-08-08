@@ -7677,7 +7677,9 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
       const { cliid, proid, mode } = equalJson(req.body);
       const selfCoreMongo = instance.mongo;
       const selfMongo = instance.mongolocal;
+      const selfOfficeMongo = instance.mongolog;
       const collection = "clientEvaluationSendHistory";
+      const collection2 = "clientEvaluation";
       let thisClient;
       let method;
       let name, phone;
@@ -7738,6 +7740,50 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
       } else if (mode === "all") {
 
         rows = await back.mongoRead(collection, {}, { selfMongo })
+        res.send(JSON.stringify(rows));
+
+      } else if (mode === "store") {
+
+        [ thisClient ] = await back.mongoPick("client", [ { cliid }, { cliid: 1, name: 1, phone: 1 } ], { selfMongo: selfCoreMongo });
+        ({ name, phone } = thisClient);
+  
+        projects = await back.mongoRead("project", { proid }, { selfMongo: selfCoreMongo });
+        projects = projects.filter((p) => { return p.desid !== "" }).filter((p) => {
+          return (/진행/gi.test(p.process.status) || /완료/gi.test(p.process.status));
+        });
+        method = "justClientEvaluation";
+
+        if (projects.length > 0) {
+          rows = await back.mongoRead(collection, { proid }, { selfMongo })
+          if (rows.length === 0) {
+            json = {
+              proid,
+              cliid,
+              date: new Date(),
+              send: [ { date: new Date() } ],
+            };
+            await back.mongoCreate(collection, json, { selfMongo });
+          } else {
+            [ target ] = rows;
+            target.send.unshift({ date: new Date() });
+            target.date = new Date();
+            json = objectDeepCopy(target);
+            await back.mongoDelete(collection, { proid }, { selfMongo });
+            await back.mongoCreate(collection, json, { selfMongo });
+          }
+          res.send(JSON.stringify({ message: "success" }));
+        } else {
+          res.send(JSON.stringify({ message: "fail" }));
+        }
+
+      } else if (mode === "result") {
+
+        rows = await back.mongoRead(collection2, { proid }, { selfMongo: selfOfficeMongo })
+        res.send(JSON.stringify({ data: rows.find((r) => { return r.proid === proid }) ? rows.find((r) => { return r.proid === proid }) : null }));
+
+      } else if (mode === "resultAll") {
+
+        rows = await back.mongoRead(collection2, {}, { selfMongo: selfOfficeMongo })
         res.send(JSON.stringify(rows));
 
       } else {

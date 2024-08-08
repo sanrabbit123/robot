@@ -7831,7 +7831,7 @@ ProjectJs.prototype.rawCommentUpload = function (proid) {
 ProjectJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { stringToDate, sleep } = GeneralJs;
+  const { stringToDate, sleep, ajaxJson } = GeneralJs;
 
   communication.setItem([
     () => { return "추천서 다시 발송"; },
@@ -8349,7 +8349,7 @@ ProjectJs.prototype.communicationRender = function () {
       try {
         if (instance.whiteBox !== null) {
           const proid = instance.whiteBox.id;
-          let thisCase, popupFunction;
+          let thisCase;
           for (let c of instance.cases) {
             if (c !== null) {
               if (c.proid === proid) {
@@ -8357,12 +8357,12 @@ ProjectJs.prototype.communicationRender = function () {
               }
             }
           }
-          const [ project ] = await GeneralJs.ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+          const [ project ] = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
           const cliid = project.cliid;
-
-          console.log(project);
-
-
+          if (window.confirm(thisCase.name + " 고객님께 서비스 평가 요청을 보낼까요?")) {
+            await ajaxJson({ mode: "send", proid, cliid }, BACKHOST + "/justClientEvaluation");
+            window.alert(thisCase.name + " 고객님께 서비스 평가 요청을 보냈습니다!");
+          }
         }
       } catch (e) {
         console.log(e);
