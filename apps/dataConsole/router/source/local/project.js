@@ -8361,7 +8361,9 @@ ProjectJs.prototype.communicationRender = function () {
           const cliid = project.cliid;
           if (window.confirm(thisCase.name + " 고객님께 서비스 평가 요청을 보낼까요?")) {
             console.log(await ajaxJson({ mode: "send", proid, cliid }, BACKHOST + "/justClientEvaluation"));
+            await GeneralJs.sleep(1000);
             window.alert(thisCase.name + " 고객님께 서비스 평가 요청을 보냈습니다!");
+            window.location.reload();
           }
         }
       } catch (e) {
