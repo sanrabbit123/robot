@@ -7671,7 +7671,7 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.cliid === undefined || req.body.proid === undefined || req.body.mode === undefined) {
+      if (req.body.mode === undefined) {
         throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
       }
       const { cliid, proid, mode } = equalJson(req.body);
@@ -7735,6 +7735,13 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
           res.send(JSON.stringify({ data: rows[0] }));
         }
 
+      } else if (mode === "all") {
+
+        rows = await back.mongoRead(collection, {}, { selfMongo })
+        res.send(JSON.stringify(rows));
+
+      } else {
+        throw new Error("invalid mode");
       }
 
     } catch (e) {

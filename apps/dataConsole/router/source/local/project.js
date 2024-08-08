@@ -8341,6 +8341,34 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "고객 평가 요청 보내기"; },
+    function () {
+      return (instance.whiteBox !== null);
+    },
+    async function (e) {
+      try {
+        if (instance.whiteBox !== null) {
+          const proid = instance.whiteBox.id;
+          let thisCase, popupFunction;
+          for (let c of instance.cases) {
+            if (c !== null) {
+              if (c.proid === proid) {
+                thisCase = c;
+              }
+            }
+          }
+
+          console.log(thisCase);
+
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "고객 평가 상태"; },
     function () {
       return (instance.whiteBox !== null);
