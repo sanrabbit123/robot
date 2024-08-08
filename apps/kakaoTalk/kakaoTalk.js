@@ -4162,6 +4162,49 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "justClientEvaluation": {
+      "name": "그냥 평가 보내기 고객",
+      "id": "TU_2414",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client} 고객님 안녕하세요, 홈리에종입니다 :) #{client}님의 소중한 집을 꾸미는 일에 저희 홈리에종과 함께 해주셔서 감사했습니다! 마지막으로 홈리에종과 디자이너에 대한 경험을 아래 서비스 평가 페이지를 통해 리뷰 부탁드리겠습니다. \n\n편안하고 아름다운 집에서 늘 행복한 일상을 이어나가시기를 바랄게요!\n\n감사합니다 :)\n\n* 서비스 평가\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "그냥 평가 보내기 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2024-08-07 15:47:28",
+        "templtCode": "TU_2414",
+        "comments": [
+          {
+            "cdate": "2024-08-08 10:18:31",
+            "name": "검수자",
+            "id": "3534717",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2024-08-08 10:18:31",
+            "status": "APR"
+          }
+        ]
+      }
+    },
     "imageTransfer": {
       "name": "이미지 전달 수정 수정",
       "id": "TQ_0295",
