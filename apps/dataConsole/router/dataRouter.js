@@ -840,7 +840,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, dateToString, serviceParsing, db, stringToDate } = this.mother;
+  const { equalJson, dateToString, serviceParsing, db, stringToDate, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res, logger) {
@@ -871,6 +871,11 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       let allClients;
       let thisRequestNumber;
       let thisRequest;
+      let evaluationSendRows;
+      let evaluationResultRows;
+      let thisEvaluationSendRow;
+      let thisEvaluationResultRow;
+
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
         req.body.where = req.body.whereQuery;
       }
@@ -1075,6 +1080,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
           allClients = await back.mongoRead("client", historyWhereQuery, { selfMongo: selfCoreMongo });
 
+          evaluationSendRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationResultRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+
           for (let obj of data) {
             thisHistory = allClients.find((o) => { return o.cliid === obj.middle.cliid });
             thisRequestNumber = 0;
@@ -1085,10 +1093,16 @@ DataRouter.prototype.rou_post_getDocuments = function () {
               }
             }
             thisRequest = thisHistory.requests[thisRequestNumber].request;
+
+            thisEvaluationSendRow = evaluationSendRows.map((r) => { return r.proid }).includes(obj.standard.proid) ? 1 : 0;
+            thisEvaluationResultRow = evaluationResultRows.map((r) => { return r.proid }).includes(obj.standard.proid) ? 1 : 0;
+
             obj.info.name = thisHistory.name;
             obj.info.address = thisRequest.space.address;
             obj.info.spaceContract = thisRequest.space.contract;
             obj.info.pyeong = thisRequest.space.pyeong;
+            obj.info.evaluationSend = thisEvaluationSendRow === 1 ? "전송" : "미전송";
+            obj.info.evaluationResult = thisEvaluationResultRow === 1 ? "완료" : "미완료";
           }
 
         }
@@ -1107,7 +1121,8 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
-  const { equalJson, dateToString } = this.mother;
+  const back = this.back;
+  const { equalJson, dateToString, serviceParsing, db, stringToDate, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res, logger) {
@@ -1138,6 +1153,13 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       let thisRequestIndex;
       let thisSalesDate;
       let queryArr;
+      let allClients;
+      let thisRequestNumber;
+      let thisRequest;
+      let evaluationSendRows;
+      let evaluationResultRows;
+      let thisEvaluationSendRow;
+      let thisEvaluationResultRow;
 
       if (req.url === "/searchClients") {
         standard = instance.patch.clientStandard();
@@ -1435,6 +1457,39 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
               obj.info.standardDate = dateToString(thisSalesDate);
               }
             }
+          }
+
+        } else if (req.url === "/searchProjects") {
+
+          thisCliids = data.map((obj) => { return obj.middle.cliid });
+          historyWhereQuery = {};
+          historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
+
+          allClients = await back.mongoRead("client", historyWhereQuery, { selfMongo: selfCoreMongo });
+
+          evaluationSendRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationResultRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+
+          for (let obj of data) {
+            thisHistory = allClients.find((o) => { return o.cliid === obj.middle.cliid });
+            thisRequestNumber = 0;
+            for (let i = 0; i < thisHistory.requests.length; i++) {
+              if (thisHistory.requests[i].request.timeline.valueOf() <= stringToDate(obj.info.proposalDate).valueOf()) {
+                thisRequestNumber = i;
+                break;
+              }
+            }
+            thisRequest = thisHistory.requests[thisRequestNumber].request;
+
+            thisEvaluationSendRow = evaluationSendRows.map((r) => { return r.proid }).includes(obj.standard.proid) ? 1 : 0;
+            thisEvaluationResultRow = evaluationResultRows.map((r) => { return r.proid }).includes(obj.standard.proid) ? 1 : 0;
+
+            obj.info.name = thisHistory.name;
+            obj.info.address = thisRequest.space.address;
+            obj.info.spaceContract = thisRequest.space.contract;
+            obj.info.pyeong = thisRequest.space.pyeong;
+            obj.info.evaluationSend = thisEvaluationSendRow === 1 ? "전송" : "미전송";
+            obj.info.evaluationResult = thisEvaluationResultRow === 1 ? "완료" : "미완료";
           }
 
         }

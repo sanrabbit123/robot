@@ -4441,6 +4441,14 @@ DataPatch.prototype.projectStandard = function () {
       name: "촬영일",
       width: 100,
     },
+    evaluationSend: {
+      name: "평가 전송",
+      width: 100,
+    },
+    evaluationResult: {
+      name: "평가 완료",
+      width: 100,
+    },
     remainSupply: {
       name: "공급가",
       width: 100,
@@ -4624,6 +4632,8 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "디자이너 잔금", target: "paymentsRemainAmount" },
       { name: "잔금 지급일", target: "paymentsRemainDate" },
       { name: "촬영 상태", target: "photoStatus" },
+      { name: "평가 전송", target: "evaluationSend" },
+      { name: "평가 완료", target: "evaluationResult" },
     ],
   };
   return targetColumns;
@@ -7749,6 +7759,8 @@ DataPatch.prototype.projectMap = function () {
     address: { name: "고객 주소", position: "null", type: "constant", searchBoo: false },
     spaceContract: { name: "계약 상태", position: "null", type: "constant", searchBoo: false },
     pyeong: { name: "평형", position: "null", type: "constant", searchBoo: false },
+    evaluationSend: { name: "평가 전송", position: "null", type: "constant", searchBoo: false },
+    evaluationResult: { name: "평가 완료", position: "null", type: "constant", searchBoo: false },
     remainPure: { name: "잔금", position: "process.contract.remain.calculation.amount.consumer", type: "object", objectFunction: remainPureToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
