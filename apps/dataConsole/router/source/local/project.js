@@ -8357,8 +8357,10 @@ ProjectJs.prototype.communicationRender = function () {
               }
             }
           }
+          const [ project ] = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+          const cliid = project.cliid;
 
-          console.log(thisCase);
+          console.log(project);
 
 
         }
