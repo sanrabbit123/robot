@@ -389,7 +389,7 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   try {
     const { client, project: projectRaw } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
     const { request, analytics } = client.requests[0];
-    const clientAnalytics = (await ajaxJson({ mode: "pick", cliid }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true })).data;
+    const clientAnalytics = (await ajaxJson({ mode: "pick", cliid }, S3HOST + ":3000/clientAnalytics2", { equal: true })).data;
     const clientHistory = await ajaxJson({ id: cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
     const { contents, history, sessions, source } = clientAnalytics;
     let dataMatrix;
@@ -5745,7 +5745,7 @@ MprJs.prototype.adsWhiteCard = function () {
         }
         whitePrompt.children[0].appendChild(loading);
 
-        ajaxJson({ startDate, endDate }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
+        ajaxJson({ startDate, endDate }, S3HOST + ":3000/getAdsComplex", { equal: true }).then((result) => {
           loading.remove();
           return instance.adsWhiteContents(whitePrompt.children[0].firstChild, result, startDate, endDate);
         }).catch((err) => {
@@ -7750,7 +7750,7 @@ MprJs.prototype.snsWhiteCard = function () {
         }
 
         chartJsPatch([
-          { data: { startDate: fromDate, endDate: toDate }, url: CONTENTSHOST + "/getSnsComplex" },
+          { data: { startDate: fromDate, endDate: toDate }, url: S3HOST + ":3000/getSnsComplex" },
         ]).then(dataLoad(loading)).catch((err) => {
           console.log(err);
         });
@@ -8273,7 +8273,7 @@ MprJs.prototype.queryWhiteCard = function () {
         whereQuery = {
           "date.from": { $gte: fromDate, $lte: toDate }
         };
-        ajaxJson({ mode: "get", whereQuery }, CONTENTSHOST + "/queryAnalytics", { equal: true }).then(dataLoad(loading)).catch((err) => {
+        ajaxJson({ mode: "get", whereQuery }, S3HOST + ":3000/queryAnalytics", { equal: true }).then(dataLoad(loading)).catch((err) => {
           console.log(err);
         });
 
@@ -9936,7 +9936,7 @@ MprJs.prototype.mprPannel = async function () {
                     mode: "get",
                     startDate,
                     endDate,
-                  }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
+                  }, S3HOST + ":3000/clientAnalytics2", { equal: true });
                   await instance.coreContentsLoad(true);
                   loading.parentNode.removeChild(loading);
                 }
@@ -10222,7 +10222,7 @@ MprJs.prototype.mprSearchEvent = async function () {
             instance.clients = await ajaxJson({
               mode: "get",
               standardDate: ago,
-            }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
+            }, S3HOST + ":3000/clientAnalytics2", { equal: true });
             await instance.coreContentsLoad(true);
             loading.parentNode.removeChild(loading);
 
@@ -10250,7 +10250,7 @@ MprJs.prototype.mprSearchEvent = async function () {
               mode: "query",
               whereQuery,
               coreWhereQuery,
-            }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
+            }, S3HOST + ":3000/clientAnalytics2", { equal: true });
             await instance.coreContentsLoad(true);
             loading.parentNode.removeChild(loading);
 
@@ -10453,7 +10453,7 @@ MprJs.prototype.launching = async function () {
       mode: "get",
       standardDate: ago,
       initRequest: true,
-    }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
+    }, S3HOST + ":3000/clientAnalytics2", { equal: true });
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
 
     this.members = members;
@@ -10532,7 +10532,7 @@ MprJs.prototype.launching = async function () {
         mode: "query",
         whereQuery,
         coreWhereQuery,
-      }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
+      }, S3HOST + ":3000/clientAnalytics2", { equal: true });
       await instance.coreContentsLoad(true);
       loading.parentNode.removeChild(loading);
 
