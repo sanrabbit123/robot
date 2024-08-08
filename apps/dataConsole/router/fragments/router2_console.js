@@ -7654,3 +7654,94 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_justClientEvaluation = function () {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const kakao = this.kakao;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep, setQueue, requestSystem, objectDeepCopy } = this.mother;
+  let obj = {};
+  obj.link = [ "/justClientEvaluation" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined || req.body.proid === undefined || req.body.mode === undefined) {
+        throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+      }
+      const { cliid, proid, mode } = equalJson(req.body);
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const collection = "clientEvaluationSendHistory";
+      let thisClient;
+      let method;
+      let name, phone;
+      let projects;
+      let rows;
+      let target;
+      let json;
+      
+      if (mode === "send") {
+
+        [ thisClient ] = await back.mongoPick("client", [ { cliid }, { cliid: 1, name: 1, phone: 1 } ], { selfMongo: selfCoreMongo });
+        ({ name, phone } = thisClient);
+  
+        projects = await back.mongoRead("project", { proid }, { selfMongo: selfCoreMongo });
+        projects = projects.filter((p) => { return p.desid !== "" }).filter((p) => {
+          return (/진행/gi.test(p.process.status) || /완료/gi.test(p.process.status));
+        });
+        method = "justClientEvaluation";
+
+        if (projects.length > 0) {
+          await kakao.sendTalk(method, name, phone, {
+            client: name,
+            host: address.frontinfo.host,
+            path: "evaluation",
+            proid
+          });
+          rows = await back.mongoRead(collection, { proid }, { selfMongo })
+          if (rows.length === 0) {
+            json = {
+              proid,
+              cliid,
+              date: new Date(),
+              send: [ { date: new Date() } ],
+            };
+            await back.mongoCreate(collection, json, { selfMongo });
+          } else {
+            [ target ] = rows;
+            target.send.unshift({ date: new Date() });
+            target.date = new Date();
+            json = objectDeepCopy(target);
+            await back.mongoDelete(collection, { proid }, { selfMongo });
+            await back.mongoCreate(collection, json, { selfMongo });
+          }
+          res.send(JSON.stringify({ message: "success" }));
+        } else {
+          res.send(JSON.stringify({ message: "fail" }));
+        }
+
+      } else if (mode === "list" || mode === "get") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo })
+        if (rows.length === 0) {
+          res.send(JSON.stringify({ data: null }));
+        } else {
+          res.send(JSON.stringify({ data: rows[0] }));
+        }
+
+      }
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_justClientEvaluation): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
