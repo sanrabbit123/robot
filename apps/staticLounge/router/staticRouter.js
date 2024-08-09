@@ -11703,7 +11703,7 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/evaluationSubmit" ];
   obj.func = async function (req, res, logger) {
@@ -11884,15 +11884,12 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
       }
       await back.mongoCreate(collection, json, { selfMongo });
 
-      kakao.sendTalk("evaluationSubmit", thisClient.name, thisClient.phone, {
-        client: thisClient.name,
-      }).then(() => {
-        return messageSend({ text: thisClient.name + " 고객님께서 평가를 완료하였습니다!", channel: "#200_web", voice: false, fairy: false });
+      messageSend({ text: thisClient.name + " 고객님께서 평가를 완료하였습니다!", channel: "#200_web", voice: false, fairy: false }).then(() => {
+        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
       }).catch((err) => {
         console.log(err);
       });
 
-      logger.alert("evaluationSubmit success => " + proid + ", " + cliid + ", " + desid).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
