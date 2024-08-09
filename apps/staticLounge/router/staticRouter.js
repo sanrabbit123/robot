@@ -11734,8 +11734,9 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
       let operationSatisfaction;
       let json;
       let rows;
-      let googleRows;
       let thisClient;
+
+      [ thisClient ] = await back.mongoPick("client", [ { cliid }, { cliid: 1, name: 1 } ], { selfMongo: selfCoreMongo });
 
       constructAmount = map.find((o) => { return o.property === "constructamount" }) === undefined ? "" : map.find((o) => { return o.property === "constructamount" }).value;
       constructPeriod = map.find((o) => { return o.property === "constructperiod" }) === undefined ? "" : map.find((o) => { return o.property === "constructperiod" }).value;
