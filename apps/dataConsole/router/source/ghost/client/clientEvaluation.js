@@ -4846,8 +4846,12 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
               document.body.removeChild(back);  
               if (raw.exist && instance.contentsRawInfo.raw.link !== "") {
                 const loading = instance.mother.whiteProgressLoading();
-                instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
-                await downloadFile(raw.link, null, loading.progress.firstChild);
+                instance.mother.greenAlert("평가가 완료되었습니다! 다운로드를 진행합니다!").catch((err) => { console.log(err); });
+                try {
+                  await downloadFile(raw.link, null, loading.progress.firstChild);
+                } catch {
+                  GeneralJs.blankHref(raw.link);
+                }
                 loading.remove();
               } else {
                 window.alert("평가가 완료되었습니다! 감사합니다 :)");

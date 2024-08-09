@@ -11760,6 +11760,498 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
   }
 }
 
+DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile, linkToString, stringToLink } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const selectPopupClassName = "selectPopupClassName";
+  const positionPhotoClassName = "positionPhotoClassName_";
+  try {
+    const mainContents = [
+      {
+        title: "대표 가로 사진 세팅",
+        contents: [
+          "디자이너님의 스타일을 가장 잘 보여주고 어필할 수 있는 가로형 사진 1장이 필요합니다! 가장 자신 있는 사진으로 1장을 구성해주세요!",
+        ],
+      },
+    ];
+    let paddingTop;
+    let block;
+    let whiteBlock, whiteTong;
+    let bottomMargin;
+    let titleFontSize;
+    let num, num2;
+    let numberRight;
+    let titleTop, titleTopNumber;
+    let titleBottom;
+    let index;
+    let mobileTitleLeft, mobileTitleTop;
+    let tong;
+    let contentsWordingSize;
+    let contentsBottom;
+    let whiteBottomMargin;
+    let firstWidth, secondWidth, secondMarginRight;
+    let contentsAreaPaddingTop;
+    let zeroWidth, zeroMarginRight;
+    let contentsMarginBottom0, contentsMarginBottom1;
+    let mobilePaddingLeft;
+    let mobileContentsWordingSize;
+    let wordings;
+    let lineTop, linePadding;
+    let contentsTextTop;
+    let textTop;
+    let cardRatio;
+    let imageCardsTong;
+    let cardLength;
+    let cardBetween;
+    let contentsSelectViewPopup;
+    let outerMargin;
+    let innerMargin;
+    let photoRatio;
+    let photoBetween;
+    let photoColumnlength;
+    let positionData;
+    let naviHeight;
+  
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+
+    if (normalMode) {
+      margin = 24;
+      paddingTop = 52;
+      whiteBottomMargin = 48;
+      naviHeight = 0;
+    } else {
+      margin = <%% 55, 55, 47, 39, 4.7 %%>;
+      paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
+      whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+      naviHeight = instance.naviHeight;
+    }
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    numberRight = <%% 12, 12, 12, 12, 2 %%>;
+  
+    titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+    titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+  
+    titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
+    contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6.5 %%>;
+  
+    mobileTitleLeft = 1.5;
+    mobileTitleTop = -8.7;
+    
+    contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+    contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+  
+    zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+    zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+    firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+    secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+    secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+    
+    contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+    contentsMarginBottom1 = <%% 36, 36, 34, 32, 2 %%>;
+  
+    lineTop = <%% 10, 10, 10, 10, 10 %%>;
+    linePadding = <%% 12, 12, 12, 12, 12 %%>;
+  
+    mobilePaddingLeft = 6;
+  
+    mobileContentsWordingSize = 3.2;
+  
+    contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
+    contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  
+    this.whiteMargin = (desktop ? margin : 0);
+
+    cardRatio = (261 / 420);
+    photoRatio = (210 / 297);
+
+    cardLength = 1;
+
+    cardBetween = <%% 8, 6, 5, 4, 0.5 %%>;
+    outerMargin = <%% 30, 30, 24, 20, 7 %%>;
+    innerMargin = <%% 30, 30, 24, 20, 3 %%>;
+    photoBetween = <%% 6, 5, 4, 3, 0.5 %%>;
+    photoColumnlength = <%% 6, 6, 5, 4, 3 %%>;
+
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data.position;
+
+    contentsSelectViewPopup = (index) => {
+      return async function (e) {
+        try {
+          const loading = await instance.mother.loadingRun();
+          const zIndex = 4;
+          const designer = instance.designer;
+          const desid = designer.desid;
+          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid, sero: true }, SECONDHOST + "/designerContentsInfo", { equal: true });
+          let cancelBack, whitePrompt;
+          let whiteScroll;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ selectPopupClassName ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  removeByClass(selectPopupClassName);
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: colorChip.black,
+              zIndex: String(zIndex),
+              animation: "justfadeineight 0.2s ease forwards",
+            }
+          });
+
+          whitePrompt = createNode({
+            mother: totalContents,
+            class: [ selectPopupClassName ],
+            style: {
+              display: "inline-flex",
+              position: "fixed",
+              width: withOut((outerMargin * 2) + (innerMargin * 2) - photoBetween, ea),
+              height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((outerMargin * 2) + (innerMargin * 2)) + ea + ")",
+              top: "calc(" + String(naviHeight) + "px" + " + " + String(outerMargin) + ea + ")",
+              left: String(outerMargin) + ea,
+              zIndex: String(zIndex),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              animation: "fadeuplite 0.3s ease forwards",
+              padding: String(innerMargin) + ea,
+              paddingRight: String(innerMargin - photoBetween) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            }
+          });
+
+          whiteScroll = createNode({
+            mother: whitePrompt,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+              justifyContent: "start",
+              alignItems: "start",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                paddingBottom: String(1200) + ea,
+              }
+            }
+          }).firstChild;
+
+          for (let obj of thisDesignerContents) {
+
+            createNode({
+              mother: whiteScroll,
+              event: {
+                mouseenter: function (e) {
+                  this.style.opacity = String(0.7);
+                },
+                mouseleave: function (e) {
+                  this.style.opacity = String(1);
+                },
+                click: async function (e) {
+                  const linkPath = this.getAttribute("source");
+                  const position = Number(this.getAttribute("position"));
+                  const targetArea = document.querySelector('.' + positionPhotoClassName + String(position));
+                  const desid = this.getAttribute("desid");
+                  targetArea.style.backgroundImage = "url('" + "https://" + FILEHOST + stringToLink(linkPath) + "')";
+
+                  await ajaxJson({
+                    mode: "save",
+                    desid,
+                    position,
+                    path: linkPath,
+                  }, BRIDGEHOST + "/designerRepresentativePhotos");
+
+                  removeByClass(selectPopupClassName);
+                }
+              },
+              attribute: {
+                source: linkToString(obj.link),
+                position: String(index),
+                desid: desid,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(photoBetween * photoColumnlength) + ea + ") / " + String(photoColumnlength) + ")",
+                height: "auto",
+                aspectRatio: String(photoRatio),
+                borderRadius: String(3) + "px",
+                backgroundImage: "url('" + "https://" + FILEHOST + obj.link + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "101% 101%",
+                marginBottom: String(photoBetween) + ea,
+                marginRight: String(photoBetween) + ea,
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            });
+
+          }
+
+          loading.parentElement.removeChild(loading);
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    whiteBlock = createNode({
+      mother: entireMode ? totalContents : baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: desktop ? colorChip.white : "",
+        paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+        paddingBottom: normalMode ? "" : (desktop ? String(whiteBottomMargin) + ea : ""),
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: normalMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
+      },
+      children: [
+        {
+          display: "block",
+          position: "relative",
+          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          height: String(100) + '%',
+          marginLeft: String(desktop ? margin : 0) + ea,
+        }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+  
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: mobile ? "absolute" : "relative",
+            left: desktop ? "" : String(mobileTitleLeft) + ea,
+            top: desktop ? "" : String(mobileTitleTop) + ea,
+            width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+            marginBottom: desktop ? String(titleBottom) + ea : "",
+            zIndex: mobile ? String(1) : "",
+            textAlign: desktop ? "" : "center",
+          },
+          children: [
+            {
+              style: {
+                display: desktop ? "none" : "block",
+                position: "absolute",
+                borderBottom: "1px dashed " + colorChip.gray4,
+                height: String(2.7) + ea,
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+              }
+            },
+            {
+              text: "대표 가로 사진 구성",
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(800),
+                background: desktop ? colorChip.white : colorChip.gray1,
+                paddingRight: String(numberRight) + ea,
+                paddingLeft: desktop ? "" : String(numberRight) + ea,
+                color: colorChip.black,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+            background: desktop ? "" : colorChip.white,
+            boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+            borderRadius: mobile ? String(1) + ea : "",
+            overflow: "hidden",
+            marginBottom: String(0) + ea,
+            marginTop: desktop ? "" : String(19) + ea,
+            paddingTop: String(contentsAreaPaddingTop) + ea,
+            borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+            paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingBottom: desktop ? "" : String(4.5) + ea,
+          }
+        },
+      ]
+    });
+    tong = block.lastChild;
+  
+    num = 0;
+    for (let { title, contents } of mainContents) {
+      num2 = 0;
+      for (let str of contents) {
+        createNode({
+          mother: tong,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+            marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
+          },
+          children: [
+            {
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                verticalAlign: "top",
+                width: desktop ? String(firstWidth + zeroWidth + zeroMarginRight) + ea : String(100) + '%',
+                marginBottom: desktop ? "" : String(1.5) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: num2 === 0 ? "block" : "none",
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    height: String(lineTop) + ea,
+                    width: withOut(0),
+                    borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+                  }
+                },
+                {
+                  text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
+                  style: {
+                    display: desktop ? "inline-block" : "block",
+                    position: "relative",
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    lineHeight: String(1.6),
+                    color: colorChip.black,
+                    textAlign: "left",
+                    background: colorChip.white,
+                    paddingRight: String(linePadding) + ea,
+                  },
+                  bold: {
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  },
+                }
+              ]
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(600),
+                verticalAlign: "top",
+                lineHeight: String(1.6),
+                width: String(secondWidth) + ea,
+                marginRight: String(secondMarginRight) + ea,
+                textAlign: desktop ? "right" : "left",
+                color: colorChip.green,
+              },
+            },
+            {
+              text: str,
+              style: {
+                display: "inline-block",
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(400),
+                verticalAlign: "top",
+                lineHeight: String(1.6),
+                width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+                textAlign: "left",
+                color: colorChip.black,
+              },
+              bold: {
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+              },
+              under: {
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.green,
+              },
+            },
+          ]
+        });
+  
+        num2++;
+      }
+      num++;
+    }
+
+    // image cards
+    imageCardsTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "row",
+      }
+    });
+
+    for (let i = 0; i < cardLength; i++) {
+      createNode({
+        mother: imageCardsTong,
+        class: [ positionPhotoClassName + String(i) ],
+        attribute: { index: String(i) },
+        event: {
+          click: contentsSelectViewPopup(i),
+        },
+        style: {
+          display: "inline-flex",
+          width: "calc(calc(100% - " + String(cardBetween * (cardLength - 1)) + ea + ") / " + String(cardLength) + ")",
+          height: "auto",
+          aspectRatio: String(cardRatio),
+          marginRight: String(i === cardLength - 1 ? 0 : cardBetween) + ea,
+          background: colorExtended.blue,
+          borderRadius: String(desktop ? 5 : 3) + "px",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
+          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
+          cursor: "pointer",
+        }
+      });
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   const instance = this;
   const mother = this.mother;
@@ -12902,9 +13394,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.contentsCenter();
             await instance.insertRepresentativeBox();
             await instance.insertRepresentativePhotosBox();
-            // await instance.insertRepresentativePaperBox();
-            // instance.insertPossibleNoticeBox();
-            // instance.calendarChain();
+            await instance.insertRepresentativeFrontPhotosBox();
           } catch (e) {
             await GeneralJs.ajaxJson({ message: "DesignerAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
           }
@@ -12918,6 +13408,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       instance.insertThreeStrongBox();
       await instance.insertRepresentativeBox();
       await instance.insertRepresentativePhotosBox();
+      await instance.insertRepresentativeFrontPhotosBox();
       await instance.insertRepresentativePaperBox();
       await instance.insertRepresentativeWordsBox();
     }
