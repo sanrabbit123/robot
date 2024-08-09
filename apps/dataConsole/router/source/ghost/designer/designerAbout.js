@@ -12228,7 +12228,7 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
       class: [ positionPhotoFrontClassName + String(0) ],
       attribute: { index: String(0) },
       event: {
-        click: contentsSelectViewPopup(i),
+        click: contentsSelectViewPopup(0),
       },
       style: {
         display: "inline-flex",
