@@ -11772,7 +11772,7 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
   const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile, linkToString, stringToLink } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const selectPopupClassName = "selectPopupClassName";
-  const positionPhotoClassName = "positionPhotoClassName_";
+  const positionPhotoFrontClassName = "positionPhotoFrontClassName_";
   try {
     const mainContents = [
       {
@@ -11871,8 +11871,8 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
   
     this.whiteMargin = (desktop ? margin : 0);
 
-    cardRatio = (261 / 420);
-    photoRatio = (210 / 297);
+    cardRatio = (420 / 261);
+    photoRatio = (297 / 210);
 
     cardLength = 1;
 
@@ -11891,7 +11891,7 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
           const zIndex = 4;
           const designer = instance.designer;
           const desid = designer.desid;
-          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid, sero: true }, SECONDHOST + "/designerContentsInfo", { equal: true });
+          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid, garo: true }, SECONDHOST + "/designerContentsInfo", { equal: true });
           let cancelBack, whitePrompt;
           let whiteScroll;
 
@@ -11974,7 +11974,7 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
                 click: async function (e) {
                   const linkPath = this.getAttribute("source");
                   const position = Number(this.getAttribute("position"));
-                  const targetArea = document.querySelector('.' + positionPhotoClassName + String(position));
+                  const targetArea = document.querySelector('.' + positionPhotoFrontClassName + String(position));
                   const desid = this.getAttribute("desid");
                   targetArea.style.backgroundImage = "url('" + "https://" + FILEHOST + stringToLink(linkPath) + "')";
 
@@ -11983,7 +11983,7 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
                     desid,
                     position,
                     path: linkPath,
-                  }, BRIDGEHOST + "/designerRepresentativePhotos");
+                  }, BRIDGEHOST + "/designerRepresentativeFrontPhotos");
 
                   removeByClass(selectPopupClassName);
                 }
@@ -12223,29 +12223,26 @@ DesignerAboutJs.prototype.insertRepresentativeFrontPhotosBox = async function ()
       }
     });
 
-    for (let i = 0; i < cardLength; i++) {
-      createNode({
-        mother: imageCardsTong,
-        class: [ positionPhotoClassName + String(i) ],
-        attribute: { index: String(i) },
-        event: {
-          click: contentsSelectViewPopup(i),
-        },
-        style: {
-          display: "inline-flex",
-          width: "calc(calc(100% - " + String(cardBetween * (cardLength - 1)) + ea + ") / " + String(cardLength) + ")",
-          height: "auto",
-          aspectRatio: String(cardRatio),
-          marginRight: String(i === cardLength - 1 ? 0 : cardBetween) + ea,
-          background: colorExtended.blue,
-          borderRadius: String(desktop ? 5 : 3) + "px",
-          backgroundPosition: "50% 50%",
-          backgroundSize: "auto 100%",
-          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
-          cursor: "pointer",
-        }
-      });
-    }
+    createNode({
+      mother: imageCardsTong,
+      class: [ positionPhotoFrontClassName + String(0) ],
+      attribute: { index: String(0) },
+      event: {
+        click: contentsSelectViewPopup(i),
+      },
+      style: {
+        display: "inline-flex",
+        width: "calc(calc(100% - " + String(cardBetween * (3 - 1)) + ea + ") / " + String(3) + ")",
+        height: "auto",
+        aspectRatio: String(cardRatio),
+        background: colorExtended.blue,
+        borderRadius: String(desktop ? 5 : 3) + "px",
+        backgroundPosition: "50% 50%",
+        backgroundSize: "auto 100%",
+        backgroundImage: "url('" + "https://" + FILEHOST + "/corePortfolio/listImage/" + instance.designer.setting.front.photo.porlid + "/" + instance.designer.setting.front.photo.index + instance.designer.setting.front.photo.porlid + ".jpg" + "')",
+        cursor: "pointer",
+      }
+    });
 
   } catch (e) {
     console.log(e);

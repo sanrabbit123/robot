@@ -3152,6 +3152,67 @@ TransferRouter.prototype.rou_post_designerRepresentativePhotos = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_designerRepresentativeFrontPhotos = function () {
+  const instance = this;
+  const { fileSystem, requestSystem, shellExec, shellLink, equalJson, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerRepresentativeFrontPhotos" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const selfMongo = instance.mongo;
+      const collection = "designer";
+      let rows;
+      let jsonModel;
+      let targetData;
+      let thisArr;
+      let fileName;
+      let pid;
+      let index;
+      let whereQuery, updateQuery;
+
+      if (mode === "save") {
+        const { desid, position: positionRaw, path: pathRaw } = equalJson(req.body);
+
+        thisArr = stringToLink(pathRaw).split("/");
+        fileName = thisArr[thisArr.length - 1].split(".")[0];
+        pid = /[ap][0-9]+/.exec(fileName)[0]
+        index = fileName.replace(new RegExp(pid + "$"), "");
+
+        whereQuery = { desid };
+        updateQuery = {};
+        updateQuery["setting.front.photo.porlid"] = pid;
+        updateQuery["setting.front.photo.index"] = index;
+
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        throw new Error("invalid post");
+      }
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerRepresentativeFrontPhotos): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson, requestSystem, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
