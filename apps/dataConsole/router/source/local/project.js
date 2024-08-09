@@ -7831,7 +7831,7 @@ ProjectJs.prototype.rawCommentUpload = function (proid) {
 ProjectJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { stringToDate, sleep, ajaxJson } = GeneralJs;
+  const { stringToDate, sleep, ajaxJson, dateToString, blankHref, objectDeepCopy } = GeneralJs;
 
   communication.setItem([
     () => { return "추천서 다시 발송"; },
@@ -8392,6 +8392,83 @@ ProjectJs.prototype.communicationRender = function () {
           popupFunction = instance.evalutaionStatusView(proid);
           await popupFunction();
         }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "모든 고객 평가 추출하기"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const today = new Date();
+        const rows = await ajaxJson({ mode: "resultAll", proid: "", cliid: "" }, BACKHOST + "/justClientEvaluation", { equal: true });
+        const designers = await ajaxJson({ whereQuery: { $or: [ ...new Set(rows.map((o) => { return o.desid })) ].map((desid) => { return { desid } }) } }, SECONDHOST + "/getDesigners", { equal: true });
+        const clients = await ajaxJson({ whereQuery: { $or: [ ...new Set(rows.map((o) => { return o.cliid })) ].map((cliid) => { return { cliid } }) } }, SECONDHOST + "/getClients", { equal: true });
+        let valuesArr, res;
+        let tempArr;
+        let thisClient, thisDesigner;
+        let loading;
+
+        valuesArr = [
+          [
+            "제출 날짜",
+            "고객명",
+            "디자이너명",
+            "c 아이디",
+            "d 아이디",
+            "p 아이디",
+            "시공 정도",
+            "시공 기간",
+            "전체 예산",
+            "스타일링 예산",
+            "제품 만족도",
+            "가구 구매 정도",
+            "구매 기간",
+            "디자인 만족도",
+            "피드백 만족도",
+            "운영 만족도",
+          ]
+        ];
+        for (let obj of rows) {
+          thisClient = clients.find((c) => { return c.cliid === obj.cliid });
+          thisDesigner = designers.find((d) => { return d.desid === obj.desid });
+          tempArr = [];
+          tempArr.push(dateToString(obj.date, true));
+          tempArr.push(thisClient.name);
+          tempArr.push(thisDesigner.designer);
+          tempArr.push(obj.cliid);
+          tempArr.push(obj.desid);
+          tempArr.push(obj.proid);
+          tempArr.push([ "시공 없음", "부분 시공", "전체 시공" ][obj.construct.level]);
+          tempArr.push(String(obj.construct.period) + "일");
+          tempArr.push(String(Math.floor(obj.spend.total / 10000)) + "만원");
+          tempArr.push(String(Math.floor(obj.spend.styling / 10000)) + "만원");
+          tempArr.push([ "불만족", "보통", "만족" ][obj.purchase.list]);
+          tempArr.push([ "재배치", "일부", "전체" ][obj.purchase.furniture]);
+          tempArr.push(String(obj.purchase.period) + "일");
+          tempArr.push([ "불만족", "보통", "만족" ][obj.satisfaction.design]);
+          tempArr.push([ "불만족", "보통", "만족" ][obj.satisfaction.feedback]);
+          tempArr.push([ "불만족", "보통", "만족" ][obj.satisfaction.operation]);
+          valuesArr.push(objectDeepCopy(tempArr));
+        }
+
+        loading = instance.mother.grayLoading();
+
+        res = await ajaxJson({
+          values: valuesArr,
+          newMake: true,
+          parentId: "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c",
+          sheetName: "fromDB_project_evaluation_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets");
+
+        loading.remove();
+        blankHref(res.link);
+
       } catch (e) {
         console.log(e);
       }

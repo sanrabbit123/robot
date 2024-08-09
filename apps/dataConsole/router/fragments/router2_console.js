@@ -7762,6 +7762,11 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
             path: "evaluation",
             proid
           });
+          await messageSend({
+            text: name + " 고객님께 서비스 평가 요청을 보냈어요!",
+            channel: "#200_web",
+            voice: false,
+          });
           rows = await back.mongoRead(collection, { proid }, { selfMongo })
           if (rows.length === 0) {
             json = {

@@ -1502,6 +1502,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_searchDocuments): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -8597,6 +8598,11 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
             host: address.frontinfo.host,
             path: "evaluation",
             proid
+          });
+          await messageSend({
+            text: name + " 고객님께 서비스 평가 요청을 보냈어요!",
+            channel: "#200_web",
+            voice: false,
           });
           rows = await back.mongoRead(collection, { proid }, { selfMongo })
           if (rows.length === 0) {
