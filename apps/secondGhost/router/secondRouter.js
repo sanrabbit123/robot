@@ -3274,7 +3274,7 @@ SecondRouter.prototype.rou_post_designerContentsInfo = function () {
         }
 
         if (req.body.garo === "true" || req.body.garo === true) {
-          targetContents = targetContents.filter((o) => { return o.sgTrue === 's' });
+          targetContents = targetContents.filter((o) => { return o.sgTrue === 'g' });
         }
 
         res.send(JSON.stringify({ data: targetContents }));
