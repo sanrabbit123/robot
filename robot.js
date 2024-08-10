@@ -419,16 +419,6 @@ Robot.prototype.recordCloud = async function (sw, boo = true) {
   }
 }
 
-Robot.prototype.pythonCloud = async function () {
-  try {
-    const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
-    const app = new ReceiptObserver();
-    await app.taxServerLaunching();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.taxBill = async function () {
   try {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
@@ -967,13 +957,6 @@ const MENU = {
   recordCloud: async function () {
     try {
       await robot.recordCloud();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  pythonCloud: async function () {
-    try {
-      await robot.pythonCloud();
     } catch (e) {
       console.log(e);
     }

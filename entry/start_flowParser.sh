@@ -1,2 +1,0 @@
-#!/bin/bash
-hypercorn entry.human_flowParser:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/home-liaison.contact/cert/cert1.pem --keyfile ./pems/home-liaison.contact/key/privkey1.pem --ca-certs ./pems/home-liaison.contact/ca/chain1.pem --ca-certs ./pems/home-liaison.contact/ca/fullchain1.pem

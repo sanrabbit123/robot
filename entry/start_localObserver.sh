@@ -1,2 +1,0 @@
-#!/bin/bash
-hypercorn entry.human_localObserver:app -b 0.0.0.0:43000 -w 2 --certfile ./pems/homeliaison.co.kr/cert/cert1.pem --keyfile ./pems/homeliaison.co.kr/key/privkey1.pem --ca-certs ./pems/homeliaison.co.kr/ca/chain1.pem --ca-certs ./pems/homeliaison.co.kr/ca/fullchain1.pem
