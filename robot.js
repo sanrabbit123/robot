@@ -313,16 +313,6 @@ Robot.prototype.logConnect = async function (testMode = false) {
   }
 }
 
-Robot.prototype.secondConnect = async function () {
-  try {
-    const SecondGhost = require(process.cwd() + "/apps/secondGhost/secondGhost.js");
-    const app = new SecondGhost();
-    await app.ghostConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.transferConnect = async function () {
   try {
     const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
@@ -1273,27 +1263,6 @@ const MENU = {
       console.log(e);
     }
   },
-  localLog: async function () {
-    try {
-      await robot.localLog();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  arpScan: async function () {
-    try {
-      await robot.arpScan();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  second: async function () {
-    try {
-      await robot.secondConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   trans: async function () {
     try {
       await robot.transferConnect();
@@ -1304,13 +1273,6 @@ const MENU = {
   static: async function () {
     try {
       await robot.staticConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  member: async function () {
-    try {
-      await robot.memberConnect();
     } catch (e) {
       console.log(e);
     }
@@ -1339,41 +1301,6 @@ const MENU = {
   contents: async function () {
     try {
       await robot.contentsConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  notionCenter: async function () {
-    try {
-      await robot.notionConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  human: async function () {
-    try {
-      await robot.spawnHuman();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  reverseHuman: async function () {
-    try {
-      await robot.reverseHuman();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  construct: async function () {
-    try {
-      await robot.constructConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  rabbit: async function () {
-    try {
-      await robot.abstractRabbit();
     } catch (e) {
       console.log(e);
     }

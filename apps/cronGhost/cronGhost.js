@@ -130,7 +130,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
     targets = [
       { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
       { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-      { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
       { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
@@ -271,9 +270,9 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.transinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.transinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
@@ -316,8 +315,7 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   try {
     const targets = [
       { name: "post", host: instance.address.backinfo.host },
-      { name: "log", host: instance.address.testinfo.host },
-      { name: "second", host: instance.address.secondinfo.host },
+      { name: "office", host: instance.address.officeinfo.ghost.host },
       { name: "trans", host: instance.address.transinfo.host },
     ]
     const robotPort = 3000;
