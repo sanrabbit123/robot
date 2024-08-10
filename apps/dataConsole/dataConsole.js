@@ -33,11 +33,11 @@ const DataConsole = function () {
   };
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
+DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, sleep, mediaQuery, uniqueValue } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
-  const SSEHOST = address.host;
+  const SSEHOST = this.address.backinfo.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
@@ -252,13 +252,13 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, mini = false, testMode = false) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPatch, DataMiddle, mini = false, testMode = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
   const { testModeInfo } = this;
   const { minify } = require("terser");
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
-  const SSEHOST = address.host;
+  const SSEHOST = this.address.backinfo.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
@@ -609,7 +609,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     port: testModeInfo.version,
   }
   try {
-    await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
+    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "clientEvaluation", to: "evaluation", path: "/middle/evaluation" },
@@ -779,7 +779,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     port: testModeInfo.version,
   }
   try {
-    await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
+    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
     const targetMap = [
       { from: "designerAbout", to: "about", path: "/middle/designerAbout" },
       { from: "designerBoard", to: "dashboard", path: "/middle/designerBoard" },
@@ -990,7 +990,6 @@ DataConsole.prototype.connect = async function () {
   const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoconsoleinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
   const PORT = 3000;
   const https = require("https");
-  const os = require("os");
   const express = require("express");
   const app = express();
   const multer = require("multer");
@@ -1025,30 +1024,19 @@ DataConsole.prototype.connect = async function () {
 
   try {
     //set address info
-    const { name, rawObj: address, isTest } = await this.mother.ipCheck();
-    let isLocal;
-    console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ${isTest ? "(test mode) " : ""}==============`);
-    console.log(``);
+    console.log(`\n\x1b[36m\x1b[1m%s\x1b[0m`, `launching console ==============\n`);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC, MONGOLOGC;
-    if (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host || isTest) {
-      isLocal = true;
-    } else {
-      await this.back.setInfoObj({ getMode: false });
-      isLocal = false;
-    }
-    MONGOC = new mongo(mongoinfo);
-    MONGOLOCALC = new mongo(mongoconsoleinfo);
-    MONGOLOGC = new mongo(mongotestinfo);
+    await this.back.setInfoObj({ getMode: false });
 
-
-    console.log(``);
+    const MONGOC = new mongo(mongoinfo);
+    const MONGOLOCALC = new mongo(mongoconsoleinfo);
+    const MONGOLOGC = new mongo(mongotestinfo);
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();
     await MONGOLOGC.connect();
+    console.log(`set db`);
 
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -1063,7 +1051,7 @@ DataConsole.prototype.connect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.backinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -1091,7 +1079,7 @@ DataConsole.prototype.connect = async function () {
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance, isLocal);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
@@ -1249,9 +1237,9 @@ DataConsole.prototype.connect = async function () {
     }).then((homeFolderList) => {
       if (homeFolderList.some((str) => { return (new RegExp("^" + processDoingKeywords, "i")).test(str) })) {
         sleep(500).then(() => {
-          return this.renderStatic(staticFolder, address, DataPatch);
+          return instance.renderStatic(staticFolder, DataPatch);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
+          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, false, false);
         }).then(() => {
           console.log(`static done`);
         }).catch((err) => {
@@ -1259,9 +1247,9 @@ DataConsole.prototype.connect = async function () {
         })
       } else {
         fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
-          return this.renderStatic(staticFolder, address, DataPatch);
+          return instance.renderStatic(staticFolder, DataPatch);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
+          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, false, false);
         }).then(() => {
           console.log(`static done`);
           return shellExec("rm", [ "-rf", process.env.HOME + "/" + tempProcessName ]);

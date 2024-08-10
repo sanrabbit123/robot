@@ -261,6 +261,16 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
   return obj;
 }
 
+
+
+
+
+
+
+
+
+
+
 ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
@@ -1540,9 +1550,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
       }
-      const emptyPromise = () => {
-        return new Promise((resolve, reject) => { resolve(null); });
-      }
       const selfMongo = instance.mongolocal;
       const { date, amount, name } = equalJson(req.body);
       const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
@@ -1677,7 +1684,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           }
 
         }
-
       } else {
         logger.log(ignoreMessage).catch((e) => { console.log(e); });
       }
@@ -4356,6 +4362,8 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
   }
   return obj;
 }
+
+
 
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;

@@ -145,11 +145,19 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC, log
 
 DataRouter.prototype.rou_get_Root = function () {
   const instance = this;
+  const address = this.address;
   let obj = {};
   obj.link = '/';
   obj.func = async function (req, res, logger) {
     try {
-      res.redirect("/client");
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -221,6 +229,39 @@ DataRouter.prototype.rou_get_First = function () {
         }).catch((err) => {
           throw new Error(err);
         });
+
+      } else if (req.params.id === "bluePrint") {
+
+        const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">*::-webkit-scrollbar{display:none;}html{overflow:hidden}body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #00ff00;}</style></head><body></body></html>`;
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(html);
+
+      } else if (req.params.id === "blackPrint") {
+
+        const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">*::-webkit-scrollbar{display:none;}html{overflow:hidden}body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #000000;}</style></head><body></body></html>`;
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(html);
+
+      } else if (req.params.id === "isOffice") {
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        res.send(JSON.stringify({ result: (String(ip).replace(/[^0-9\.]/gi, '').trim() === address.officeinfo.ip.outer.trim() ? 1 : 0) }));  
 
       } else {
 

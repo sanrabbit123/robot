@@ -1,12 +1,11 @@
-const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance, isLocal = false) {
+const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
-  this.dir = process.cwd() + "/apps/dataConsole";
-  this.module = this.dir + "/module";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
@@ -14,6 +13,10 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLO
   this.mother = new Mother();
   this.back = new BackMaker();
   this.work = new BackWorker();
+  this.dir = process.cwd() + "/apps/dataConsole";
+  this.module = this.dir + "/module";
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.bill = new BillMaker();
   this.patchClass = DataPatch;
   this.patch = new DataPatch();
   this.middle = DataMiddle;
@@ -25,13 +28,10 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLO
   this.mongolocal = MONGOLOCALC;
   this.mongolog = MONGOLOGC;
   this.pythonApp = this.dir + "/python/app.py";
-  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.members = {};
   this.kakao = kakaoInstance;
   this.human = humanInstance;
-  if (isLocal) {
-    this.back.bindDev();
-  }
+  this.bankCode = BillMaker.returnBankCode("", "matrix");
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
