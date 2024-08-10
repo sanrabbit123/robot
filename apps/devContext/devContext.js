@@ -1839,31 +1839,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const url = "https://api.openai.com/v1/images/generations";
-    // const openAiToken = "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";
-    // const size = "1024x1024";
-    // let res;
-
-    // res = await requestSystem(url, {
-    //   "prompt": "photo of combination of a rabbit and pigeons",
-    //   "n": 1,
-    //   "size": size
-    // }, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Authorization": "Bearer " + openAiToken,
-    //   }
-    // })
-
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/image.json`, res.data ]);
-    // console.log(res.data);
-
-
-
-
-
-
-
 
 
 
@@ -7253,86 +7228,12 @@ DevContext.prototype.launching = async function () {
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-
     // certbot
     // await this.certRefreshing();
 
-
-    // get drive folder
-    // const drive = new GoogleDrive();
-    // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1rsLsiAo012dAsjHx97-urGsyxUma2trz");
-
-
-    // naverBlog to json
-    // const blog = new NaverBlogParsing();
-    // await blog.blogToJson();
-
-
     // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
-
-
-    // kakao test
-    // const kakao = new KakaoTalk();
-    // await kakao.sendTalk("designerEducationBasicSend", "배창규", "010-2747-3403", {
-    //   designer: "박혜연",
-    //   desid: "d1701_aa01s",
-    //   host: "home-liaison.com",
-    // });
-
-
-    // const kakaoInstance = new KakaoTalk();
-    // let projects;
-    // let clientObj;
-    // let designerObj;
-    // let shareGoogleIdClient;
-    // let shareGoogleIdDesigner;
-    // let clientName, designerName;
-    // let project;
-
-    // clientName = "정가희";
-    // designerName = "박미연";
-
-    // projects = await back.getProjectsByNames([ clientName, designerName ]);
-    // if (projects.length > 0) {
-    //   project = projects[0];
-    //   console.log(project.proid);
-    //   consoleQInput = await consoleQ("Is it OK?\n");
-    //   if (/OK/gi.test(consoleQInput.trim())) {
-    //     await back.updateProject([
-    //       { proid: project.proid },
-    //       {
-    //         "contents.raw.photo.status": "원본 보정 완료",
-    //         "contents.share.client.photo": new Date(),
-    //         "contents.share.designer.photo": new Date(),
-    //       }
-    //     ]);
-    //     clientObj = await back.getClientById(project.cliid);
-    //     designerObj = await back.getDesignerById(project.desid);
-
-    //     if (clientObj !== null && designerObj !== null) {
-    //       await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-    //       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
-    //       await sleep(2000);
-    //       await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
-    //       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-    //     }
-    //   }
-    // }
-
-
-    // get photo folder
-    // const drive = new GoogleDrive();
-    // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
-
-
-    // aspirant to designer
-    // await this.aspirantToDesigner([
-    //   [ "김민지", "2024-07-26" ],
-    // ]);
+    const app = new KakaoTalk();
+    await app.generateToken();
 
 
     // send mail
@@ -7344,59 +7245,12 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
-    // const audio = new PlayAudio();
-    // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
-
-
 
     // send sms
     // const name = "김희진";
     // const amount = 11_272_000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
-
-    // front designer sync
-    // await this.frontDesignerSync();
-
-
-    // ready page block
-    // await this.pageReady("webProposal");
-
-
-    // render page block
-    // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
-
-
-    // voice to text
-    // const audio = new PlayAudio();
-    // await audio.voiceToText();
-
-
-    // send native alarm
-    // const alarm = new NativeNotifier();
-    // await alarm.sendAlarm("안녕안녕", () => {});
-
-    // cook json property
-    /*
-    await this.cookProperty([
-      {
-        mongoConnection: this.MONGOC,
-        collection: "project",
-        standard: "proid",
-        mode: "add",
-        position: "contents.sns",
-        value: {
-          portfolio: {
-            long: new Date(3800, 0, 1),
-            short: new Date(3800, 0, 1),
-          },
-          interview: {
-            long: new Date(3800, 0, 1),
-            short: new Date(3800, 0, 1),
-          },
-        }
-      }
-    ]);
 
 
     */
