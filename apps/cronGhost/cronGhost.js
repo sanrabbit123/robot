@@ -129,7 +129,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
 
     targets = [
       { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
-      { name: "pythonCloud", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
@@ -256,7 +255,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   try {
 
     requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
-      return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
@@ -276,7 +275,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
     }).then(() => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
@@ -317,7 +316,6 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   try {
     const targets = [
       { name: "post", host: instance.address.backinfo.host },
-      { name: "python", host: instance.address.pythoninfo.host },
       { name: "log", host: instance.address.testinfo.host },
       { name: "second", host: instance.address.secondinfo.host },
       { name: "trans", host: instance.address.transinfo.host },
@@ -541,7 +539,7 @@ CronGhost.prototype.cronServer = async function () {
 
     // set pem key
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.pythoninfo.host;
+    pemsLink = process.cwd() + "/pems/" + address.backinfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
