@@ -8399,7 +8399,7 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "기간별 매출 상태 추출"; },
+    () => { return "고객 평가 동기화"; },
     function () {
       return true;
     },
