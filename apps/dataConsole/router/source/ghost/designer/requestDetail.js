@@ -1436,7 +1436,7 @@ RequestDetailJs.prototype.insertPhotoBox = function (indexNumber) {
     images = curation.image.map((image) => {
       const imageLink = "/corePortfolio/listImage";
       const pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-      return BRIDGEHOST.replace(/\:3000$/gi, '') + imageLink + "/" + pid + "/" + image;
+      return S3HOST + imageLink + "/" + pid + "/" + image;
     }).concat(images);
 
     positionArr = [];

@@ -95,7 +95,7 @@ DevContext.prototype.launching = async function () {
 
 
     
-    await findCode("SecondGhost")
+    await findCode("BRIDGEHOST.replace(/")
     
 
     

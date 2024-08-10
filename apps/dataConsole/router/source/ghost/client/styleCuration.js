@@ -297,7 +297,7 @@ StyleCurationJs.prototype.styleCheck = function (mother) {
   }
 
   this.randomPick = randomPick;
-  targetPhotos = randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
+  targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
   this.photoPosition = [];
 
   mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(1) + ea;
@@ -466,7 +466,7 @@ StyleCurationJs.prototype.styleCheck = function (mother) {
         }
       });
     } else {
-      targetPhotos = instance.randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
+      targetPhotos = instance.randomPick.map((obj) => { return S3HOST + obj.path; });
       sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
         try {
           for (let i = 0; i < instance.photoPosition.length; i++) {

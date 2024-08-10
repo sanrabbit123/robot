@@ -7551,7 +7551,7 @@ ProcessDetailJs.prototype.insertStyleBox = async function () {
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const { mainContents } = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
-  const imageStart = BRIDGEHOST.replace(/\:3000$/gi, '') + "/corePortfolio/listImage";
+  const imageStart = S3HOST + "/corePortfolio/listImage";
   try {
     let paddingTop;
     let block;

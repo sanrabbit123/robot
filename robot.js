@@ -323,26 +323,6 @@ Robot.prototype.transferConnect = async function () {
   }
 }
 
-Robot.prototype.contentsConnect = async function () {
-  try {
-    const ContentsLounge = require(process.cwd() + "/apps/contentsLounge/contentsLounge.js");
-    const app = new ContentsLounge();
-    await app.contentsConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.notionConnect = async function () {
-  try {
-    const NotionCenter = require(process.cwd() + "/apps/notionCenter/notionCenter.js");
-    const app = new NotionCenter();
-    await app.notionConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.staticConnect = async function () {
   try {
     const StaticLounge = require(process.cwd() + "/apps/staticLounge/staticLounge.js");
@@ -368,26 +348,6 @@ Robot.prototype.localConnect = async function () {
     const MemberLounge = require(process.cwd() + "/apps/localObserver/localObserver.js");
     const app = new MemberLounge();
     await app.localConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.basicConnect = async function () {
-  try {
-    const BasicLounge = require(process.cwd() + "/apps/basicLounge/basicLounge.js");
-    const app = new BasicLounge();
-    await app.basicConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.photoConnect = async function () {
-  try {
-    const PhotoConsole = require(process.cwd() + "/apps/photoConsole/photoConsole.js");
-    const app = new PhotoConsole();
-    await app.photoConnect();
   } catch (e) {
     console.log(e);
   }
@@ -1121,15 +1081,6 @@ const MENU = {
       console.log(e);
     }
   },
-  spawnSector: async function () {
-    try {
-      let arg;
-      arg = typeof process.argv[3] === "string" ? process.argv[3] : "";
-      await robot.spawnSector(arg === "install");
-    } catch (e) {
-      console.log(e);
-    }
-  },
   publicSector: async function () {
     try {
       await robot.publicSector();
@@ -1228,20 +1179,6 @@ const MENU = {
       console.log(e);
     }
   },
-  phpClient: async function () {
-    try {
-      await robot.renderFrontPhp();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  phpTest: async function () {
-    try {
-      await robot.renderTestFrontPhp();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   phpDesigner: async function () {
     try {
       await robot.renderDesignerPhp();
@@ -1273,34 +1210,6 @@ const MENU = {
   static: async function () {
     try {
       await robot.staticConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  localObserver: async function () {
-    try {
-      await robot.localConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  basic: async function () {
-    try {
-      await robot.basicConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  photo: async function () {
-    try {
-      await robot.photoConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  contents: async function () {
-    try {
-      await robot.contentsConnect();
     } catch (e) {
       console.log(e);
     }
