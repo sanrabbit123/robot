@@ -16,28 +16,17 @@ const KakaoTalk = function () {
   this.ip = {
     office: address.officeinfo.ip.outer,
     console: address.backinfo.ip.outer,
-    front: address.frontinfo.ip.outer,
-    python: address.pythoninfo.ip.outer,
-    test: address.testinfo.ip.outer,
-    second: address.secondinfo.ip.outer,
-    contents: address.contentsinfo.ip.outer,
+    second: address.transinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
     console: new RegExp(this.ip.console, 'gi'),
-    front: new RegExp(this.ip.front, 'gi'),
-    python: new RegExp(this.ip.python, 'gi'),
-    test: new RegExp(this.ip.test, 'gi'),
     second: new RegExp(this.ip.second, 'gi'),
-    contents: new RegExp(this.ip.contents, 'gi'),
   };
   this.token = {
     office: "fcf8ae563233bb943408caeb7ab1bd88e7407e566ad37e3bac155d90bae5b417de0908bc821e8457f70c08e5586dd0a47f6ef958b04e9eb077f4b0d87dc15c5ds3Kr5O3gekHZBAZzzDM4HkdThPacOn9Qqq5KMKaFcFN53PFzKO81EIJoJd38RY9NqoAmu4RkyOFlwDhjoVS4jg==",
     console: "d1f471de2a51dcb274c03b667d76d32b6565e26f5ef7b52401ed03721396f8e61bc451c969fe886d47d082a3a22b443b5b031941c67459569dc0ce7afc82e6d7isk4rc0u02hPvi6/qyLQSUN0tCd8DJLnaTSHoo82y2Ke+Dzap1E0Yc9aW6mmXBeBKqsko9TDKKLtg/gwYBw4Dg==",
-    python: "fa00d602d8ea0175ea5a589a6a34c194dd366052753b4b104e747013f56cf5bd94cfab495a16b9b0fd3ef3f86e69f365be7062bacdd20dcd0062457f2b06caf5ovKj6SnKOw/DkqgyO17cGsk6eevDREWlyd/i+8ly2gYowpHD2Xn6Lj84hYQxce+KDNeleQZyEbeonIhDSk+YGA==",
-    test: "653405233f47846d8a0e221cec348fc9a6ba51b807c5b76cfb0673ab331b6d9007563b912651867b91fed1a6152a67eb00bd6219e97f6ee59b679336f7da06e9+0VRj06cXafvqvU3XP0m0vocW2tFb7wpwIB84vkv/s7L77hgPt6Ux3TOB+IXe7yt1i4zal4l3FGzI04Cjpt7Ew==",
     second: "9441912be335e0b6f3aac79f23e3bd89ca28b14122e750134776dbb9c854593eb05ed4103d28f3330f2fa94d796a819ef80a30f5a975e7bbb5aad3e4e0934ef0387JtpG29I4l0Xt7TcnYvErqhYDJQCBPphM9T0FORwRpUa4v3opf2NSpf9c1fD1RI4BzacBTFIwDG9nggJWIbg=='",
-    contents: "5db4dd1e3c461d9fb09d5c0b39300bc9e9429f8aad4e0970918a64bf1170367fbe45754c43debd0b8f1d64552e112dabf04345e4329b99fbf963d54cf3c9dc7bcSFfFyGGBHbaQCsoTkLNeOrr5ln3UZiHt8tMzeeozF48rKeaAgtyvVsCh/oBNjBv/I9aK7f3Nr0ljQoffKeKqw==",
   };
   this.authObj = {};
   this.message = {};
@@ -76,20 +65,14 @@ KakaoTalk.prototype.setAuth = async function () {
     this.authObj.userid = this.userid;
     this.authObj.senderkey = this.senderkey;
 
-    const { data } = await requestSystem("https://" + address.pythoninfo.host + ":3000");
+    const { data } = await requestSystem("https://" + address.backinfo.host + ":3000");
 
     if (this.ipRegExp.office.test(data.trim())) {
       this.authObj.token = this.token.office;
     } else if (this.ipRegExp.console.test(data.trim())) {
       this.authObj.token = this.token.console;
-    } else if (this.ipRegExp.python.test(data.trim())) {
-      this.authObj.token = this.token.python;
-    } else if (this.ipRegExp.test.test(data.trim())) {
-      this.authObj.token = this.token.test;
     } else if (this.ipRegExp.second.test(data.trim())) {
       this.authObj.token = this.token.second;
-    } else if (this.ipRegExp.contents.test(data.trim())) {
-      this.authObj.token = this.token.contents;
     }
 
     return true;

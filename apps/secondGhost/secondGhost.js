@@ -11,19 +11,12 @@ const SecondGhost = function (mother = null, back = null, address = null) {
     this.back = new BackMaker();
     this.address = ADDRESS;
   }
-  const { WebClient } = require("@slack/web-api");
   this.dir = process.cwd() + "/apps/secondGhost";
+  const { WebClient } = require("@slack/web-api");
   this.slack_token = this.address.officeinfo.slack.bot;
   this.slack_userToken = this.address.officeinfo.slack.user;
   this.slack_bot = new WebClient(this.slack_token);
   this.slack_user = new WebClient(this.slack_userToken);
-  this.slack_fairyToken = this.address.officeinfo.slack.user;
-  this.slack_fairyId = "U067FG4GTNZ";
-  this.slack_fairyAppId = "A04GQKWAQF6";
-  this.slack_uragenToken = this.address.officeinfo.slack.user;
-  this.slack_uragenId = "U054W05RAU9";
-  this.slack_uragenAppId = "A06NPAEMLQZ";
-  this.slack_fairy = new WebClient(this.slack_fairyToken);
   this.slack_info = {
     endPoint: "https://slack.com/api",
     userDictionary: {},
@@ -69,51 +62,17 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       channel: "D062B65SSNS",
     },
   };
-  this.slack_geminiToken = "xoxp-717757271335-6709850918257-6685498874183-996bafe2e93d6656aff877f8ca0589bb";
-  this.slack_geminiId = "U06LVR0T07K";
-  this.slack_geminiAppId = "A06L5DPDYR5";
-  this.slack_gemini = new WebClient(this.slack_geminiToken);
-  this.telegram = {
-    chat: {
-      general: "-806575867",
-      notice: "-896011842",
-      operation: "-895560263",
-      request: "-625365105",
-      plan: "-799916015",
-      clare: "-882308233",
-      jyeun: "-835972543",
-    },
-    bot: {
-      log: "-741702420",
-      alive: "-965706823",
-      error: "-952575178",
-      cron: "-977560893",
-      checklist: "-4085471967",
-      general: "-771644766",
-      emergency: "-754872890",
-      consulting: "-856907489",
-      operation: "-728861584",
-      proposal: "-885912068",
-      mail: "-617429987",
-      taxbill: "-802082485",
-      console: "-818998366"
-    },
-    token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
-    url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }
-  }
 }
 
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const { slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, slack_uragenToken, slack_uragenId, slack_uragenAppId } = this;
+  const { slack_userToken, slack_info } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
   const app = express();
-  const multer = require("multer");
-  const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
   const fs = require("fs");
@@ -124,7 +83,6 @@ SecondGhost.prototype.ghostConnect = async function () {
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
-  app.use(multiForms.array());
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
   app.use((req, res, next) => {
@@ -203,7 +161,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_uragenToken, slack_uragenId, slack_uragenAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakaoInstance, humanInstance);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

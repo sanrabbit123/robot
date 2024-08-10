@@ -1,9 +1,8 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_uragenToken, slack_uragenId, slack_uragenAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -12,26 +11,15 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
+  
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.members = {};
-  this.openAi = new OpenAiAPIs();
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
   this.slack_user = slack_user;
   this.slack_info = slack_info;
-  this.slack_fairyToken = slack_fairyToken;
-  this.slack_fairyId = slack_fairyId;
-  this.slack_fairyAppId = slack_fairyAppId;
-  this.slack_fairy = slack_fairy;
-  this.slack_gemini = slack_gemini;
-  this.slack_geminiToken = slack_geminiToken;
-  this.slack_geminiId = slack_geminiId;
-  this.slack_geminiAppId = slack_geminiAppId;
-  this.slack_uragenToken = slack_uragenToken;
-  this.slack_uragenId = slack_uragenId;
-  this.slack_uragenAppId = slack_uragenAppId;
 
   this.kakao = kakao;
   this.human = human;
@@ -43,7 +31,6 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
-    this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
@@ -54,7 +41,6 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
     "1.229.181.6:53000",
   ];
 
-  this.telegram = telegram;
 }
 
 SecondRouter.prototype.baseMaker = function (target, req = null) {
@@ -100,52 +86,6 @@ SecondRouter.prototype.fireWall = function (req) {
     }
   }
   return __wallLogicBoo;
-}
-
-SecondRouter.prototype.telegramSend = async function (chat_id, text, logger) {
-  const instance = this;
-  const { telegram } = this;
-  const { ajaxJson, sleep } = this.mother;
-  try {
-    let result;
-
-    result = true;
-
-    try {
-      await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-    } catch (e) {
-      await sleep(100);
-      try {
-        await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-      } catch (e) {
-        await sleep(500);
-        try {
-          await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-        } catch (e) {
-          await sleep(1000);
-          try {
-            await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-          } catch (e) {
-            await sleep(1500);
-            try {
-              await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-            } catch (e) {
-              await sleep(3000);
-              try {
-                await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
-              } catch (e) {
-                result = false;
-              }
-            }
-          }
-        }
-      }
-    }
-    return result;
-  } catch (e) {
-    logger.error("SecondRouter.prototype.telegramSend error : " + e.message).catch((err) => { console.log(err) });
-    return false;
-  }
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -242,7 +182,7 @@ SecondRouter.prototype.rou_get_First = function () {
 
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
-  const { telegram, slack_info } = this;
+  const { slack_info } = this;
   const { requestSystem, ajaxJson, equalJson, sleep, setQueue } = this.mother;
   let obj;
   obj = {};
@@ -343,7 +283,6 @@ SecondRouter.prototype.rou_post_kakaoAccessToken = function () {
 
 SecondRouter.prototype.rou_post_emergencyAlarm = function () {
   const instance = this;
-  const { telegram } = this;
   const { requestSystem, ajaxJson, sleep } = this.mother;
   let obj;
   obj = {};
@@ -363,7 +302,6 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
       const channel = "#emergency_alarm";
 
       await instance.slack_bot.chat.postMessage({ text, channel });
-      await instance.telegramSend(telegram.bot["emergency"], `(${channel}) ${text}`, logger);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
@@ -3341,38 +3279,6 @@ SecondRouter.prototype.rou_post_designerPaperInfo = function () {
   return obj;
 }
 
-SecondRouter.prototype.rou_post_voice = function () {
-  const instance = this;
-  const address = this.address;
-  const { requestSystem, messageSend, messageLog } = this.mother;
-  let obj = {};
-  obj.link = [ "/voice" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.text === undefined) {
-        throw new Error("invaild post");
-      }
-      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", {
-      // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", {
-          text: req.body.text,
-      }, {
-        headers: { "Content-Type": "application/json" }
-      }).catch((err) => { console.log(err); });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 SecondRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
   const address = this.address;
@@ -3443,8 +3349,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const address = this.address;
-  const { openAi } = this;
-  const { slack_info: { userDictionary, channelDictionary }, slack_fairyId, slack_fairyAppId, telegram } = this;
+  const { slack_info: { userDictionary, channelDictionary } } = this;
   const { messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -3458,26 +3363,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     const thisBody = equalJson(req.body);
     try {
       const selfMongo = instance.mongo;
-      const members = instance.members;
-      const membersSlack = members.map((o) => { return {
-        id: o.id,
-        name: o.name,
-        title: o.title,
-        slack: o.slack.id === null ? "" : o.slack.id,
-        level: o.level,
-      } });
-      let thisUser;
-
       if (typeof thisBody.event === "object") {
-        if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
-          if (thisBody.event.type === "message") {
-            if (typeof thisBody.event.text === "string") {
-              // pass
-            }
-          } else if (thisBody.event.type === "app_home_opened") {
-            console.log(thisBody.event.user)
-          }
-        }
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
@@ -3688,7 +3574,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { slack_info: { userDictionary, channelDictionary } } = this;
   const { messageSend, equalJson, ajaxJson, requestSystem, dateToString } = this.mother;
   const divider = () => {
     return {
@@ -4111,7 +3997,7 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
 SecondRouter.prototype.rou_post_fairyMessage = function () {
   const instance = this;
   const { requestSystem, stringToLink } = this.mother;
-  const { slack_fairyToken, slack_info } = this;
+  const { slack_userToken, slack_info } = this;
   let obj;
   obj = {};
   obj.link = [ "/fairyMessage" ];
@@ -4161,7 +4047,7 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
         text: text,
       }, {
         headers: {
-          "Authorization": "Bearer " + slack_fairyToken,
+          "Authorization": "Bearer " + slack_userToken,
           "Content-Type": "application/x-www-form-urlencoded",
         }
       });
@@ -4181,7 +4067,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
   const instance = this;
   const back = this.back;
   const { requestSystem, dateToString, stringToDate, cryptoString, equalJson } = this.mother;
-  const { slack_fairyToken: token, slack_info } = this;
+  const { slack_userToken: token, slack_info } = this;
   let obj;
   obj = {};
   obj.link = [ "/storeDailyReport" ];
@@ -4264,10 +4150,10 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
 SecondRouter.prototype.rou_post_fairySlack = function () {
   const instance = this;
   const { requestSystem, stringToLink } = this.mother;
-  const { slack_fairyToken, slack_info } = this;
+  const { slack_userToken, slack_info } = this;
   let obj;
   obj = {};
-  obj.link = [ "/fairySlack" ];
+  obj.link = [ "/fairySlack", "/uragenSlack", "/geminiSlack" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -4288,7 +4174,7 @@ SecondRouter.prototype.rou_post_fairySlack = function () {
 
       await requestSystem(url, { channel, text }, {
         headers: {
-          "Authorization": "Bearer " + slack_fairyToken,
+          "Authorization": "Bearer " + slack_userToken,
           "Content-Type": "application/x-www-form-urlencoded",
         }
       });
@@ -4298,126 +4184,6 @@ SecondRouter.prototype.rou_post_fairySlack = function () {
     } catch (e) {
       console.log(e);
       logger.error("Second Ghost 서버 문제 생김 (rou_post_fairySlack): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_uragenSlack = function () {
-  const instance = this;
-  const { requestSystem, stringToLink } = this.mother;
-  const { slack_uragenToken, slack_info } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/uragenSlack" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.channel === undefined || req.body.text === undefined) {
-        throw new Error("invalid post");
-      }
-      const { channel } = req.body;
-      const url = slack_info.endPoint + "/chat.postMessage";
-      let text;
-
-      text = req.body.text;
-      text = stringToLink(text);
-
-      await requestSystem(url, { channel, text }, {
-        headers: {
-          "Authorization": "Bearer " + slack_uragenToken,
-          "Content-Type": "application/x-www-form-urlencoded",
-        }
-      });
-
-      res.send(JSON.stringify({ message: "done" }));
-
-    } catch (e) {
-      console.log(e);
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_uragenSlack): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_geminiSlack = function () {
-  const instance = this;
-  const { requestSystem, stringToLink } = this.mother;
-  const { slack_geminiToken, slack_info } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/geminiSlack" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.channel === undefined || req.body.text === undefined) {
-        throw new Error("invalid post");
-      }
-      const { channel } = req.body;
-      const url = slack_info.endPoint + "/chat.postMessage";
-      let text;
-
-      text = req.body.text;
-      text = stringToLink(text);
-
-      await requestSystem(url, { channel, text }, {
-        headers: {
-          "Authorization": "Bearer " + slack_geminiToken,
-          "Content-Type": "application/x-www-form-urlencoded",
-        }
-      });
-
-      res.send(JSON.stringify({ message: "done" }));
-
-    } catch (e) {
-      console.log(e);
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_geminiSlack): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_fairyAi = function () {
-  const instance = this;
-  const { equalJson } = this.mother;
-  const { openAi } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/fairyAi" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.id === undefined || req.body.text === undefined) {
-        throw new Error("invalid post");
-      }
-      const { id, text } = req.body;
-      openAi.fairyGPT(id, text).then((res) => {
-        console.log(res.data);
-      }).catch((err) => {
-        console.log(err);
-      })
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      console.log(e);
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_fairyAi): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
