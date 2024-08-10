@@ -78,8 +78,22 @@ DevContext.prototype.launching = async function () {
     // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
     // =======================================================================================================================================================
         
+    // certbot
+    // await this.certRefreshing();
+    // =======================================================================================================================================================
 
-    
+    // kakao token
+    // const app = new KakaoTalk();
+    // await app.generateToken();
+    // =======================================================================================================================================================
+
+    // send sms
+    // const name = "김희진";
+    // const amount = 11_272_000;
+    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
+    // =======================================================================================================================================================
+
+
     
 
     
@@ -7226,30 +7240,6 @@ DevContext.prototype.launching = async function () {
     // await reflection.mongoMigration("local", "pythoninfo");
 
 
-    // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // certbot
-    // await this.certRefreshing();
-
-    // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
-
-
-    // send mail
-    // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    // const human = new HumanPacket();
-    // console.log(await human.sendEmail({
-    //   to: "uragenbooks@gmail.com",
-    //   subject: "안녕하세요!",
-    //   contents: "안녕하세요.",
-    // }));
-
-
-    // send sms
-    // const name = "김희진";
-    // const amount = 11_272_000;
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
 
