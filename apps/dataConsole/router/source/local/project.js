@@ -8399,6 +8399,22 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "기간별 매출 상태 추출"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        await ajaxJson({ data: null }, S3HOST + ":3000/syncEvaluationContents", { equal: true });
+        window.alert("리뷰 컨텐츠 동기화를 실행하였습니다!");
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "모든 고객 평가 추출하기"; },
     function () {
       return true;
