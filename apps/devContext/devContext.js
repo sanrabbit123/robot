@@ -7232,8 +7232,8 @@ DevContext.prototype.launching = async function () {
     // await this.certRefreshing();
 
     // kakao token
-    const app = new KakaoTalk();
-    await app.generateToken();
+    // const app = new KakaoTalk();
+    // await app.generateToken();
 
 
     // send mail
