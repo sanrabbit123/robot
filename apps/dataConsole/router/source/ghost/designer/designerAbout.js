@@ -12566,7 +12566,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
               }
             },
             {
-              text: "대표 세로 사진 구성",
+              text: "대표 페이퍼 워크 구성",
               style: {
                 position: "relative",
                 display: "inline-block",
