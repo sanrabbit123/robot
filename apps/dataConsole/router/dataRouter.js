@@ -12746,7 +12746,6 @@ DataRouter.prototype.rou_post_responseInjection = function () {
       });
 
       thisBill = await bill.getBillById(bilid, { selfMongo });
-
       res.send(JSON.stringify({ bill: thisBill }));
     } catch (e) {
       logger.error("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
