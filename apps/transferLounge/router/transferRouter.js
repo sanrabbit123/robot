@@ -3759,7 +3759,6 @@ TransferRouter.prototype.rou_post_parsingCall = function () {
     const outerUrl = "http://www.moyaweb.com/search_result.do";
     try {
       if (req.body.phoneNumber === undefined) {
-        console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
       } else {
         const selfMongo = instance.mongo;
@@ -3905,7 +3904,7 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
         console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
       } else {
-        const { sender, kind, ip } = req.body;
+        const { sender, kind } = req.body;
         const timeoutConst = "receiveCall";
         let phoneNumber, senderArr;
         let part0, part1, part2;
