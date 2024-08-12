@@ -3900,6 +3900,9 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+
+      console.log(req.body)
+
       if (req.body.sender === undefined || req.body.kind === undefined) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
