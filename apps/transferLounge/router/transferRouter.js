@@ -3945,30 +3945,7 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
           phoneNumber = part0 + '-' + part1 + '-' + part2;
         }
 
-        if (instance.timeouts[timeoutConst] !== undefined || instance.timeouts[timeoutConst] !== null) {
-          clearTimeout(instance.timeouts[timeoutConst]);
-        }
-        instance.timeouts[timeoutConst] = setTimeout(async () => {
-          try {
-            await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}.json`, { phoneNumber, kind } ]);
-            setQueue(async () => {
-              try {
-                await sleep(Math.round(1000 * Math.random()));
-                if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
-                  const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                  await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                  await requestSystem("https://" + instance.address.transinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
-                }
-              } catch (e) {
-                throw new Error(e.message);
-              }
-            }, 300);
-            clearTimeout(instance.timeouts[timeoutConst]);
-            instance.timeouts[timeoutConst] = null;
-          } catch (e) {
-            console.log(e);
-          }
-        }, 600);
+        await requestSystem("https://" + instance.address.transinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
 
         res.send(JSON.stringify({ message: "success" }));
       }
