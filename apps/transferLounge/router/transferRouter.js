@@ -3900,6 +3900,7 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      console.log(equalJson(req.body));
       const thisData = equalJson(req.body).data;
       if (thisData.sender === undefined || thisData.kind === undefined) {
         console.log(req.body);
@@ -3956,7 +3957,7 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
                 if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
                   const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
                   await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                  await requestSystem("https://" + instance.address.secondinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+                  await requestSystem("https://" + instance.address.transinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
                 }
               } catch (e) {
                 throw new Error(e.message);
