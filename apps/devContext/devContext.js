@@ -95,7 +95,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     
+
 
     
     // const selfMongo = this.MONGOC;
@@ -6468,7 +6470,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
 
 
@@ -6480,13 +6482,13 @@ DevContext.prototype.launching = async function () {
     // let callbackport;
     // let num;
     // phoneNumbers.push("0220392252")
-    // console.log(phoneNumbers);
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/receiveCall.php";
-    //   callbackhost = "52.79.229.124";
+    //   callbackhost = "13.125.244.81";
     //   callbackport = 80;
-    //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })).data);
+    //   console.log(url + "?id=" + global.encodeURIComponent(id) + "&pass=" + pass + "&callbackurl=" + global.encodeURIComponent(callbackurl) + "&callbackhost=" + global.encodeURIComponent(callbackhost) + "&callbackport=" + String(callbackport));
+    //   // console.log(((url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })));
     //   num++;
     // }
 
