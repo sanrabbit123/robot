@@ -1582,6 +1582,7 @@ LogReport.prototype.dailyReports = async function () {
                 }
               } catch (e) {
                 console.log(e);
+                referrerArr = [];
                 referrer = "(not set)";
               }
 
@@ -1676,17 +1677,29 @@ LogReport.prototype.dailyReports = async function () {
                 device = "(not set)";
               }
 
-              referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
-              referrerArr.sort((a, b) => { return b.length - a.length });
-              if (referrerArr.length > 0) {
-                referrer = referrerArr[0];
-              } else {
+
+              try {
+                referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
+                referrerArr.sort((a, b) => { return b.length - a.length });
+                if (referrerArr.length > 0) {
+                  referrer = referrerArr[0];
+                } else {
+                  referrer = "(not set)";
+                }
+              } catch (e) {
+                console.log(e);
+                referrerArr = [];
                 referrer = "(not set)";
               }
 
-              if (targetHistory.service.serid.length > 0) {
-                service = serviceParsing(targetHistory.service.serid[0]);
-              } else {
+              try {
+                if (targetHistory.service.serid.length > 0) {
+                  service = serviceParsing(targetHistory.service.serid[0]);
+                } else {
+                  service = "알 수 없음";
+                }
+              } catch (e) {
+                console.log(e);
                 service = "알 수 없음";
               }
 
