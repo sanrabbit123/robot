@@ -963,7 +963,6 @@ LogReport.prototype.dailyReports = async function () {
     // dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
     // const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
     const startDay = new Date(2023, 3, 1);
-    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
@@ -2212,7 +2211,7 @@ LogReport.prototype.dailyReports = async function () {
         now = new Date();
 
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        for (let i = 0; i < dateAgo; i++) {
+        for (let i = 0; i < 30; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
           if (!Array.isArray(resMatrix)) {
             console.log(resMatrix);
