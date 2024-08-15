@@ -1057,8 +1057,8 @@ LogReport.prototype.dailyReports = async function () {
     const marketingBasicMatrix = async (startDate) => {
       try {
         const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-        const clients = await back.getClientsByQuery({ $or: [ { cliid: "c1801_aa01s" }, { requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } } ] }, { selfMongo: selfCoreMongo, withTools: true });
-        const projects = await back.getProjectsByQuery({ "proposal.date": { $gte: queryStandardDate } }, { selfMongo: selfCoreMongo, withTools: true });
+        const clients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
+        const projects = await back.getProjectsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
         const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
           idArr: clients.toNormal().map((obj) => { return obj.cliid }),
           property: "curation",
@@ -2365,7 +2365,6 @@ LogReport.prototype.dailyReports = async function () {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-          console.log(target);
           if (target.length !== 0) {
             endD = target[0][0];
             startD = target[target.length - 1][0];

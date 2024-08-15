@@ -3506,7 +3506,7 @@ GeneralJs.prototype.greenBar = function () {
     "/designer",
     "/designer?mode=contents",
     "/process",
-    "/mpr",
+    "/contents",
     "/contents",
   ];
   naviIconsContextLinks = [
@@ -3516,7 +3516,7 @@ GeneralJs.prototype.greenBar = function () {
     "/builder",
     "/designer?mode=contents",
     "/calculation",
-    "/mpr",
+    "/contents",
     "/contents",
   ];
   naviIconsLeftException = [
@@ -3536,7 +3536,7 @@ GeneralJs.prototype.greenBar = function () {
     [ "designer" ],
     [ "designercontents" ],
     [ "process", "calculation" ],
-    [ "mpr" ],
+    [ "contents" ],
     [ "contents" ],
   ];
   opacityMap = {
