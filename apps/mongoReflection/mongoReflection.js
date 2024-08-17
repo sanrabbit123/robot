@@ -411,7 +411,7 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
   }
 }
 
-MongoReflection.prototype.mongoToFront = async function (testMode = false) {
+MongoReflection.prototype.mongoToFront = async function () {
   const instance = this;
   const back = this.back;
   const { mysqlQuery } = this.mother;
@@ -483,11 +483,7 @@ MongoReflection.prototype.mongoToFront = async function (testMode = false) {
         queryArr.unshift(createQuery);
         queryArr.unshift("DROP TABLE " + table + ";");
 
-        if (testMode) {
-          await mysqlQuery(queryArr, { test: true });
-        } else {
-          await mysqlQuery(queryArr);
-        }
+        await mysqlQuery(queryArr);
 
       } catch (e) {
         console.log(e);
@@ -579,12 +575,8 @@ MongoReflection.prototype.mongoToFront = async function (testMode = false) {
         queryArr.unshift(createQuery);
         queryArr.unshift("DROP TABLE " + table + ";");
 
-        if (testMode) {
-          await mysqlQuery(queryArr, { test: true });
-        } else {
-          await mysqlQuery(queryArr);
-        }
-        
+        await mysqlQuery(queryArr);
+      
       } catch (e) {
         console.log(e);
       }
@@ -596,7 +588,7 @@ MongoReflection.prototype.mongoToFront = async function (testMode = false) {
   }
 }
 
-MongoReflection.prototype.frontReflection = async function (to = "local", testMode = false) {
+MongoReflection.prototype.frontReflection = async function (to = "local") {
   const instance = this;
   const { mongo } = this.mother;
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
@@ -610,58 +602,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local", testMo
     let consoleWording;
     let equalNum;
 
-    for (let [ from, collection ] of targets) {
-
-      consoleWording = `${from} reflection start `;
-      equalNum = 78 - consoleWording.length;
-      for (let j = 0; j < equalNum; j++) {
-        consoleWording += '=';
-      }
-      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, consoleWording);
-
-      fromDB = from;
-      fromHost = this.address[fromDB].host;
-      toDB = to;
-      fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
-      if (toDB === "local") {
-        toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + "127.0.0.1" + ':' + String(this.address[fromDB].port) + "/admin";
-      } else {
-        toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
-      }
-
-      console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
-
-      MONGOC_FROM = new mongo(fromString);
-      MONGOC_TO = new mongo(toString);
-
-      await MONGOC_FROM.connect();
-      await MONGOC_TO.connect();
-
-      console.log("connection success");
-
-      for (let i of collection) {
-
-        try {
-          await MONGOC_TO.db(dbName).collection(i).drop();
-        } catch {
-          console.log("There is no collection : " + i);
-        }
-
-        rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
-        await MONGOC_TO.db(dbName).collection(i).insertMany(rows);
-        console.log(`migration ${i} success`);
-
-      }
-
-      await MONGOC_FROM.close();
-      await MONGOC_TO.close();
-
-      console.log(`\x1b[33m%s\x1b[0m`, `from: ${from} => to: ${to} reflection success`);
-      console.log(``);
-
-    }
-
-    await this.mongoToFront(testMode);
+    await this.mongoToFront();
 
   } catch (e) {
     console.log(e);
