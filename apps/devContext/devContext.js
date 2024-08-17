@@ -89,33 +89,36 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const fromMongo = new mongo(mongoinfo);
-    const toMongo = new mongo(mongoofficeinfo);
-    const db = "miro81";
-    let fromCollection, toCollection;
-    let rows;
 
-    await fromMongo.connect();
-    await toMongo.connect();
+    
 
-    fromCollection = await fromMongo.db(db).listCollections().toArray();
-    toCollection = await toMongo.db(db).listCollections().toArray();
+    // const fromMongo = new mongo(mongoinfo);
+    // const toMongo = new mongo(mongoofficeinfo);
+    // const db = "miro81";
+    // let fromCollection, toCollection;
+    // let rows;
 
-    for (let i of fromCollection) {
-      if (toCollection.map((o) => { return o.name }).includes(i.name)) {
-        await toMongo.db(db).collection(i.name).drop();
-      }
-    }
+    // await fromMongo.connect();
+    // await toMongo.connect();
 
-    for (let i of fromCollection) {
-      rows = await fromMongo.db(db).collection(i.name).find({}).toArray();
-      console.log(i.name, " targets length => ", rows.length)
-      await toMongo.db(db).collection(i.name).insertMany(rows.map((o) => { delete o._id; return o; }));
-      console.log(`migration ${i.name} success`);
-    }
+    // fromCollection = await fromMongo.db(db).listCollections().toArray();
+    // toCollection = await toMongo.db(db).listCollections().toArray();
 
-    await fromMongo.close();
-    await toMongo.close();
+    // for (let i of fromCollection) {
+    //   if (toCollection.map((o) => { return o.name }).includes(i.name)) {
+    //     await toMongo.db(db).collection(i.name).drop();
+    //   }
+    // }
+
+    // for (let i of fromCollection) {
+    //   rows = await fromMongo.db(db).collection(i.name).find({}).toArray();
+    //   console.log(i.name, " targets length => ", rows.length)
+    //   await toMongo.db(db).collection(i.name).insertMany(rows.map((o) => { delete o._id; return o; }));
+    //   console.log(`migration ${i.name} success`);
+    // }
+
+    // await fromMongo.close();
+    // await toMongo.close();
 
 
 
