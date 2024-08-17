@@ -7,5 +7,12 @@ module.exports = {
       exec_mode: "cluster",
       args: [ "static" ]
     },
+    {
+      name: "robot2",
+      script: "./robot2.js",
+      instances: 2,
+      exec_mode: "cluster",
+      args: [ "back" ]
+    }
   ]
 };

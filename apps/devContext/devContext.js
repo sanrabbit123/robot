@@ -36,7 +36,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo } = this.mother;
   const { consoleQ, fileSystem, setQueue, shellExec, shellLink, http2InNode, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -86,6 +86,38 @@ DevContext.prototype.launching = async function () {
     // const app = new KakaoTalk();
     // await app.generateToken();
     // =======================================================================================================================================================
+
+
+
+    // const fromMongo = new mongo(mongoconsoleinfo);
+    // const toMongo = new mongo(mongoofficeinfo);
+    // const db = "miro81";
+    // let fromCollection, toCollection;
+    // let rows;
+
+    // await fromMongo.connect();
+    // await toMongo.connect();
+
+    // fromCollection = await fromMongo.db(db).listCollections().toArray();
+    // toCollection = await toMongo.db(db).listCollections().toArray();
+
+    // for (let i of fromCollection) {
+    //   if (toCollection.map((o) => { return o.name }).includes(i.name)) {
+    //     await toMongo.db(db).collection(i.name).drop();
+    //   }
+    // }
+
+    // for (let i of fromCollection) {
+    //   rows = await fromMongo.db(db).collection(i.name).find({}).toArray();
+    //   console.log(i.name, " targets length => ", rows.length)
+    //   await toMongo.db(db).collection(i.name).insertMany(rows.map((o) => { delete o._id; return o; }));
+    //   console.log(`migration ${i.name} success`);
+    // }
+
+    // await fromMongo.close();
+    // await toMongo.close();
+
+
 
 
 
