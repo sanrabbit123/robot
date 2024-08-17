@@ -2412,11 +2412,6 @@ DesignerJs.prototype.calendarView = async function () {
     loading.parentNode.removeChild(loading);
     this.totalMother.style.animation = "fadeup 0.3s ease forwards";
 
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/realtimeDesigner");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.calendarModuleClick(equalJson(e.data));
-    // });
-
     await sleep(500);
 
     this.calendarFixUp();

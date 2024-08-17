@@ -37,8 +37,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, sleep, mediaQuery, uniqueValue } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
-  const SSEHOST = this.address.backinfo.host;
-  const SSEHOST_CONSOLE = this.address.backinfo.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
   const PYTHONHOST = "https://" + this.address.backinfo.host + ":3000";
@@ -149,7 +147,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result;
@@ -158,8 +156,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
-    sseString = "const SSEHOST = \"" + SSEHOST + "\";";
-    sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
@@ -210,7 +206,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -258,8 +254,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
   const { testModeInfo } = this;
   const { minify } = require("terser");
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
-  const SSEHOST = this.address.backinfo.host;
-  const SSEHOST_CONSOLE = this.address.backinfo.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.backinfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
@@ -336,7 +330,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
     let staticDirList;
     let staticTempDir, staticTempDirList_raw, staticTempDirList;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result, moduleString;
@@ -384,8 +378,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
-    sseString = "const SSEHOST = \"" + SSEHOST + "\";";
-    sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     logString = "const LOGHOST = \"" + LOGHOST + "\";";
@@ -495,7 +487,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
@@ -600,14 +592,6 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
   const testDir = this.frontDir + "/test";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-  const localTarget = {
-    name: testModeInfo.name,
-    host: testModeInfo.host,
-    path: testModeInfo.path,
-    ip: testModeInfo.ip,
-    log: testModeInfo.log,
-    port: testModeInfo.version,
-  }
   try {
     await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
     const targetMap = [
@@ -770,14 +754,6 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
   const testDir = this.frontDir + "/test";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-  const localTarget = {
-    name: testModeInfo.name,
-    host: testModeInfo.host,
-    path: testModeInfo.path,
-    ip: testModeInfo.ip,
-    log: testModeInfo.log,
-    port: testModeInfo.version,
-  }
   try {
     await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
     const targetMap = [
@@ -923,63 +899,6 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
     await fileSystem(`write`, [ `${this.dir}/router/${finalStringConst}`, codeString ]);
     const DataRouter = require(`${this.dir}/router/${finalStringConst}`);
     return DataRouter;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DataConsole.prototype.readGhostPatch = async function () {
-  const instance = this;
-  const { fileSystem } = this.mother;
-  try {
-    const ghostTargetsDir = `${this.ghostDir}/client`;
-    const ghostTargets = (await fileSystem("readDir", [ ghostTargetsDir ])).filter((str) => { return str !== ".DS_Store" && str !== "general.js" }).map((str) => { return `${ghostTargetsDir}/${str}`; });
-    const readHead = async (path) => {
-      try {
-        let raw, patch;
-        raw = await fileSystem("readHead", [ path, 50 ]);
-        patch = JSON.parse(raw.slice(0, [ ...raw.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
-        return patch;
-      } catch (e) {
-        return {};
-      }
-    }
-    class GhostPatch extends Array {
-      constructor(arr) {
-        super();
-        for (let obj of arr) {
-          this.push(obj);
-        }
-        for (let obj of arr) {
-          this[obj.name] = obj;
-        }
-      }
-
-      getHangulNames() {
-        let tong = [];
-        for (let obj of this) {
-          tong[obj.name] = obj.hangul;
-        }
-        return tong;
-      }
-
-      getMetaObject() {
-        let obj = {};
-        for (let o of this) {
-          obj[o.name] = o.meta;
-        }
-        return obj;
-      }
-
-    }
-    let tong;
-
-    tong = [];
-    for (let target of ghostTargets) {
-      tong.push(await readHead(target));
-    }
-
-    return new GhostPatch(tong);
   } catch (e) {
     console.log(e);
   }

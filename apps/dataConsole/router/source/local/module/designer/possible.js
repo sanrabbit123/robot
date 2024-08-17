@@ -10,19 +10,6 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   this.dateDoms = [];
   this.selection = [];
 
-  // if (middleMode) {
-  //   if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
-  //     GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  //     GeneralJs.stacks["designerConsoleSseSource"] = null;
-  //     GeneralJs.stacks["designerConsoleSseEvent"] = null;
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/possibleDesigner");
-  //   GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-  //     instance.possibleSseParsing(GeneralJs.equalJson(e.data));
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  // }
-
   if (typeof this.possiblePannelStatus !== "object" || this.possiblePannelStatus === null) {
     this.possiblePannelStatus = {
       project: false,
@@ -3368,12 +3355,6 @@ DesignerJs.prototype.possibleView = async function () {
 
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
-
-    //sse
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/possibleDesigner");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.possibleSseParsing(equalJson(e.data));
-    // });
 
     loading.parentNode.removeChild(loading);
 
