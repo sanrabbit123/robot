@@ -38,12 +38,12 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
   const { fileSystem, shellExec, shellLink, sleep, mediaQuery, uniqueValue } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
-  const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
-  const PYTHONHOST = "https://" + this.address.backinfo.host + ":3000";
+  const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3003";
+  const PYTHONHOST = "https://" + this.address.backinfo.host + ":3002";
   const LOGHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
-  const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
-  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
+  const BACKHOST = "https://" + this.address.backinfo.host + ":3002";
+  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3003";
   const CONTENTSHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
@@ -255,12 +255,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
   const { minify } = require("terser");
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
-  const PYTHONHOST = "https://" + this.address.backinfo.host + ":3000";
-  const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
+  const PYTHONHOST = "https://" + this.address.backinfo.host + ":3002";
+  const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3003";
   const LOGHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.log) : "https://" + this.address.officeinfo.ghost.host + ":3000";
   const FRONTHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.version) : "https://" + this.address.frontinfo.host;
-  const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
-  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
+  const BACKHOST = "https://" + this.address.backinfo.host + ":3002";
+  const SECONDHOST = "https://" + this.address.secondinfo.host + ":3003";
   const CONTENTSHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
@@ -691,9 +691,9 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
     generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
     generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3003");
     generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3002");
     generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.officeinfo.ghost.host + ":3000");
     generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
     generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
@@ -825,9 +825,9 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
     generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
     generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3003");
     generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3002");
     generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.officeinfo.ghost.host + ":3000");
     generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
     generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
@@ -1076,15 +1076,15 @@ DataConsole.prototype.connect = async function () {
               instance.address.frontinfo.host,
               instance.address.frontinfo.host + ":3000",
               instance.address.backinfo.host,
-              instance.address.backinfo.host + ":3000",
+              instance.address.backinfo.host + ":3002",
               instance.address.pythoninfo.host,
-              instance.address.pythoninfo.host + ":3000",
+              instance.address.pythoninfo.host + ":3002",
               instance.address.secondinfo.host,
               instance.address.secondinfo.host + ":3000",
               instance.address.officeinfo.ghost.host,
               instance.address.officeinfo.ghost.host + ":3000",
               instance.address.transinfo.host,
-              instance.address.transinfo.host + ":3000",
+              instance.address.transinfo.host + ":3003",
               instance.address.officeinfo.test.host,
               instance.address.officeinfo.test.host + ":" + instance.address.officeinfo.test.port,
               "localhost:3000",
