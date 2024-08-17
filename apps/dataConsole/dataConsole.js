@@ -907,7 +907,7 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
 DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoconsoleinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
-  const PORT = 3000;
+  const PORT = 3002;
   const https = require("https");
   const express = require("express");
   const app = express();
