@@ -11,7 +11,7 @@ const CronGhost = function () {
   this.generalPort = 3000;
 }
 
-CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) {
+CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog, dateToString, stringToDate } = this.mother;
@@ -19,7 +19,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
   const controlPath = "/ssl";
   const aws = this.aws;
   const back = this.back;
-  const collection = "aliveLog";
   const selfMongo = MONGOC;
   const bar = "================================================";
   const bar2 = "====================================================================";
@@ -120,125 +119,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
         data,
       }, { selfMongo });
     }
-
-    timeoutId = setTimeout(() => {
-      emergencyAlarm("alive test error : " + JSON.stringify(new Date())).catch((err) => {
-        console.log(err);
-      })
-    }, initialTimeout + timeoutConst);
-
-    targets = [
-      { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
-      { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-      { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
-      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
-    ];
-
-    targetNumber = targets.length;
-    successNum = 0;
-    failNum = 0;
-    message = '';
-
-    instances = await aws.getInstancesStatus();
-    diskMongoMessage = '';
-    tong = [];
-
-    for (let { name, protocol, host, port } of targets) {
-
-      thisObj = instances.find((obj) => { return obj.name === name; });
-
-      boo = false;
-      if (thisObj !== undefined) {
-        thisObj.alive = false;
-      }
-      try {
-        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
-        ({ disk: thisDisk, mongo: thisMongo } = res.data);
-        thisMongo = (thisMongo === true || thisMongo === undefined) ? true : false;
-        tempMessage = '';
-        tempMessage += host;
-        tempMessage += " => ";
-
-        percentage = thisDisk[1] / thisDisk[0];
-        percentage = Math.floor(percentage * 10000) / 100;
-
-        tempMessage += String(percentage) + '%';
-        tempMessage += " used / ";
-        if (thisMongo) {
-          tempMessage += "mongo alive";
-        } else {
-          tempMessage += "mongo death";
-        }
-        tong.push({
-          message: tempMessage,
-          percentage,
-          mongo: thisMongo,
-        });
-      } catch {
-        res = null;
-        tong.push({
-          message: host + " => " + "death",
-          percentage: 0,
-          mongo: false,
-        });
-      }
-
-      if (typeof res === "object" && res !== null) {
-        if (res.status !== undefined && typeof res.status === "number") {
-          if (res.status === 200) {
-            if (res.data.mongo === true || res.data.mongo === undefined) {
-              successNum = successNum + 1;
-              message += "\n" +  name + " server alive";
-              boo = true;
-              if (thisObj !== undefined) {
-                thisObj.alive = true;
-                thisObj.utilization.disk.total = res.data.disk[0];
-                thisObj.utilization.disk.used = res.data.disk[1];
-                thisObj.utilization.disk.available = res.data.disk[2];
-              }
-              if (successNum === targetNumber) {
-                message = "server all alive" + " " + bar;
-                diskMongoMessage = tong.map(({ message }) => { return message }).join("\n");
-                message = message + "\n\n" + diskMongoMessage + "\n\n" + bar2;
-                await aliveLog(message);
-                if (tong.some((o) => { return !o.mongo })) {
-                  await emergencyAlarm("something mongo death => \n");
-                  await emergencyAlarm(JSON.stringify(tong, null, 2));
-                }
-                if (tong.some((o) => { return o.percentage > 90 })) {
-                  await emergencyAlarm("something disk full => \n");
-                  await emergencyAlarm(JSON.stringify(tong, null, 2));
-                }
-              } else if (successNum + failNum === targetNumber) {
-                message += "\n======================================";
-                message += "\nsomething death";
-                await emergencyAlarm(message);
-              }
-            }
-          }
-        }
-      }
-
-      if (!boo) {
-        failNum = failNum + 1;
-        message += "\n" +  name + " server death";
-        if (successNum + failNum === targetNumber) {
-          message += "\n======================================";
-          message += "\nsomething death";
-          await emergencyAlarm(message);
-        }
-      }
-
-    }
-
-    if (!/death/gi.test(message)) {
-      clearTimeout(timeoutId);
-    }
-
-    for (let json of instances) {
-      await back.mongoCreate(collection, json, { selfMongo });
-    }
-
     await accountSync();
   } catch (e) {
     await emergencyAlarm("alive test error : " + e.message);
