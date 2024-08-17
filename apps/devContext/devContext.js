@@ -87,12 +87,6 @@ DevContext.prototype.launching = async function () {
     // await app.generateToken();
     // =======================================================================================================================================================
 
-    // send sms
-    // const name = "김희진";
-    // const amount = 11_272_000;
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
-    // =======================================================================================================================================================
-
 
 
 
