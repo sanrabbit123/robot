@@ -6523,18 +6523,13 @@ DevContext.prototype.launching = async function () {
     // const url = "https://centrex.uplus.co.kr/RestApi/getringcallback";
     // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
     // let id;
-    // let callbackurl;
-    // let callbackhost;
-    // let callbackport;
     // let num;
     // phoneNumbers.push("0220392252")
     // console.log(phoneNumbers);
     // num = 0;
     // for (let id of phoneNumbers) {
-    //   callbackurl = "/receiveCall.php";
-    //   callbackhost = "52.79.229.124";
-    //   callbackport = 80;
-    //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } })).data);
+    //   console.log(url + "?id=" + id + "&pass=" + pass);
+    //   // console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
     // }
 
