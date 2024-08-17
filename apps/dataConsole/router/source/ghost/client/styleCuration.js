@@ -1158,7 +1158,7 @@ StyleCurationJs.prototype.insertInitBox = async function () {
         display: "flex",
         position: "relative",
         justifyContent: "center",
-        alignItems: desktop ? "start" : "center",
+        alignItems: "center",
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -7436,7 +7436,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 76 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 7 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
@@ -7502,7 +7502,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
     returnCicleArrowWidth = <%% 9, 9, 8, 7, 2 %%>;
     returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, 0.2 %%>;
 
-    mobileArrowZoneMarginTop = 11;
+    mobileArrowZoneMarginTop = 6;
 
     mainIllust = <%% StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust2.svg" %%>;
 
@@ -7843,6 +7843,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
           flexDirection: "row",
           animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
           marginTop: String(mobileArrowZoneMarginTop) + ea,
+          marginBottom: String(mobileArrowZoneMarginTop) + ea,
         },
         child: {
           style: {
@@ -9355,7 +9356,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
       this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
       this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
-      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
+      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 250 %%>;
       this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
       this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     }
