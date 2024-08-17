@@ -4,16 +4,17 @@ const Mother = function () {
   //mongo
   this.mongoinfoObj = infoObj.mongoinfo;
 
-  this.mongoinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + infoObj.mongoinfo.host + ':' + String(infoObj.mongoinfo.port) + "/admin";
-  this.mongopythoninfo = "mongodb://" + infoObj.pythoninfo.user + ':' + infoObj.pythoninfo.password + '@' + infoObj.pythoninfo.host + ':' + String(infoObj.pythoninfo.port) + "/admin";
-  this.mongoconsoleinfo = "mongodb://" + infoObj.backinfo.user + ':' + infoObj.backinfo.password + '@' + infoObj.backinfo.host + ':' + String(infoObj.backinfo.port) + "/admin";
-  this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
+  this.mongoinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
+  this.mongopythoninfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
+  this.mongoconsoleinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongologinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
-  this.mongosecondinfo = "mongodb://" + infoObj.secondinfo.user + ':' + infoObj.secondinfo.password + '@' + infoObj.secondinfo.host + ':' + String(infoObj.secondinfo.port) + "/admin";
-  this.mongocontentsinfo = "mongodb://" + infoObj.contentsinfo.user + ':' + infoObj.contentsinfo.password + '@' + infoObj.contentsinfo.host + ':' + String(infoObj.contentsinfo.port) + "/admin";
-  this.mongotransinfo = "mongodb://" + infoObj.transinfo.user + ':' + infoObj.transinfo.password + '@' + infoObj.transinfo.host + ':' + String(infoObj.transinfo.port) + "/admin";
+  this.mongosecondinfo ="mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
+  this.mongocontentsinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
+  this.mongotransinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongoofficeinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
+
+  this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
 
   this.mongo = require("mongodb").MongoClient;
 

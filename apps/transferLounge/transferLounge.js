@@ -67,7 +67,7 @@ const TransferLounge = function (mother = null, back = null, address = null) {
 TransferLounge.prototype.transConnect = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, cronLog, aliveLog, alertLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongoofficeinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, cronLog, aliveLog, alertLog } = this.mother;
   const { slack_userToken, slack_info } = this;
   const PORT = 3000;
   const https = require("https");
@@ -104,7 +104,7 @@ TransferLounge.prototype.transConnect = async function () {
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
     MONGOC = new mongo(mongoinfo);
-    MONGOLOCALC = new mongo(mongolocalinfo);
+    MONGOLOCALC = new mongo(mongoofficeinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();
