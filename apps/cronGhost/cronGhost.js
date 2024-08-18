@@ -150,9 +150,9 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.host + ":" + String(3003) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.secondinfo.host + ":" + String(3003) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.host + ":" + String(3003) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.secondinfo.host + ":" + String(3003) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {

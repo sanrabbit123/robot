@@ -6496,7 +6496,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
           }, { selfMongo });
 
           proidArr = projects.toNormal().map((p) => { return p.proid })
-          secondRes = await requestSystem("https://" + address.officeinfo.host + ":3003/getProcessData", { proidArr }, {
+          secondRes = await requestSystem("https://" + address.secondinfo.host + ":3003/getProcessData", { proidArr }, {
             headers: {
               "Content-Type": "application/json",
               "origin": address.officeinfo.host
