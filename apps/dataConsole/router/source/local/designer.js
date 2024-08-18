@@ -4423,7 +4423,7 @@ DesignerJs.prototype.launching = async function () {
   const { returnGet, getUser, protoPatch } = GeneralJs;
   try {
     const getObj = returnGet();
-    const modulePath = "/module/designer";
+    const modulePath = BACKHOST + "/module/designer";
     let getTarget;
     let tempFunction;
 
