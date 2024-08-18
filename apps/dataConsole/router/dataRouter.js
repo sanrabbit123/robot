@@ -4138,7 +4138,6 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         await messageSend({ text: message, channel: "#301_apply", voice: false });
         await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다!", channel: "#301_apply", voice: true });
 
-        requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
           client: updateQuery.designer,
           host: address.frontinfo.host,
@@ -4288,7 +4287,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
   const paidCompleteFunc = async (aspirant, logger) => {
     try {
       await sleep(2000);
-      await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantConsole", {
+      await requestSystem("https://" + address.secondinfo.host + ":3003/noticeAspirantConsole", {
         mode: "send",
         aspid: aspirant.aspid,
         designer: aspirant.designer,
@@ -4298,7 +4297,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         headers: { "Content-Type": "application/json" },
       });
       await sleep(500);
-      await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantCommon", {
+      await requestSystem("https://" + address.secondinfo.host + ":3003/noticeAspirantCommon", {
         aspid: aspirant.aspid,
         value: "default",
         mode: "send",
@@ -5826,7 +5825,7 @@ DataRouter.prototype.rou_post_callTo = function () {
           res.send(JSON.stringify({ message: "error" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
-          await requestSystem("https://" + instance.address.secondinfo.host + ":3000/clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + instance.address.secondinfo.host + ":3003/clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') }, { headers: { "Content-Type": "application/json" } });
           res.send(JSON.stringify({ message: "true" }));
         }
       }
@@ -7374,7 +7373,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
           }, { selfMongo });
 
           proidArr = projects.toNormal().map((p) => { return p.proid })
-          secondRes = await requestSystem("https://" + address.officeinfo.host + ":3003/getProcessData", { proidArr }, {
+          secondRes = await requestSystem("https://" + address.secondinfo.host + ":3003/getProcessData", { proidArr }, {
             headers: {
               "Content-Type": "application/json",
               "origin": address.officeinfo.host
@@ -11332,7 +11331,7 @@ DataRouter.prototype.rou_post_serviceConverting = function () {
             pastservice: serviceParsing(report.service.from),
             newservice: serviceParsing(report.service.to),
             total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
-            host: address.backinfo.host,
+            host: address.officeinfo.host + ":3002",
             path: "estimation",
             cliid: client.cliid,
             needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
@@ -11466,7 +11465,7 @@ DataRouter.prototype.rou_post_designerConverting = function () {
           client: client.name,
           pastdesigner: pastDesigner.designer,
           newdesigner: designer.designer,
-          host: address.backinfo.host,
+          host: address.officeinfo.host + ":3002",
           total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
           path: "estimation",
           cliid: client.cliid,
@@ -12628,7 +12627,7 @@ DataRouter.prototype.rou_post_stylingFormFile = function () {
       rows = await back.mongoRead(collection, {}, { selfMongo });
       rows = rows.filter((obj) => { return obj.confirm });
   
-      transRes = await requestSystem("https://" + address.transinfo.host + ":3000/contractList", { data: null }, { headers: { "Content-Type": "application/json" } });
+      transRes = await requestSystem("https://" + address.secondinfo.host + ":3003/contractList", { data: null }, { headers: { "Content-Type": "application/json" } });
 
       fileList = transRes.data.map((obj) => { return obj.proid });
       subtract = rows.map((obj) => { return obj.proid }).filter((proid) => {
@@ -12650,7 +12649,7 @@ DataRouter.prototype.rou_post_stylingFormFile = function () {
   
         fromArr = [ `${process.cwd()}/temp/${fileName}` ];
         toArr = [ "/photo/contract/" + fileName ];
-        await generalFileUpload("https://" + address.transinfo.host + ":3000/generalFileUpload", fromArr, toArr);
+        await generalFileUpload("https://" + address.secondinfo.host + ":3003/generalFileUpload", fromArr, toArr);
   
         await sleep(300);
         await shellExec("rm", [ "-rf", `${process.cwd()}/temp/${fileName}` ]);
@@ -13368,16 +13367,13 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             host: instance.address.frontinfo.host,
             path: "about",
           });
-          if (client.phone !== "010-2747-3403") {
-            await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
-            requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, requestNumber: 0, history }, { headers: { "Content-Type": "application/json" } }).then(() => {
-              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
-            }).then(() => {
-              return sleep(30 * 1000);
-            }).then(() => {
-              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { report: 0 }, { headers: { "Content-Type": "application/json" } });
-            }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
-          }
+          await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
+          requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } }).then(() => {
+            return sleep(10 * 1000);
+          }).then(() => {
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { report: 0 }, { headers: { "Content-Type": "application/json" } });
+          }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
+
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));

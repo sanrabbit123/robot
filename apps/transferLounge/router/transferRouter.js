@@ -10,7 +10,7 @@ const TransferRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, sla
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.host = this.address.transinfo.host;
+  this.host = this.address.secondinfo.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
@@ -51,8 +51,6 @@ const TransferRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, sla
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
-    this.address.transinfo.host,
-    this.address.backinfo.host,
     this.address.testinfo.host,
     this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
@@ -553,8 +551,8 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       }
 
       if (mode !== "fileMode") {
-        preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.transinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
-        sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.transinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+        preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.secondinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+        sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.secondinfo.host}/${global.encodeURI(i.replace(new RegExp(clientConst.split('/').slice(0, -2).join('/'), "gi"), '')).replace(/^\//, '')}`; });
       }
 
       res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
@@ -887,7 +885,7 @@ TransferRouter.prototype.rou_post_aspirantSettingList = function () {
             const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
             return targetPath;
           }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
+            return linkToString("https://" + address.secondinfo.host + path);
           });
         }
         if (tempArr.includes("proposal")) {
@@ -896,7 +894,7 @@ TransferRouter.prototype.rou_post_aspirantSettingList = function () {
             const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
             return targetPath;
           }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
+            return linkToString("https://" + address.secondinfo.host + path);
           });
         }
 
@@ -1059,7 +1057,7 @@ TransferRouter.prototype.rou_post_aspirantDocumentsList = function () {
             const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
             return targetPath;
           }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
+            return linkToString("https://" + address.secondinfo.host + path);
           });
         }
         if (tempArr.includes("business")) {
@@ -1068,7 +1066,7 @@ TransferRouter.prototype.rou_post_aspirantDocumentsList = function () {
             const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
             return targetPath;
           }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
+            return linkToString("https://" + address.secondinfo.host + path);
           });
         }
         if (tempArr.includes("identity")) {
@@ -1077,7 +1075,7 @@ TransferRouter.prototype.rou_post_aspirantDocumentsList = function () {
             const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
             return targetPath;
           }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
+            return linkToString("https://" + address.secondinfo.host + path);
           });
         }
 
@@ -1137,7 +1135,7 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
               const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
               return targetPath;
             }).map((path) => {
-              return linkToString("https://" + address.transinfo.host + path);
+              return linkToString("https://" + address.secondinfo.host + path);
             });
             totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
           } else {
@@ -1219,7 +1217,7 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
         path = String(`${tempConst}/${tempFolderName}.zip`).replace(new RegExp("^" + staticConst, "g"), "");
         await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
 
-        res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
+        res.send(JSON.stringify({ link: linkToString("https://" + address.secondinfo.host + path) }));
 
       } else if (mode === "delete") {
 
@@ -1300,7 +1298,7 @@ TransferRouter.prototype.rou_post_aspirantSettingDownload = function () {
         path = String(`${tempConst}/${tempFolderName}.zip`).replace(new RegExp("^" + staticConst, "g"), "");
         await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
 
-        res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
+        res.send(JSON.stringify({ link: linkToString("https://" + address.secondinfo.host + path) }));
 
       } else if (mode === "delete") {
 
@@ -1381,7 +1379,7 @@ TransferRouter.prototype.rou_post_aspirantProposalDownload = function () {
         path = String(`${tempConst}/${tempFolderName}.zip`).replace(new RegExp("^" + staticConst, "g"), "");
         await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
 
-        res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
+        res.send(JSON.stringify({ link: linkToString("https://" + address.secondinfo.host + path) }));
 
       } else if (mode === "delete") {
 
@@ -2072,9 +2070,9 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
                 type = contents.type;
                 tongContents.push(body);
                 
-                requestSystem("https://" + address.secondinfo.host + ":3000/projectDesignerRaw", { mode: "update", proid, cliid, desid, body, type }, { headers: {
+                requestSystem("https://" + address.secondinfo.host + ":3003/projectDesignerRaw", { mode: "update", proid, cliid, desid, body, type }, { headers: {
                   "Content-Type": "application/json",
-                  "origin": address.transinfo.host,
+                  "origin": address.secondinfo.host,
                 } }).then(() => {
                   return drive.upload_inPython(parentsId, newFileName);
                 }).then(() => {
@@ -2546,7 +2544,7 @@ TransferRouter.prototype.rou_post_contractList = function () {
           requestNumber: Number(requestNumberString),
           id,
           fileName: rawString,
-          downloadLink: "https://" + address.transinfo.host + contractLinkConst + "/" + rawString,
+          downloadLink: "https://" + address.secondinfo.host + contractLinkConst + "/" + rawString,
         }
       });
 
@@ -2697,7 +2695,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             }
 
             thisLinkPath = String(designerProfileConst + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
-            thisLink = linkToString("https://" + address.transinfo.host + thisLinkPath);
+            thisLink = linkToString("https://" + address.secondinfo.host + thisLinkPath);
             resultObj = {
               id,
               desid,
@@ -2765,7 +2763,7 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
           desid,
           gs,
           date: new Date(Number(timeNumber)),
-          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+          link: linkToString("https://" + address.secondinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
           file: {
             exe,
             name: rawString,
@@ -2839,7 +2837,7 @@ TransferRouter.prototype.rou_post_designerProfileUpdate = function () {
           desid,
           gs,
           date: new Date(Number(timeNumber)),
-          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+          link: linkToString("https://" + address.secondinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
           file: {
             exe,
             name: rawString,
@@ -2943,7 +2941,7 @@ TransferRouter.prototype.rou_post_designerWorksPhoto = function () {
             }
 
             thisLinkPath = String(targetFolder + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
-            thisLink = linkToString("https://" + address.transinfo.host + thisLinkPath);
+            thisLink = linkToString("https://" + address.secondinfo.host + thisLinkPath);
             resultObj = {
               id,
               desid,
@@ -3018,7 +3016,7 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
             desid,
             gs,
             date: new Date(Number(timeNumber)),
-            link: linkToString("https://" + address.transinfo.host + String(designerWorksConst + "/" + designerWorksConstFactors[index] + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+            link: linkToString("https://" + address.secondinfo.host + String(designerWorksConst + "/" + designerWorksConstFactors[index] + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
             file: {
               exe,
               name: rawString,
@@ -3824,23 +3822,23 @@ TransferRouter.prototype.rou_post_parsingCall = function () {
                 manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                 text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                 cliidBoo = true;
-                targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
+                targetLink = "https://" + address.officeinfo.host + ":3002" + "/client?cliid=" + cliid;
               } else {
                 if (thisProject.desid.trim() === "") {
                   manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                   text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                   cliidBoo = true;
-                  targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
+                  targetLink = "https://" + address.officeinfo.host + ":3002" + "/client?cliid=" + cliid;
                 } else {
                   if (thisProject.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
                     text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다.`;
                     cliidBoo = true;
-                    targetLink = "https://" + address.backinfo.host + "/project?cliid=" + cliid;
+                    targetLink = "https://" + address.officeinfo.host + ":3002" + "/project?cliid=" + cliid;
                   } else {
                     manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                     text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                     cliidBoo = true;
-                    targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
+                    targetLink = "https://" + address.officeinfo.host + ":3002" + "/client?cliid=" + cliid;
                   }
                 }
               }
@@ -3953,7 +3951,7 @@ TransferRouter.prototype.rou_post_receiveCall = function () {
                 if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
                   const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
                   await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
-                  await requestSystem("https://" + instance.address.transinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+                  await requestSystem("https://" + instance.address.secondinfo.host + ":3003/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
                 }
               } catch (e) {
                 throw new Error(e.message);
@@ -6388,7 +6386,7 @@ TransferRouter.prototype.rou_post_noticeAspirantContractYesterday = function () 
           await requestSystem("https://" + address.officeinfo.host + ":3002/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
           if (aspirant.response.portfolio.plus.photo.valueOf() < emptyDateValue) {
             await sleep(500);
-            await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantConsole", {
+            await requestSystem("https://" + address.secondinfo.host + ":3003/noticeAspirantConsole", {
               mode: "send",
               aspid: aspirant.aspid,
               designer: aspirant.designer,
@@ -7306,7 +7304,7 @@ TransferRouter.prototype.rou_post_slackForm = function () {
               buttonText += " ~ ";
               buttonText += dateToString(project.process.contract.form.date.to).slice(2);
 
-              modalJson.view.blocks.push(linkButtonSection(buttonText, "콘솔", "https://" + address.backinfo.host + "/project?proid=" + project.proid));
+              modalJson.view.blocks.push(linkButtonSection(buttonText, "콘솔", "https://" + address.officeinfo.host + ":3002/project?proid=" + project.proid));
             }
 
             await requestSystem("https://slack.com/api/views.open", modalJson, {

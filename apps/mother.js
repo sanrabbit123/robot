@@ -10,7 +10,6 @@ const Mother = function () {
   this.mongologinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongosecondinfo ="mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongocontentsinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
-  this.mongotransinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongoofficeinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
 
   this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
@@ -1456,7 +1455,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         } else {
           formHeaders2 = form2.getHeaders();
           formHeaders2["Content-Length"] = length;
-          axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
+          axios.post(`https://${ADDRESS.secondinfo.host}:${String(3003)}/generalFileUpload`, form2, {
             headers: { ...formHeaders2 },
           }).then((response) => {
             resolve({ message: "done" });
@@ -4096,7 +4095,7 @@ Mother.prototype.errorLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#error_log";
@@ -4126,7 +4125,7 @@ Mother.prototype.aliveLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#alive_log";
@@ -4156,7 +4155,7 @@ Mother.prototype.cronLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#cron_log";
@@ -4186,7 +4185,7 @@ Mother.prototype.alertLog = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "errorLog";
   const channel = "#alert_log";
@@ -4354,7 +4353,7 @@ Mother.prototype.emergencyAlarm = function (text) {
     }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/emergencyAlarm";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/emergencyAlarm";
   const axios = require("axios");
   return new Promise((resolve, reject) => {
     axios.post(recordUrl, { text }, { headers: { "Content-Type": "application/json" } }).then((res) => {
@@ -4398,7 +4397,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     fairy = false;
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   const emptyPromise = () => {
@@ -4443,7 +4442,7 @@ Mother.prototype.messageLog = function (text) {
     channel = "silent";
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.transinfo.host + ":3000/messageLog";
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
   return new Promise((resolve, reject) => {

@@ -123,7 +123,7 @@ TransferLounge.prototype.transConnect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.transinfo.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.secondinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);

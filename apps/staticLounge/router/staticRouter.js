@@ -80,8 +80,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
-    this.address.transinfo.host,
-    this.address.backinfo.host,
     this.address.testinfo.host,
     this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
@@ -3419,7 +3417,7 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
       const path = "/fairyMessage";
       const thisMember = instance.members.find((o) => { return o.id === toId });
       const text = "안녕하세요, " + thisMember.name + "님! #{from}님께서 새로운 파일을 업로드하셨습니다. 확인부탁드립니다!";
-      requestSystem("https://" + address.secondinfo.host + ":" + String(portNumber) + path, { fromId, toId, text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); })
+      requestSystem("https://" + address.secondinfo.host + ":" + String(3003) + path, { fromId, toId, text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); })
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
@@ -4470,7 +4468,7 @@ StaticRouter.prototype.rou_post_realtimeMessage = function () {
       const { channel } = equalJson(req.body);
       const text = await analytics.realtimeMessage(instance.mongolocal);
 
-      requestSystem("https://" + address.secondinfo.host + ":" + String(3000) + "/fairySlack", {
+      requestSystem("https://" + address.secondinfo.host + ":" + String(3003) + "/fairySlack", {
         channel: channel,
         text: text,
       }, {
@@ -6035,10 +6033,10 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
     try {
       const targetRoot = staticConst + "/designProposal/image";
       const toNormal = true;
-      const endPoint = "https://" + address.transinfo.host + ":" + String(3000);
+      const endPoint = "https://" + address.secondinfo.host + ":" + String(3003);
       const config = { headers: { "Content-Type": "application/json" } };
       const userName = "ubuntu";
-      const scpRoot = userName + "@" + address.transinfo.host + ":"
+      const scpRoot = userName + "@" + address.secondinfo.host + ":"
       const scpPath = scpRoot + "/home/" + userName + "/static/photo/designer";
       const representativeFolderPath = "/representative";
       const representativeRootPath = "/photo/designer" + representativeFolderPath;
@@ -7018,7 +7016,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
     
           nowValue = dateToString(new Date(), true).replace(/[^0-9]/gi, '');
   
-          await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+          await requestSystem("https://" + instance.address.secondinfo.host + ":3003/projectDesignerRaw", {
             mode: "update",
             desid: desid,
             proid: "individual_" + nowValue,
@@ -7077,7 +7075,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
           [ project ] =  await back.mongoRead("project", { proid }, { selfMongo });
           thisSetName = `${client.name} C, ${designer.designer} D 현장 원본 사진`;
   
-          await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+          await requestSystem("https://" + instance.address.secondinfo.host + ":3003/projectDesignerRaw", {
             mode: "update",
             desid: designer.desid,
             proid: project.proid,

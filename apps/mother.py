@@ -1263,7 +1263,7 @@ async def errorLog(text: str):
     if type(text) is not str:
         raise TypeError("text must be string")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/messageLog"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/messageLog"
     collection = "errorLog"
     channel = "#error_log"
     response = await requestSystem(recordUrl, { "text": text, "channel": channel, "collection": collection }, {
@@ -1280,7 +1280,7 @@ async def aliveLog(text: str):
     if type(text) is not str:
         raise TypeError("text must be string")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/messageLog"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/messageLog"
     collection = "errorLog"
     channel = "#alive_log"
     response = await requestSystem(recordUrl, { "text": text, "channel": channel, "collection": collection }, {
@@ -1297,7 +1297,7 @@ async def cronLog(text: str):
     if type(text) is not str:
         raise TypeError("text must be string")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/messageLog"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/messageLog"
     collection = "errorLog"
     channel = "#cron_log"
     response = await requestSystem(recordUrl, { "text": text, "channel": channel, "collection": collection }, {
@@ -1314,7 +1314,7 @@ async def alertLog(text: str):
     if type(text) is not str:
         raise TypeError("text must be string")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/messageLog"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/messageLog"
     collection = "errorLog"
     channel = "#alert_log"
     response = await requestSystem(recordUrl, { "text": text, "channel": channel, "collection": collection }, {
@@ -1331,7 +1331,7 @@ async def emergencyAlarm(text: str):
     if type(text) is not str:
         raise TypeError("text must be string")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/emergencyAlarm"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/emergencyAlarm"
     response = await requestSystem(recordUrl, { "text": text }, {
         "headers": {
             "Content-Type": "application/json"
@@ -1346,7 +1346,7 @@ async def messageSend(obj: dict):
     if type(obj) is not dict:
         raise TypeError("obj must be dictionary")
     address = returnAddress()
-    recordUrl = "https://" + address["secondinfo"]["host"] + ":3000/messageLog"
+    recordUrl = "https://" + address["secondinfo"]["host"] + ":3003/messageLog"
 
     voice = False
     if "voice" in obj and obj["voice"] == True:

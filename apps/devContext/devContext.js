@@ -20,7 +20,7 @@ const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongotransinfo, mongologinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongologinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo);
   this.MONGOLOCALC = new mongo(mongolocalinfo);
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
@@ -28,14 +28,13 @@ const DevContext = function () {
   this.MONGOLOGCREAL = new mongo(mongologinfo);
   this.MONGOSECONDC = new mongo(mongosecondinfo);
   this.MONGOCONTENTSC = new mongo(mongocontentsinfo);
-  this.MONGOTRANSC = new mongo(mongotransinfo);
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo, mongotransinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo } = this.mother;
   const { consoleQ, fileSystem, setQueue, shellExec, shellLink, http2InNode, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -87,7 +86,7 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    await findCode("googleLogInInit")
+    await findCode("backinfo")
 
     
 
@@ -692,82 +691,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
-
-    const selfMongo = this.MONGOC;
-    const collection = "designerRepresentativeKeywords";
-    const selfTransMongo = this.MONGOTRANSC;
-    let designers;
-    let designersSetting;
-    let tempResponse;
-    let finalList;
-    let keywords;
-    let thisJson;
-    let rows;
-
-    await selfTransMongo.connect();
-
-    designers = await back.getDesignersByQuery({}, { selfMongo, toNormal: true });
-    designersSetting = designers.map((d) => { d.setting.desid = d.desid; return d.setting })
-    designersSetting = designersSetting.map((d) => {
-      return {
-        introduction: d.front.introduction.desktop.join(" ") + "\n\n" + d.description.join("\n"),
-        desid: d.desid,
-      }
-    })
-
-    finalList = [];
-    for (let { introduction, desid } of designersSetting) {
-
-      rows = await back.mongoRead(collection, { desid: desid }, { selfMongo: selfTransMongo });
-      if (rows.length === 0) {
-
-        introduction = introduction.trim();
-        if (/NULL/g.test(introduction)) {
-          introduction = "";
-
-          thisJson = {
-            date: new Date(),
-            desid,
-            introduction,
-            keywords: [],
-            selected: [],
-          };
-
-        } else {
-          tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
-          keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
-            return str.replace(/홈 스타일링/gi, "홈스타일링");
-          }).filter((str) => {
-            return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
-          }).filter((str) => {
-            return str.length < 15 && str.length > 2;
-          })
-
-          thisJson = {
-            date: new Date(),
-            desid,
-            introduction,
-            keywords,
-            selected: [],
-          };
-        }
-
-        await back.mongoCreate(collection, objectDeepCopy(thisJson), { selfMongo: selfTransMongo });
-        console.log(thisJson);
-        finalList.push(objectDeepCopy(thisJson));
-
-      }
-
-    }
-
-    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/targetJson.json`, finalList ]);
-    await selfTransMongo.close();
-
-    */
-
-
-
     
 
     
@@ -782,10 +705,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-    // const meta = new FacebookAPIs();
-    // await meta.instagramList();
 
 
 

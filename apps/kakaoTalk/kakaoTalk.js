@@ -4717,7 +4717,7 @@ KakaoTalk.prototype.getAccessToken = async function () {
   const address = this.address;
   const { requestSystem } = this.mother;
   try {
-    const { accessToken } = (await requestSystem("https://" + address.secondinfo.host + "/kakaoAccessToken")).data;
+    const { accessToken } = (await requestSystem("https://" + address.secondinfo.host + ":3003/kakaoAccessToken")).data;
     return accessToken;
   } catch (e) {
     console.log(e);

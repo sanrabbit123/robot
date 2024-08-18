@@ -1506,7 +1506,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   
       await messageSend({ text: `${thisDesigner.designer} 디자이너 포트폴리오 컨텐츠를 자동으로 웹에 업로드하였습니다. 편집을 시작해주세요! 편집이 완료되어야 발행이 정상적으로 완료됩니다.\nlink : ${portfolioLink + pid}&edit=true`, channel });
       if (forceProid !== null) {
-        await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+        await requestSystem("https://" + instance.address.secondinfo.host + ":3003/projectDesignerRaw", {
           mode: "delete",
           desid: thisDesigner.desid,
           proid: forceProid,
@@ -1627,7 +1627,7 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
 
 PortfolioFilter.prototype.chmodReload = async function () {
   const instance = this;
-  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongosecondinfo } = this.mother;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo } = this.mother;
   try {
     await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/corePortfolio" ]);
     await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/list_image" ]);

@@ -1075,8 +1075,6 @@ DataConsole.prototype.connect = async function () {
             __vailHosts = [
               instance.address.frontinfo.host,
               instance.address.frontinfo.host + ":3000",
-              instance.address.backinfo.host,
-              instance.address.backinfo.host + ":3002",
               instance.address.secondinfo.host,
               instance.address.secondinfo.host + ":3003",
               instance.address.officeinfo.ghost.host,

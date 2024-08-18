@@ -60,7 +60,7 @@ class GoogleAPIs:
 
     async def ai_geminiSlack(self, channel: str, query: str, userDict = None):
         address = self.address
-        port = 3000
+        port = 3003
         path = "/geminiSlack"
         result = await self.ai_talkToGemini(query)
         thisText = ""
