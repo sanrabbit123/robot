@@ -45,7 +45,6 @@ class RobotInstall:
             [ "google.ads" ],
             [ "binascii" ],
             [ "google-generativeai" ],
-            [ "openai" ],
             [ "prettytable" ],
         ]
 
@@ -55,7 +54,6 @@ class RobotInstall:
             [ "oauth2client" ],
             [ "google-analytics-data" ],
             [ "google-generativeai" ],
-            [ "openai" ],
         ]
 
         self.homeDir = str(Path.home())

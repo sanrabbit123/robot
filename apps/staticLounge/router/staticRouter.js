@@ -12,7 +12,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
   const GoogleForms = require(process.cwd() + "/apps/googleAPIs/googleForms.js");
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-  const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
   const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
@@ -41,7 +40,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
   this.analytics = new GoogleAnalytics();
-  this.audio = new PlayAudio();
   this.slides = new GoogleSlides();
   this.forms = new GoogleForms();
   this.notion = new NotionAPIs();
@@ -2374,7 +2372,6 @@ StaticRouter.prototype.rou_post_issueCashReceipt = function () {
 
 StaticRouter.prototype.rou_post_textToVoice = function () {
   const instance = this;
-  const audio = this.audio;
   const address = this.address;
   const { equalJson, requestSystem } = this.mother;
   let obj;
@@ -2388,19 +2385,9 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      // const thisBody = equalJson(req.body);
-      // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
-      // res.send(JSON.stringify({ message: "toss" }));
-
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       if (typeof req.body.text !== "string") {
         throw new Error("invalid post");
       }
-      audio.textToVoice(req.body.text).catch((err) => {
-        console.log(err);
-      })
       res.send(JSON.stringify({ message: "will do" }));
 
     } catch (e) {
@@ -2413,7 +2400,6 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
 
 StaticRouter.prototype.rou_post_printText = function () {
   const instance = this;
-  const audio = this.audio;
   const address = this.address;
   const { uniqueValue, fileSystem, shellExec, shellLink, equalJson, requestSystem } = this.mother;
   let obj;
@@ -2427,10 +2413,6 @@ StaticRouter.prototype.rou_post_printText = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      // const thisBody = equalJson(req.body);
-      // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
-      // res.send(JSON.stringify({ message: "toss" }));
-
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
