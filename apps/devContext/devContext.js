@@ -8,7 +8,6 @@ const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const GoogleChrome = require(APP_PATH + "/googleAPIs/googleChrome.js");
 const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
-const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
@@ -87,9 +86,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-    
+    await findCode("NotionAPIs")
+    await findCode("notionAPIs")
 
 
     
@@ -7644,59 +7642,6 @@ DevContext.prototype.cookProperty = async function (obj) {
   }
 }
 
-DevContext.prototype.splitAi = async function (targetAi) {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
-  const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
-  try {
-    if (!(await fileSystem(`exist`, [ targetAi ]))) {
-      throw new Error("There is no ai file");
-    }
-    const contents = new ContentsMaker();
-    await fileSystem(`write`, [ `${process.cwd()}/temp/aiCanvasScript.js`, `console.splitAi("${targetAi}", true);` ]);
-    await contents.generalLaunching(`${process.cwd()}/temp/aiCanvasScript.js`);
-    let targetAirDir, resultFolder;
-    let target;
-    let targetDir, temp, targetTong, optimizer, optimizeResult;
-    let svgTongString;
-
-    targetAirDir = targetAi.split('/');
-    targetAirDir.pop();
-    targetAirDir = targetAirDir.join('/');
-    resultFolder = targetAirDir + "/split";
-
-    target = resultFolder + "/svg";
-
-    targetDir = await fileSystem(`readDir`, [ target ]);
-    targetDir = targetDir.filter((i) => { return ((i !== `.DS_Store`) && (!/\.js/i.test(i)) && i !== "tong.js"); });
-    targetTong = [];
-
-    for (let svg of targetDir) {
-      targetTong.push(target + "/" + svg);
-    }
-
-    optimizer = new SvgOptimizer(targetTong);
-    optimizeResult = await optimizer.launching();
-
-    svgTongString = '';
-    for (let i in optimizeResult) {
-      svgTongString += "SvgTong." + i + " = " + "'" + optimizeResult[i].replace(/\'/g, '"') + "'";
-      svgTongString += "\n\n";
-    }
-
-    await fileSystem(`write`, [ `${target}/tong.js`, svgTongString ]);
-    for (let svg of targetDir) {
-      shell.exec(`rm -rf ${shellLink(target + "/" + svg)};`);
-    }
-
-    return resultFolder;
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DevContext.prototype.pageRender = async function (targetAi) {
   const instance = this;
   const { fileSystem, shell, shellLink, ghostFileUpload } = this.mother;
@@ -7751,100 +7696,6 @@ DevContext.prototype.pageRender = async function (targetAi) {
 
     await ghostFileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(resultFolder)}`);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.pageReady = async function (name) {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
-  try {
-    const contents = new ContentsMaker();
-    const homeDir = process.env.HOME;
-    const homeDirList = await fileSystem(`readDir`, [ homeDir ]);
-    let aiScriptFunc, aiScript;
-    let resultFolder;
-
-    resultFolder = `${homeDir}/${name}`;
-    if (homeDirList.includes(name)) {
-      shell.exec(`rm -rf ${shellLink(resultFolder)}`);
-    }
-    shell.exec(`mkdir ${shellLink(resultFolder)}`);
-
-    aiScriptFunc = function () {
-      const thisAi = console.createDocument();
-      const rect = thisAi.artboards[0].artboardRect;
-      const rectangle = console.rectangle({
-        top: 0,
-        left: 0,
-        width: console.convertMillimeters(297),
-        height: console.convertMillimeters(210),
-        stroke: null,
-        fill: "#2fa678",
-        radius: null,
-      });
-
-      thisAi.artboards.add(rectangle.geometricBounds);
-      thisAi.artboards.remove(0);
-      rectangle.remove();
-
-      let tempRect, saveOptions;
-
-      thisAi.artboards[0].name = "a1";
-      thisAi.layers[0].name = "svg";
-      tempRect = console.rectangle({
-        top: 0,
-        left: 0,
-        width: console.convertMillimeters(20),
-        height: console.convertMillimeters(210),
-        stroke: null,
-        fill: "#2fa678",
-        radius: null,
-      });
-      tempRect.guides = true;
-      tempRect = console.rectangle({
-        top: 0,
-        left: 0,
-        width: console.convertMillimeters(297),
-        height: console.convertMillimeters(24),
-        stroke: null,
-        fill: "#2fa678",
-        radius: null,
-      });
-      tempRect.guides = true;
-      tempRect = console.rectangle({
-        top: 0,
-        left: console.convertMillimeters(297 - 20),
-        width: console.convertMillimeters(20),
-        height: console.convertMillimeters(210),
-        stroke: null,
-        fill: "#2fa678",
-        radius: null,
-      });
-      tempRect.guides = true;
-      tempRect = console.rectangle({
-        top: console.convertMillimeters(210 - 24) * -1,
-        left: 0,
-        width: console.convertMillimeters(297),
-        height: console.convertMillimeters(24),
-        stroke: null,
-        fill: "#2fa678",
-        radius: null,
-      });
-      tempRect.guides = true;
-
-      saveOptions = new IllustratorSaveOptions();
-      thisAi.saveAs(new File(RESULT_FILE), saveOptions);
-      thisAi.close(SaveOptions.DONOTSAVECHANGES);
-    }
-    aiScript = aiScriptFunc.toString().replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '').replace(/\}$/gi, '').replace(/RESULT_FILE/g, '"' + resultFolder + "/" + name + ".ai" + '"');
-    await fileSystem(`write`, [ `${process.cwd()}/temp/aiCanvasScript.js`, aiScript ]);
-    await contents.generalLaunching(`${process.cwd()}/temp/aiCanvasScript.js`);
-
-    shell.exec(`open ${shellLink(resultFolder)}`);
 
   } catch (e) {
     console.log(e);

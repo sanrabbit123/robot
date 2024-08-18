@@ -140,19 +140,6 @@ Robot.prototype.renderDesignerPhp = async function () {
   await app.renderDesignerPhp(false);
 }
 
-Robot.prototype.contentsMaker = function (button, arg) {
-  const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
-  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
-  let app;
-  if (button === "resource" || button === "1") {
-    app = new ResourceMaker(arg);
-    app.launching();
-  } else if (button === "google" || button === "2") {
-    app = new AiContents();
-    app.to_google(arg);
-  }
-}
-
 Robot.prototype.aliveTest = function () {
   const instance = this;
   const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
@@ -274,20 +261,6 @@ Robot.prototype.proposalMaker = function (button, arg) {
   });
 }
 
-Robot.prototype.requestMaker = async function (arg) {
-  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
-  try {
-    let app;
-    app = new AiConsole();
-    if (arg === undefined) {
-      throw new Error("must be arguments");
-    }
-    await app.cardToRequest(arg);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designerName, pid = "g0") {
   const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
   let app = new PortfolioFilter(clientName, apartName, designerName, pid);
@@ -326,12 +299,6 @@ Robot.prototype.staticConnect = async function () {
   } catch (e) {
     console.log(e);
   }
-}
-
-Robot.prototype.consoleSource = function () {
-  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
-  let cobot = new AiConsole();
-  cobot.console_maker();
 }
 
 Robot.prototype.recordCloud = async function (sw, boo = true) {
@@ -777,40 +744,7 @@ Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
   try {
-    let re, re2, re3, re4, re5, re6;
-
-    re = await consoleQ(`Choose commands : 1.contents 2.portfolio 3.magazine\n`);
-
-    if (re === "contents" || re === "1") {
-      re2 = await consoleQ(`Choose commands : 1.resource 2.google 3.tendency\n`);
-      if (re2 === '3' || re2 === 3) {
-        await this.designerTendencySync();
-      } else {
-        re3 = await consoleQ(`Porfolio number?\n`);
-        this.contentsMaker(re2, re3);
-      }
-
-    } else if (re === "portfolio" || re === "2") {
-      re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
-      if (re2 === "portfolio" || re2 === "1") {
-        re3 = await consoleQ(`Client name what?\n`);
-        re4 = await consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
-        re5 = await consoleQ(`Designer name what?\n`);
-        re6 = await consoleQ(`Project number what?\n`);
-        this.portfolioFilter("portfolio", re3, re4, re5, re6);
-      } else if (re2 === "ghost" || re2 === "2") {
-        re3 = await consoleQ(`Designer name what?\n`);
-        this.portfolioFilter("ghost", "null", "", re3, "g0");
-      }
-
-    } else if (re === "magazine" || re === "3") {
-      re3 = await consoleQ(`mid?\n`);
-      this.magazineMaker(re3);
-
-    } else {
-      process.exit();
-    }
-
+    process.exit();
   } catch (e) {
     console.log(e);
   }
@@ -847,20 +781,6 @@ const MENU = {
       } else {
         robot.dataConsole(false);
       }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  request: async function () {
-    try {
-      await robot.requestMaker(process.argv[3]);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  consolesource: async function () {
-    try {
-      robot.consoleSource();
     } catch (e) {
       console.log(e);
     }
