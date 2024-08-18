@@ -384,42 +384,7 @@ BackMaker.prototype.setAjaxAuthorization = async function () {
   try {
     let trapString;
     trapString = "";
-    trapString += "SvgTong['___ABCMDA___'] = \"" + (await cryptoString("homeliaison13", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ABNEDA___'] = \"" + (await cryptoString("homeliaison14", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ABCGDA___'] = \"" + (await cryptoString("homeliaison15", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___YBCEDA___'] = \"" + (await cryptoString("homeliaison41", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ZBCDEA___'] = \"" + (await cryptoString("homeliaison42", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ACYEDA___'] = \"" + (await cryptoString("homeliaison43", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___AUDEDA___'] = \"" + (await cryptoString("homeliaison44", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___AXCEAB___'] = \"" + (await cryptoString("homeliaison45", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ABCEQB___'] = \"" + (await cryptoString("homeliaison46", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ABQEDB___'] = \"" + (await cryptoString("homeliaison47", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___AACEXB___'] = \"" + (await cryptoString("homeliaison48", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___AXCKDC___'] = \"" + (await cryptoString("homeliaison49", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___XBVEDC___'] = \"" + (await cryptoString("homeliaison50", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___AICEDC___'] = \"" + (await cryptoString("homeliaison51", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ARCEMC___'] = \"" + (await cryptoString("homeliaison52", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___ABRMDD___'] = \"" + (await cryptoString("homeliaison53", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UBCDEC___'] = \"" + (await cryptoString("homeliaison82", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___URAGEN___'] = \"" + (await cryptoString("homeliaison83", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UUDEDC___'] = \"" + (await cryptoString("homeliaison84", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UXCEAA___'] = \"" + (await cryptoString("homeliaison85", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UBCEQE___'] = \"" + (await cryptoString("homeliaison86", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UBQEDR___'] = \"" + (await cryptoString("homeliaison87", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UACEXU___'] = \"" + (await cryptoString("homeliaison88", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___URCENN___'] = \"" + (await cryptoString("homeliaison92", instance.address.s3info.boto3.key)) + "\";\n\n";
-    trapString += "SvgTong['___UZRGDR___'] = \"" + (await cryptoString("homeliaison95", instance.address.s3info.boto3.key)) + "\";\n\n";
     return trapString;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-BackMaker.prototype.getAjaxAuthorization = async function () {
-  const instance = this;
-  const { cryptoString } = this.mother;
-  try {
-    return ("Basic " + (await cryptoString("homeliaison83", instance.address.s3info.boto3.key)));
   } catch (e) {
     console.log(e);
   }

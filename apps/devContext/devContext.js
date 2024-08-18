@@ -86,9 +86,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("NotionAPIs")
-    await findCode("notionAPIs")
 
+    
+    
 
     
     // const selfMongo = this.MONGOC;
