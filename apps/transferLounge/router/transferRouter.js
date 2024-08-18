@@ -129,6 +129,14 @@ TransferRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
+      } else if (req.params.id === "code") {
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:38080?folder=/home/ubuntu/robot";</script></html>`));
       } else {
         res.set({
           "Content-Type": "text/html",
