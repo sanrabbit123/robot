@@ -129,20 +129,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
       }
       await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
 
-      //sub module
-      if (await fileSystem(`exist`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}` ])) {
-        subModuleList = await fileSystem(`readDir`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}` ]);
-        subModuleList = subModuleList.filter((f) => { return f !== `.DS_Store`; });
-        for (let subFile of subModuleList) {
-          tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}` ]);
-          if (/<%%/gi.test(tempScriptString)) {
-            tempMediaResult = mediaQuery(tempScriptString);
-            tempScriptString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
-          }
-          await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}`, tempScriptString ]);
-        }
-      }
-
     }
 
     console.log(`set static`);

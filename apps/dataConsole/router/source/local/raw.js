@@ -106,8 +106,10 @@ RawJs.prototype.imageViewing = function (images, convertMode = true) {
   const className = "photoSelectedTarget";
   const zIndex = 3;
   return async function (e) {
-    e.stopPropagation();
-    e.preventDefault();
+    if (typeof e.stopPropagation === "function") {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     try {
       let img, height, imgBox;
       let title, titleSize, bottom;
