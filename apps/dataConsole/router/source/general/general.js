@@ -4537,9 +4537,6 @@ GeneralJs.prototype.loginBox = async function () {
       type: "get",
     }, BACKHOST + "/getMembers");
 
-    loginBox = null;
-    memberBoo = false;
-
     if (memberBoo) {
 
       tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + storageCookie.homeliaisonConsoleLoginedEmail, BACKHOST + "/getMembers"));
