@@ -34845,6 +34845,9 @@ DesignerJs.prototype.normalView = async function () {
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
     statusCheckLog = await ajaxJson({ mode: "all", date: statusCheckAgo }, SECONDHOST + "/readLogDesignerStatus", { equal: true });
+
+    console.log(statusCheckLog);
+
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
     representativeList = await ajaxJson({ target: "$all" }, BRIDGEHOST + "/representativeFileRead", { equal: true });
