@@ -3476,7 +3476,7 @@ GeneralJs.prototype.greenBar = function () {
     "/designer",
     "/designer?mode=contents",
     "/process",
-    "/contents",
+    "/mpr",
     "/contents",
   ];
   naviIconsContextLinks = [
@@ -3486,7 +3486,7 @@ GeneralJs.prototype.greenBar = function () {
     "/builder",
     "/designer?mode=contents",
     "/calculation",
-    "/contents",
+    "/mpr",
     "/contents",
   ];
   naviIconsLeftException = [
