@@ -10423,21 +10423,26 @@ GeneralJs.googleLogInInit = function () {
     homeliaisonConsoleLoginedBoolean: false
   };
   return new Promise(function(resolve, reject) {
-    GeneralJs.request("https://apis.google.com/js/platform.js?onload=googleLogInInit", function (response) {
+    GeneralJs.request("https://accounts.google.com/gsi/client", function (response) {
       const googleCode = new Function(response);
       googleCode();
-      gapi.load("auth2", function () {
-        const googleAuth = gapi.auth2.init({
-          client_id: "362492126666-q2igru8htor2ol7paniqucp2dtskv5cs.apps.googleusercontent.com",
-        });
-        googleAuth.then(function () {
-          GeneralJs.stacks["GoogleAuth"] = googleAuth;
-          console.log(googleAuth);
-          resolve(googleAuth);
-        }, function (e) {
-          reject(e);
-        });
-      });
+
+      resolve({});
+
+      // gapi.load("auth2", function () {
+      //   const googleAuth = gapi.auth2.init({
+      //     client_id: "362492126666-q2igru8htor2ol7paniqucp2dtskv5cs.apps.googleusercontent.com",
+      //   });
+      //   googleAuth.then(function () {
+      //     GeneralJs.stacks["GoogleAuth"] = googleAuth;
+      //     console.log(googleAuth);
+      //     resolve(googleAuth);
+      //   }, function (e) {
+      //     reject(e);
+      //   });
+      // });
+
+
     });
   });
 }
