@@ -970,7 +970,7 @@ DataConsole.prototype.connect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.backinfo.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
