@@ -1,2 +1,2 @@
 #!/bin/bash
-cd /home/ubuntu/robot;git reset --hard 2bcf995add74e504e3c7f80cae326ca775509a94;git pull;node /home/ubuntu/robot/robot.js infoObj;cd /home/ubuntu/robot;git pull;pm2 kill;pm2 start /home/ubuntu/robot/.office.config.js;systemctl restart robot-cron;systemctl restart robot-trans;systemctl restart nginx;
+cd /home/ubuntu/robot;git reset --hard 85550c724c8463183be2c1066effa6487ff7d2e9;git pull;node /home/ubuntu/robot/robot.js infoObj;cd /home/ubuntu/robot;git pull;pm2 kill;pm2 start /home/ubuntu/robot/.office.config.js;systemctl restart robot-cron;systemctl restart robot-trans;systemctl restart nginx;
