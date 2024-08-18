@@ -10428,7 +10428,7 @@ GeneralJs.googleLogInInit = function () {
       googleCode();
       gapi.load("auth2", function () {
         const googleAuth = gapi.auth2.init({
-          client_id: "444967534334-r85i9pcnfd3oeschret07t465vcnv4gf.apps.googleusercontent.com",
+          client_id: "362492126666-q2igru8htor2ol7paniqucp2dtskv5cs.apps.googleusercontent.com",
         });
         googleAuth.then(function () {
           GeneralJs.stacks["GoogleAuth"] = googleAuth;
