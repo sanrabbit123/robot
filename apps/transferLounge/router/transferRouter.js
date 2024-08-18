@@ -52,9 +52,7 @@ const TransferRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, sla
     this.address.frontinfo.host,
     this.address.secondinfo.host,
     this.address.testinfo.host,
-    this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
-    "home-liaison.servehttp.com",
     "localhost:3000",
     "172.30.1.90:3000",
     "172.30.1.37:3000",
@@ -5055,6 +5053,7 @@ TransferRouter.prototype.rou_post_readLogDesignerStatus = function () {
       }
 
     } catch (e) {
+      console.log(e);
       logger.error("Second Ghost 서버 문제 생김 (rou_post_readLogDesignerStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
