@@ -87,7 +87,7 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    await findCode("backinfo")
+    await findCode("googleLogInInit")
 
     
 

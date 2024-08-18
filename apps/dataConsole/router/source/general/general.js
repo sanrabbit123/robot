@@ -87,14 +87,6 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
     let finalValue, valueTemp;
     let tempBoo, tempFunction;
   
-    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
-      throw new Error("member stacks error : " + JSON.stringify(cookies));
-    }
-    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
-      window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
-      throw new Error("member roles error : " + JSON.stringify(cookies));
-    }
-  
     if (window.location.pathname === "/client") {
       map = DataPatch.clientMap();
     } else if (window.location.pathname === "/designer") {
@@ -190,29 +182,12 @@ GeneralJs.updateValue = async function (dataObj) {
   if (dataObj === undefined) {
     throw new Error("invaild arguments");
   }
-  if (window.localStorage.getItem("GoogleClientProfile") === null) {
-    throw new Error("not allowed");
-  }
   const instance = this;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   try {
     let dataString, response;
 
-    if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
-      //set user
-      dataObj.user = cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail;
-    } else {
-      //set user
-      dataObj.user = "unknown" + "__split__" + "unknown@unknown";
-    }
-
-    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
-      throw new Error("member stacks error : " + JSON.stringify(cookies));
-    }
-    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
-      window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
-      throw new Error("member roles error : " + JSON.stringify(cookies));
-    }
+    dataObj.user = "unknown" + "__split__" + "unknown@unknown";
 
     GeneralJs.updateHistoryTong.unshift(dataObj);
     dataString = GeneralJs.objectToRawquery(dataObj);
@@ -1641,11 +1616,6 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   let thisPathName = pathArr[0].replace(/\//g, '');
   const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
   const UPDATE_WORD = "담당자";
-  if (window.localStorage.getItem("GoogleClientProfile") === null) {
-    throw new Error(window.location.href + " / not allowed");
-    window.localStorage.clear();
-    window.location.reload();
-  }
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   GeneralJs.stacks["grayTitle"] = null;
   GeneralJs.stacks["grayData"] = null;
@@ -4539,7 +4509,8 @@ GeneralJs.prototype.loginBox = async function () {
     let storage;
     let response;
     let storageCookie;
-
+    let responseEmail;
+    let targetMemberObject;
 
     storage = window.localStorage.getItem("GoogleClientProfile");
     storageCookie = null;
@@ -4552,7 +4523,7 @@ GeneralJs.prototype.loginBox = async function () {
       response = await GeneralJs.ajaxJson({
         type: "boo",
         value: storageCookie.homeliaisonConsoleLoginedEmail
-      }, "/getMembers");
+      }, BACKHOST + "/getMembers");
       if (response.result !== null) {
         memberBoo = true;
         thisMember = response.result;
@@ -4562,11 +4533,16 @@ GeneralJs.prototype.loginBox = async function () {
       }
     }
 
+    response = await GeneralJs.ajaxJson({
+      type: "get",
+    }, BACKHOST + "/getMembers");
+
     loginBox = null;
+    memberBoo = false;
 
     if (memberBoo) {
 
-      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + storageCookie.homeliaisonConsoleLoginedEmail, "/getMembers"));
+      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + storageCookie.homeliaisonConsoleLoginedEmail, BACKHOST + "/getMembers"));
       thisMember = tempObj.result;
       this.member = GeneralJs.equalJson(JSON.stringify(thisMember));
       GeneralJs.stacks["homeliaisonMember"] = GeneralJs.equalJson(JSON.stringify(thisMember));
@@ -4591,20 +4567,22 @@ GeneralJs.prototype.loginBox = async function () {
       document.body.appendChild(div_clone);
       loginBox = div_clone;
 
-      if (GeneralJs.stacks["GoogleAuth"] !== undefined && GeneralJs.stacks["GoogleAuth"] !== null) {
-        googleAuth = GeneralJs.stacks["GoogleAuth"];
-      } else {
-        googleAuth = await GeneralJs.googleLogInInit();
+      responseEmail = null;
+      while (responseEmail === null) {
+        responseEmail = await GeneralJs.prompt("허가 받은 이메일을 입력하세요");
+        if (typeof responseEmail === "string") {
+          responseEmail = responseEmail.trim();
+          if (responseEmail === "") {
+            responseEmail = null;
+          }
+        }
       }
+      
+      targetMemberObject = response.find((o) => { return o.email.includes(responseEmail) });
 
-      client = await googleAuth.signIn();
-      profile = client.getBasicProfile();
+      name = targetMemberObject.name;
+      email = responseEmail;
 
-      name = profile.getName();
-      email = profile.getEmail();
-      id = profile.getId();
-
-      GeneralJs.stacks["GoogleClient"] = client;
       GeneralJs.stacks["GoogleClientProfile"] = {
         homeliaisonConsoleLoginedName: name,
         homeliaisonConsoleLoginedEmail: email,
@@ -4613,7 +4591,7 @@ GeneralJs.prototype.loginBox = async function () {
 
       window.localStorage.setItem("GoogleClientProfile", JSON.stringify(GeneralJs.stacks["GoogleClientProfile"]));
 
-      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + email, "/getMembers"));
+      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + email, BACKHOST + "/getMembers"));
       if (tempObj.result !== null) {
         thisMember = tempObj.result;
         this.member = GeneralJs.equalJson(JSON.stringify(thisMember));

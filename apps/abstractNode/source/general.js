@@ -10414,39 +10414,6 @@ GeneralJs.getCookieById = function (key) {
   }
 }
 
-GeneralJs.googleLogInInit = function () {
-  GeneralJs.stacks["GoogleAuth"] = null;
-  GeneralJs.stacks["GoogleClient"] = null;
-  GeneralJs.stacks["GoogleClientProfile"] = {
-    homeliaisonConsoleLoginedName: null,
-    homeliaisonConsoleLoginedEmail: null,
-    homeliaisonConsoleLoginedBoolean: false
-  };
-  return new Promise(function(resolve, reject) {
-    GeneralJs.request("https://accounts.google.com/gsi/client", function (response) {
-      const googleCode = new Function(response);
-      googleCode();
-
-      resolve({});
-
-      // gapi.load("auth2", function () {
-      //   const googleAuth = gapi.auth2.init({
-      //     client_id: "362492126666-q2igru8htor2ol7paniqucp2dtskv5cs.apps.googleusercontent.com",
-      //   });
-      //   googleAuth.then(function () {
-      //     GeneralJs.stacks["GoogleAuth"] = googleAuth;
-      //     console.log(googleAuth);
-      //     resolve(googleAuth);
-      //   }, function (e) {
-      //     reject(e);
-      //   });
-      // });
-
-
-    });
-  });
-}
-
 GeneralJs.isMac = function () {
   return !/Windows/gi.test(window.navigator.userAgent);
 }
