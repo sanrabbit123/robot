@@ -111,7 +111,6 @@ TransferRouter.prototype.fireWall = function (req) {
 TransferRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { diskReading, aliveMongo, requestSystem, fileSystem } = this.mother;
-  const kakao = this.kakao;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -131,7 +130,13 @@ TransferRouter.prototype.rou_get_First = function () {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
       } else {
-        res.send(JSON.stringify({ message: "hi" }));
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script></html>`));
       }
 
     } catch (e) {
