@@ -106,7 +106,7 @@ RawJs.prototype.imageViewing = function (images, convertMode = true) {
   const className = "photoSelectedTarget";
   const zIndex = 3;
   return async function (e) {
-    if (typeof e.stopPropagation === "function") {
+    if (typeof e.stopPropagation === "function" && typeof e.preventDefault === "function") {
       e.stopPropagation();
       e.preventDefault();
     }
