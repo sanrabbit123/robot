@@ -3045,7 +3045,7 @@ BackMaker.prototype.createUser = async function (updateQuery, option = { selfMon
 
 BackMaker.prototype.getHistoryById = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3053,11 +3053,7 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     let arr, target;
@@ -3098,7 +3094,7 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
 
 BackMaker.prototype.getHistoriesByQuery = async function (method, query, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3106,11 +3102,7 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     let tong, sortQuery;
@@ -3159,7 +3151,7 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
 
 BackMaker.prototype.getHistoriesAll = async function (method, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3167,11 +3159,7 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     let tong, sortQuery;
@@ -3220,7 +3208,7 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
 
 BackMaker.prototype.getHistoryProperty = async function (method, property, idArr = null, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3228,11 +3216,7 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     let tong, sortQuery;
@@ -3362,7 +3346,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3370,11 +3354,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     const [ whereQuery, updateQuery ] = queryArr;
@@ -3416,7 +3396,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
 
 BackMaker.prototype.deleteHistory = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOLOCALC, SELFMONGOBOO;
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
@@ -3424,11 +3404,7 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     let sortStandard, collection, deleteQuery;
@@ -3504,7 +3480,7 @@ BackMaker.prototype.returnHistoryDummies = function (subject) {
 
 BackMaker.prototype.createHistory = async function (method = "client", updateQuery = {}, option = { fromConsole: false, selfMongo: null, secondMongo: null, defaultCheckMode: false }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo, objectDeepCopy } = this.mother;
+  const { mongo, mongoinfo, objectDeepCopy } = this.mother;
   const defaultSerid = "s2011_aa02s";
   const defaultCheckKey = "curation.check";
   const defaultCheckObject = {
@@ -3556,11 +3532,7 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
       MONGOLOCALC = option.selfMongo;
     } else {
       SELFMONGOBOO = false;
-      if (option.fromConsole) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo);
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo);
-      }
+      MONGOLOCALC = new mongo(mongoinfo);
     }
 
     if (/client/gi.test(method)) {
@@ -3859,7 +3831,7 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
 
 BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, hexaJson } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
   try {
 
     let MONGOC;
@@ -3867,10 +3839,6 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }
@@ -3895,7 +3863,7 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
 
 BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, hexaJson } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
   try {
     let MONGOC;
     let tong;
@@ -3915,10 +3883,6 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }
@@ -3966,7 +3930,7 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
 
 BackMaker.prototype.mongoPick = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, hexaJson } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
   try {
     let MONGOC;
     let tong;
@@ -3999,10 +3963,6 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }
@@ -4050,7 +4010,7 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
 
 BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null, unset: false }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
@@ -4073,10 +4033,6 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }
@@ -4094,17 +4050,13 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
 
 BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   try {
     let MONGOC;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }
@@ -4122,17 +4074,13 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
 
 BackMaker.prototype.mongoListCollections = async function (option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   try {
     let MONGOC, allCollections_raw, allCollections;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
         MONGOC = new mongo(mongolocalinfo);
-      } else if (option.console !== undefined && option.console !== null) {
-        MONGOC = new mongo(mongoconsoleinfo);
-      } else if (option.log !== undefined && option.log !== null) {
-        MONGOC = new mongo(mongotestinfo);
       } else {
         MONGOC = new mongo(mongoinfo);
       }

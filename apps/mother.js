@@ -1226,7 +1226,7 @@ Mother.prototype.returnUragenPath = function () {
 }
 
 Mother.prototype.ipCheck = function () {
-  const standardInfo = "backinfo";
+  const standardInfo = "officeinfo";
   const axios = require(`axios`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const keys = Object.keys(ADDRESS);
@@ -5018,7 +5018,7 @@ Mother.prototype.chromeOpen = async function (url) {
   }
 }
 
-Mother.prototype.homeliaisonAnalytics = async function (obj, infoName = "backinfo") {
+Mother.prototype.homeliaisonAnalytics = async function (obj, infoName = "officeinfo") {
   const axios = require("axios");
   const crypto = require("crypto");
   const address = require(`${process.cwd()}/apps/infoObj.js`);

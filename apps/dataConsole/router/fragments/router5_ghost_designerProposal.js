@@ -32,22 +32,6 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
       messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
-        return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
-          mode: "sse",
-          db: "console",
-          collection: "sse_clientCard",
-          log: true,
-          who: "autoBot",
-          updateQuery: {
-            cliid,
-            requestNumber,
-            mode: "action",
-            from: thisClient.requests[requestNumber].analytics.response.action.value,
-            to: action,
-            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-          }
-        }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-      }).then(() => {
         let updateObj;
         updateObj = {};
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;

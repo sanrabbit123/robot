@@ -1058,7 +1058,7 @@ LogReport.prototype.dailyReports = async function () {
         const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
         const clients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
         const projects = await back.getProjectsByQuery({}, { selfMongo: selfCoreMongo, withTools: true });
-        const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
+        const clientHistories = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", {
           idArr: clients.toNormal().map((obj) => { return obj.cliid }),
           property: "curation",
           method: "client",

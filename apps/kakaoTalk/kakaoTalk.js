@@ -15,13 +15,13 @@ const KakaoTalk = function () {
   this.channelId = "_vxixkjxl";
   this.ip = {
     office: address.officeinfo.ip.outer,
-    console: address.backinfo.ip.outer,
-    second: address.transinfo.ip.outer,
+    console: address.officeinfo.ip.outer,
+    second: address.officeinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
-    console: new RegExp(this.ip.console, 'gi'),
-    second: new RegExp(this.ip.second, 'gi'),
+    console: new RegExp(this.ip.office, 'gi'),
+    second: new RegExp(this.ip.office, 'gi'),
   };
   this.token = {
     office: "e2bf509af044a9a497c51fd8b98ba8f0b6b264837323e719822e38e5df9ed5459dee6c359f1398d495ea3e6b14f75fef9b9cf5cb5a9cdcd92fa79021ab219f47ndaS1dl2XH4atmy1CO2der3Xg0AcGidZyQJ5PVsvPNGU0n2+oBDiKCgqWZVHmisOk+JJkmjfJs0gzUjTgTfMdQ==",
@@ -65,7 +65,7 @@ KakaoTalk.prototype.setAuth = async function () {
     this.authObj.userid = this.userid;
     this.authObj.senderkey = this.senderkey;
 
-    const { data } = await requestSystem("https://" + address.backinfo.host + ":3000");
+    const { data } = await requestSystem("https://" + address.officeinfo.host + ":3002");
 
     if (this.ipRegExp.office.test(data.trim())) {
       this.authObj.token = this.token.office;

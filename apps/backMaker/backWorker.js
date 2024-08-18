@@ -973,7 +973,6 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
     if (alarm) {
       tong = [];
       tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
-      tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/calculation`);
       tong.push(bar1);
 
       tongTong = [];
@@ -2575,7 +2574,7 @@ BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid
 BackWorker.prototype.clientActionSync = async function (option = { selfMongo: null, selfConsoleMongo: null, updateMongo: null }) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongoconsoleinfo, mongolocalinfo, equalJson, requestSystem } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, equalJson, requestSystem } = this.mother;
   const actionFilter = (action, clients, clientHistories) => {
     let targets, cliidArr;
     let targetClients;
@@ -2627,11 +2626,7 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
       selfMongo = option.selfMongo;
     }
     if (!selfConsoleBoo) {
-      if (!fromLocalMode) {
-        selfConsoleMongo = new mongo(mongoconsoleinfo);
-      } else {
-        selfConsoleMongo = new mongo(mongolocalinfo);
-      }
+      selfConsoleMongo = new mongo(mongoinfo);
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
@@ -3015,15 +3010,6 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
         console.log(whereQuery, updateQuery);
       }
 
-      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
-        mode: "sse",
-        db: "console",
-        collection: "sse_clientCard",
-        log: true,
-        who: "autoBot",
-        updateQueries
-      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
-
     }
 
     if (!selfBoo) {
@@ -3283,15 +3269,6 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
         });
         console.log(whereQuery, updateQuery);
       }
-
-      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
-        mode: "sse",
-        db: "console",
-        collection: "sse_projectCard",
-        log: true,
-        who: "autoBot",
-        updateQueries
-      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
 
     }
 

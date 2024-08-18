@@ -89,13 +89,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     <meta name="description" content="${descriptionString}">
     <title>${titleString}</title><style></style>`;
 
-    if (/localhost/gi.test(req.get("host"))) {
-      gtagId = "G-6KYB6YEQLS";
-    } else if (req.get("host").trim() === address.backinfo.host.trim()) {
-      gtagId = "G-N81TTVHYK4";
-    } else {
-      gtagId = "G-GGGZ2JRC2C";
-    }
+    gtagId = "G-GGGZ2JRC2C";
 
     html += `
     <script async src="https://www.googletagmanager.com/gtag/js?id=${gtagId}"></script>

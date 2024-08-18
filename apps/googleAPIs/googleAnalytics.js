@@ -1168,8 +1168,6 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, contentsArr
     }
     clientObject.source.referrer = [ ...new Set(clientObject.source.referrer) ].filter((str) => {
       return !(new RegExp(address.frontinfo.host, "g")).test(str);
-    }).filter((str) => {
-      return !(new RegExp(address.backinfo.host, "g")).test(str);
     });
     clientObject.source.mother = [ ...new Set(clientObject.source.mother) ];
     clientObject.source.medium = [ ...new Set(clientObject.source.medium) ];

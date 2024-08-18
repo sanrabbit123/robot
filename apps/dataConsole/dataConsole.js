@@ -665,7 +665,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
         if (/^[\"\']http/.test(p2)) {
           return original;
         } else {
-          return `ajaxJson(${p1}"https://${address.backinfo.host}" + ${p2}`;
+          return `ajaxJson(${p1}"https://${address.officeinfo.host}:3002" + ${p2}`;
         }
       });
 
@@ -693,7 +693,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
     generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3003");
     generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3002");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.officeinfo.host + ":3002");
     generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.officeinfo.ghost.host + ":3000");
     generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
     generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
@@ -799,7 +799,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
         if (/^[\"\']http/.test(p2)) {
           return original;
         } else {
-          return `ajaxJson(${p1}"https://${address.backinfo.host}" + ${p2}`;
+          return `ajaxJson(${p1}"https://${address.officeinfo.host}:3002" + ${p2}`;
         }
       });
 
@@ -827,7 +827,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
     generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3003");
     generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3002");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.officeinfo.host + ":3002");
     generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.officeinfo.ghost.host + ":3000");
     generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
     generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");

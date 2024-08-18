@@ -214,13 +214,13 @@ Robot.prototype.proposalMaker = function (button, arg) {
       return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
     }).then(() => {
 
-      return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
+      return requestSystem("https://" + instance.address.officeinfo.host + ":3002/updateLog", {
         id: cliid,
         column: "action",
         position: "requests." + String(requestNumber) + ".analytics.response.action",
         pastValue: client.requests[requestNumber].analytics.response.action.value,
         finalValue: action
-      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
+      }, { headers: { "origin": "https://" + instance.address.officeinfo.host, "Content-Type": "application/json" } });
 
     }).then(() => {
 
@@ -237,7 +237,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
 
     }).then(() => {
 
-      return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
+      return requestSystem("https://" + instance.address.officeinfo.host + ":3002/generalMongo", {
         mode: "sse",
         db: "console",
         collection: "sse_clientCard",
@@ -251,7 +251,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
           to: action,
           randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         }
-      }, { headers: { "origin": "https://" + instance.address.backinfo.host, "Content-Type": "application/json" } });
+      }, { headers: { "origin": "https://" + instance.address.officeinfo.host, "Content-Type": "application/json" } });
 
     }).then(() => {
 

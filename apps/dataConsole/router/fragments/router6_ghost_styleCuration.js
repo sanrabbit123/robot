@@ -187,42 +187,34 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         }).then((proid) => {
 
-          // if (detailUpdate.length > 0) {
-            if (newProid === null) {
-              newProid = proid;
-            }
-            return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
-              id: cliid,
-              column: "action",
-              position: "requests." + String(requestNumber) + ".analytics.response.action",
-              pastValue: client.requests[requestNumber].analytics.response.action.value,
-              finalValue: action
-            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-          // } else {
-          //   return passPromise();
-          // }
+          if (newProid === null) {
+            newProid = proid;
+          }
+          return requestSystem("https://" + address.officeinfo.host + ":3002/updateLog", {
+            id: cliid,
+            column: "action",
+            position: "requests." + String(requestNumber) + ".analytics.response.action",
+            pastValue: client.requests[requestNumber].analytics.response.action.value,
+            finalValue: action
+          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
 
         }).then(() => {
 
-          // if (detailUpdate.length > 0) {
-            return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
-              mode: "sse",
-              db: "console",
-              collection: "sse_clientCard",
-              log: true,
-              who: "autoBot",
-              updateQuery: {
-                cliid,
-                requestNumber,
-                mode: "action",
-                from: client.requests[requestNumber].analytics.response.action.value,
-                to: action,
-                randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-              }
-            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-          // } else {
-          //   return passPromise();
-          // }
+          return requestSystem("https://" + address.officeinfo.host + ":3002/generalMongo", {
+            mode: "sse",
+            db: "console",
+            collection: "sse_clientCard",
+            log: true,
+            who: "autoBot",
+            updateQuery: {
+              cliid,
+              requestNumber,
+              mode: "action",
+              from: client.requests[requestNumber].analytics.response.action.value,
+              to: action,
+              randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+            }
+          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
 
         }).then(() => {
 
@@ -321,19 +313,6 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       messageSend({ text, channel, voice: false }).catch((e) => {
         console.log(e);
       });
-
-      // if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
-      //   clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
-      //   DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
-      // }
-      // DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
-      //   await requestSystem("https://" + instance.address.backinfo.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       "origin": instance.address.backinfo.host,
-      //     }
-      //   })
-      // }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 

@@ -22,7 +22,7 @@
     "@google-cloud/local-auth": "^3.0.1",
     "@google-cloud/translate": "^8.2.0",
     "@slack/web-api": "^6.9.1",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "express": "^4.19.2",
     "express-useragent": "^1.0.15",
     "facebook-nodejs-business-sdk": "^19.0.3",

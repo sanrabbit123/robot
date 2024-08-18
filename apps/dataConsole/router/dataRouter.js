@@ -1121,8 +1121,8 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
           allClients = await back.mongoRead("client", historyWhereQuery, { selfMongo: selfCoreMongo });
 
-          evaluationSendRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
-          evaluationResultRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationSendRows = (await requestSystem("https://" + instance.address.officeinfo.host + ":3002/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationResultRows = (await requestSystem("https://" + instance.address.officeinfo.host + ":3002/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
 
           for (let obj of data) {
             thisHistory = allClients.find((o) => { return o.cliid === obj.middle.cliid });
@@ -1508,8 +1508,8 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
           allClients = await back.mongoRead("client", historyWhereQuery, { selfMongo: selfCoreMongo });
 
-          evaluationSendRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
-          evaluationResultRows = (await requestSystem("https://" + instance.address.backinfo.host + ":3000/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationSendRows = (await requestSystem("https://" + instance.address.officeinfo.host + ":3002/justClientEvaluation", { mode: "all", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+          evaluationResultRows = (await requestSystem("https://" + instance.address.officeinfo.host + ":3002/justClientEvaluation", { mode: "resultAll", cliid: "", proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
 
           for (let obj of data) {
             thisHistory = allClients.find((o) => { return o.cliid === obj.middle.cliid });
@@ -3411,7 +3411,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   requestObj.silent = true;
                 }
 
-                requestSystem("https://" + address.backinfo.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } }).then(() => {
+                requestSystem("https://" + address.officeinfo.host + ":3002/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } }).then(() => {
                   //pass
                 }).catch((err) => {
                   console.log(err);
@@ -3641,19 +3641,6 @@ DataRouter.prototype.rou_post_alimTalk = function () {
         }
       }
       await instance.kakao.sendTalk(method, name, phone, option);
-
-      if (method === "designerConsoleRequest") {
-        await homeliaisonAnalytics({
-          action: "sendDesignerRequest",
-          data: {
-            date: dateToString(new Date(), true),
-            desid: option.desid,
-            designer: option.designer,
-            client: option.client,
-            proid: option.proid,
-          }
-        }, "backinfo");
-      }
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
@@ -3907,9 +3894,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       instance.parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).then((r) => {
         const { result, id } = r;
-        if (!result) {
-          return messageSend({ text: "표준 주소 체계 위반 사례, 바르게 고쳐주세요! : https://" + instance.address.backinfo.host + "/client?cliid=" + id, channel: "#401_consulting" });
-        }
       }).catch((err) => {
         logger.error("주소 연산 중 오류 생김 : " + err.message).catch((e) => { console.log(e); });
         console.log(err);
@@ -4152,7 +4136,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "세션 아이디 : " + sessionId.join(", ");
 
         await messageSend({ text: message, channel: "#301_apply", voice: false });
-        await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다! <@" + ceoId + ">\nlink: https://" + instance.address.backinfo.host + "/designer?mode=aspirant&aspid=" + aspid, channel: "#301_apply", voice: true });
+        await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다!", channel: "#301_apply", voice: true });
 
         requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
@@ -4200,7 +4184,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
 
         await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
         await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님이 추가 포트폴리오를 전송하였습니다!", channel: "#301_apply", voice: true });
-        await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님의 추가 포트폴리오 검토를 부탁드리겠습니다! <@" + ceoId + ">\nlink: https://" + instance.address.backinfo.host + "/designer?mode=aspirant&aspid=" + aspid, channel: "#301_apply", voice: false });
+        await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님의 추가 포트폴리오 검토를 부탁드리겠습니다!", channel: "#301_apply", voice: false });
 
         sleep(5000).then(() => {
           return kakao.sendTalk("aspirantPortfolio", name, phone, {
@@ -4582,13 +4566,13 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             const aspid = aspid0 + "_" + aspid1;
 
             if (paymentData.pay_method === "card") {
-              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
                 aspid,
                 mode: "card",
                 status: "paid"
               }, { headers: { "Content-Type": "application/json" } });
             } else {
-              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
                 aspid,
                 mode: "vbank",
                 status: "paid"
@@ -7390,10 +7374,10 @@ DataRouter.prototype.rou_post_processConsole = function () {
           }, { selfMongo });
 
           proidArr = projects.toNormal().map((p) => { return p.proid })
-          secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getProcessData", { proidArr }, {
+          secondRes = await requestSystem("https://" + address.officeinfo.host + ":3003/getProcessData", { proidArr }, {
             headers: {
               "Content-Type": "application/json",
-              "origin": address.backinfo.host
+              "origin": address.officeinfo.host
             }
           });
 
@@ -8551,7 +8535,7 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
             [ targetProposal ] = rows;
             proid = targetProposal.proid;
 
-            await requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/createProposalDocument", { instant: true, proid }, { headers: { "Content-Type": "application/json", "origin": "https://" + address.frontinfo.host } });
+            await requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/createProposalDocument", { instant: true, proid }, { headers: { "Content-Type": "application/json", "origin": "https://" + address.frontinfo.host } });
             await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#404_curation", voice: true });
             await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#403_proposal", voice: false });
 
@@ -11016,13 +11000,13 @@ DataRouter.prototype.rou_post_webHookVAccount = function () {
           const aspid = aspid0 + "_" + aspid1;
           if (/paid/g.test(paymentData.status)) {
             if (paymentData.pay_method === "card") {
-              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
                 aspid,
                 mode: "card",
                 status: "paid"
               }, { headers: { "Content-Type": "application/json" } });
             } else {
-              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
                 aspid,
                 mode: "vbank",
                 status: "paid"
@@ -11030,7 +11014,7 @@ DataRouter.prototype.rou_post_webHookVAccount = function () {
             }
           } else {
             if (paymentData.pay_method !== "card") {
-              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
                 aspid,
                 mode: "vbank",
                 status: "paid"
@@ -12998,22 +12982,6 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
       messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
-        return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
-          mode: "sse",
-          db: "console",
-          collection: "sse_clientCard",
-          log: true,
-          who: "autoBot",
-          updateQuery: {
-            cliid,
-            requestNumber,
-            mode: "action",
-            from: thisClient.requests[requestNumber].analytics.response.action.value,
-            to: action,
-            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-          }
-        }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-      }).then(() => {
         let updateObj;
         updateObj = {};
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
@@ -13324,42 +13292,34 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         }).then((proid) => {
 
-          // if (detailUpdate.length > 0) {
-            if (newProid === null) {
-              newProid = proid;
-            }
-            return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
-              id: cliid,
-              column: "action",
-              position: "requests." + String(requestNumber) + ".analytics.response.action",
-              pastValue: client.requests[requestNumber].analytics.response.action.value,
-              finalValue: action
-            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-          // } else {
-          //   return passPromise();
-          // }
+          if (newProid === null) {
+            newProid = proid;
+          }
+          return requestSystem("https://" + address.officeinfo.host + ":3002/updateLog", {
+            id: cliid,
+            column: "action",
+            position: "requests." + String(requestNumber) + ".analytics.response.action",
+            pastValue: client.requests[requestNumber].analytics.response.action.value,
+            finalValue: action
+          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
 
         }).then(() => {
 
-          // if (detailUpdate.length > 0) {
-            return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
-              mode: "sse",
-              db: "console",
-              collection: "sse_clientCard",
-              log: true,
-              who: "autoBot",
-              updateQuery: {
-                cliid,
-                requestNumber,
-                mode: "action",
-                from: client.requests[requestNumber].analytics.response.action.value,
-                to: action,
-                randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-              }
-            }, { headers: { "origin": "https://" + address.backinfo.host, "Content-Type": "application/json" } });
-          // } else {
-          //   return passPromise();
-          // }
+          return requestSystem("https://" + address.officeinfo.host + ":3002/generalMongo", {
+            mode: "sse",
+            db: "console",
+            collection: "sse_clientCard",
+            log: true,
+            who: "autoBot",
+            updateQuery: {
+              cliid,
+              requestNumber,
+              mode: "action",
+              from: client.requests[requestNumber].analytics.response.action.value,
+              to: action,
+              randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+            }
+          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
 
         }).then(() => {
 
@@ -13458,19 +13418,6 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       messageSend({ text, channel, voice: false }).catch((e) => {
         console.log(e);
       });
-
-      // if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
-      //   clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
-      //   DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
-      // }
-      // DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = setTimeout(async () => {
-      //   await requestSystem("https://" + instance.address.backinfo.host + "/styleCuration_updateCalculation", { cliid, coreQuery: {}, historyQuery: {}, mode: "" }, {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       "origin": instance.address.backinfo.host,
-      //     }
-      //   })
-      // }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 

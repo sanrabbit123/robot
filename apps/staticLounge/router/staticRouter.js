@@ -3436,7 +3436,7 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
       const portNumber = 3000;
       const path = "/fairyMessage";
       const thisMember = instance.members.find((o) => { return o.id === toId });
-      const text = "안녕하세요, " + thisMember.name + "님! #{from}님께서 새로운 파일을 업로드하셨습니다. 확인부탁드립니다!\n" + "https://" + address.backinfo.host + "/dashboard?mode=file&injection=me";
+      const text = "안녕하세요, " + thisMember.name + "님! #{from}님께서 새로운 파일을 업로드하셨습니다. 확인부탁드립니다!";
       requestSystem("https://" + address.secondinfo.host + ":" + String(portNumber) + path, { fromId, toId, text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); })
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

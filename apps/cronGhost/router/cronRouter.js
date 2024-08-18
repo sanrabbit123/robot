@@ -14,9 +14,7 @@ const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
-    this.address.transinfo.host,
     this.address.backinfo.host,
-    this.address.testinfo.host,
     this.address.officeinfo.ghost.host,
     "localhost:3000",
   ];

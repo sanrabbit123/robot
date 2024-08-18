@@ -815,7 +815,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
               }
             }
 
-            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantSubmit", { mode: "setting", map: { aspid, name, phone, type: mode } }, { headers: { "Content-Type": "application/json" } });
+            await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantSubmit", { mode: "setting", map: { aspid, name, phone, type: mode } }, { headers: { "Content-Type": "application/json" } });
             await messageSend({ text: name + "님의 " + (mode === "general" ? "1세트 포트폴리오" : "추천서용 사진") + " 파일 전송을 완료하였습니다!", channel: "#301_apply" });
             res.send(JSON.stringify({ message: "done" }));
 
@@ -2135,8 +2135,6 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
       } else {
         text = client + " 고객님이 콘솔을 통해 " + title + " 파일을 업로드했습니다!";
       }
-      text += "\n";
-      text += "https://" + instance.address.backinfo.host + "/designer?mode=checklist&desid=" + desid + "&proid=" + proid;
       text += "\n";
 
       await messageSend({ text, channel, voice });
@@ -3823,13 +3821,13 @@ TransferRouter.prototype.rou_post_parsingCall = function () {
                 [ thisProject ] = thisProjects;
               }
               if (thisProject === null) {
-                manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                 text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                 cliidBoo = true;
                 targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
               } else {
                 if (thisProject.desid.trim() === "") {
-                  manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                  manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                   text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                   cliidBoo = true;
                   targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
@@ -3839,7 +3837,7 @@ TransferRouter.prototype.rou_post_parsingCall = function () {
                     cliidBoo = true;
                     targetLink = "https://" + address.backinfo.host + "/project?cliid=" + cliid;
                   } else {
-                    manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                    manager = (await requestSystem("https://" + address.officeinfo.host + ":3002/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                     text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
                     cliidBoo = true;
                     targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;

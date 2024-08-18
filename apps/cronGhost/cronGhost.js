@@ -134,7 +134,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   try {
 
     requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
-      return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
@@ -150,11 +150,11 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.transinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.host + ":" + String(3003) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.transinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.host + ":" + String(3003) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
@@ -194,9 +194,7 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   const { requestSystem, errorLog, emergencyAlarm, aliveLog } = this.mother;
   try {
     const targets = [
-      { name: "post", host: instance.address.backinfo.host },
       { name: "office", host: instance.address.officeinfo.ghost.host },
-      { name: "trans", host: instance.address.transinfo.host },
     ]
     const robotPort = 3000;
     const pathConst = "/disk";
@@ -417,7 +415,7 @@ CronGhost.prototype.cronServer = async function () {
 
     // set pem key
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.backinfo.host;
+    pemsLink = process.cwd() + "/pems/" + address.officeinfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
