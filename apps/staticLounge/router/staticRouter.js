@@ -4129,7 +4129,7 @@ StaticRouter.prototype.rou_post_readHomeliaisonAnalytics = function () {
       if (req.body.whereQuery === undefined) {
         throw new Error("invalid post");
       }
-      const selfMongo = instance.mongolocal;
+      const selfMongo = instance.mongo;
       const { whereQuery } = equalJson(JSON.stringify(req.body));
       const collection = "homeliaisonAnalytics";
       let rows, projectQuery;
@@ -4155,6 +4155,7 @@ StaticRouter.prototype.rou_post_readHomeliaisonAnalytics = function () {
 
       res.send(JSON.stringify({ data: rows }));
     } catch (e) {
+      console.log(e);
       await logger.error("Static lounge 서버 문제 생김 (rou_post_readHomeliaisonAnalytics): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }

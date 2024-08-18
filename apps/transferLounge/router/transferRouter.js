@@ -5004,9 +5004,6 @@ TransferRouter.prototype.rou_post_readLogDesignerStatus = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       if (req.body.mode === undefined) {
         throw new Error("invalid post");
       }
