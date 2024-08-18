@@ -261,7 +261,7 @@ StaticRouter.prototype.rou_get_Root = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
-      res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
+      res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script></html>`));
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -271,7 +271,7 @@ StaticRouter.prototype.rou_get_Root = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
-      res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
+      res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script></html>`));
     }
   }
   return obj;
@@ -320,7 +320,7 @@ StaticRouter.prototype.rou_get_First = function () {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-        res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
+        res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script></html>`));
       }
 
     } catch (e) {
