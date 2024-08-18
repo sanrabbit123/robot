@@ -84,7 +84,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
     this.address.secondinfo.host,
     this.address.transinfo.host,
     this.address.backinfo.host,
-    this.address.pythoninfo.host,
     this.address.testinfo.host,
     this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
@@ -2131,10 +2130,6 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
       const backFolderName = "backup";
       const mongoTargets = [
         [ "mongoinfo", "mongo" ],
-        [ "backinfo", "console" ],
-        [ "pythoninfo", "python" ],
-        [ "testinfo", "log" ],
-        [ "secondinfo", "second" ],
       ];
       const robotDirArr = process.cwd().split("/");
       robotDirArr.pop();
@@ -5653,73 +5648,6 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
     const path = "/permanents";
     const collection = "accountSms";
     try {
-      // let response0, response1;
-      // let textArr;
-      // let headers;
-      // let rows;
-      // let date, amount, name;
-      // let filteredArr;
-      // let idArr;
-
-      // headers = { "Access-Token": token };
-
-      // response0 = await requestSystem("https://" + host + "/" + version + path + "/" + device + "_thread_" + String(threads[0]), {}, { method: "get", headers });
-      // response1 = await requestSystem("https://" + host + "/" + version + path + "/" + device + "_thread_" + String(threads[1]), {}, { method: "get", headers });
-
-      // textArr = (response1.data.thread.map((obj) => {
-      //   return obj.body.split("\n").filter((str) => { return str.trim() !== "" }).filter((str) => { return !/잔액 [0-9]/gi.test(str) });
-      // }).concat(response0.data.thread.map((obj) => {
-      //   return obj.body.split("\n").filter((str) => { return str.trim() !== "" }).filter((str) => { return !/잔액 [0-9]/gi.test(str) }).map((str) => { return str.replace(/\[홈리에종\] /gi, "").trim().replace(/\:$/gi, '') });
-      // })).map((arr) => {
-      //   const index = arr.findIndex((str) => { return /^입금/gi.test(str.trim()) });
-      //   const timeString = arr[index - 1];
-      //   const amount = arr[index];
-      //   const name = arr[index + 1];
-      //   const thisDate = stringToDate(timeString.replace(/\//gi, '-') + ":00")
-      //   const thisAmount = Math.floor(Number(amount.replace(/[^0-9\-\.]/gi, '')));
-      //   const thisId = idKeyword + String(thisDate.valueOf()) + "_" + String(thisAmount);
-      //   return {
-      //     id: thisId,
-      //     date: thisDate,
-      //     amount: thisAmount,
-      //     name: name.trim(),
-      //   }
-      // }));
-
-      // if (req.body.date !== undefined && req.body.amount !== undefined && req.body.name !== undefined) {
-      //   ({ date, amount, name } = equalJson(req.body));
-      //   textArr.unshift({
-      //     id: idKeyword + String(date.valueOf()) + "_" + String(amount),
-      //     date,
-      //     amount,
-      //     name
-      //   })
-      // }
-
-      // for (let obj of textArr) {
-      //   obj.id = obj.id + "_" + (await cryptoString(password, obj.name));
-      // }
-
-      // filteredArr = [];
-      // idArr = [];
-      // for (let obj of textArr) {
-      //   if (!idArr.includes(obj.id)) {
-      //     filteredArr.push(equalJson(JSON.stringify(obj)));
-      //   }
-      //   idArr.push(obj.id);
-      // }
-
-      // for (let obj of filteredArr) {
-      //   rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
-      //   if (rows.length === 0) {
-      //     await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
-      //     await back.mongoCreate(collection, obj, { selfMongo });
-      //     await sleep(500);
-      //   }
-      // }
-
-      // res.send(JSON.stringify(textArr));
-
       const { date, amount, name } = equalJson(req.body);
       const obj = {
         id: idKeyword + String(date.valueOf()) + "_" + String(amount),
@@ -5729,7 +5657,7 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
       }
       rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
       if (rows.length === 0) {
-        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
+        await requestSystem("https://" + instance.address.officeinfo.host + ":3002/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
         await back.mongoCreate(collection, obj, { selfMongo });
         await sleep(500);
       }
@@ -5747,7 +5675,7 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
       }
       rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
       if (rows.length === 0) {
-        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
+        await requestSystem("https://" + instance.address.officeinfo.host + ":3002/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
         await back.mongoCreate(collection, obj, { selfMongo });
         await sleep(500);
       }

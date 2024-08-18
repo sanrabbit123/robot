@@ -53,7 +53,6 @@ const TransferRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, sla
     this.address.secondinfo.host,
     this.address.transinfo.host,
     this.address.backinfo.host,
-    this.address.pythoninfo.host,
     this.address.testinfo.host,
     this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
@@ -6389,9 +6388,9 @@ TransferRouter.prototype.rou_post_noticeAspirantContractYesterday = function () 
           updateQuery["meeting.status"] = "계약 요청";
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
           await sleep(500);
-          await requestSystem("https://" + address.pythoninfo.host + ":3000/createPartnershipContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + address.officeinfo.host + ":3002/createPartnershipContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
           await sleep(500);
-          await requestSystem("https://" + address.pythoninfo.host + ":3000/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + address.officeinfo.host + ":3002/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
           if (aspirant.response.portfolio.plus.photo.valueOf() < emptyDateValue) {
             await sleep(500);
             await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantConsole", {

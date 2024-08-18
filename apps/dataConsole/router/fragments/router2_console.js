@@ -3680,7 +3680,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                       break;
                     }
                   }
-                  await requestSystem("https://" + address.pythoninfo.host + ":3000/ghostClientBill", {
+                  await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
                     bilid: thisBill.bilid,
                     requestNumber,
                     data: convertingData
@@ -4678,7 +4678,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         } else {
 
-          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
+          await requestSystem("https://" + instance.address.officeinfo.host + ":3002/accountTimeSet", {
             bilid,
             requestNumber: Number(req.body.requestNumber),
             proid,
@@ -4787,7 +4787,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
         const { phone, hash, bilid, proid, desid, cliid, name } = equalJson(req.body);
         const data = JSON.parse(await decryptoHash(password, hash.trim()));
-        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeUpdate", {
+        await requestSystem("https://" + instance.address.officeinfo.host + ":3002/accountTimeUpdate", {
           whereQuery: {
             $and: [
               { bilid },
@@ -5383,7 +5383,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         updateQuery["process.design.construct.contract.form.guide"] = new Date();
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
-        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
           throw new Error(err);
         });
         result = { message: "success" };
@@ -5424,7 +5424,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
 
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
-          requestSystem("https://" + instance.address.pythoninfo.host + ":3000/constructAmountSync", {
+          requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructAmountSync", {
             proid,
             cliid: project.cliid,
             desid: project.desid,
@@ -5565,7 +5565,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           },
         };
 
-        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/constructAmountSync", toPython, { headers: { "Content-type": "application/json" } }).catch((err) => {
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructAmountSync", toPython, { headers: { "Content-type": "application/json" } }).catch((err) => {
           throw new Error(err);
         });
 
@@ -8392,11 +8392,11 @@ DataRouter.prototype.rou_post_createConstructContract = function () {
 
                 await kakao.sendTalk("constructForm", client.name, client.phone, { client: client.name });
                 messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).then(() => {
-                  return requestSystem("https://" + instance.address.backinfo.host + ":3000/constructInteraction", {
+                  return requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructInteraction", {
                     mode: "chargeGuide",
                     proid: project.proid,
                     method: "first",
-                  }, { headers: { "Content-Type": "application/json", "origin": instance.address.pythoninfo.host } });
+                  }, { headers: { "Content-Type": "application/json", "origin": instance.address.officeinfo.host } });
                 }).catch((err) => {
                   console.log(err);
                 });
@@ -8713,11 +8713,11 @@ DataRouter.prototype.rou_post_receiveConstructContract = function () {
       if (client !== null) {
         await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
         messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).then(() => {
-          return requestSystem("https://" + instance.address.backinfo.host + ":3000/constructInteraction", {
+          return requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructInteraction", {
             mode: "chargeGuide",
             proid: json.proid,
             method: "first",
-          }, { headers: { "Content-Type": "application/json", "origin": instance.address.pythoninfo.host } });
+          }, { headers: { "Content-Type": "application/json", "origin": instance.address.officeinfo.host } });
         }).catch((err) => {
           console.log(err);
         });
@@ -9191,7 +9191,7 @@ DataRouter.prototype.rou_post_smsParsing = function () {
           target.accountInfo.requestNumber = requestNumber;
           messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
 
-          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
+          await requestSystem("https://" + instance.address.officeinfo.host + ":3002/webHookVAccount", target.accountInfo, {
             headers: { "Content-Type": "application/json" }
           });
           logger.log("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
@@ -9626,14 +9626,14 @@ DataRouter.prototype.sync_paymentProject = async function (bilid, requestNumber,
           }
         }
 
-        requestSystem("https://" + instance.address.backinfo.host + ":3000/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
           headers: {
             "Content-Type": "application/json",
-            "origin": "https://" + instance.address.pythoninfo.host,
+            "origin": "https://" + instance.address.officeinfo.host,
           }
         }).then((res) => {
           const { data } = res;
-          return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+          return requestSystem("https://" + instance.address.officeinfo.host + ":3002/updateHistory", {
             method: "project",
             id: proid,
             column: "manager",
@@ -9642,7 +9642,7 @@ DataRouter.prototype.sync_paymentProject = async function (bilid, requestNumber,
           }, {
             headers: {
               "Content-Type": "application/json",
-              "origin": "https://" + instance.address.pythoninfo.host,
+              "origin": "https://" + instance.address.officeinfo.host,
             }
           });
         }).catch((err) => {
@@ -9658,10 +9658,10 @@ DataRouter.prototype.sync_paymentProject = async function (bilid, requestNumber,
           console.log(err);
         });
 
-        requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/realtimeDesigner", { mode: "sync", proid }, {
           headers: {
             "Content-Type": "application/json",
-            "origin": "https://" + instance.address.pythoninfo.host
+            "origin": "https://" + instance.address.officeinfo.host
           }
         }).then((obj) => {
           if (obj.status >= 300) {
@@ -10464,11 +10464,6 @@ DataRouter.prototype.rou_post_serviceConverting = function () {
           },
         ];
 
-        for (let { column, position, pastValue, finalValue } of map) {
-          await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-          await sleep(timeConst);
-        }
-
         if (report.request.additional) {
           await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
             client: client.name,
@@ -10603,11 +10598,6 @@ DataRouter.prototype.rou_post_designerConverting = function () {
           finalValue: report.response.to.remain,
         },
       ];
-
-      for (let { column, position, pastValue, finalValue } of map) {
-        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-        await sleep(timeConst);
-      }
 
       if (report.request.additional) {
         await kakao.sendTalk("plusDesignerFee", client.name, client.phone, {
@@ -10783,11 +10773,6 @@ DataRouter.prototype.rou_post_requestRefund = function () {
           },
         ];
 
-        for (let { column, position, pastValue, finalValue } of map) {
-          await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-          await sleep(timeConst);
-        }
-
         kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
           client: client.name,
           designer: designer.designer,
@@ -10897,11 +10882,6 @@ DataRouter.prototype.rou_post_contractCancel = function () {
           finalValue: project.process.calculation.payments.remain.amount,
         },
       ];
-
-      for (let { column, position, pastValue, finalValue } of map) {
-        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-        await sleep(timeConst);
-      }
 
       res.send(JSON.stringify(report));
     } catch (e) {
@@ -11740,7 +11720,7 @@ DataRouter.prototype.rou_post_stylingFormSync = function () {
         } else {
           logger.error("styling form sync fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
         }
-        return requestSystem("https://" + address.pythoninfo.host + ":3000/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
+        return requestSystem("https://" + address.officeinfo.host + ":3002/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
       }).catch((err) => {
         logger.error("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
       });

@@ -8,7 +8,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, errorLog, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.backinfo.host + ":3000/dailySales", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.host + ":3002/dailySales", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
     await emergencyAlarm("calendar sync error : " + e.message);

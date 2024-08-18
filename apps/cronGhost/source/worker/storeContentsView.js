@@ -8,7 +8,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, messageLog, errorLog, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.contentsinfo.host + ":" + String(3000) + "/storeContentsView", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.host + ":" + String(3000) + "/storeContentsView", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
     await emergencyAlarm("store contents view error : " + e.message);

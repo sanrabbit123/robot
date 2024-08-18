@@ -150,12 +150,6 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
     await this.setCredentials();
     const nameDictionary = {
       coreDB: { info: "mongoinfo", key: "co0000" },
-      backConsole: { info: "backinfo", key: "ba0000" },
-      logConsole: { info: "testinfo", key: "lo0000" },
-      secondGhost: { info: "secondinfo", key: "se0000" },
-      pythonCloud: { info: "pythoninfo", key: "py0000" },
-      transferLounge: { info: "transinfo", key: "tr0000" },
-      contentsLounge: { info: "contentsinfo", key: "ct0000" },
     };
     const idKeyword = "alive_";
     const region = "ap-northeast-2";

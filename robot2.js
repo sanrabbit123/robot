@@ -17,11 +17,6 @@ Robot.prototype.mongoToJson = async function () {
     const backFolderName = "backup";
     const mongoTargets = [
       [ "mongoinfo", "mongo" ],
-      [ "backinfo", "console" ],
-      [ "pythoninfo", "python" ],
-      [ "testinfo", "log" ],
-      [ "secondinfo", "second" ],
-      [ "contentsinfo", "contents" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
@@ -333,26 +328,6 @@ Robot.prototype.staticConnect = async function () {
   }
 }
 
-Robot.prototype.memberConnect = async function () {
-  try {
-    const MemberLounge = require(process.cwd() + "/apps/memberLounge/memberLounge.js");
-    const app = new MemberLounge();
-    await app.memberConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.localConnect = async function () {
-  try {
-    const MemberLounge = require(process.cwd() + "/apps/localObserver/localObserver.js");
-    const app = new MemberLounge();
-    await app.localConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -443,21 +418,7 @@ Robot.prototype.localReflection = async function (arg = null) {
     const reflection = new MongoReflection();
     let target;
 
-    if (arg === undefined || arg === null) {
-      target = "mongoinfo";
-    } else {
-      if (/mongo/gi.test(arg)) {
-        target = "mongoinfo";
-      } else if (/console/gi.test(arg) || /back/gi.test(arg)) {
-        target = "backinfo";
-      } else if (/log/gi.test(arg)) {
-        target = "testinfo";
-      } else if (/python/gi.test(arg)) {
-        target = "pythoninfo";
-      } else {
-        target = "mongoinfo";
-      }
-    }
+    target = "mongoinfo";
 
     console.log(arg, target);
     await reflection.mongoMigration("local", target);

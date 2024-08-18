@@ -518,7 +518,7 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
 
 BackWorker.prototype.designerCalculation = async function (alarm = true) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, dateToString, autoComma, messageSend } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma, messageSend } = this.mother;
   const MONGOC = new mongo(mongoinfo);
   const PYTHONMONGOC = new mongo(mongolocalinfo);
   try {

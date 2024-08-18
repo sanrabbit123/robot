@@ -16,11 +16,9 @@ const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
     this.address.secondinfo.host,
     this.address.transinfo.host,
     this.address.backinfo.host,
-    this.address.pythoninfo.host,
     this.address.testinfo.host,
     this.address.officeinfo.ghost.host,
     "localhost:3000",
-    "192.168.0.14:3000",
   ];
 
 }

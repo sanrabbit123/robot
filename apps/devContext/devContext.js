@@ -20,10 +20,9 @@ const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongotransinfo, mongologinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongotransinfo, mongologinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo);
   this.MONGOLOCALC = new mongo(mongolocalinfo);
-  this.MONGOPYTHONC = new mongo(mongopythoninfo);
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
   this.MONGOLOGC = new mongo(mongotestinfo);
   this.MONGOLOGCREAL = new mongo(mongologinfo);
@@ -36,7 +35,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo, mongotransinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo, mongotransinfo } = this.mother;
   const { consoleQ, fileSystem, setQueue, shellExec, shellLink, http2InNode, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -407,10 +406,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const res = await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
-
-
 
     // const url = "https://api.pushbullet.com/v2/permanents/ujEVkZaUIQCsjA8RALCBgW_thread_36";
     // const webToken = "OWdKdk94bTNrQ2tUMUNwMVVxSW5jT29kQ3dCZnhnWE46";
@@ -672,193 +667,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-    /*
-
-    // 객단가
-
-    await this.MONGOPYTHONC.connect();
-    const agoDate = new Date(2021, 0, 1, 0, 0, 0);
-    const selfMongo = this.MONGOC;
-    const selfPythonMongo = this.MONGOPYTHONC;
-    const emptyDate = new Date(2000, 0, 1);
-    const toNormal = true;
-    const collection = "generalBill";
-    let projects, clients, bills;
-    let whereQuery;
-    let cliidArr;
-    let orQuery;
-    let proidArr;
-    let billMatrix;
-    let payCancelMatrix;
-    let projectFeeArr;
-    let thisClient, thisProject;
-    let thisRequestNumber;
-    let designFee2021, designFee2022, designFee2023, designFee2024;
-    let returnFeeMatrix;
-    let sheetsId0, sheetsId1, sheetsId2, sheetsId3;
-    let designers, thisDesigner;
-
-    designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
-    projects = await back.getProjectsByQuery({ "process.contract.first.date": { $gte: agoDate } }, { selfMongo, toNormal })
-    proidArr = projects.map((p) => { return { cliid: p.cliid } });
-    clients = await back.getClientsByQuery({ "$or": proidArr }, { selfMongo, toNormal });
-    cliidArr = [ ...new Set(clients.map((c) => { return c.cliid })) ];
-    proidArr = projects.map((p) => { return { "links.proid": p.proid, "links.method": (p.service.online ? "online" : "offline") } })
-    bills = await back.mongoRead(collection, { $or: proidArr }, { selfMongo: selfPythonMongo });
-    billMatrix = bills.map((b) => {
-      const resultArr = objectDeepCopy(b.requests.filter((o) => { return /홈리에종 잔금/gi.test(o.name) || /홈리에종 계약금/gi.test(o.name) }));
-      resultArr.proid = b.links.proid;
-      resultArr.cliid = b.links.cliid;
-      resultArr.method = b.links.method;
-      resultArr.response = objectDeepCopy(b.responses.filter((o) => { return /홈리에종 선금 정산/gi.test(o.name) || /홈리에종 잔금 정산/gi.test(o.name) }));
-      return resultArr;
-    });
-
-    payCancelMatrix = billMatrix.map((arr) => {
-      return arr.map((o, index, original) => {
-        return { items: o.items, pay: o.pay, cancel: o.cancel, proid: original.proid, cliid: original.cliid, method: original.method, response: original.response }
-      })
-    });
-
-    payCancelMatrix = payCancelMatrix.map((arr) => {
-      return arr.map(({ items, pay, cancel, proid, cliid, method, response }) => {
-        if (pay.length === 0) {
-            return { amount: items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0), proid, cliid, method, response };
-        } else {
-          // if (pay.length === cancel.length) {
-          //   return { amount: 0, proid, cliid, method, response: [] };
-          // } else {
-            // return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0) - cancel.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method, response };
-            return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method, response };
-          // }
-        }
-      })
-    })
-
-    projectFeeArr = payCancelMatrix.map((arr, index, original) => {
-      if (arr.length > 0) {
-        return arr.reduce((acc, curr) => { acc.amount = acc.amount + curr.amount; return acc }, { amount: 0, proid: arr[0].proid, cliid: arr[0].cliid, method: arr[0].method, response: arr[0].response });
-      } else {
-        return { amount: 0 };
-      }
-    }).filter((n) => { return n.amount !== 0 })
-
-    projectFeeArr = projectFeeArr.map((obj) => {
-      obj.response = obj.response.map((o) => {
-        return o.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0);
-      }).reduce((acc, curr) => { return acc + curr }, 0);
-      return obj;
-    })
-
-    for (let obj of projectFeeArr) {
-      thisClient = clients.find((o) => { return o.cliid === obj.cliid });
-      [ thisProject ] = projects.filter((o) => { return o.cliid === obj.cliid }).filter((o) => { return o.service.online === (obj.method === "online") });
-      thisRequestNumber = 0;
-      for (let i = 0; i < thisClient.requests.length; i++) {
-        if (thisClient.requests[i].request.timeline.valueOf() < thisProject.proposal.date.valueOf()) {
-          thisRequestNumber = i;
-          break;
-        }
-      }
-      thisDesigner = designers.find((d) => { return d.desid === thisProject.desid });
-
-      obj.serid = thisProject.service.serid;
-      obj.desid = thisProject.desid;
-      obj.designer = thisDesigner.designer;
-      obj.first = thisProject.process.contract.first.date;
-      obj.remain = thisProject.process.contract.remain.date;
-      obj.discount = thisProject.process.contract.remain.calculation.discount;
-
-      obj.timeline = thisClient.requests[thisRequestNumber].request.timeline;
-      obj.family = thisClient.requests[thisRequestNumber].request.family;
-      obj.address = thisClient.requests[thisRequestNumber].request.space.address;
-      obj.contract = thisClient.requests[thisRequestNumber].request.space.contract;
-      obj.pyeong = thisClient.requests[thisRequestNumber].request.space.pyeong;
-
-      obj.name = thisClient.name;
-    }
-
-    designFee2021 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2021; });
-    designFee2022 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2022; });
-    designFee2023 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2023; });
-    designFee2024 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2024; });
-
-    returnFeeMatrix = (arr) => {
-      let matrix;
-      matrix = [ [
-        "성함",
-        "디자이너",
-        "고객 아이디",
-        "디자이너 아이디",
-        "프로젝트 아이디",
-        "디자인비",
-        "정산액",
-        "수익",
-        "온오프라인",
-        "서비스",
-        "문의일",
-        "계약일",
-        "잔금일",
-        "할인율",
-        "가족구성원",
-        "주소",
-        "계약 형태",
-        "평수"
-      ] ];
-      arr.sort((a, b) => { return a.timeline.valueOf() - b.timeline.valueOf() });
-      // arr = arr.filter((obj) => { return obj.remain.valueOf() > emptyDate.valueOf(); });
-      for (let obj of arr) {
-        matrix.push([
-          obj.name,
-          obj.designer,
-          obj.cliid,
-          obj.desid,
-          obj.proid,
-          obj.amount,
-          obj.response,
-          (obj.amount - obj.response),
-          obj.method === "online" ? "온라인" : "오프라인",
-          serviceParsing(obj.serid),
-          dateToString(obj.timeline, true),
-          dateToString(obj.first, true),
-          dateToString(obj.remain, true),
-          obj.discount,
-          obj.family,
-          obj.address,
-          obj.contract,
-          obj.pyeong,
-        ]);
-      }
-      return matrix;
-    }
-
-    sheetsId0 = await sheets.create_newSheets_inPython("디자인비_2021년", parent);
-    await sheets.setting_cleanView_inPython(sheetsId0);
-    await sheets.update_value_inPython(sheetsId0, "", returnFeeMatrix(designFee2021));
-
-    sheetsId1 = await sheets.create_newSheets_inPython("디자인비_2022년", parent);
-    await sheets.setting_cleanView_inPython(sheetsId1);
-    await sheets.update_value_inPython(sheetsId1, "", returnFeeMatrix(designFee2022));
-
-    sheetsId2 = await sheets.create_newSheets_inPython("디자인비_2023년", parent);
-    await sheets.setting_cleanView_inPython(sheetsId2);
-    await sheets.update_value_inPython(sheetsId2, "", returnFeeMatrix(designFee2023));
-
-    sheetsId3 = await sheets.create_newSheets_inPython("디자인비_2024년", parent);
-    await sheets.setting_cleanView_inPython(sheetsId3);
-    await sheets.update_value_inPython(sheetsId3, "", returnFeeMatrix(designFee2024));
-
-    await this.MONGOPYTHONC.close();
-
-    */
-
-
-
-
-
-
     // promotion start ============================================================================================================================================================
     /*
 
@@ -993,7 +801,7 @@ DevContext.prototype.launching = async function () {
     
 
 
-
+    await findCode("backinfo")
 
 
 
@@ -3682,115 +3490,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
-
-    // construct update
-
-    await this.MONGOPYTHONC.connect();
-    const selfMongo = this.MONGOPYTHONC;
-    const selfCoreMongo = this.MONGOC;
-    const collection = "generalBill";
-    let sheetsId;
-    let rows;
-    let targets;
-    let tong;
-    let project;
-    let method;
-    let thisBill, thisBills;
-    let bilid;
-    let client, designer;
-    let updatedBill;
-    let whereQuery, updateQuery;
-    let response;
-    let thisAmount, thisDate;
-
-    sheetsId = "1WeOohoFhlPpqEk4ltxVCi772ie6dLUYWtCNco-RCb1c";
-    rows = await sheets.get_value_inPython(sheetsId, "default!A2:G");
-    targets = rows.map((arr) => { return arr.slice(2) }).map(([ construct, kind, amount, dateString, proid ]) => {
-      const [ year, month, date ] = dateString.trim().split('.');
-      return {
-        name: construct,
-        amount: Number(amount),
-        date: new Date(Number(year), Number(month) - 1, Number(date)),
-        proid
-      }
-    }).filter(({ proid }) => {
-      return proid !== '';
-    });
-
-    targets.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
-
-    tong = {};
-    for (let { name, amount, date, proid } of targets) {
-      if (!Array.isArray(tong[proid])) {
-        tong[proid] = [];
-      }
-      tong[proid].push({ name, amount, date });
-    }
-
-    for (let proid in tong) {
-      tong[proid].sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
-
-      project = await back.getProjectById(proid, { selfMongo: selfCoreMongo });
-
-      method = project.service.online ? "online" : "offline";
-
-      thisBills = await back.mongoRead(collection, {
-        $and: [
-          { "links.proid": proid },
-          { "links.method": method }
-        ],
-      }, { selfMongo });
-      [ thisBill ] = thisBills;
-
-      bilid = thisBill.bilid;
-
-      client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo });
-      designer = await back.getDesignerById(project.desid, { selfMongo: selfCoreMongo });
-
-      for (let { amount, date, name } of tong[proid]) {
-        await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
-          customAmount: { amount: Number(amount) },
-          consumerMode: false,
-          customSub: { name },
-          selfMongo
-        });
-
-        updatedBill = await bill.getBillById(bilid, { selfMongo });
-        [ response ] = updatedBill.responses;
-        thisAmount = response.items[0].amount.pure;
-        thisDate = date;
-
-        whereQuery = { bilid };
-        updateQuery = {};
-
-        updateQuery["responses.0.pay"] = [
-          {
-            amount: thisAmount,
-            date: thisDate,
-            oid: ""
-          }
-        ]
-        updateQuery["responses.0.proofs"] = [
-          {
-            date: thisDate,
-            method: "계좌 이체",
-            proof: "",
-            to: name,
-          }
-        ]
-        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-        console.log(bilid);
-      }
-    }
-
-
-    await this.MONGOPYTHONC.close();
-
-
-    */
-
-
 
 
 
@@ -6458,42 +6157,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // alive test
-
-    // const desid = "d1701_aa01s"
-    // const project = await back.getDesignerById(desid, { selfMongo: this.MONGOC });
-    // const p = (await this.MONGOC.db("miro81").collection("designer").find({ desid }).toArray())[0]
-    // delete p._id;
-    // console.log(JSON.stringify(project.toNormal()).length === JSON.stringify(p).length)
-    // const bilid = "b218s_aa04s";
-    // const b = await bill.getBillById(bilid);
-    // const MONGOC = new mongo(mongopythoninfo);
-    // await MONGOC.connect();
-    // const p = (await MONGOC.db("miro81").collection("generalBill").find({ bilid }).toArray())[0]
-    // await MONGOC.close();
-    // delete p._id;
-    // console.log(JSON.stringify(b.toNormal()).length)
-    // console.log(JSON.stringify(p).length);
-
-
-    // create bill
-
-    // const proid = "p2107_aa46s";
-
-    // console.log(await bill.createStylingBill("p1801_aa01s"));
-    // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
-    // console.log((await bill.getBillById("b218q_aa04s", { selfMongo: this.MONGOLOCALC })).responses[0].items);
-    // console.log((await bill.getBillById("b218r_aa04s")));
-
-    // await bill.designerSelect("p2108_aa63s", "d2007_aa02s", { selfMongo: this.MONGOLOCALC });
-
-    // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
-    // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
-    // console.log(await bill.serviceConverting(proid, "online", "s2011_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
-    // console.log(await bill.amountConverting("b2192_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
-
-
-
 
 
     
@@ -7261,54 +6924,17 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    // const reflection = new MongoReflection();
-    // await reflection.mongoMigration("local", "pythoninfo");
-
-
-
-
-
 
     
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
-    // await rethink.close();
     console.log(`done`);
 
   } catch (e) {
     console.log(e);
     console.log(e?.response?.data);
     await this.MONGOC.close();
-    // await rethink.close();
     console.log(`error`);
-  }
-}
-
-DevContext.prototype.exceptionPid = async function () {
-  const instance = this;
-  const address = this.address;
-  const { requestSystem } = this.mother;
-  try {
-    const exceptionPids = [
-      "p99",
-      "p100",
-      "p104",
-      "p111",
-      "p128",
-      "p145",
-      "p233",
-      "p241",
-      "p280",
-    ]
-    for (let pid of exceptionPids) {
-      console.log(await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", {
-        mode: "exceptionControl",
-        pid,
-        control: "register",
-      }, { headers: { "Content-Type": "application/json" } }));
-    }
-  } catch (e) {
-    console.log(e);
   }
 }
 

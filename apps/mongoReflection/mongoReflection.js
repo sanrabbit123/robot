@@ -2,7 +2,7 @@ const MongoReflection = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const mongoTargets = [ "mongoinfo", "backinfo", "pythoninfo" ];
+  const mongoTargets = [ "mongoinfo" ];
 
   this.mother = new Mother();
   this.back = new BackMaker();

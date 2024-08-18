@@ -37,26 +37,7 @@ def mongoConnection(target: str = "core"):
         raise TypeError("target must be string")
     address = returnAddress()
     url = "mongodb://"
-    if target == "core" or target == "mongo":
-        url += address["mongoinfo"]["user"] + ":" + address["mongoinfo"]["password"] + "@" + address["mongoinfo"]["host"] + ":" + str(address["mongoinfo"]["port"]) + "/admin"
-    elif target == "back":
-        url += address["backinfo"]["user"] + ":" + address["backinfo"]["password"] + "@" + address["backinfo"]["host"] + ":" + str(address["backinfo"]["port"]) + "/admin"
-    elif target == "python" or target == "receipt":
-        url += address["pythoninfo"]["user"] + ":" + address["pythoninfo"]["password"] + "@" + address["pythoninfo"]["host"] + ":" + str(address["pythoninfo"]["port"]) + "/admin"
-    elif target == "test" or target == "log":
-        url += address["testinfo"]["user"] + ":" + address["testinfo"]["password"] + "@" + address["testinfo"]["host"] + ":" + str(address["testinfo"]["port"]) + "/admin"
-    elif target == "second":
-        url += address["secondinfo"]["user"] + ":" + address["secondinfo"]["password"] + "@" + address["secondinfo"]["host"] + ":" + str(address["secondinfo"]["port"]) + "/admin"
-    elif target == "trans":
-        url += address["transinfo"]["user"] + ":" + address["transinfo"]["password"] + "@" + address["transinfo"]["host"] + ":" + str(address["transinfo"]["port"]) + "/admin"
-    elif target == "contents":
-        url += address["contentsinfo"]["user"] + ":" + address["contentsinfo"]["password"] + "@" + address["contentsinfo"]["host"] + ":" + str(address["contentsinfo"]["port"]) + "/admin"
-    elif target == "office":
-        url += address["officeinfo"]["user"] + ":" + address["officeinfo"]["password"] + "@" + address["officeinfo"]["ghost"]["host"] + ":" + str(address["officeinfo"]["port"]) + "/admin"
-    elif target == "local":
-        url += address["officeinfo"]["user"] + ":" + address["officeinfo"]["password"] + "@" + "127.0.0.1" + ":" + str(address["officeinfo"]["port"]) + "/admin"
-    else:
-        url += address["mongoinfo"]["user"] + ":" + address["mongoinfo"]["password"] + "@" + address["mongoinfo"]["host"] + ":" + str(address["mongoinfo"]["port"]) + "/admin"
+    url += address["mongoinfo"]["user"] + ":" + address["mongoinfo"]["password"] + "@" + address["mongoinfo"]["host"] + ":" + str(address["mongoinfo"]["port"]) + "/admin"
     connection = AsyncIOMotorClient(url)
     return connection
 

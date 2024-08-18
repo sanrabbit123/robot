@@ -10,7 +10,7 @@ const worker = async function (package) {
   try {
     const today = new Date();
     if (today.getDay() === 6) {
-      await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
+      await requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
       await errorLog("weekly calculation done");
     }
     return true;

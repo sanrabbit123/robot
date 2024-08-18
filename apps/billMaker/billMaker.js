@@ -962,7 +962,7 @@ BillMaker.returnBankCode = function (name, mode = "code") {
 
 BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null }) {
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   if (typeof collection === "object" && typeof updateQueryArr === "object" && !Array.isArray(updateQueryArr)) {
     const updateQuery = collection;
     option = updateQueryArr;
@@ -983,7 +983,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       }
 
       if (!selfBoo) {
-        MONGOC = new mongo(mongopythoninfo);
+        MONGOC = new mongo(mongoinfo);
         await MONGOC.connect();
       } else {
         MONGOC = option.selfMongo;
@@ -1038,7 +1038,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       }
 
       if (!selfBoo) {
-        MONGOC = new mongo(mongopythoninfo);
+        MONGOC = new mongo(mongoinfo);
         await MONGOC.connect();
       } else {
         MONGOC = option.selfMongo;
@@ -1079,7 +1079,7 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     throw new Error("generalBill must use getBillById or getBillsByQuery");
   }
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   const map = require(`${this.mapDir}/${collection}.js`);
   try {
     const { alive, wrap } = map;
@@ -1101,7 +1101,7 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1142,7 +1142,7 @@ BillMaker.prototype.returnBillDummies = function (subject) {
 
 BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: null }) {
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     const map = require(`${this.mapDir}/generalBill.js`);
     let MONGOC;
@@ -1155,7 +1155,7 @@ BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: n
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1178,7 +1178,7 @@ BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: n
 
 BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { selfMongo: null }) {
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     const map = require(`${this.mapDir}/generalBill.js`);
     let MONGOC;
@@ -1191,7 +1191,7 @@ BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { sel
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1224,7 +1224,7 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
@@ -1238,7 +1238,7 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1260,7 +1260,7 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
 
 BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: null }) {
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   try {
     let MONGOC;
     let selfBoo;
@@ -1270,7 +1270,7 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1294,7 +1294,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo, mongoconsoleinfo, sleep, equalJson } = this.mother;
+  const { mongo, mongoinfo, mongoconsoleinfo, sleep, equalJson } = this.mother;
   const constNames = {
     class: BillMaker.billDictionary.styling.class,
     name: BillMaker.billDictionary.styling.name,
@@ -1319,7 +1319,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1480,7 +1480,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
 BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = { selfMongo: null }) {
   const instance = this;
-  const { mongo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   const collection = "constructInvoice";
   const map = require(`${this.mapDir}/${collection}.js`);
   try {
@@ -1498,7 +1498,7 @@ BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = {
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1536,7 +1536,7 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, uniqueValue } = this.mother;
+  const { mongo, mongoinfo, uniqueValue } = this.mother;
   const organizer = {
     name: "홈리에종",
     businessNumber: "221-81-49759",
@@ -1575,7 +1575,7 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1859,7 +1859,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
     throw new Error("invaild input");
   }
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const { contractAmount, vatRatio, freeRatio, distancePercentage } = BillMaker.billDictionary.styling.etc;
@@ -1890,7 +1890,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2062,7 +2062,7 @@ BillMaker.prototype.requestEjection = async function (bilid, requestIndex, optio
   }
 
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  const { mongo, mongoinfo, equalJson } = this.mother;
   try {
     let MONGOC;
     let selfBoo;
@@ -2076,7 +2076,7 @@ BillMaker.prototype.requestEjection = async function (bilid, requestIndex, optio
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2120,7 +2120,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     throw new Error("invaild input");
   }
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
   const stylingResponses = BillMaker.billDictionary.styling.responses;
   const { contractAmount, vatRatio, freeRatio, distancePercentage } = BillMaker.billDictionary.styling.etc;
@@ -2152,7 +2152,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2319,7 +2319,7 @@ BillMaker.prototype.responseEjection = async function (bilid, responseIndex, opt
   }
 
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  const { mongo, mongoinfo, equalJson } = this.mother;
   try {
     let MONGOC;
     let selfBoo;
@@ -2333,7 +2333,7 @@ BillMaker.prototype.responseEjection = async function (bilid, responseIndex, opt
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2383,7 +2383,7 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
     throw new Error("must be request or response id");
   }
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const bilid = id.split('_')[0] + "_" + id.split('_')[1];
   const toggle = /^r/.test(id.split('_')[2]) ? true : false;
   const stylingItems = BillMaker.billDictionary.styling.goods;
@@ -2444,7 +2444,7 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2549,7 +2549,7 @@ BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfM
     throw new Error("must be request or response id");
   }
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const bilid = id.split('_')[0] + "_" + id.split('_')[1];
   const toggle = /^r/.test(id.split('_')[2]) ? true : false;
   const stylingItems = BillMaker.billDictionary.styling.goods;
@@ -2585,7 +2585,7 @@ BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfM
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2664,11 +2664,11 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
     throw new Error("invaild input");
   }
   const instance = this;
-  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  const { mongo, mongoinfo, equalJson } = this.mother;
   const address = this.address;
   let selfMongo, selfBoo;
   if (option.selfMongo === undefined || option.selfMongo === null) {
-    selfMongo = new mongo(mongopythoninfo);
+    selfMongo = new mongo(mongoinfo);
     selfBoo = false;
   } else {
     selfMongo = option.selfMongo;
@@ -2740,9 +2740,9 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
 BillMaker.prototype.passiveSyncAll = async function () {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
-  const MONGOPYTHONC = new mongo(mongopythoninfo);
+  const MONGOPYTHONC = new mongo(mongoinfo);
   try {
     await MONGOC.connect();
     await MONGOPYTHONC.connect();
@@ -2962,7 +2962,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
@@ -2984,7 +2984,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3083,7 +3083,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
@@ -3107,7 +3107,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3256,7 +3256,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
@@ -3284,7 +3284,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3383,7 +3383,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
@@ -3412,7 +3412,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3561,7 +3561,7 @@ BillMaker.prototype.designerSelect = async function (proid, desid, option = { se
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3656,7 +3656,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
   const doingSignature = "billMaker_serviceConvertingDoing_" + proid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
   try {
@@ -3718,7 +3718,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -4130,7 +4130,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
   const doingSignature = "billMaker_designerConvertingDoing_" + proid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
   const { vatRatio, freeRatio, designerCancel } = BillMaker.billDictionary.styling.etc;
   try {
     let MONGOC, MONGOCOREC;
@@ -4198,7 +4198,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -4645,7 +4645,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
   const doingSignature = "billMaker_amountConvertingDoing_" + bilid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
   const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -4698,7 +4698,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -4984,7 +4984,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
   const address = this.address;
   const back = this.back;
   const crypto = require("crypto");
-  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, emergencyAlarm } = this.mother;
+  const { mongo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, emergencyAlarm } = this.mother;
   const dateToTimestamp = (date) => {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
     return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
@@ -5048,7 +5048,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -5345,7 +5345,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, autoComma, messageSend } = this.mother;
+  const { mongo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, autoComma, messageSend } = this.mother;
   try {
     let selfBoo;
     let selfCoreBoo;
@@ -5404,7 +5404,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -5691,7 +5691,7 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, requestSystem, ipCheck, equalJson } = this.mother;
+  const { mongo, mongoinfo, requestSystem, ipCheck, equalJson } = this.mother;
   const now = new Date();
   const designerCancel = BillMaker.billDictionary.styling.etc.designerCancel;
   try {
@@ -5726,7 +5726,7 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -5858,7 +5858,7 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const { mongo, mongoinfo, equalJson, sleep } = this.mother;
   try {
     const { first, start, middle, remain } = amountObject;
     let thisBill;
@@ -5879,7 +5879,7 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo);
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -6538,8 +6538,8 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
       });
     }
 
-    await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashOut: [ outMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
-    await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashIn: [ inMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.host + ":3002/cashReceipt", { json: JSON.stringify({ cashOut: [ outMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.host + ":3002/cashReceipt", { json: JSON.stringify({ cashIn: [ inMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
 
     return true;
 

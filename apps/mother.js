@@ -5,7 +5,6 @@ const Mother = function () {
   this.mongoinfoObj = infoObj.mongoinfo;
 
   this.mongoinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
-  this.mongopythoninfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongoconsoleinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
   this.mongologinfo = "mongodb://" + infoObj.officeinfo.user + ':' + infoObj.officeinfo.password + '@' + infoObj.officeinfo.ghost.host + ':' + String(infoObj.officeinfo.port) + "/admin";
@@ -1233,7 +1232,7 @@ Mother.prototype.ipCheck = function () {
   const keys = Object.keys(ADDRESS);
   const values = Object.values(ADDRESS);
   return new Promise(function(resolve, reject) {
-    axios.get("https://" + ADDRESS["pythoninfo"]["host"] + ":3000").then(function (response) {
+    axios.get("https://" + ADDRESS["officeinfo"]["host"] + ":3002").then(function (response) {
       const ip = response.data.replace(/[^0-9\.]/g, '');
       let obj;
       let target;
