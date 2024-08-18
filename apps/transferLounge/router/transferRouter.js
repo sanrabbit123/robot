@@ -144,7 +144,7 @@ TransferRouter.prototype.rou_get_First = function () {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-        res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script></html>`));
+        res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/${req.params.id}";</script></html>`));
       }
 
     } catch (e) {
