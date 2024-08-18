@@ -3632,71 +3632,7 @@ GeneralJs.prototype.greenBar = function () {
     svg_icon.style[i] = additionalStyle[i];
   }
   svg_icon.addEventListener("click", function (e) {
-    const whitePopupClassName = "whitePopupClassName";
-    const totalContents = document.getElementById("totalcontents");
-    const zIndex = 99;
-    let margin;
-    let cancelBack, whitePrompt;
-    margin = 30;
-    GeneralJs.removeByClass(whitePopupClassName);
-    
-    cancelBack = GeneralJs.createNode({
-      mother: totalContents,
-      class: [ whitePopupClassName ],
-      event: {
-        click: (e) => {
-          GeneralJs.removeByClass(whitePopupClassName);
-        },
-      },
-      style: {
-        display: "block",
-        position: "fixed",
-        top: String(0),
-        left: String(0) + ea,
-        width: GeneralJs.withOut(0, ea),
-        height: GeneralJs.withOut(instance.belowHeight, ea),
-        background: GeneralJs.colorChip.black,
-        opacity: String(0.3),
-        zIndex: String(zIndex),
-      }
-    });
-  
-    whitePrompt = GeneralJs.createNode({
-      mother: totalContents,
-      class: [ whitePopupClassName ],
-      style: {
-        display: "block",
-        position: "fixed",
-        top: String(margin) + ea,
-        left: String(0 + margin) + ea,
-        width: GeneralJs.withOut(0 + (margin * 2), ea),
-        height: GeneralJs.withOut(instance.belowHeight + (margin * 2), ea),
-        borderRadius: String(5) + "px",
-        background: GeneralJs.colorChip.white,
-        boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
-        animation: "fadeuplite 0.3s ease forwards",
-        overflow: "hidden",
-        zIndex: String(zIndex),
-      },
-      child: {
-        mode: "iframe",
-        attribute: {
-          src: "https://" + FILEHOST + ":6081/vnc_lite.html",
-          // src: BACKHOST + "/email?entire=true&dataonly=true" + (typeof GeneralJs.returnGet().emailtarget === "string" ? ("&target=" + GeneralJs.returnGet().emailtarget) : ""),
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        style: {
-          display: "block",
-          position: "relative",
-          top: String(0),
-          left: String(0),
-          width: GeneralJs.withOut(0, ea),
-          height: String(100) + '%',
-          border: String(0),
-        }
-      }
-    });
+    GeneralJs.blankHref(SECONDHOST + "/code");
   });
   svg_icon.addEventListener("contextmenu", (e) => {
     e.preventDefault();
