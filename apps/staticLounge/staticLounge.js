@@ -50,17 +50,10 @@ StaticLounge.prototype.staticConnect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC;
-    MONGOC = new mongo(mongoinfo);
-    MONGOLOCALC = new mongo(mongolocalinfo);
-    MONGOCONSOLEC = new mongo(mongoconsoleinfo);
-    MONGOCONTENTSC = new mongo(mongocontentsinfo);
+    const MONGOC = new mongo(mongoinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();
-    await MONGOLOCALC.connect();
-    await MONGOCONSOLEC.connect();
-    await MONGOCONTENTSC.connect();
 
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -75,7 +68,7 @@ StaticLounge.prototype.staticConnect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -101,7 +94,7 @@ StaticLounge.prototype.staticConnect = async function () {
 
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC, kakaoInstance, humanInstance);
+    const router = new StaticRouter(MONGOC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

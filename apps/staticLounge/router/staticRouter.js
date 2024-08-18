@@ -1,4 +1,4 @@
-const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC, kakao, human) {
+const StaticRouter = function (MONGOC, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -27,8 +27,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.host = this.address.officeinfo.ghost.host;
   this.mongo = MONGOC;
-  this.mongolocal = MONGOLOCALC;
-  this.mongoconsole = MONGOCONSOLEC;
+  this.mongolocal = MONGOC;
+  this.mongoconsole = MONGOC;
   this.members = {};
 
   this.formidable = require("formidable");
@@ -80,14 +80,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTS
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
-    this.address.testinfo.host,
-    this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
-    "home-liaison.servehttp.com",
     "localhost:3000",
-    "172.30.1.90:3000",
-    "172.30.1.37:3000",
-    "192.168.0.90:3000",
   ];
 }
 
@@ -261,11 +255,23 @@ StaticRouter.prototype.rou_get_Root = function () {
   obj.link = '/';
   obj.func = async function (req, res, logger) {
     try {
-      res.redirect("https://" + address.frontinfo.host);
+      res.set({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
-      res.redirect("https://" + address.frontinfo.host);
+      res.set({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
     }
   }
   return obj;
@@ -298,9 +304,6 @@ StaticRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
-      } else if (((req.params.id === "microsoft" && typeof req.query === "object") && req.query !== null) && typeof req.query.code === "string") {
-        microsoft.codeToAccessToken(req.query.code).catch((err) => { console.log(err) });
-        res.send(JSON.stringify({ message: "hi" }));
       } else if (req.params.id === "ip") {
         const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
         res.set({
@@ -311,7 +314,13 @@ StaticRouter.prototype.rou_get_First = function () {
         });
         res.send(String(ip).replace(/[^0-9\.]/gi, ''));
       } else {
-        res.send(JSON.stringify({ message: "hi" }));
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(JSON.stringify(`<script>window.location.href = "https://${instance.address.officeinfo.host}:3002/client";</script>`));
       }
 
     } catch (e) {
