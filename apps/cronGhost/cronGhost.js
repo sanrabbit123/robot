@@ -2,12 +2,10 @@ const CronGhost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-  const AwsAPIs = require(process.cwd() + "/apps/awsAPIs/awsAPIs.js")
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
-  this.aws = new AwsAPIs();
   this.generalPort = 3000;
 }
 
@@ -17,7 +15,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog, dateToString, stringToDate } = this.mother;
   const { generalPort } = this;
   const controlPath = "/ssl";
-  const aws = this.aws;
   const back = this.back;
   const selfMongo = MONGOC;
   const bar = "================================================";
@@ -194,44 +191,18 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   const { requestSystem, errorLog, emergencyAlarm, aliveLog } = this.mother;
   try {
     const targets = [
-      { name: "office", host: instance.address.officeinfo.ghost.host },
+      { name: "office", port: 3000 },
+      { name: "office", port: 3002 },
+      { name: "office", port: 3003 },
     ]
     const robotPort = 3000;
     const pathConst = "/disk";
     const protocol = "https:";
-    const aws = this.aws;
-    const back = this.back;
-    const collection = "costLog";
-    const selfMongo = MONGOC;
-    let response;
-    let tong;
-    let rows;
-    let start, end;
 
-    for (let { name, host } of targets) {
-      response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
-      console.log(response.data.disk);
-      if (response.data.disk[2] < 100000) {
-        await emergencyAlarm(name + " " + "disk warning");
-      }
+    for (let { name, port } of targets) {
+      await requestSystem(protocol + "//" + instance.address.officeinfo.ghost.host + ":" + String(port) + pathConst);
     }
 
-    start = new Date();
-    end = new Date();
-
-    start.setDate(start.getDate() - 4);
-    end.setDate(end.getDate() - 1);
-
-    tong = await aws.getCostByDate(start, end);
-
-    for (let obj of tong) {
-      rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
-      if (rows.length === 0) {
-        await back.mongoCreate(collection, obj, { selfMongo });
-      }
-    }
-
-    await aliveLog("disk test and cost save done");
   } catch (e) {
     console.log(e);
   }

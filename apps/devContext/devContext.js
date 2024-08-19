@@ -7,7 +7,6 @@ const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const GoogleChrome = require(APP_PATH + "/googleAPIs/googleChrome.js");
-const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
@@ -86,6 +85,7 @@ DevContext.prototype.launching = async function () {
 
 
     
+    await findCode("aws-sdk")
 
     
     

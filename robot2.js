@@ -714,12 +714,6 @@ Robot.prototype.arpScan = async function () {
   }
 }
 
-Robot.prototype.magazineMaker = function (mid) {
-  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
-  const app = new ResourceMaker();
-  app.magazineMaker(mid).catch((err) => { console.log(err); })
-}
-
 Robot.prototype.designerTendencySync = async function () {
   try {
     const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);

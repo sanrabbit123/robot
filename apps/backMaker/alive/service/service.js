@@ -46,45 +46,4 @@ Service.prototype.toMatrix = function () {
   return matrix;
 }
 
-Service.prototype.uploadAppleNote = async function () {
-  if (this.kind !== "checklist") {
-    throw new Error("only available in checklist");
-  }
-  const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
-  const br = "<br><br>";
-  const colon = ". ";
-  const { title, checklist } = this.setting.contents;
-  let body;
-  let num;
-  let note;
-  try {
-    body = '';
-    body += title;
-    body += br;
-
-    body += this.setting.target.collection;
-    body += br;
-    body += this.setting.target.action;
-    body += br;
-
-    num = 0;
-    for (let { title, children } of checklist) {
-      body += "_" + String(num + 1) + " " + title;
-      body += br;
-      for (let { title, contents } of children) {
-        body += "T" + colon + title;
-        body += "<br>";
-        body += "C" + colon + contents.replace(/\<b\%/gi, "[").replace(/\%b\>/gi, "]");
-        body += br;
-      }
-      num++;
-    }
-
-    note = new AppleNotes({ folder: "checklist", subject: this.key });
-    await note.createNote(body);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 module.exports = Service;
