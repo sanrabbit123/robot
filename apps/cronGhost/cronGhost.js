@@ -169,15 +169,7 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).catch((e) => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
       throw new Error(e);
     });
 

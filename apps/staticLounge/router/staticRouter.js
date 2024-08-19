@@ -12,10 +12,7 @@ const StaticRouter = function (MONGOC, kakao, human) {
   const GoogleForms = require(process.cwd() + "/apps/googleAPIs/googleForms.js");
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
-  const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
-  const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
   const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
   const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
@@ -42,9 +39,6 @@ const StaticRouter = function (MONGOC, kakao, human) {
   this.analytics = new GoogleAnalytics();
   this.slides = new GoogleSlides();
   this.forms = new GoogleForms();
-  this.notion = new NotionAPIs();
-  this.microsoft = new MicrosoftAPIs();
-  this.devices = new LocalDevices();
   this.report = new LogReport(MONGOC);
   this.naver = new NaverAPIs();
   this.facebook = new FacebookAPIs();
@@ -279,7 +273,6 @@ StaticRouter.prototype.rou_get_Root = function () {
 
 StaticRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const microsoft = this.microsoft;
   const { diskReading, aliveMongo } = this.mother;
   let obj = {};
   obj.link = "/:id";
@@ -1038,100 +1031,6 @@ StaticRouter.prototype.rou_post_createNewForms = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_createNewNotionPage = function () {
-  const instance = this;
-  const notion = this.notion;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewNotionPage" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let notionResult;
-      let target;
-
-      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
-      if (target.trim() === '') {
-        target = sambaToken;
-      }
-      if (!/^__/.test(target)) {
-        target = sambaToken + "/" + target;
-      }
-      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      notionResult = await notion.createPage(name);
-      await fileSystem(`writeJson`, [ target + "/" + name + ".ntpage", notionResult ]);
-
-      res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewNotionPage): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
-  const instance = this;
-  const notion = this.notion;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewNotionKanban" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let notionResult;
-      let target;
-
-      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
-      if (target.trim() === '') {
-        target = sambaToken;
-      }
-      if (!/^__/.test(target)) {
-        target = sambaToken + "/" + target;
-      }
-      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      notionResult = await notion.createKanban(name);
-      await fileSystem(`writeJson`, [ target + "/" + name + ".ntkanban", notionResult ]);
-
-      res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewNotionKanban): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
 StaticRouter.prototype.rou_post_createNewLinkFile = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson, stringToLink } = this.mother;
@@ -1175,252 +1074,6 @@ StaticRouter.prototype.rou_post_createNewLinkFile = function () {
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_createNewLinkFile): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewExcel = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewExcel" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let microsoftResult;
-      let target;
-
-      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
-      if (target.trim() === '') {
-        target = sambaToken;
-      }
-      if (!/^__/.test(target)) {
-        target = sambaToken + "/" + target;
-      }
-      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      microsoftResult = await microsoft.createExcel(name);
-      await fileSystem(`writeJson`, [ target + "/" + name + ".odxlsx", {
-        url: microsoftResult.editUrl,
-        ...microsoftResult
-      } ]);
-
-      res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewExcel): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewWord = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewWord" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let microsoftResult;
-      let target;
-
-      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
-      if (target.trim() === '') {
-        target = sambaToken;
-      }
-      if (!/^__/.test(target)) {
-        target = sambaToken + "/" + target;
-      }
-      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      microsoftResult = await microsoft.createWord(name);
-      await fileSystem(`writeJson`, [ target + "/" + name + ".oddocx", {
-        url: microsoftResult.editUrl,
-        ...microsoftResult
-      } ]);
-
-      res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewWord): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewPowerPoint = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewPowerPoint" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let microsoftResult;
-      let target;
-
-      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
-      if (target.trim() === '') {
-        target = sambaToken;
-      }
-      if (!/^__/.test(target)) {
-        target = sambaToken + "/" + target;
-      }
-      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      microsoftResult = await microsoft.createPowerPoint(name);
-      await fileSystem(`writeJson`, [ target + "/" + name + ".odpptx", {
-        url: microsoftResult.editUrl,
-        ...microsoftResult
-      } ]);
-
-      res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewPowerPoint): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { equalJson } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/downloadUrlFromOneDrive" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.id === undefined) {
-        throw new Error("invalid post");
-      }
-      const { id } = equalJson(req.body);
-      const encodedUrl = await microsoft.getDownloadUrl(id, true);
-      res.send(JSON.stringify({ url: encodedUrl }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_downloadUrlFromOneDrive): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_microsoftConvert = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, equalJson, shellExec } = this.mother;
-  const { staticConst, sambaToken } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/microsoftConvert" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.target === undefined || req.body.path === undefined) {
-        throw new Error("invalid post");
-      }
-      const { target, path } = equalJson(req.body);
-      let motherFolder, thisTarget;
-      let microsoftResult;
-
-      if (!microsoft.isMicrosoftFile(target)) {
-        throw new Error("invalid target");
-      }
-
-      motherFolder = path.replace(/^\//i, '').replace(/\/$/i, '');
-      if (motherFolder.trim() === '') {
-        motherFolder = sambaToken;
-      }
-      if (!/^__/.test(motherFolder)) {
-        motherFolder = sambaToken + "/" + motherFolder;
-      }
-      motherFolder = motherFolder.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      thisTarget = target.replace(/^\//i, '').replace(/\/$/i, '');
-      if (thisTarget.trim() === '') {
-        thisTarget = sambaToken;
-      }
-      if (!/^__/.test(thisTarget)) {
-        thisTarget = sambaToken + "/" + thisTarget;
-      }
-      thisTarget = thisTarget.replace(new RegExp(sambaToken, "gi"), staticConst);
-
-      microsoftResult = await microsoft.uploadDocument(thisTarget);
-      await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(thisTarget), {
-        url: microsoftResult.editUrl,
-        ...microsoftResult
-      } ]);
-      await shellExec(`rm`, [ `-rf`, thisTarget ]);
-
-      res.send(JSON.stringify({ url: microsoftResult.editUrl }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_microsoftConvert): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1509,7 +1162,6 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const { staticConst } = this;
   const osTempFolder = "/tmp";
   const hangul = this.hangul;
-  const microsoft = this.microsoft;
   let obj;
   obj = {};
   obj.link = [ "/generalFileUpload" ];
@@ -1534,7 +1186,6 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
             let thisFileName;
-            let microsoftResult;
             let thisFileExe;
 
             filesKey = Object.keys(files);
@@ -3335,83 +2986,6 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
-  const microsoft = this.microsoft;
-  let obj = {};
-  obj.link = [ "/getMicrosoftAccessToken" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const accessToken = await microsoft.getAccessTokenInServer();
-      res.send(JSON.stringify({ accessToken }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_getMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue, sleep } = this.mother;
-  const microsoft = this.microsoft;
-  let obj = {};
-  obj.link = [ "/renewMicrosoftAccessToken" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      let boo;
-      boo = await microsoft.renewAccessToken();
-      while (!boo) {
-        await sleep(3000);
-        boo = await microsoft.renewAccessToken();
-      }
-      res.send(JSON.stringify({ message: "done" }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_renewMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_getMacArr = function () {
-  const instance = this;
-  const devices = this.devices;
-  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
-  let obj = {};
-  obj.link = [ "/getMacArr" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const macArr = await devices.getMacArr();
-      res.send(JSON.stringify(macArr));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_getMacArr): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
   const instance = this;
   const address = this.address;
@@ -3439,80 +3013,6 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
-  const instance = this;
-  const devices = this.devices;
-  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
-  let obj = {};
-  obj.link = [ "/parsingDevicesStatus" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      res.send(JSON.stringify({}));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
-  const instance = this;
-  const { fileSystem, equalJson, shellExec, messageSend } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/storeDevicesStatus" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_getDevicesStatus = function () {
-  const instance = this;
-  const devices = this.devices;
-  const { fileSystem, equalJson, shellExec, messageSend } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/getDevicesStatus" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      const resultObj = await devices.getDevicesStatus();
-      res.send(JSON.stringify(resultObj));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
