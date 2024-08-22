@@ -574,27 +574,6 @@ Robot.prototype.passiveSync = async function () {
   }
 }
 
-Robot.prototype.devAliveSync = async function () {
-  try {
-    const path = `${process.cwd()}/apps/backMaker`;
-    const { shell, shellLink } = this.mother;
-    const list = [
-      [ "alive", "devAlive" ],
-      [ "map", "devMap" ]
-    ];
-    let command;
-    for (let [ from, to ] of list) {
-      command = "";
-      command += `rm -rf ${shellLink(path)}/${shellLink(to)};`;
-      command += `cp -r ${shellLink(path)}/${shellLink(from)} ${shellLink(path)}/${shellLink(to)};`;
-      shell.exec(command);
-      console.log(`sync ${from} => ${to} done`);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.cronServer = async function () {
   try {
     const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
@@ -906,13 +885,6 @@ const MENU = {
       const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
       const dev = new DevContext();
       await dev.calendarSync();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  devAliveSync: async function () {
-    try {
-      await robot.devAliveSync();
     } catch (e) {
       console.log(e);
     }
