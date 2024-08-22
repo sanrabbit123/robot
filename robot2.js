@@ -271,16 +271,6 @@ Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   }
 }
 
-Robot.prototype.logConnect = async function (testMode = false) {
-  try {
-    const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
-    const app = new LogConsole();
-    await app.logConnect(testMode);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.transferConnect = async function () {
   try {
     const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
@@ -1001,20 +991,6 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  log: async function () {
-    try {
-      await robot.logConnect(false);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  logTest: async function () {
-    try {
-      await robot.logConnect(true);
     } catch (e) {
       console.log(e);
     }

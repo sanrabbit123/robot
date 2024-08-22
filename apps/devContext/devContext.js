@@ -84,9 +84,9 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    await findCode("releaseDev");
-    
 
+    await findCode("ExcelReader")
+    await findCode("excelReader")
     
     
     

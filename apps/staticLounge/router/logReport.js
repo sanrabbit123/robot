@@ -5,7 +5,7 @@ const LogReport = function (MONGOC) {
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mongo = MONGOC;
-  this.host = this.address.testinfo.host;
+  this.host = this.address.officeinfo.host;
   this.realEstate = {
     collection: "realEstate",
     key: "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==",
@@ -19,8 +19,7 @@ LogReport.prototype.miningRealEstate = async function () {
   const address = this.address;
   const { host } = this;
   const { collection, key, keyConst } = this.realEstate;
-  const { fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, sleep } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, sleep, zeroAddition } = this.mother;
   try {
     const selfMongo = this.mongo;
     const url = "https://api.odcloud.kr/api/RealEstateTradingSvc/v1/getRealEstateTradingCountBuildType";
