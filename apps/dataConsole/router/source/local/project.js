@@ -3518,8 +3518,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   let refundReceipt;
                                   let cancelAmount;
 
-                                  obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : (infoCopied[index].data.payMethod !== "ACCOUNT" ? "무통장" : "계좌 이체");
-                                  obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
+                                  if (infoCopied[index] !== undefined) {
+                                    obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : (infoCopied[index].data.payMethod !== "ACCOUNT" ? "무통장" : "계좌 이체");
+                                    obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
+                                  } else {
+                                    obj.payMethod = "계좌 이체";
+                                    obj.detail = "";
+                                  }
                                   if (typeof obj.detail === "string") {
                                     obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
                                   } else {
