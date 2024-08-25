@@ -451,7 +451,6 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
         const { fileSystem, shellExec, shellLink, mysqlQuery } = this.mother;
         try {
           const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-          const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
           const Filter = this.back.idFilter("designer");
           const frontSetting = await this.returnFrontObject(porlid, index, designerObj);
           console.log(frontSetting);

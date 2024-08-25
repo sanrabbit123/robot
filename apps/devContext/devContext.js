@@ -85,8 +85,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("ExcelReader")
-    await findCode("excelReader")
+    await findCode("svgOptimizer")
+
+
+
+
     
     
     
@@ -444,7 +447,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
+    
 
     // version 0
 
@@ -7698,38 +7701,6 @@ DevContext.prototype.pageRender = async function (targetAi) {
     await ghostFileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(resultFolder)}`);
 
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.makeSvgTong = async function () {
-  const instance = this;
-  const { fileSystem } = this.mother;
-  try {
-    const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
-    const target = process.cwd() + "/temp/svg";
-    let targetDir, temp, targetTong, optimizer, optimizeResult;
-    let svgTongString;
-
-    targetDir = await fileSystem(`readDir`, [ target ]);
-    targetDir = targetDir.filter((i) => { return ((i !== `.DS_Store`) && (!/\.js/i.test(i)) && i !== "tong.js"); });
-    targetTong = [];
-
-    for (let svg of targetDir) {
-      targetTong.push(target + "/" + svg);
-    }
-
-    optimizer = new SvgOptimizer(targetTong);
-    optimizeResult = await optimizer.launching();
-
-    svgTongString = '';
-    for (let i in optimizeResult) {
-      svgTongString += "SvgTong." + i + " = " + "'" + optimizeResult[i].replace(/\'/g, '"') + "'";
-      svgTongString += "\n\n";
-    }
-
-    await fileSystem(`write`, [ `${process.cwd()}/temp/svg/tong.js`, svgTongString ]);
   } catch (e) {
     console.log(e);
   }
