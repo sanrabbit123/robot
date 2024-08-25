@@ -417,12 +417,12 @@ DesignerProposalJs.prototype.insertInitBox = async function () {
 
     if (big) {
       descriptionContents = [
-        `${instance.client.name}} 고객님께 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는 디자이너를 제안드립니다.`,
+        `${instance.client.name} 고객님께 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는 디자이너를 제안드립니다.`,
         `선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
       ];
     } else {
       descriptionContents = [
-        `${instance.client.name}} 고객님께 <b%${serviceParsing(instance.project.service)}%b>와`,
+        `${instance.client.name} 고객님께 <b%${serviceParsing(instance.project.service)}%b>와`,
         `그에 맞는 디자이너를 제안드립니다. 선택된 디자이너는 고객님의 예산을`,
         `현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
       ];
