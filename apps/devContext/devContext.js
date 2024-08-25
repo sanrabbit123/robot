@@ -85,7 +85,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("svgOptimizer")
+    await findCode("MongoReflection")
 
 
 

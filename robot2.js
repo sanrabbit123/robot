@@ -321,64 +321,9 @@ Robot.prototype.kakaoTokenGenerate = async function () {
   }
 }
 
-Robot.prototype.ultimateReflection = async function () {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    await reflection.ultimateReflection();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.coreReflection = async function () {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    await reflection.coreReflection();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.frontReflection = async function (testMode = false) {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    await reflection.frontReflection("local", testMode);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.frontSync = async function () {
   try {
     await this.mother.requestSystem("https://" + this.address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.mysqlReflection = async function () {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    await reflection.mysqlReflection();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.localReflection = async function (arg = null) {
-  try {
-    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-    const reflection = new MongoReflection();
-    let target;
-
-    target = "mongoinfo";
-
-    console.log(arg, target);
-    await reflection.mongoMigration("local", target);
   } catch (e) {
     console.log(e);
   }
@@ -762,51 +707,9 @@ const MENU = {
       console.log(e);
     }
   },
-  reflect: async function () {
-    try {
-      await robot.ultimateReflection();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  coreReflect: async function () {
-    try {
-      await robot.coreReflection();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  frontReflect: async function () {
-    try {
-      await robot.frontReflection(false);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  frontReflectTest: async function () {
-    try {
-      await robot.frontReflection(true);
-    } catch (e) {
-      console.log(e);
-    }
-  },
   frontSync: async function () {
     try {
       await robot.frontSync();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  mysqlReflect: async function () {
-    try {
-      await robot.mysqlReflection();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  localReflect: async function () {
-    try {
-      await robot.localReflection(process.argv[3]);
     } catch (e) {
       console.log(e);
     }
