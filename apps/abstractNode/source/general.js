@@ -7067,7 +7067,7 @@ GeneralJs.promptVeryLong = function (message, preValue = '') {
   inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 920;
+  inputBoxHeight = 400;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
