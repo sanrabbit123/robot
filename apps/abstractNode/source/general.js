@@ -7061,13 +7061,13 @@ GeneralJs.promptVeryLong = function (message, preValue = '') {
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
-  paddingBottom = 952;
+  paddingBottom = 452;
   size0 = 14;
   size1 = 15;
   inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 400;
+  inputBoxHeight = 420;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
