@@ -1,15 +1,64 @@
 const BackReport = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   this.mother = new Mother();
-  this.dir = process.cwd() + "/apps/backMaker";
-  const BackMaker = require(this.dir + "/backMaker.js");
   this.back = new BackMaker();
+  this.dir = process.cwd() + "/apps/backMaker";
   this.mapDir = this.dir + "/map";
   this.pastDir = this.dir + "/intoMap";
   this.tempDir = process.cwd() + "/temp";
   this.resourceDir = this.dir + "/resource";
   this.aliveDir = this.dir + "/alive";
   this.idFilterDir = this.dir + "/idFilter";
+}
+
+class ProposalTong {
+  get matrix() {
+    let temp, temp2, temp3;
+
+    temp3 = {};
+    for (let desid in this) {
+      temp2 = [];
+      temp2.push([ "디자이너명", "제안 횟수", "평균 금액", "제안 정보 =>", "제안 일자", "고객명", "고객 평수", "제안 금액", "계약 정보 =>", "계약 제안 일자", "고객명", "고객 평수", "제안 금액" ]);
+      for (let i = 0; i < this[desid].proposal.length; i++) {
+        temp = [];
+        if (i === 0) {
+          temp.push(this[desid].designer);
+          temp.push(this[desid].report.proposal.numberString);
+          temp.push(this[desid].report.proposal.averageString);
+        } else {
+          temp.push("");
+          temp.push("");
+          temp.push("");
+        }
+
+        temp.push("-");
+        temp.push(dateToString(this[desid].proposal[i].date));
+        temp.push(this[desid].proposal[i].client);
+        temp.push(numberToPyeong(this[desid].proposal[i].pyeong));
+        temp.push(numberToWon(this[desid].proposal[i].fee));
+
+        if (this[desid].contract[i] !== undefined) {
+          temp.push("-");
+          temp.push(dateToString(this[desid].contract[i].date));
+          temp.push(this[desid].contract[i].client);
+          temp.push(numberToPyeong(this[desid].contract[i].pyeong));
+          temp.push(numberToWon(this[desid].contract[i].fee));
+        } else {
+          temp.push("");
+          temp.push("");
+          temp.push("");
+          temp.push("");
+          temp.push("");
+        }
+        temp2.push(temp);
+      }
+
+      temp3[desid] = temp2;
+    }
+
+    return temp3;
+  }
 }
 
 BackReport.prototype.getDesignerProposalReport = async function (option = { selfMongo: null }) {
@@ -26,55 +75,6 @@ BackReport.prototype.getDesignerProposalReport = async function (option = { self
     } else {
       option = { selfMongo: option.selfMongo, withTools: true };
       selfBoo = true;
-    }
-
-    class ProposalTong {
-      get matrix() {
-        let temp, temp2, temp3;
-
-        temp3 = {};
-        for (let desid in this) {
-          temp2 = [];
-          temp2.push([ "디자이너명", "제안 횟수", "평균 금액", "제안 정보 =>", "제안 일자", "고객명", "고객 평수", "제안 금액", "계약 정보 =>", "계약 제안 일자", "고객명", "고객 평수", "제안 금액" ]);
-          for (let i = 0; i < this[desid].proposal.length; i++) {
-            temp = [];
-            if (i === 0) {
-              temp.push(this[desid].designer);
-              temp.push(this[desid].report.proposal.numberString);
-              temp.push(this[desid].report.proposal.averageString);
-            } else {
-              temp.push("");
-              temp.push("");
-              temp.push("");
-            }
-
-            temp.push("-");
-            temp.push(dateToString(this[desid].proposal[i].date));
-            temp.push(this[desid].proposal[i].client);
-            temp.push(numberToPyeong(this[desid].proposal[i].pyeong));
-            temp.push(numberToWon(this[desid].proposal[i].fee));
-
-            if (this[desid].contract[i] !== undefined) {
-              temp.push("-");
-              temp.push(dateToString(this[desid].contract[i].date));
-              temp.push(this[desid].contract[i].client);
-              temp.push(numberToPyeong(this[desid].contract[i].pyeong));
-              temp.push(numberToWon(this[desid].contract[i].fee));
-            } else {
-              temp.push("");
-              temp.push("");
-              temp.push("");
-              temp.push("");
-              temp.push("");
-            }
-            temp2.push(temp);
-          }
-
-          temp3[desid] = temp2;
-        }
-
-        return temp3;
-      }
     }
 
     const projects = await back.getProjectsByQuery({}, option);

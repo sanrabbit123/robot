@@ -71,12 +71,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    await findCode("svgTong")
 
     
-    
-    
+
+
 
     
     // const selfMongo = this.MONGOC;

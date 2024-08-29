@@ -62,7 +62,6 @@ class BackMaker {
         "project",
         "designer",
         "contents",
-        "user"
       ]
     ]
   ];
@@ -3022,198 +3021,352 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
   }
 }
 
-// 다음은 BackMaker에 대한 메서드야 특히 이거는 '홈리에종'이라는 회사와 같이 일하기로 한 인테리어 디자이너들에 대한 정보가 있는 designer라는 collection과 소통하는 메서드들이거든? (홈리에종과 협약한 인테리어 디자이너=designer)  이 코드에 대해서 한줄한줄 한국어로 다 설명하고 그 설명한걸 한줄한줄 주석으로 다 달아놔 JSDOC과 호환되는 형태로 그리고 설명 진짜 자세하게 해야돼 코드 한줄한줄에 주석 다 달아서 최대한 자세하게, 그리고 그 모든 설명을 나한테 하지 말고 주석 형태로 코드에 다 달아놔 그리고 Mother에 대해 기억하지? Mother 메서드가 만약 사용되면 그에 대한 설명도 다 주석으로 달아놔 그리고 나한테 직접 설명하지 말고 한줄한줄 설명할 내용을 다 소스코드의 주석으로 달아놔라
-
+/**
+ * @method deleteDesigner
+ * @description '홈리에종'과 협약한 인테리어 디자이너의 정보를 삭제하는 메서드입니다. 주어진 디자이너 ID를 사용하여 MongoDB에서 디자이너 데이터를 삭제합니다.
+ * @param {string} desid - 삭제할 디자이너의 고유 ID.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 삭제가 성공하면 "success"를 반환합니다.
+ */
 BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다. 
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+  
+  // Mother 클래스에서 필요한 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트이고, mongoinfo는 데이터베이스 연결 정보입니다.
   const { mongo, mongoinfo } = this.mother;
+  
+  // MongoDB 연결을 위한 클라이언트를 생성합니다.
+  // MONGOC 변수에 mongo 클라이언트를 초기화합니다. 이 클라이언트를 사용하여 MongoDB와 상호작용합니다.
   const MONGOC = new mongo(mongoinfo);
+  
+  // 'designer' 컬렉션의 이름을 button 변수에 저장합니다. 이 컬렉션은 홈리에종과 협약한 인테리어 디자이너의 정보를 담고 있습니다.
   const button = "designer";
+  
   try {
+    // 옵션으로 전달된 selfMongo가 undefined이거나 null인지 확인합니다.
+    // selfMongo가 설정되지 않은 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스와 연결합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      
+      // MongoDB에 연결합니다. MONGOC.connect()는 MongoDB 서버와의 연결을 설정하는 비동기 메서드입니다.
       await MONGOC.connect();
+      
+      // MongoDB의 'designer' 컬렉션에서 desid와 일치하는 문서를 삭제합니다.
+      // deleteOne 메서드는 주어진 조건에 맞는 첫 번째 문서를 삭제합니다.
       await MONGOC.db(`miro81`).collection(button).deleteOne({ desid });
+      
+      // MongoDB 연결을 종료합니다. MONGOC.close()는 연결을 해제하는 비동기 메서드입니다.
       await MONGOC.close();
     } else {
+      // 옵션으로 selfMongo가 설정된 경우, 그 인스턴스를 사용하여 MongoDB와 상호작용합니다.
+      // MongoDB의 'designer' 컬렉션에서 desid와 일치하는 문서를 삭제합니다.
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ desid });
     }
+    
+    // 삭제 작업이 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
     console.log(e);
   }
 }
 
-// 다음은 BackMaker에 대한 메서드야 특히 이거는 '홈리에종'이라는 회사와 같이 일하기로 한 인테리어 디자이너들에 대한 정보가 있는 designer라는 collection과 소통하는 메서드들이거든? (홈리에종과 협약한 인테리어 디자이너=designer)  이 코드에 대해서 한줄한줄 한국어로 다 설명하고 그 설명한걸 한줄한줄 주석으로 다 달아놔 JSDOC과 호환되는 형태로 그리고 설명 진짜 자세하게 해야돼 코드 한줄한줄에 주석 다 달아서 최대한 자세하게, 그리고 그 모든 설명을 나한테 하지 말고 주석 형태로 코드에 다 달아놔 그리고 Mother에 대해 기억하지? Mother 메서드가 만약 사용되면 그에 대한 설명도 다 주석으로 달아놔 그리고 나한테 직접 설명하지 말고 한줄한줄 설명할 내용을 다 소스코드의 주석으로 달아놔라
-
+/**
+ * @method createDesigner
+ * @description '홈리에종'과 협약한 인테리어 디자이너의 정보를 생성하는 메서드입니다. 새로 생성된 디자이너의 정보를 MongoDB에 저장합니다.
+ * @param {Object} updateQuery - 새로 생성된 디자이너 정보를 업데이트하기 위한 쿼리입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 생성된 디자이너의 고유 ID(desid)를 반환합니다.
+ */
 BackMaker.prototype.createDesigner = async function (updateQuery, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이고, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'designer' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 협약한 인테리어 디자이너들의 정보를 저장합니다.
   const button = "designer";
+
+  // 디자이너 데이터 맵핑을 위한 designer.js 파일을 가져옵니다.
+  // map 객체를 통해 기본 데이터 구조 및 설정을 불러옵니다.
   const map = require(`${this.mapDir}/designer.js`);
+
   try {
+    // 변수들을 선언합니다.
+    // dummy: 새로 생성할 디자이너의 기본 데이터 구조를 저장할 변수입니다.
+    // dummySetting: 설정 값을 초기화하는 함수입니다.
+    // latestDesigner: 가장 최근에 생성된 디자이너의 정보를 저장할 변수입니다.
+    // latestDesignerArr: 최신 디자이너 정보를 배열 형태로 저장할 변수입니다.
     let dummy, dummySetting, latestDesigner, latestDesignerArr;
+
+    // 새로운 옵션 객체를 선언합니다.
     let newOption = {};
+
+    // 임시 변수를 선언합니다.
     let temp0, temp1;
+
+    // 프로젝트 매트릭스 표준을 저장할 변수들을 선언합니다.
     let matrixStandard0, matrixStandard1, matrixStandard2;
 
+    // 옵션으로 selfMongo가 설정되어 있으면, 이를 새로운 옵션 객체에 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
     }
+
+    // 도구를 포함하지 않는 설정으로 옵션을 구성합니다.
     newOption.withTools = false;
+
+    // desid를 기준으로 내림차순으로 정렬하여 최신 디자이너를 찾기 위한 설정을 추가합니다.
     newOption.sort = { "desid": -1 };
+
+    // 최대 1개의 문서만 반환하도록 제한을 설정합니다.
     newOption.limit = 1;
 
+    // 최신 디자이너 데이터를 가져옵니다.
+    // getDesignersByQuery 메서드를 사용하여 쿼리 조건에 맞는 디자이너 데이터를 가져옵니다.
     latestDesignerArr = await this.getDesignersByQuery({}, newOption);
+
+    // 배열에서 최신 디자이너 데이터를 추출합니다.
     latestDesigner = latestDesignerArr[0];
 
+    // 디자이너 데이터의 기본 구조를 가져옵니다.
+    // map.main() 메서드를 사용하여 디자이너의 기본 구조를 가져옵니다.
     dummy = map.main();
+
+    // dummySetting 함수는 기본 설정 값을 초기화하고 생성합니다.
+    // num 값을 받아 설정 객체를 초기화하고 기본 세팅을 생성합니다.
     dummySetting = function (num) {
       let settingObj;
+
+      // 설정 값을 맵핑하여 가져옵니다.
+      // map.sub() 메서드를 사용하여 'setting.proposal' 경로의 데이터를 가져옵니다.
       settingObj = map.sub("setting.proposal");
+
+      // 세팅 이름을 "기본 세팅"과 숫자를 조합하여 설정합니다.
       settingObj.name = "기본 세팅 " + String(num);
+
+      // 객체를 JSON 형식으로 변환하고 다시 파싱하여 깊은 복사를 수행합니다.
       return JSON.parse(JSON.stringify(settingObj));
-    }
+    };
+
+    // 새로운 디자이너 ID를 생성하여 dummy 구조의 desid 속성에 할당합니다.
+    // idMaker 메서드를 사용하여 고유 ID를 생성합니다.
     dummy.structure.desid = this.idMaker(latestDesigner.desid);
+
+    // 새로운 디자이너의 DID를 생성하여 dummy 구조의 정보에 할당합니다.
+    // DID는 기존 DID에서 숫자만 추출하고 1을 더한 후 다시 문자열로 변환하여 생성됩니다.
     dummy.structure.information.did = 'd' + String(Number(latestDesigner.information.did.replace(/[^0-9]/gi, '')) + 1);
+
+    // 5개의 기본 세팅을 생성하여 dummy 구조의 설정 속성에 추가합니다.
+    // for 루프를 사용하여 5개의 기본 세팅을 생성하고 설정 값에 추가합니다.
     for (let i = 0; i < 5; i++) {
       dummy.structure.setting.proposal.push(dummySetting(i));
     }
 
-    matrixStandard0 = [ 'F', 'S', 'T', 'XT' ];
-    matrixStandard1 = [ 'mini', 'normal', 'premium' ];
+    // 프로젝트 매트릭스 표준을 설정합니다.
+    // matrixStandard0과 matrixStandard1에 각각 표준 값을 할당합니다.
+    matrixStandard0 = ['F', 'S', 'T', 'XT'];
+    matrixStandard1 = ['mini', 'normal', 'premium'];
 
+    // 프로젝트 매트릭스 표준에 따라 기본 값을 0으로 초기화합니다.
+    // matrixStandard0과 matrixStandard1을 사용하여 2차원 배열을 초기화합니다.
     for (let i = 0; i < matrixStandard0.length; i++) {
       temp0 = [];
       for (let j = 0; j < matrixStandard1.length; j++) {
         temp0.push(0);
       }
+      // 초기화된 배열을 dummy 구조의 분석 속성에 추가합니다.
       dummy.structure.analytics.project.matrix.push(temp0);
     }
 
+    // 옵션에 따라 MongoDB에 연결하고 새로운 디자이너 데이터를 삽입합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우 기본 MongoDB 인스턴스를 사용합니다.
       await MONGOC.connect();
+
+      // 'designer' 컬렉션에 새로운 디자이너 데이터를 삽입합니다.
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우 해당 MongoDB 인스턴스를 사용하여 데이터를 삽입합니다.
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
 
-    await this.updateDesigner([ { desid: dummy.structure.desid }, updateQuery ], option);
+    // 생성된 디자이너 정보를 업데이트합니다.
+    // updateDesigner 메서드를 사용하여 생성된 디자이너 정보를 업데이트합니다.
+    await this.updateDesigner([{ desid: dummy.structure.desid }, updateQuery], option);
 
-    //set setting note
-    const thisDesigner = await this.getDesignerById(dummy.structure.desid, option);
-    const br = "<br><br>";
-    let note, body, front;
-
-    front = thisDesigner.setting.front;
-    body = '';
-    body += thisDesigner.designer;
-    body += br;
-    body += "_desktop";
-    body += br;
-    for (let i of thisDesigner.setting.front.introduction.desktop) {
-      body += i;
-      body += br;
-    }
-    body += "_mobile";
-    body += br;
-    for (let i of thisDesigner.setting.front.introduction.mobile) {
-      body += i;
-      body += br;
-    }
-    body += "_method";
-    body += br;
-    for (let i of thisDesigner.setting.front.methods) {
-      body += i;
-      body += br;
-    }
-    body += "_porlid";
-    body += br;
-    body += thisDesigner.setting.front.photo.porlid;
-    body += br;
-    body += "_index";
-    body += br;
-    body += thisDesigner.setting.front.photo.index;
-    body += br;
-    body += "_order";
-    body += br;
-    body += String(thisDesigner.setting.front.order);
-
+    // 생성된 디자이너의 고유 ID를 반환합니다.
     return dummy.structure.desid;
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
-}
+};
 
 // GET Project --------------------------------------------------------------------------------
 
+/**
+ * @method getProjectById
+ * @description '홈리에종'이 진행한 인테리어 디자인 프로젝트 정보를 프로젝트 ID로 검색하여 반환하는 메서드입니다.
+ * @param {string} proid - 검색할 프로젝트의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 프로젝트 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 프로젝트 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object|null>} 검색된 프로젝트 객체를 반환하며, 검색 결과가 없으면 null을 반환합니다.
+ */
 BackMaker.prototype.getProjectById = async function (proid, option = { withTools: false, selfMongo: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
+  // 프로젝트와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Project, Projects, Tools 객체를 가져옵니다.
   let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // 배열 변수(arr)와 대상 변수(target)를 선언합니다.
     let arr, target;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'project' 컬렉션에서 주어진 프로젝트 ID(proid)를 기준으로 문서를 찾고 배열로 반환합니다.
       arr = await MONGOC.db(`miro81`).collection(button).find({ proid }).toArray();
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ proid }).toArray();
     }
 
+    // withTools 옵션이 true인 경우, Project 객체에 도구를 포함시킵니다.
     if (option.withTools) {
+      // Tools.withTools 메서드를 사용하여 도구를 포함한 Project 객체를 생성합니다.
       Project = Tools.withTools(Project);
     }
 
+    // 검색된 프로젝트가 있는지 확인합니다.
     if (arr.length > 0) {
+      // 검색된 첫 번째 프로젝트 데이터를 사용하여 Project 객체를 생성합니다.
       target = new Project(arr[0]);
+
+      // toNormal 옵션이 true인 경우, 프로젝트 객체를 일반 객체로 변환합니다.
       if (option.toNormal === true) {
         target = target.toNormal();
       }
     } else {
+      // 검색 결과가 없는 경우, target 변수에 null을 할당합니다.
       target = null;
     }
 
+    // 최종적으로 target 변수를 반환합니다. 이 변수는 프로젝트 객체이거나 null입니다.
     return target;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
-}
+};
 
+/**
+ * @method getProjectsByQuery
+ * @description '홈리에종'이 진행한 인테리어 디자인 프로젝트들을 특정 쿼리로 검색하여 반환하는 메서드입니다.
+ * @param {Object} query - MongoDB 쿼리 객체로, 검색 조건을 정의합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 프로젝트 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.fromLocal=null] - 로컬 MongoDB에서 데이터를 가져올지 여부를 설정합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 프로젝트 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @param {Object} [option.sort] - 정렬 기준을 정의하는 객체입니다.
+ * @param {number} [option.limit] - 검색 결과의 최대 개수를 설정합니다.
+ * @returns {Promise<Object[]|null>} 검색된 프로젝트 객체 배열을 반환하며, 오류가 발생하면 null을 반환합니다.
+ */
 BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo, mongoinfo, mongolocalinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 원격 데이터베이스 연결 정보를, mongolocalinfo는 로컬 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+
+  // MONGOC 변수에 사용할 MongoDB 클라이언트를 할당합니다.
+  // 로컬 데이터베이스를 사용할지 여부에 따라 MONGOC에 다른 MongoDB 클라이언트를 할당합니다.
   let MONGOC;
   if (option.fromLocal === true) {
+    // 로컬 데이터베이스 연결 정보를 사용하여 MongoDB 클라이언트를 초기화합니다.
     MONGOC = new mongo(mongolocalinfo);
   } else {
+    // 원격 데이터베이스 연결 정보를 사용하여 MongoDB 클라이언트를 초기화합니다.
     MONGOC = new mongo(mongoinfo);
   }
-  const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
-  try {
-    let tong, projectsArr;
-    let sortQuery;
 
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
+  const button = "project";
+
+  // 프로젝트와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Project, Projects, Tools 객체를 가져옵니다.
+  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
+  try {
+    // tong과 projectsArr 변수를 선언합니다.
+    // tong은 검색된 프로젝트 문서 배열을 저장하며, projectsArr는 최종 반환될 프로젝트 객체 배열을 저장합니다.
+    let tong, projectsArr;
+
+    // sortQuery 변수를 선언하고 정렬 기준을 할당합니다.
     if (option.sort === undefined) {
+      // 정렬 기준이 주어지지 않은 경우, 기본적으로 제안 날짜(proposal.date) 기준으로 내림차순 정렬합니다.
       sortQuery = { "proposal.date": -1 };
     } else {
+      // 주어진 정렬 기준을 사용합니다.
       sortQuery = option.sort;
     }
 
+    // MongoDB에서 쿼리를 실행하여 프로젝트 문서를 검색합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
       if (option.limit !== undefined) {
+        // limit 옵션이 설정된 경우, 결과 개수를 제한합니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
+        // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
@@ -3221,12 +3374,14 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
       }
     }
 
+    // withTools 옵션이 false인 경우, Projects 배열을 초기화하고 Project 객체들을 추가합니다.
     if (!option.withTools) {
       projectsArr = new Projects();
       for (let i of tong) {
         projectsArr.push(new Project(i));
       }
     } else {
+      // withTools 옵션이 true인 경우, 도구를 포함한 Project와 Projects 객체를 생성합니다.
       Project = Tools.withTools(Project);
       Projects = Tools.withToolsArr(Projects);
       projectsArr = new Projects();
@@ -3235,146 +3390,291 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
       }
     }
 
+    // toNormal 옵션이 true인 경우, 프로젝트 배열을 일반 객체 배열로 변환합니다.
     if (option.toNormal === true) {
       projectsArr = projectsArr.toNormal();
     }
 
+    // 최종적으로 projectsArr 변수를 반환합니다.
     return projectsArr;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    // 오류가 발생하면 null을 반환합니다.
+    return null;
   }
-}
+};
 
+/**
+ * @method getProjectsAll
+ * @description '홈리에종'이 진행한 모든 인테리어 디자인 프로젝트들을 검색하여 반환하는 메서드입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 프로젝트 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 프로젝트 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object[]|null>} 검색된 모든 프로젝트 객체 배열을 반환하며, 오류가 발생하면 null을 반환합니다.
+ */
 BackMaker.prototype.getProjectsAll = async function (option = { withTools: false, selfMongo: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
+  // 프로젝트와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Project, Projects, Tools 객체를 가져옵니다.
   let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // tong과 projectsArr 변수를 선언합니다.
+    // tong은 검색된 프로젝트 문서 배열을 저장하며, projectsArr는 최종 반환될 프로젝트 객체 배열을 저장합니다.
     let tong, projectsArr;
 
+    // MongoDB에서 모든 프로젝트 문서를 검색합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'project' 컬렉션에서 모든 문서를 검색하여 배열로 반환합니다.
       tong = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       tong = await option.selfMongo.db(`miro81`).collection(button).find({}).toArray();
     }
 
+    // withTools 옵션이 false인 경우, Projects 배열을 초기화하고 Project 객체들을 추가합니다.
     if (!option.withTools) {
+      // Projects 배열을 초기화합니다.
       projectsArr = new Projects();
+      
+      // 검색된 각 프로젝트 문서에 대해 Project 객체를 생성하고, Projects 배열에 추가합니다.
       for (let i of tong) {
         projectsArr.push(new Project(i));
       }
     } else {
+      // withTools 옵션이 true인 경우, 도구를 포함한 Project와 Projects 객체를 생성합니다.
       Project = Tools.withTools(Project);
       Projects = Tools.withToolsArr(Projects);
+      
+      // Projects 배열을 초기화하고, 검색된 프로젝트 문서들을 추가합니다.
       projectsArr = new Projects();
       for (let i of tong) {
         projectsArr.push(new Project(i));
       }
     }
 
+    // toNormal 옵션이 true인 경우, 프로젝트 배열을 일반 객체 배열로 변환합니다.
     if (option.toNormal === true) {
       projectsArr = projectsArr.toNormal();
     }
 
+    // 최종적으로 projectsArr 변수를 반환합니다.
     return projectsArr;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    // 오류가 발생하면 null을 반환합니다.
+    return null;
   }
-}
+};
 
+/**
+ * @method getProjectsByCliidArr
+ * @description 고객 아이디 배열(cliidArr)을 사용하여 해당 고객들의 인테리어 디자인 프로젝트 정보를 검색하여 반환하는 메서드입니다.
+ * @param {Array<string>} cliidArr - 검색할 고객 아이디로 구성된 문자열 배열입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 프로젝트 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {Array} [option.recycle=null] - 재사용할 프로젝트 배열을 지정합니다. 설정된 경우, 데이터베이스에서 새로 검색하지 않고 이 배열에서 데이터를 필터링합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 프로젝트 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Array|Projects>} 검색된 프로젝트 객체 배열을 반환하며, 옵션에 따라 일반 객체 배열로 변환될 수 있습니다.
+ */
 BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
+  // 프로젝트와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Project, Projects, Tools 객체를 가져옵니다.
   let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
+  // 반환할 프로젝트 배열을 저장할 변수를 선언합니다.
   let projects;
 
+  // 옵션으로 재활용할 프로젝트 배열(recycle)이 설정된 경우, 이 배열을 사용하여 작업을 수행합니다.
   if (option.recycle !== undefined && option.recycle !== null) {
+    // option.recycle에 저장된 프로젝트 배열을 projects 변수에 할당합니다.
     projects = option.recycle;
+
+    // withTools 옵션이 true로 설정된 경우, Projects 배열에 도구를 포함시킵니다.
     if (option.withTools === true) {
       Projects = Tools.withToolsArr(Projects);
     }
+
+    // 반환할 결과 배열(result)을 초기화합니다. toNormal 옵션에 따라 일반 객체 배열 또는 Projects 객체로 초기화됩니다.
     let result = (option.toNormal === true) ? [] : new Projects();
+
+    // 프로젝트 배열(projects)에서 각 프로젝트를 순회하며, 해당 프로젝트의 cliid가 cliidArr에 포함되어 있는지 확인합니다.
     for (let p of projects) {
       if (cliidArr.includes(p.cliid)) {
+        // cliid가 일치하는 경우, 해당 프로젝트를 결과 배열에 추가합니다.
         result.push(p);
       }
     }
+
+    // 필터링된 결과 배열을 반환합니다.
     return result;
 
   } else {
+    // 재활용할 프로젝트 배열이 없는 경우, 데이터베이스에서 프로젝트를 새로 검색합니다.
+
+    // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+    // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
     const { mongo, mongoinfo } = this.mother;
+
+    // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
     const MONGOC = new mongo(mongoinfo);
+
+    // 새로운 Promise를 생성하여 비동기 작업을 수행합니다.
     return new Promise(function (resolve, reject) {
+      // getProjectsByQuery 메서드를 호출하여 데이터베이스에서 모든 프로젝트를 검색합니다.
       instance.getProjectsByQuery({}, option).then((projects) => {
+        // withTools 옵션이 true로 설정된 경우, Projects 배열에 도구를 포함시킵니다.
         if (option.withTools === true) {
           Projects = Tools.withToolsArr(Projects);
         }
+
+        // 반환할 결과 배열(result)을 초기화합니다. toNormal 옵션에 따라 일반 객체 배열 또는 Projects 객체로 초기화됩니다.
         let result = (option.toNormal === true) ? [] : new Projects();
+
+        // 검색된 프로젝트 배열(projects)에서 각 프로젝트를 순회하며, 해당 프로젝트의 cliid가 cliidArr에 포함되어 있는지 확인합니다.
         for (let p of projects) {
           if (cliidArr.includes(p.cliid)) {
+            // cliid가 일치하는 경우, 해당 프로젝트를 결과 배열에 추가합니다.
             result.push(p);
           }
         }
+
+        // 필터링된 결과 배열을 resolve를 통해 반환합니다.
         resolve(result);
+
       }).catch(function (e) {
+        // 데이터베이스 작업 중 오류가 발생한 경우, reject를 통해 오류를 반환합니다.
         reject(e);
       });
     });
   }
 
-}
+};
 
+/**
+ * @method getProjectsByNames
+ * @description 고객 이름과 디자이너 이름으로 '홈리에종'이 진행한 인테리어 디자인 프로젝트를 검색하여 반환하는 메서드입니다.
+ * @param {Array<string>|Object} nameArr - 검색할 고객 이름과 디자이너 이름이 포함된 배열 또는 객체입니다. 
+ *                                          배열 형식: [ '고객 이름', '디자이너 이름' ] 
+ *                                          객체 형식: { client: '고객 이름', designer: '디자이너 이름' } 또는 { clientName: '고객 이름', designerName: '디자이너 이름' }
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 프로젝트 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 프로젝트 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object[]|null>} 검색된 프로젝트 객체 배열을 반환하며, 오류가 발생하면 null을 반환합니다.
+ */
 BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // confirmMode 변수를 초기화합니다. 이 변수는 nameArr이 객체일 때, 이름을 확인하는 모드로 전환됩니다.
   let confirmMode = false;
+
   try {
+    // nameArr이 배열인지 확인합니다.
     if (Array.isArray(nameArr)) {
+      // nameArr이 배열일 경우, 요소의 개수가 2개 미만이면 오류를 발생시킵니다.
       if (nameArr.length < 2) {
         throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
       }
-    } else if (typeof nameArr === "object") {
+    } 
+    // nameArr이 객체인지 확인합니다.
+    else if (typeof nameArr === "object") {
+      // nameArr 객체가 client와 designer 속성을 가지고 있는지 확인합니다.
       if (nameArr.client !== undefined && nameArr.designer !== undefined) {
+        // client와 designer 속성이 있으면 배열로 변환합니다.
         nameArr = [ nameArr.client, nameArr.designer ];
-      } else if (nameArr.clientName !== undefined && nameArr.designerName !== undefined) {
+      } 
+      // nameArr 객체가 clientName과 designerName 속성을 가지고 있는지 확인합니다.
+      else if (nameArr.clientName !== undefined && nameArr.designerName !== undefined) {
+        // clientName과 designerName 속성이 있으면 배열로 변환합니다.
         nameArr = [ nameArr.clientName, nameArr.designerName ];
       } else {
+        // 위의 조건을 만족하지 않으면 오류를 발생시킵니다.
         throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
       }
+      // confirmMode를 true로 설정합니다.
       confirmMode = true;
     } else {
+      // nameArr이 배열도 객체도 아니면 오류를 발생시킵니다.
       throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
     }
+
+    // 고객과 디자이너를 검색하기 위한 쿼리 객체를 초기화합니다.
     let searchQuery_client, searchQuery_designer;
     let clients, designers, projects;
     let allCases, tempArr;
     let whereQuery;
 
+    // 고객 검색 쿼리 초기화
     searchQuery_client = {};
     searchQuery_client["$or"] = [];
+
+    // 디자이너 검색 쿼리 초기화
     searchQuery_designer = {};
     searchQuery_designer["$or"] = [];
 
+    // confirmMode가 false인 경우, nameArr 배열을 순회하여 고객과 디자이너 이름을 쿼리에 추가합니다.
     if (!confirmMode) {
       for (let i of nameArr) {
+        // 고객 이름으로 검색하기 위한 쿼리를 생성합니다.
         searchQuery_client["$or"].push({ name: i });
+        // 디자이너 이름으로 검색하기 위한 쿼리를 생성합니다.
         searchQuery_designer["$or"].push({ designer: i });
       }
-    } else {
+    } 
+    // confirmMode가 true인 경우, nameArr 배열의 첫 번째와 두 번째 요소를 사용하여 쿼리를 생성합니다.
+    else {
       searchQuery_client = { name: nameArr[0] };
       searchQuery_designer = { designer: nameArr[1] };
     }
 
+    // 고객을 검색합니다. getClientsByQuery 메서드를 사용하여 해당 조건의 고객을 가져옵니다.
     clients = await this.getClientsByQuery(searchQuery_client, option);
+
+    // 디자이너를 검색합니다. getDesignersByQuery 메서드를 사용하여 해당 조건의 디자이너를 가져옵니다.
     designers = await this.getDesignersByQuery(searchQuery_designer, option);
 
+    // 검색된 고객이나 디자이너가 없으면 빈 배열을 반환합니다.
     if (clients.length === 0 || designers.length === 0) {
       return [];
     }
 
+    // 모든 고객과 디자이너의 조합을 생성합니다.
     allCases = [];
     for (let { cliid } of clients) {
       for (let { desid } of designers) {
@@ -3383,194 +3683,409 @@ BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { wit
       }
     }
 
+    // 생성된 조합이 없으면 빈 배열을 반환합니다.
     if (allCases.length === 0) {
       return [];
     }
 
+    // 프로젝트를 검색하기 위한 쿼리를 초기화합니다.
     whereQuery = {};
     whereQuery["$or"] = [];
+
+    // 생성된 고객과 디자이너의 조합을 기반으로 프로젝트를 검색하기 위한 조건을 추가합니다.
     for (let [ cliid, desid ] of allCases) {
       whereQuery["$or"].push({ cliid, desid });
     }
 
+    // 프로젝트를 검색합니다. getProjectsByQuery 메서드를 사용하여 조건에 맞는 프로젝트를 가져옵니다.
     projects = await this.getProjectsByQuery(whereQuery, option);
 
+    // 검색된 프로젝트를 반환합니다.
     return projects;
 
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method updateProject
+ * @description '홈리에종'이 진행한 인테리어 프로젝트의 정보를 업데이트하는 메서드입니다.
+ * @param {Array<Object>} queryArr - 업데이트를 위한 쿼리 객체 배열입니다. 
+ *                                   [ Object: whereQuery, Object: updateQuery ] 형식으로 제공되어야 합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 업데이트가 성공하면 "success", 실패하면 "fail"을 반환합니다.
+ */
 BackMaker.prototype.updateProject = async function (queryArr, option = { selfMongo: null }) {
+  // queryArr 배열의 길이가 2가 아닌 경우, 잘못된 인자로 간주하고 오류를 발생시킵니다.
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
+
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
   try {
+    // queryArr 배열에서 whereQuery와 updateQuery 객체를 추출합니다.
     const [ whereQuery, updateQuery ] = queryArr;
 
+    // updateQuery가 객체가 아니거나 null인 경우, 잘못된 업데이트 쿼리로 간주하고 오류를 발생시킵니다.
     if (typeof updateQuery !== "object" || updateQuery === null) {
       throw new Error("invalid updateQuery");
     }
+
+    // updateQuery 객체에 "null" 키가 존재하는 경우, 해당 키를 삭제합니다.
     if (updateQuery["null"] !== undefined) {
       delete updateQuery["null"];
     }
 
+    // MongoDB에서 프로젝트 정보를 업데이트합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'project' 컬렉션에서 whereQuery 조건에 맞는 문서를 updateQuery 내용으로 업데이트합니다.
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 업데이트합니다.
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
 
+    // 업데이트가 성공적으로 완료되면 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+
+    // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
   }
 }
 
+/**
+ * @method deleteProject
+ * @description '홈리에종'이 진행한 특정 인테리어 프로젝트를 삭제하는 메서드입니다.
+ * @param {string} proid - 삭제할 프로젝트의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 삭제가 성공하면 "success"를 반환합니다.
+ */
 BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
   try {
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'project' 컬렉션에서 proid와 일치하는 문서를 삭제합니다.
+      // deleteOne 메서드는 주어진 조건에 맞는 첫 번째 문서를 삭제합니다.
       await MONGOC.db(`miro81`).collection(button).deleteOne({ proid });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삭제합니다.
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ proid });
     }
+
+    // 삭제 작업이 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method returnProjectDummies
+ * @description 주어진 주제(subject)에 따라 '홈리에종'의 인테리어 프로젝트에 대한 더미 데이터를 반환하는 메서드입니다.
+ * @param {string} subject - 더미 데이터를 가져올 주제입니다. 
+ * @returns {Object} 주어진 주제에 해당하는 더미 데이터 객체를 반환합니다.
+ */
 BackMaker.prototype.returnProjectDummies = function (subject) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // 프로젝트 맵핑 데이터를 가져오기 위해 project.js 파일을 require로 불러옵니다.
+  // map 객체는 project.js에서 내보내는 데이터를 포함합니다.
   const map = require(`${this.mapDir}/project.js`);
+
+  // 주어진 subject(주제)에 해당하는 더미 데이터를 map 객체에서 가져옵니다.
+  // map.sub 메서드를 사용하여 주제에 맞는 데이터를 불러옵니다.
   let dummy;
   dummy = map.sub(subject);
+
+  // 더미 데이터를 반환합니다. 이 데이터는 주어진 주제에 맞게 생성된 데이터입니다.
   return dummy;
 }
 
+/**
+ * @method createProject
+ * @description '홈리에종'이 진행한 새로운 인테리어 프로젝트를 생성하는 메서드입니다. 생성된 프로젝트의 ID를 반환합니다.
+ * @param {Object} updateQuery - 새로 생성된 프로젝트 정보를 업데이트하기 위한 쿼리 객체입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 생성된 프로젝트의 고유 ID(proid)를 반환합니다.
+ */
 BackMaker.prototype.createProject = async function (updateQuery, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'project' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'이 진행한 인테리어 프로젝트들의 정보를 저장합니다.
   const button = "project";
+
+  // 프로젝트 맵핑 데이터를 가져오기 위해 project.js 파일을 require로 불러옵니다.
+  // map 객체는 project.js에서 내보내는 데이터를 포함합니다.
   const map = require(`${this.mapDir}/project.js`);
+
   try {
+    // 여러 변수를 선언합니다.
     let dummy, latestProject, latestProjectArr;
     let newOption = {};
     let temp;
 
+    // selfMongo 옵션이 설정된 경우, 이를 newOption 객체에 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
     }
+
+    // withTools 옵션을 false로 설정합니다.
     newOption.withTools = false;
+
+    // proid를 기준으로 내림차순 정렬하고, 최신 프로젝트를 하나만 가져오기 위해 limit을 1로 설정합니다.
     newOption.sort = { "proid": -1 };
     newOption.limit = 1;
 
+    // getProjectsByQuery 메서드를 사용하여 가장 최근에 생성된 프로젝트를 가져옵니다.
     latestProjectArr = await this.getProjectsByQuery({}, newOption);
     latestProject = latestProjectArr[0];
 
+    // map.main() 메서드를 사용하여 프로젝트의 기본 구조를 가져옵니다.
     dummy = map.main();
+
+    // 새로운 프로젝트 ID를 생성하여 dummy 구조에 할당합니다.
     dummy.structure.proid = this.idMaker(latestProject.proid);
 
+    // MongoDB에 연결하고 새 프로젝트 데이터를 삽입합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'project' 컬렉션에 새로운 프로젝트 데이터를 삽입합니다.
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삽입합니다.
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
 
-    await this.updateProject([ { proid: dummy.structure.proid }, updateQuery ], option);
+    // 생성된 프로젝트를 업데이트합니다. updateProject 메서드를 사용하여 추가 정보를 업데이트합니다.
+    await this.updateProject([{ proid: dummy.structure.proid }, updateQuery], option);
 
+    // 생성된 프로젝트의 고유 ID를 반환합니다.
     return dummy.structure.proid;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
 // GET Aspirant -------------------------------------------------------------------------------
 
+/**
+ * @method getAspirantById
+ * @description '홈리에종'에 지원한 특정 인테리어 디자이너 신청자의 정보를 ID로 검색하여 반환하는 메서드입니다.
+ * @param {string} aspid - 검색할 신청자의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 신청자 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.portfolioReset=null] - 포트폴리오 리셋 여부를 설정합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 신청자 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object|null>} 검색된 신청자 객체를 반환하며, 결과가 없으면 null을 반환합니다.
+ */
 BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'aspirant' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 저장합니다.
   const button = "aspirant";
+
+  // 신청자와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Aspirant, Aspirants, Tools 객체를 가져옵니다.
   let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // 배열 변수(arr)와 대상 변수(target)를 선언합니다.
+    // arr는 검색된 신청자 문서 배열을 저장하며, target는 최종 반환될 신청자 객체를 저장합니다.
     let arr, target;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'aspirant' 컬렉션에서 aspid와 일치하는 문서를 검색하여 배열로 반환합니다.
       arr = await MONGOC.db(`miro81`).collection(button).find({ aspid }).toArray();
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ aspid }).toArray();
     }
 
+    // withTools 옵션이 true인 경우, Aspirant 객체에 도구를 포함시킵니다.
     if (option.withTools) {
       Aspirant = Tools.withTools(Aspirant);
     }
 
+    // 검색된 신청자가 있는지 확인합니다.
     if (arr.length > 0) {
+      // 검색된 첫 번째 신청자 데이터를 사용하여 Aspirant 객체를 생성합니다.
       target = new Aspirant(arr[0]);
+
+      // toNormal 옵션이 true인 경우, 신청자 객체를 일반 객체로 변환합니다.
       if (option.toNormal === true) {
         target = target.toNormal();
       }
     } else {
+      // 검색 결과가 없는 경우, target 변수에 null을 할당합니다.
       target = null;
     }
 
+    // 최종적으로 target 변수를 반환합니다. 이 변수는 신청자 객체이거나 null입니다.
     return target;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method getAspirantsByQuery
+ * @description '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 특정 쿼리를 사용하여 검색하고 반환하는 메서드입니다.
+ * @param {Object} query - MongoDB 쿼리 객체로, 검색 조건을 정의합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 신청자 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.portfolioReset=null] - 포트폴리오를 리셋할지 여부를 설정합니다.
+ * @param {boolean} [option.fromLocal=null] - 로컬 MongoDB에서 데이터를 가져올지 여부를 설정합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 신청자 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object[]|null>} 검색된 신청자 객체 배열을 반환하며, 오류가 발생하면 null을 반환합니다.
+ */
 BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo, mongoinfo, mongolocalinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 원격 데이터베이스 연결 정보를, mongolocalinfo는 로컬 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+
+  // 사용할 MongoDB 클라이언트를 결정합니다.
+  // 로컬 데이터베이스를 사용할지 여부에 따라 MONGOC에 다른 MongoDB 클라이언트를 할당합니다.
   let MONGOC;
   if (option.fromLocal === true) {
     MONGOC = new mongo(mongolocalinfo);
   } else {
     MONGOC = new mongo(mongoinfo);
   }
+
+  // 'aspirant' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 저장합니다.
   const button = "aspirant";
+
+  // 신청자와 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Aspirant, Aspirants, Tools 객체를 가져옵니다.
   let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // tong과 aspirantsArr 변수를 선언합니다.
+    // tong은 검색된 신청자 문서 배열을 저장하며, aspirantsArr는 최종 반환될 신청자 객체 배열을 저장합니다.
     let tong, aspirantsArr;
     let sortQuery;
     let updateQuery;
 
+    // sortQuery 변수를 선언하고 정렬 기준을 할당합니다.
+    // 정렬 기준이 주어지지 않은 경우, 기본적으로 신청자의 첫 요청 날짜(submit.firstRequest.date) 기준으로 내림차순 정렬합니다.
     if (option.sort === undefined) {
       sortQuery = { "submit.firstRequest.date": -1 };
     } else {
       sortQuery = option.sort;
     }
 
+    // MongoDB에서 쿼리를 실행하여 신청자 문서를 검색합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
       if (option.limit !== undefined) {
+        // limit 옵션이 설정된 경우, 결과 개수를 제한합니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
+        // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
@@ -3578,12 +4093,15 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
       }
     }
 
+    // portfolioReset 옵션이 설정된 경우, 포트폴리오를 리셋합니다.
     if (option.portfolioReset !== null && option.portfolioReset !== undefined) {
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
       }
       for (let a of tong) {
+        // 신청자의 포트폴리오가 비어 있는 경우, 포트폴리오를 추가합니다.
         if (a.portfolio.length === 0) {
+          // 웹, SNS, 클라우드 채널에서 포트폴리오 링크를 생성하고 추가합니다.
           for (let i of a.information.channel.web) {
             a.portfolio.unshift({ date: a.submit.firstRequest.date, confirm: [], folderId: "__link__" + i.replace(/[\&\=]/g, '') });
           }
@@ -3595,6 +4113,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
           }
           updateQuery = {};
           updateQuery["portfolio"] = a.portfolio;
+          // 포트폴리오 업데이트 쿼리를 실행합니다.
           if (option.selfMongo === undefined || option.selfMongo === null) {
             await MONGOC.db(`miro81`).collection(button).updateOne({ aspid: a.aspid }, { "$set": updateQuery });
           } else {
@@ -3602,17 +4121,20 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
           }
         }
       }
+      // MongoDB 연결을 종료합니다.
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.close();
       }
     }
 
+    // withTools 옵션이 false인 경우, 신청자 객체 배열을 생성합니다.
     if (!option.withTools) {
       aspirantsArr = new Aspirants();
       for (let i of tong) {
         aspirantsArr.push(new Aspirant(i));
       }
     } else {
+      // withTools 옵션이 true인 경우, 도구를 포함한 신청자 객체 배열을 생성합니다.
       Aspirant = Tools.withTools(Aspirant);
       Aspirants = Tools.withToolsArr(Aspirants);
       aspirantsArr = new Aspirants();
@@ -3621,211 +4143,442 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
       }
     }
 
+    // toNormal 옵션이 true인 경우, 신청자 객체 배열을 일반 객체 배열로 변환합니다.
     if (option.toNormal === true) {
       aspirantsArr = aspirantsArr.toNormal();
     }
 
+    // 최종적으로 aspirantsArr 변수를 반환합니다.
     return aspirantsArr;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method updateAspirant
+ * @description '홈리에종'에 지원한 인테리어 디자이너 신청자의 정보를 업데이트하는 메서드입니다.
+ * @param {Array<Object>} queryArr - 업데이트를 위한 쿼리 객체 배열입니다. 
+ *                                   [ Object: whereQuery, Object: updateQuery ] 형식으로 제공되어야 합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 업데이트가 성공하면 "success", 실패하면 "fail"을 반환합니다.
+ */
 BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMongo: null }) {
+  // 쿼리 배열(queryArr)의 길이가 2가 아닌 경우, 잘못된 인자로 간주하고 오류를 발생시킵니다.
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
+
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'aspirant' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 저장합니다.
   const button = "aspirant";
+
   try {
+    // queryArr 배열에서 whereQuery와 updateQuery 객체를 추출합니다.
     const [ whereQuery, updateQuery ] = queryArr;
 
+    // updateQuery가 객체가 아니거나 null인 경우, 잘못된 업데이트 쿼리로 간주하고 오류를 발생시킵니다.
     if (typeof updateQuery !== "object" || updateQuery === null) {
       throw new Error("invalid updateQuery");
     }
+
+    // updateQuery 객체에 "null" 키가 존재하는 경우, 해당 키를 삭제합니다.
     if (updateQuery["null"] !== undefined) {
       delete updateQuery["null"];
     }
 
+    // MongoDB에서 신청자 정보를 업데이트합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'aspirant' 컬렉션에서 whereQuery 조건에 맞는 문서를 updateQuery 내용으로 업데이트합니다.
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 업데이트합니다.
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
 
+    // 업데이트가 성공적으로 완료되면 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+
+    // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
   }
 }
 
+/**
+ * @method deleteAspirant
+ * @description '홈리에종'에 지원한 특정 인테리어 디자이너 신청자의 정보를 삭제하는 메서드입니다.
+ * @param {string} aspid - 삭제할 신청자의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 삭제가 성공하면 "success"를 반환합니다.
+ */
 BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'aspirant' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 저장합니다.
   const button = "aspirant";
+
   try {
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'aspirant' 컬렉션에서 aspid와 일치하는 문서를 삭제합니다.
+      // deleteOne 메서드는 주어진 조건에 맞는 첫 번째 문서를 삭제합니다.
       await MONGOC.db(`miro81`).collection(button).deleteOne({ aspid });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삭제합니다.
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ aspid });
     }
+
+    // 삭제 작업이 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method createAspirant
+ * @description '홈리에종'에 인테리어 디자이너로 지원한 새로운 신청자를 생성하는 메서드입니다. 생성된 신청자의 ID를 반환합니다.
+ * @param {Object} updateQuery - 새로 생성된 신청자 정보를 업데이트하기 위한 쿼리 객체입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 생성된 신청자의 고유 ID(aspid)를 반환합니다.
+ */
 BackMaker.prototype.createAspirant = async function (updateQuery, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'aspirant' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'에 지원한 인테리어 디자이너 신청자들의 정보를 저장합니다.
   const button = "aspirant";
+
+  // 프로젝트 맵핑 데이터를 가져오기 위해 aspirant.js 파일을 require로 불러옵니다.
+  // map 객체는 aspirant.js에서 내보내는 데이터를 포함합니다.
   const map = require(`${this.mapDir}/aspirant.js`);
+
   try {
+    // 여러 변수를 선언합니다.
     let dummy, latestAspirant, latestAspirantArr;
     let newOption = {};
     let temp;
 
+    // selfMongo 옵션이 설정된 경우, 이를 newOption 객체에 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
     }
+
+    // withTools 옵션을 false로 설정합니다.
     newOption.withTools = false;
+
+    // aspid를 기준으로 내림차순 정렬하고, 최신 신청자를 하나만 가져오기 위해 limit을 1로 설정합니다.
     newOption.sort = { "aspid": -1 };
     newOption.limit = 1;
 
+    // getAspirantsByQuery 메서드를 사용하여 가장 최근에 생성된 신청자를 가져옵니다.
     latestAspirantArr = await this.getAspirantsByQuery({}, newOption);
     latestAspirant = latestAspirantArr[0];
 
+    // map.main() 메서드를 사용하여 신청자의 기본 구조를 가져옵니다.
     dummy = map.main();
+
+    // 새로운 신청자 ID를 생성하여 dummy 구조에 할당합니다.
     dummy.structure.aspid = this.idMaker(latestAspirant.aspid);
 
+    // MongoDB에 연결하고 새 신청자 데이터를 삽입합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'aspirant' 컬렉션에 새로운 신청자 데이터를 삽입합니다.
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삽입합니다.
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
 
-    await this.updateAspirant([ { aspid: dummy.structure.aspid }, updateQuery ], option);
+    // 생성된 신청자를 업데이트합니다. updateAspirant 메서드를 사용하여 추가 정보를 업데이트합니다.
+    await this.updateAspirant([{ aspid: dummy.structure.aspid }, updateQuery], option);
 
+    // 생성된 신청자의 고유 ID를 반환합니다.
     return dummy.structure.aspid;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method unshiftAspirantPortfolioConfirm
+ * @description '홈리에종'에 지원한 인테리어 디자이너 신청자의 포트폴리오에 새로운 확인 정보를 추가하는 메서드입니다.
+ * @param {Object} whereQuery - 포트폴리오를 업데이트할 신청자를 찾기 위한 조건을 정의하는 쿼리 객체입니다.
+ * @param {number} position - 포트폴리오 배열에서 확인 정보를 추가할 위치를 나타내는 인덱스입니다.
+ * @param {Date} date - 확인 정보에 추가할 날짜 객체입니다.
+ * @param {string} who - 확인 정보를 추가한 사람의 이름 또는 식별자입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<void>} 메서드는 값을 반환하지 않으며, 작업이 완료되면 종료됩니다.
+ */
 BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery, position, date, who, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
   try {
+    // whereQuery가 정의되지 않았을 경우, 오류를 발생시킵니다.
     if (whereQuery === undefined) {
       throw new Error("invaild where query : arguments must be { whereQuery: Object, position: number, date: Date, who: string ");
     }
+
+    // position이 숫자 타입이 아닌 경우, 오류를 발생시킵니다.
     if (typeof position !== "number") {
       throw new Error("invaild position : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
     }
+
+    // date가 Date 인스턴스가 아닌 경우, 오류를 발생시킵니다.
     if (!(date instanceof Date)) {
       throw new Error("invaild date : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
     }
+
+    // who가 문자열 타입이 아닌 경우, 오류를 발생시킵니다.
     if (typeof who !== "string") {
       throw new Error("invaild who : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
     }
 
+    // 신청자 데이터를 임시로 저장할 변수를 선언합니다.
     let tempAspirants, tempAspirant;
+
+    // 포트폴리오 업데이트 쿼리를 저장할 변수를 선언합니다.
     let updateQuery;
 
+    // whereQuery를 사용하여 해당 조건에 맞는 신청자들을 가져옵니다.
     tempAspirants = await this.getAspirantsByQuery(whereQuery, option);
+
+    // updateQuery 객체를 초기화합니다.
     updateQuery = {};
 
+    // 검색된 신청자가 1명인 경우, 포트폴리오에 확인 정보를 추가합니다.
     if (tempAspirants.length === 1) {
+      // 첫 번째 신청자를 tempAspirant 변수에 할당합니다.
       tempAspirant = tempAspirants[0];
+
+      // 포트폴리오가 존재하는 경우, 지정된 위치에 확인 정보를 추가합니다.
       if (tempAspirant.portfolio.length > 0) {
+        // 포트폴리오의 지정된 위치에 새로운 확인 정보를 추가합니다.
         tempAspirant.portfolio[position].confirm.unshift({ date, who });
+
+        // 업데이트할 쿼리를 정의합니다.
         updateQuery["portfolio." + String(position) + ".confirm"] = tempAspirant.portfolio[position].confirm;
+
+        // updateAspirant 메서드를 사용하여 포트폴리오 정보를 업데이트합니다.
         await this.updateAspirant([ whereQuery, updateQuery ], option);
       }
     }
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
 // GET builder --------------------------------------------------------------------------------
 
+/**
+ * @method getBuilderById
+ * @description '홈리에종'과 계약을 맺은 특정 인테리어 시공사 소장님의 정보를 ID로 검색하여 반환하는 메서드입니다.
+ * @param {string} buiid - 검색할 소장님의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 소장님 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.portfolioReset=null] - 포트폴리오 리셋 여부를 설정합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 소장님 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object|null>} 검색된 소장님 객체를 반환하며, 결과가 없으면 null을 반환합니다.
+ */
 BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools: false, selfMongo: null, portfolioReset: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'builder' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 계약을 맺은 인테리어 시공사 소장님의 정보를 저장합니다.
   const button = "builder";
+
+  // 소장님과 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Builder, Builders, Tools 객체를 가져옵니다.
   let { Builder, Builders, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // 배열 변수(arr)와 대상 변수(target)를 선언합니다.
+    // arr는 검색된 소장님 문서 배열을 저장하며, target는 최종 반환될 소장님 객체를 저장합니다.
     let arr, target;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'builder' 컬렉션에서 buiid와 일치하는 문서를 검색하여 배열로 반환합니다.
       arr = await MONGOC.db(`miro81`).collection(button).find({ buiid }).toArray();
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ buiid }).toArray();
     }
 
+    // withTools 옵션이 true인 경우, Builder 객체에 도구를 포함시킵니다.
     if (option.withTools) {
       Builder = Tools.withTools(Builder);
     }
 
+    // 검색된 소장님이 있는지 확인합니다.
     if (arr.length > 0) {
+      // 검색된 첫 번째 소장님 데이터를 사용하여 Builder 객체를 생성합니다.
       target = new Builder(arr[0]);
+
+      // toNormal 옵션이 true인 경우, 소장님 객체를 일반 객체로 변환합니다.
       if (option.toNormal === true) {
         target = target.toNormal();
       }
     } else {
+      // 검색 결과가 없는 경우, target 변수에 null을 할당합니다.
       target = null;
     }
 
+    // 최종적으로 target 변수를 반환합니다. 이 변수는 소장님 객체이거나 null입니다.
     return target;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    return null;
   }
 }
 
+/**
+ * @method getBuildersByQuery
+ * @description '홈리에종'과 계약을 맺은 인테리어 시공사 소장님들의 정보를 특정 쿼리를 사용하여 검색하고 반환하는 메서드입니다.
+ * @param {Object} query - MongoDB 쿼리 객체로, 검색 조건을 정의합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.withTools=false] - 소장님 객체에 도구를 포함할지 여부를 설정합니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.fromLocal=null] - 로컬 MongoDB에서 데이터를 가져올지 여부를 설정합니다.
+ * @param {boolean} [option.toNormal=false] - 반환할 소장님 객체를 일반 객체로 변환할지 여부를 설정합니다.
+ * @returns {Promise<Object[]|[]>} 검색된 소장님 객체 배열을 반환하며, 오류가 발생하면 빈 배열을 반환합니다.
+ */
 BackMaker.prototype.getBuildersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, toNormal: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo, mongoinfo, mongolocalinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 원격 데이터베이스 연결 정보를, mongolocalinfo는 로컬 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+
+  // 사용할 MongoDB 클라이언트를 결정합니다.
+  // 로컬 데이터베이스를 사용할지 여부에 따라 MONGOC에 다른 MongoDB 클라이언트를 할당합니다.
   let MONGOC;
   if (option.fromLocal === true) {
     MONGOC = new mongo(mongolocalinfo);
   } else {
     MONGOC = new mongo(mongoinfo);
   }
+
+  // 'builder' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 계약을 맺은 인테리어 시공사 소장님의 정보를 저장합니다.
   const button = "builder";
+
+  // 소장님과 관련된 클래스 및 도구들을 불러옵니다.
+  // generator.js 파일에서 Builder, Builders, Tools 객체를 가져옵니다.
   let { Builder, Builders, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+
   try {
+    // tong과 buildersArr 변수를 선언합니다.
+    // tong은 검색된 소장님 문서 배열을 저장하며, buildersArr는 최종 반환될 소장님 객체 배열을 저장합니다.
     let tong, buildersArr;
     let sortQuery;
 
+    // sortQuery 변수를 선언하고 정렬 기준을 할당합니다.
+    // 정렬 기준이 주어지지 않은 경우, 기본적으로 계약 날짜(information.contract.date) 기준으로 내림차순 정렬합니다.
     if (option.sort === undefined) {
       sortQuery = { "information.contract.date": -1 };
     } else {
       sortQuery = option.sort;
     }
 
+    // MongoDB에서 쿼리를 실행하여 소장님 문서를 검색합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
       if (option.limit !== undefined) {
+        // limit 옵션이 설정된 경우, 결과 개수를 제한합니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
+        // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 가져옵니다.
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
@@ -3833,12 +4586,14 @@ BackMaker.prototype.getBuildersByQuery = async function (query, option = { withT
       }
     }
 
+    // withTools 옵션이 false인 경우, 소장님 객체 배열을 생성합니다.
     if (!option.withTools) {
       buildersArr = new Builders();
       for (let i of tong) {
         buildersArr.push(new Builder(i));
       }
     } else {
+      // withTools 옵션이 true인 경우, 도구를 포함한 소장님 객체 배열을 생성합니다.
       Builder = Tools.withTools(Builder);
       Builders = Tools.withToolsArr(Builders);
       buildersArr = new Builders();
@@ -3847,286 +4602,555 @@ BackMaker.prototype.getBuildersByQuery = async function (query, option = { withT
       }
     }
 
+    // toNormal 옵션이 true인 경우, 소장님 객체 배열을 일반 객체 배열로 변환합니다.
     if (option.toNormal === true) {
       buildersArr = buildersArr.toNormal();
     }
 
+    // 최종적으로 buildersArr 변수를 반환합니다.
     return buildersArr;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    // 오류가 발생하면 빈 배열을 반환합니다.
+    return [];
   }
 }
 
+/**
+ * @method updateBuilder
+ * @description '홈리에종'과 계약을 맺은 특정 인테리어 시공사 소장님의 정보를 업데이트하는 메서드입니다.
+ * @param {Array<Object>} queryArr - 업데이트를 위한 쿼리 객체 배열입니다. 
+ *                                   [ Object: whereQuery, Object: updateQuery ] 형식으로 제공되어야 합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 업데이트가 성공하면 "success", 실패하면 "fail"을 반환합니다.
+ */
 BackMaker.prototype.updateBuilder = async function (queryArr, option = { selfMongo: null }) {
+  // 쿼리 배열(queryArr)의 길이가 2가 아닌 경우, 잘못된 인자로 간주하고 오류를 발생시킵니다.
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
+
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 통해 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'builder' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 계약을 맺은 인테리어 시공사 소장님들의 정보를 저장합니다.
   const button = "builder";
+
   try {
+    // queryArr 배열에서 whereQuery와 updateQuery 객체를 추출합니다.
     const [ whereQuery, updateQuery ] = queryArr;
 
+    // updateQuery가 객체가 아니거나 null인 경우, 잘못된 업데이트 쿼리로 간주하고 오류를 발생시킵니다.
     if (typeof updateQuery !== "object" || updateQuery === null) {
       throw new Error("invalid updateQuery");
     }
+
+    // updateQuery 객체에 "null" 키가 존재하는 경우, 해당 키를 삭제합니다.
     if (updateQuery["null"] !== undefined) {
       delete updateQuery["null"];
     }
 
+    // MongoDB에서 소장님 정보를 업데이트합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'builder' 컬렉션에서 whereQuery 조건에 맞는 문서를 updateQuery 내용으로 업데이트합니다.
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 업데이트합니다.
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
 
+    // 업데이트가 성공적으로 완료되면 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+
+    // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
   }
 }
 
+/**
+ * @method deleteBuilder
+ * @description '홈리에종'과 계약을 맺은 특정 인테리어 시공사 소장님의 정보를 삭제하는 메서드입니다.
+ * @param {string} buiid - 삭제할 소장님의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 삭제가 성공하면 "success", 실패하면 "fail"을 반환합니다.
+ */
 BackMaker.prototype.deleteBuilder = async function (buiid, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'builder' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 계약을 맺은 인테리어 시공사 소장님들의 정보를 저장합니다.
   const button = "builder";
+
   try {
+    // selfMongo 옵션이 설정되지 않은 경우, 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // 'builder' 컬렉션에서 buiid와 일치하는 문서를 삭제합니다.
+      // deleteOne 메서드는 주어진 조건에 맞는 첫 번째 문서를 삭제합니다.
       await MONGOC.db(`miro81`).collection(button).deleteOne({ buiid });
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삭제합니다.
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ buiid });
     }
+
+    // 삭제 작업이 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
     console.log(e);
+
+    // 오류가 발생하면 "fail" 문자열을 반환합니다.
+    return "fail";
   }
 }
 
+/**
+ * @method createBuilder
+ * @description '홈리에종'과 계약을 맺은 새로운 인테리어 시공사 소장님을 생성하고, 생성된 소장님의 ID를 반환하는 메서드입니다.
+ * @param {Object} updateQuery - 새로 생성된 소장님 정보를 업데이트하기 위한 쿼리 객체입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string|null>} 생성된 소장님의 고유 ID(buiid)를 반환하며, 오류 발생 시 null을 반환합니다.
+ */
 BackMaker.prototype.createBuilder = async function (updateQuery, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  // instance 변수를 사용하여 클래스의 다른 메서드나 속성에 접근할 수 있습니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
+  // MongoDB 클라이언트를 초기화하여 MONGOC 변수에 할당합니다.
+  // MONGOC를 통해 MongoDB와 상호작용할 수 있습니다.
   const MONGOC = new mongo(mongoinfo);
+
+  // 'builder' 컬렉션의 이름을 button 변수에 할당합니다.
+  // 이 컬렉션은 '홈리에종'과 계약을 맺은 인테리어 시공사 소장님들의 정보를 저장합니다.
   const button = "builder";
+
+  // 프로젝트 맵핑 데이터를 가져오기 위해 builder.js 파일을 require로 불러옵니다.
+  // map 객체는 builder.js에서 내보내는 데이터를 포함합니다.
   const map = require(`${this.mapDir}/builder.js`);
+
   try {
+    // 여러 변수를 선언합니다.
     let dummy, latestBuilder, latestBuilderArr;
     let newOption = {};
     let temp;
 
+    // selfMongo 옵션이 설정된 경우, 이를 newOption 객체에 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
     }
+
+    // withTools 옵션을 false로 설정합니다.
     newOption.withTools = false;
+
+    // buiid를 기준으로 내림차순 정렬하고, 최신 소장님을 하나만 가져오기 위해 limit을 1로 설정합니다.
     newOption.sort = { "buiid": -1 };
     newOption.limit = 1;
 
+    // getBuildersByQuery 메서드를 사용하여 가장 최근에 생성된 소장님을 가져옵니다.
     latestBuilderArr = await this.getBuildersByQuery({}, newOption);
     latestBuilder = latestBuilderArr[0];
 
+    // map.main() 메서드를 사용하여 소장님의 기본 구조를 가져옵니다.
     dummy = map.main();
+
+    // 새로운 소장님 ID를 생성하여 dummy 구조에 할당합니다.
     dummy.structure.buiid = this.idMaker(latestBuilder.buiid);
 
+    // MongoDB에 연결하고 새 소장님 데이터를 삽입합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      // 기본 MongoDB 인스턴스를 사용하여 연결을 설정합니다.
       await MONGOC.connect();
+
+      // 'builder' 컬렉션에 새로운 소장님 데이터를 삽입합니다.
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+
+      // MongoDB 연결을 종료합니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 데이터를 삽입합니다.
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
 
-    await this.updateBuilder([ { buiid: dummy.structure.buiid }, updateQuery ], option);
+    // 생성된 소장님을 업데이트합니다. updateBuilder 메서드를 사용하여 추가 정보를 업데이트합니다.
+    await this.updateBuilder([{ buiid: dummy.structure.buiid }, updateQuery], option);
 
+    // 생성된 소장님의 고유 ID를 반환합니다.
     return dummy.structure.buiid;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+
+    // 오류가 발생하면 null을 반환합니다.
+    return null;
   }
 }
 
 // GET history --------------------------------------------------------------------------------
 
+/**
+ * @method getHistoryById
+ * @description 특정 고객, 디자이너, 프로젝트 또는 컨텐츠의 히스토리 데이터를 ID를 사용하여 검색하는 메서드입니다.
+ * @param {string} method - 검색할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {string} id - 검색할 대상의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<Object|null>} 검색된 히스토리 객체를 반환하며, 결과가 없으면 null을 반환합니다.
+ */
 BackMaker.prototype.getHistoryById = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // arr와 target 변수를 선언합니다. arr는 검색된 히스토리 배열을 저장하며, target은 최종적으로 반환할 히스토리 객체를 저장합니다.
     let arr, target;
+
+    // collection 변수와 whereQuery 변수를 선언하여, 검색할 컬렉션과 쿼리 조건을 설정합니다.
     let collection, whereQuery;
 
+    // method 값에 따라 검색할 컬렉션과 쿼리 조건을 설정합니다.
     if (/client/gi.test(method)) {
+      // method에 "client"가 포함된 경우, 고객 히스토리 컬렉션을 설정하고 cliid를 사용하여 검색합니다.
       collection = "clientHistory";
       whereQuery = { cliid: id };
     } else if (/designer/gi.test(method)) {
+      // method에 "designer"가 포함된 경우, 디자이너 히스토리 컬렉션을 설정하고 desid를 사용하여 검색합니다.
       collection = "designerHistory";
       whereQuery = { desid: id };
     } else if (/project/gi.test(method)) {
+      // method에 "project"가 포함된 경우, 프로젝트 히스토리 컬렉션을 설정하고 proid를 사용하여 검색합니다.
       collection = "projectHistory";
       whereQuery = { proid: id };
     } else if (/contents/gi.test(method)) {
+      // method에 "contents"가 포함된 경우, 컨텐츠 히스토리 컬렉션을 설정하고 conid를 사용하여 검색합니다.
       collection = "contentsHistory";
       whereQuery = { conid: id };
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // 해당 컬렉션에서 whereQuery 조건에 맞는 히스토리 데이터를 검색하여 배열로 반환합니다.
     arr = await MONGOLOCALC.db(`miro81`).collection(collection).find(whereQuery).toArray();
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
+
+    // 검색된 히스토리 데이터가 존재하는 경우, 첫 번째 요소를 반환합니다.
     if (arr.length > 0) {
       return arr[0];
     } else {
+      // 검색 결과가 없는 경우, null을 반환합니다.
       return null;
     }
   } catch (e) {
+    // 오류가 발생한 경우, 오류 메시지를 콘솔에 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method getHistoriesByQuery
+ * @description 고객, 디자이너, 프로젝트, 또는 컨텐츠의 히스토리 데이터를 특정 쿼리를 사용하여 검색하고, 해당 데이터를 반환하는 메서드입니다. 
+ *              이 히스토리 데이터는 각 대상에 대한 응대 기록과 로그를 포함하는 서브 컬렉션에 저장되어 있습니다.
+ * @param {string} method - 검색할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {Object} query - MongoDB 쿼리 객체로, 검색 조건을 정의합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.sort] - 검색 결과를 정렬하기 위한 정렬 조건입니다.
+ * @param {number} [option.limit] - 검색 결과의 개수를 제한하는 옵션입니다.
+ * @returns {Promise<Array>} 검색된 히스토리 객체 배열을 반환하며, 오류 발생 시 빈 배열을 반환합니다.
+ */
 BackMaker.prototype.getHistoriesByQuery = async function (method, query, option = { fromConsole: false, selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // 히스토리 데이터를 저장할 tong 변수를 선언하고, 정렬 조건을 저장할 sortQuery 변수를 선언합니다.
     let tong, sortQuery;
+
+    // 히스토리 데이터를 정렬할 기준과 검색할 컬렉션 이름을 설정하기 위한 변수를 선언합니다.
     let sortStandard, collection;
 
+    // method 값에 따라 검색할 히스토리 컬렉션과 정렬 기준을 설정합니다.
     if (/client/gi.test(method)) {
+      // method에 "client"가 포함된 경우, 고객 히스토리 컬렉션을 설정하고 cliid를 정렬 기준으로 설정합니다.
       collection = "clientHistory";
       sortStandard = "cliid";
     } else if (/designer/gi.test(method)) {
+      // method에 "designer"가 포함된 경우, 디자이너 히스토리 컬렉션을 설정하고 desid를 정렬 기준으로 설정합니다.
       collection = "designerHistory";
       sortStandard = "desid";
     } else if (/project/gi.test(method)) {
+      // method에 "project"가 포함된 경우, 프로젝트 히스토리 컬렉션을 설정하고 proid를 정렬 기준으로 설정합니다.
       collection = "projectHistory";
       sortStandard = "proid";
     } else if (/contents/gi.test(method)) {
+      // method에 "contents"가 포함된 경우, 컨텐츠 히스토리 컬렉션을 설정하고 conid를 정렬 기준으로 설정합니다.
       collection = "contentsHistory";
       sortStandard = "conid";
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // sort 옵션이 설정되지 않은 경우, 기본 정렬 기준을 설정합니다.
     if (option.sort === undefined) {
       sortQuery = {};
       sortQuery[sortStandard] = -1;
     } else {
+      // sort 옵션이 설정된 경우, 해당 정렬 조건을 사용합니다.
       sortQuery = option.sort;
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // limit 옵션이 설정된 경우, 검색 결과의 개수를 제한합니다.
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
+      // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
     }
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
 
+    // 최종적으로 검색된 히스토리 객체 배열을 반환합니다.
     return tong;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    // 오류 발생 시 빈 배열을 반환합니다.
+    return [];
   }
 }
 
+/**
+ * @method getHistoriesAll
+ * @description 고객, 디자이너, 프로젝트 또는 컨텐츠의 모든 히스토리 데이터를 검색하여 반환하는 메서드입니다. 
+ *              이 히스토리 데이터는 각 대상에 대한 응대 기록과 로그를 포함하는 서브 컬렉션에 저장되어 있으며, 핵심 데이터와 연동됩니다.
+ * @param {string} method - 검색할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.sort] - 검색 결과를 정렬하기 위한 정렬 조건입니다.
+ * @param {number} [option.limit] - 검색 결과의 개수를 제한하는 옵션입니다.
+ * @returns {Promise<Array>} 검색된 히스토리 객체 배열을 반환하며, 오류 발생 시 빈 배열을 반환합니다.
+ */
 BackMaker.prototype.getHistoriesAll = async function (method, option = { fromConsole: false, selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // 히스토리 데이터를 저장할 tong 변수를 선언하고, 정렬 조건을 저장할 sortQuery 변수를 선언합니다.
     let tong, sortQuery;
+
+    // 히스토리 데이터를 정렬할 기준과 검색할 컬렉션 이름을 설정하기 위한 변수를 선언합니다.
     let sortStandard, collection;
 
+    // method 값에 따라 검색할 히스토리 컬렉션과 정렬 기준을 설정합니다.
     if (/client/gi.test(method)) {
+      // method에 "client"가 포함된 경우, 고객 히스토리 컬렉션을 설정하고 cliid를 정렬 기준으로 설정합니다.
       collection = "clientHistory";
       sortStandard = "cliid";
     } else if (/designer/gi.test(method)) {
+      // method에 "designer"가 포함된 경우, 디자이너 히스토리 컬렉션을 설정하고 desid를 정렬 기준으로 설정합니다.
       collection = "designerHistory";
       sortStandard = "desid";
     } else if (/project/gi.test(method)) {
+      // method에 "project"가 포함된 경우, 프로젝트 히스토리 컬렉션을 설정하고 proid를 정렬 기준으로 설정합니다.
       collection = "projectHistory";
       sortStandard = "proid";
     } else if (/contents/gi.test(method)) {
+      // method에 "contents"가 포함된 경우, 컨텐츠 히스토리 컬렉션을 설정하고 conid를 정렬 기준으로 설정합니다.
       collection = "contentsHistory";
       sortStandard = "conid";
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // sort 옵션이 설정되지 않은 경우, 기본 정렬 기준을 설정합니다.
     if (option.sort === undefined) {
       sortQuery = {};
-      sortQuery[sortStandard] = -1;
+      sortQuery[sortStandard] = -1; // 기본적으로 최신 항목이 먼저 오도록 내림차순 정렬합니다.
     } else {
+      // sort 옵션이 설정된 경우, 해당 정렬 조건을 사용합니다.
       sortQuery = option.sort;
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // limit 옵션이 설정된 경우, 검색 결과의 개수를 제한합니다.
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find({}).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
+      // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find({}).sort(sortQuery).toArray();
     }
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
 
+    // 최종적으로 검색된 히스토리 객체 배열을 반환합니다.
     return tong;
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
+    // 오류 발생 시 빈 배열을 반환합니다.
+    return [];
   }
 }
 
+/**
+ * @method getHistoryProperty
+ * @description 히스토리 데이터가 매우 클 때 특정 프로퍼티만 추출하여 반환하는 메서드입니다. 
+ *              히스토리 데이터는 각 고객(client), 디자이너(designer), 프로젝트(project), 컨텐츠(contents)에 대한 응대 기록과 로그를 포함하는 서브 컬렉션에 저장됩니다.
+ * @param {string} method - 검색할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {string|Array<string>} property - 가져올 특정 프로퍼티 또는 프로퍼티의 배열입니다. "$all"을 사용하면 모든 프로퍼티를 가져옵니다.
+ * @param {Array<string>|null} [idArr=null] - 검색할 대상의 ID 배열입니다. null일 경우 모든 데이터를 검색합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.sort] - 검색 결과를 정렬하기 위한 정렬 조건입니다.
+ * @param {number} [option.limit] - 검색 결과의 개수를 제한하는 옵션입니다.
+ * @returns {Promise<Object|null>} 특정 프로퍼티만을 포함하는 히스토리 객체를 반환하며, 오류 발생 시 null을 반환합니다.
+ */
 BackMaker.prototype.getHistoryProperty = async function (method, property, idArr = null, option = { fromConsole: false, selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // tong 변수에 히스토리 데이터를 저장할 배열을 선언하고, 정렬 조건을 저장할 sortQuery 변수를 선언합니다.
     let tong, sortQuery;
     let finalTong;
     let findQuery, projectQuery;
@@ -4137,6 +5161,7 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     let createQuery;
     let idKeywords;
 
+    // method 값에 따라 검색할 히스토리 컬렉션과 정렬 기준, 그리고 ID 키워드를 설정합니다.
     if (/client/gi.test(method)) {
       collection = "clientHistory";
       sortStandard = "cliid";
@@ -4154,18 +5179,23 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       sortStandard = "conid";
       idKeywords = 't';
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // sort 옵션이 설정되지 않은 경우, 기본 정렬 기준을 설정합니다.
     if (option.sort === undefined) {
       sortQuery = {};
-      sortQuery[sortStandard] = -1;
+      sortQuery[sortStandard] = -1; // 기본적으로 최신 항목이 먼저 오도록 내림차순 정렬합니다.
     } else {
+      // sort 옵션이 설정된 경우, 해당 정렬 조건을 사용합니다.
       sortQuery = option.sort;
     }
 
+    // projectQuery 객체를 초기화합니다. 특정 프로퍼티를 가져오기 위한 쿼리를 설정합니다.
     projectQuery = {};
     if (property !== "$all") {
+      // 특정 프로퍼티가 지정된 경우, 해당 프로퍼티만 가져오도록 설정합니다.
       projectQuery[sortStandard] = 1;
       if (typeof property === "string") {
         projectQuery[property] = 1;
@@ -4176,31 +5206,42 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       }
     }
 
+    // findQuery 객체를 초기화합니다. 검색할 ID 조건을 설정합니다.
     findQuery = { "$or": [] };
     if (idArr === null) {
+      // ID 배열이 null인 경우, 모든 데이터를 검색하도록 설정합니다.
       findQuery = {};
     } else if (Array.isArray(idArr)) {
+      // ID 배열이 주어진 경우, 각 ID에 대한 검색 조건을 설정합니다.
       for (let c of idArr) {
         tempObj = {};
         tempObj[sortStandard] = c;
         findQuery["$or"].push(tempObj);
       }
     } else {
-      throw new Error("invaild id arr");
+      // ID 배열이 유효하지 않은 경우, 오류를 발생시킵니다.
+      throw new Error("invalid id arr");
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // limit 옵션이 설정된 경우, 검색 결과의 개수를 제한합니다.
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(findQuery).project(projectQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
+      // limit 옵션이 설정되지 않은 경우, 모든 결과를 가져옵니다.
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(findQuery).project(projectQuery).sort(sortQuery).toArray();
     }
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
 
+    // 검색된 데이터의 ID 배열과 요청된 ID 배열을 비교하여 누락된 데이터가 있는지 확인합니다.
     if (idArr !== null) {
       if (idArr.length !== tong.length) {
         tongIds = [];
@@ -4210,6 +5251,7 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
         tongLeft = [];
         for (let id of idArr) {
           if (!tongIds.includes(id)) {
+            // 누락된 데이터에 대해 히스토리 항목을 생성합니다.
             if ((new RegExp("^" + idKeywords)).test(id)) {
               tongLeft.push(id);
             }
@@ -4218,12 +5260,13 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
         for (let id of tongLeft) {
           createQuery = {};
           createQuery[sortStandard] = id;
-          await this.createHistory(method, createQuery, option);
-          tong.push(await this.getHistoryById(method, id, option));
+          await this.createHistory(method, createQuery, option); // 누락된 히스토리 항목 생성
+          tong.push(await this.getHistoryById(method, id, option)); // 새로 생성된 항목을 다시 가져옴
         }
       }
     }
 
+    // 특정 프로퍼티만 포함하는 최종 결과를 생성합니다.
     if (tong.length > 0) {
       finalTong = {};
       for (let obj of tong) {
@@ -4231,335 +5274,463 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
           if (typeof property === "string") {
             finalTong[obj[sortStandard]] = obj[property];
           } else {
-            delete obj._id;
+            delete obj._id; // MongoDB의 _id 필드는 제외
             finalTong[obj[sortStandard]] = obj;
           }
         } else {
-          delete obj._id;
+          delete obj._id; // MongoDB의 _id 필드는 제외
           finalTong[obj[sortStandard]] = obj;
         }
       }
       return finalTong;
     } else {
+      // 결과가 없으면 null을 반환
       return null;
     }
 
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method updateHistory
+ * @description 고객, 디자이너, 프로젝트, 또는 컨텐츠에 대한 히스토리 데이터를 업데이트하는 메서드입니다. 
+ *              히스토리 데이터는 각 대상에 대한 응대 기록과 로그를 포함하는 서브 컬렉션에 저장되며, core data와 연동됩니다.
+ * @param {string} method - 업데이트할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {Array<Object>} queryArr - 업데이트할 데이터의 조건(whereQuery)과 업데이트할 내용(updateQuery)을 담은 배열입니다. 배열 길이는 2여야 합니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 업데이트가 성공하면 "success", 실패하면 "fail"을 반환합니다.
+ */
 BackMaker.prototype.updateHistory = async function (method, queryArr, option = { fromConsole: false, selfMongo: null }) {
+  // queryArr의 길이가 2가 아니면 에러를 발생시킵니다. 
+  // queryArr에는 whereQuery와 updateQuery 객체가 포함되어야 합니다.
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
+
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // queryArr 배열에서 whereQuery와 updateQuery 객체를 추출합니다.
     const [ whereQuery, updateQuery ] = queryArr;
     let collection;
 
+    // updateQuery가 객체 타입이 아니거나 null이면 에러를 발생시킵니다.
     if (typeof updateQuery !== "object" || updateQuery === null) {
       throw new Error("invalid updateQuery");
     }
+
+    // updateQuery에 "null"이라는 키가 있으면 이를 삭제합니다.
     if (updateQuery["null"] !== undefined) {
       delete updateQuery["null"];
     }
 
+    // method 값에 따라 업데이트할 히스토리 컬렉션을 설정합니다.
     if (/client/gi.test(method)) {
+      // 고객 히스토리 컬렉션 설정
       collection = "clientHistory";
     } else if (/designer/gi.test(method)) {
+      // 디자이너 히스토리 컬렉션 설정
       collection = "designerHistory";
     } else if (/project/gi.test(method)) {
+      // 프로젝트 히스토리 컬렉션 설정
       collection = "projectHistory";
     } else if (/contents/gi.test(method)) {
+      // 컨텐츠 히스토리 컬렉션 설정
       collection = "contentsHistory";
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // whereQuery 조건에 맞는 히스토리 데이터를 updateQuery로 업데이트합니다.
     await MONGOLOCALC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
 
+    // 업데이트가 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력하고, "fail" 문자열을 반환합니다.
     console.log(e);
     return "fail";
   }
 }
 
+/**
+ * @method deleteHistory
+ * @description 고객, 디자이너, 프로젝트 또는 컨텐츠의 특정 히스토리 데이터를 삭제하는 메서드입니다. 
+ *              히스토리 데이터는 각 대상에 대한 응대 기록과 로그를 포함하는 서브 컬렉션에 저장되며, core data와 연동됩니다.
+ * @param {string} method - 삭제할 대상의 타입을 지정하는 문자열입니다. 예: "client", "designer", "project", "contents".
+ * @param {string} id - 삭제할 히스토리 데이터의 고유 ID입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 삭제가 성공하면 "success", 오류 발생 시 오류 메시지를 출력합니다.
+ */
 BackMaker.prototype.deleteHistory = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // Mother 클래스에서 mongo와 mongoinfo 객체를 가져옵니다.
+  // mongo는 MongoDB 클라이언트 객체이며, mongoinfo는 데이터베이스 연결 정보를 담고 있습니다.
   const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
     let MONGOLOCALC, SELFMONGOBOO;
+
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // 히스토리 데이터를 삭제하기 위한 기준인 sortStandard와 컬렉션 이름을 설정합니다.
     let sortStandard, collection, deleteQuery;
 
+    // method 값에 따라 삭제할 히스토리 컬렉션과 ID 필드(sortStandard)를 설정합니다.
     if (/client/gi.test(method)) {
+      // 고객 히스토리 컬렉션 설정
       collection = "clientHistory";
       sortStandard = "cliid";
     } else if (/designer/gi.test(method)) {
+      // 디자이너 히스토리 컬렉션 설정
       collection = "designerHistory";
       sortStandard = "desid";
     } else if (/project/gi.test(method)) {
+      // 프로젝트 히스토리 컬렉션 설정
       collection = "projectHistory";
       sortStandard = "proid";
     } else if (/contents/gi.test(method)) {
+      // 컨텐츠 히스토리 컬렉션 설정
       collection = "contentsHistory";
       sortStandard = "conid";
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // 삭제할 히스토리 데이터를 지정하기 위한 쿼리 객체를 생성합니다.
     deleteQuery = {};
     deleteQuery[sortStandard] = id;
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // 지정된 컬렉션에서 deleteQuery에 해당하는 히스토리 데이터를 삭제합니다.
     await MONGOLOCALC.db(`miro81`).collection(collection).deleteOne(deleteQuery);
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
+
+    // 삭제가 성공적으로 완료되었음을 나타내는 "success" 문자열을 반환합니다.
     return "success";
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method returnHistoryDummies
+ * @description 특정 주제(subject)에 대한 히스토리 데이터의 더미(dummy) 객체를 반환하는 메서드입니다. 
+ *              이 메서드는 'History' 데이터의 서브 컬렉션에 포함되는 응대 기록과 로그 기록을 관리하기 위해 사용됩니다.
+ * @param {string} subject - 더미 데이터를 생성할 히스토리 주제를 나타내는 문자열입니다. 예: "project.purchase.requests", "project.purchase.requests.items".
+ * @returns {Object|null} 지정된 주제에 해당하는 더미 객체를 반환하며, 주제가 유효하지 않으면 null을 반환합니다.
+ */
 BackMaker.prototype.returnHistoryDummies = function (subject) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+
+  // dummy 변수를 선언하여 더미 데이터를 저장할 객체를 초기화합니다.
   let dummy;
+
+  // subject 값에 따라 특정 구조의 더미 데이터를 생성합니다.
   if (subject === "project.purchase.requests") {
+    // 주제가 "project.purchase.requests"인 경우, 구매 요청에 대한 기본 구조를 가진 더미 객체를 생성합니다.
     dummy = {
-      id: "",
-      date: new Date(),
-      name: "",
-      description: "",
-      items: []
+      id: "",                        // 구매 요청의 고유 ID
+      date: new Date(),              // 구매 요청 날짜 (현재 날짜로 초기화)
+      name: "",                      // 구매 요청 이름
+      description: "",               // 구매 요청 설명
+      items: []                      // 구매 요청 항목들의 배열 (초기 상태는 빈 배열)
     }
   } else if (subject === "project.purchase.requests.items") {
+    // 주제가 "project.purchase.requests.items"인 경우, 구매 요청 항목에 대한 기본 구조를 가진 더미 객체를 생성합니다.
     dummy = {
-      id: "",
-      name: "",
-      description: "",
-      detail: {
-        link: "",
-        location: "",
-        option: "",
+      id: "",                        // 항목의 고유 ID
+      name: "",                      // 항목 이름
+      description: "",               // 항목 설명
+      detail: {                      // 항목 세부 정보 객체
+        link: "",                    // 항목의 관련 링크
+        location: "",                // 항목의 위치 정보
+        option: "",                  // 항목의 옵션 정보
       },
-      unit: {
-        ea: null,
-        price: 0,
-        number: 0,
+      unit: {                        // 항목의 단위 정보 객체
+        ea: null,                    // 단위 수량 (null로 초기화)
+        price: 0,                    // 단가 (0으로 초기화)
+        number: 0,                   // 총 수량 (0으로 초기화)
       },
-      amount: {
-        supply: 0,
-        vat: 0,
-        consumer: 0,
-        delivery: 0,
+      amount: {                      // 금액 정보 객체
+        supply: 0,                   // 공급가액 (0으로 초기화)
+        vat: 0,                      // 부가가치세 (0으로 초기화)
+        consumer: 0,                 // 소비자가 (0으로 초기화)
+        delivery: 0,                 // 배송비 (0으로 초기화)
       },
     }
   }
-  return dummy;
+
+  // 생성된 더미 객체를 반환합니다. 주제가 유효하지 않은 경우, dummy는 undefined가 되며, 이 경우 null을 반환합니다.
+  return dummy || null;
 }
 
+/**
+ * @method createHistory
+ * @description 고객(client), 디자이너(designer), 프로젝트(project), 또는 컨텐츠(contents)에 대한 히스토리 데이터를 생성하는 메서드입니다. 
+ *              히스토리 데이터는 각 대상의 응대 기록과 로그를 포함하는 서브 컬렉션에 저장되며, core data와 연동됩니다.
+ * @param {string} [method="client"] - 생성할 히스토리 데이터의 대상 유형을 지정하는 문자열입니다. 기본값은 "client"입니다. 예: "client", "designer", "project", "contents".
+ * @param {Object} [updateQuery={}] - 히스토리 데이터를 생성할 때 사용할 기본 데이터입니다. 각 대상의 고유 ID를 포함합니다.
+ * @param {Object} [option={}] - 추가 설정 옵션입니다.
+ * @param {boolean} [option.fromConsole=false] - 콘솔에서 실행 여부를 설정하는 플래그입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.secondMongo=null] - 추가로 사용할 MongoDB 인스턴스입니다. 프로젝트 매니저를 검색할 때 사용됩니다.
+ * @param {boolean} [option.defaultCheckMode=false] - 기본 검사 모드를 활성화할지 여부를 결정합니다. 활성화되면 기본 검사 객체를 반환합니다.
+ * @returns {Promise<string|Object>} 생성된 히스토리 데이터의 ID를 반환하거나, 기본 검사 모드가 활성화된 경우 검사 객체를 반환합니다.
+ */
 BackMaker.prototype.createHistory = async function (method = "client", updateQuery = {}, option = { fromConsole: false, selfMongo: null, secondMongo: null, defaultCheckMode: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, objectDeepCopy } = this.mother;
-  const defaultSerid = "s2011_aa02s";
-  const defaultCheckKey = "curation.check";
-  const defaultCheckObject = {
-    serid: defaultSerid,
-    construct: {
-      entire: true,
-      items: [],
-      environment: 2,
-    },
-    budget: 5,
-    furniture: [],
-    fabric: [],
-    expect: 2,
-    purchase: null,
-    family: null,
-    age: null,
-    time: [],
-  };
-  try {
-    let MONGOLOCALC, SELFMONGOBOO;
-    let dummy;
-    let sortStandard, collection, whereQuery;
-    let temp, tempArr;
-    let projectManager;
-    let resultObject;
 
+  // Mother 클래스에서 필요한 유틸리티와 MongoDB 정보를 가져옵니다.
+  const { mongo, mongoinfo, objectDeepCopy } = this.mother;
+
+  // 기본 serid와 기본 검사 키, 기본 검사 객체를 정의합니다.
+  const defaultSerid = "s2011_aa02s"; // 기본 서비스 ID를 나타냅니다.
+  const defaultCheckKey = "curation.check"; // 기본 검사 객체의 키를 정의합니다.
+  const defaultCheckObject = {
+    serid: defaultSerid, // 서비스 ID
+    construct: {
+      entire: true, // 전체 구조의 상태를 나타냅니다.
+      items: [], // 관련 항목들의 목록을 담는 배열입니다.
+      environment: 2, // 환경 설정 값 (예: 1, 2, 3과 같은 숫자 값)
+    },
+    budget: 5, // 예산 (임의의 숫자 값)
+    furniture: [], // 가구 관련 정보 목록
+    fabric: [], // 패브릭 관련 정보 목록
+    expect: 2, // 예상 결과 (임의의 숫자 값)
+    purchase: null, // 구매 관련 정보 (초기값은 null)
+    family: null, // 가족 정보 (초기값은 null)
+    age: null, // 연령 정보 (초기값은 null)
+    time: [], // 시간 관련 정보 목록
+  };
+
+  try {
+    // MONGOLOCALC는 사용할 MongoDB 클라이언트를 저장하며, SELFMONGOBOO는 selfMongo 옵션이 사용되는지 여부를 나타냅니다.
+    let MONGOLOCALC, SELFMONGOBOO;
+    let dummy; // 히스토리 데이터 더미 객체를 저장할 변수입니다.
+    let sortStandard, collection, whereQuery; // 정렬 기준, 컬렉션 이름, 쿼리 객체를 정의합니다.
+    let temp, tempArr; // 임시 변수를 선언합니다.
+    let projectManager; // 프로젝트 매니저 정보를 저장할 변수입니다.
+    let resultObject; // 결과 객체를 저장할 변수입니다.
+
+    // method가 문자열인지 확인하고, 그렇지 않으면 오류를 발생시킵니다.
     if (typeof method !== "string") {
       throw new Error("invalid method");
     }
+
+    // updateQuery가 객체인지 확인하고, 그렇지 않으면 오류를 발생시킵니다.
     if (typeof updateQuery !== "object" || updateQuery === null) {
       throw new Error("invalid update query");
     }
+
+    // option이 객체인지 확인하고, 그렇지 않으면 오류를 발생시킵니다.
     if (typeof option !== "object" || option === null) {
       throw new Error("invalid option");
     }
 
+    // defaultCheckMode가 활성화된 경우, 기본 검사 객체를 반환합니다.
     if (option.defaultCheckMode === true || option.defaultCheckMode === 1) {
       if (option.keyMode === true || option.keyMode === 1) {
         resultObject = {};
-        resultObject[defaultCheckKey] = objectDeepCopy(defaultCheckObject);
+        resultObject[defaultCheckKey] = objectDeepCopy(defaultCheckObject); // 기본 검사 객체의 딥 카피를 생성합니다.
         return resultObject;
       } else {
-        return objectDeepCopy(defaultCheckObject);
+        return objectDeepCopy(defaultCheckObject); // 기본 검사 객체의 딥 카피를 반환합니다.
       }
     }
 
+    // selfMongo 옵션이 설정된 경우, SELFMONGOBOO를 true로 설정하고 MONGOLOCALC에 selfMongo 인스턴스를 할당합니다.
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
     } else {
+      // selfMongo 옵션이 설정되지 않은 경우, SELFMONGOBOO를 false로 설정하고 MONGOLOCALC에 기본 MongoDB 클라이언트를 할당합니다.
       SELFMONGOBOO = false;
       MONGOLOCALC = new mongo(mongoinfo);
     }
 
+    // method 값에 따라 히스토리 컬렉션과 정렬 기준, 더미 데이터를 설정합니다.
     if (/client/gi.test(method)) {
+      // 고객 히스토리 데이터 설정
       collection = "clientHistory";
-      sortStandard = "cliid";
+      sortStandard = "cliid"; // 고객 ID를 정렬 기준으로 사용합니다.
       dummy = {
-        cliid: updateQuery.cliid,
-        history: "",
-        space: "",
-        construct: "",
-        styling: "",
-        budget: "",
-        progress: "",
-        important: false,
-        issue: "",
-        manager: "-",
-        curation: {
+        cliid: updateQuery.cliid, // 고객 ID
+        history: "", // 고객 히스토리 텍스트
+        space: "", // 공간 정보
+        construct: "", // 구조 정보
+        styling: "", // 스타일링 정보
+        budget: "", // 예산 정보
+        progress: "", // 진행 상황
+        important: false, // 중요한 여부
+        issue: "", // 이슈 정보
+        manager: "-", // 담당 매니저
+        curation: { // 큐레이션 정보
           analytics: {
-            page: [],
-            update: [],
-            submit: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            submit: [], // 제출 분석 정보
+            send: [], // 발송 분석 정보
             call: {
-              out: [],
-              in: []
+              out: [], // 발신 통화 기록
+              in: [] // 수신 통화 기록
             },
-            full: false
+            full: false // 전체 분석 여부
           },
-          style: [],
-          image: [],
+          style: [], // 스타일 정보
+          image: [], // 이미지 정보
           service: {
-            serid: [ defaultSerid ],
+            serid: [defaultSerid], // 서비스 ID 배열
           },
           building: {
-            type: "",
+            type: "", // 건물 유형
           },
           furniture: {
-            ratio: 50,
+            ratio: 50, // 가구 비율
             makeNeeds: {
-              furniture: false,
-              fabric: false,
+              furniture: false, // 가구 요구 사항
+              fabric: false, // 패브릭 요구 사항
             }
           },
           construct: {
-            living: false,
-            items: []
+            living: false, // 생활 구조 정보
+            items: [] // 관련 항목 목록
           },
-          check: objectDeepCopy(defaultCheckObject),
+          check: objectDeepCopy(defaultCheckObject), // 기본 검사 객체
         }
       };
     } else if (/designer/gi.test(method)) {
+      // 디자이너 히스토리 데이터 설정
       collection = "designerHistory";
-      sortStandard = "desid";
+      sortStandard = "desid"; // 디자이너 ID를 정렬 기준으로 사용합니다.
       dummy = {
-        desid: updateQuery.desid,
-        important: false,
-        history: "",
-        career: "",
-        issue: "",
-        family: "",
-        partner: "",
-        craft: "",
-        styling: "",
-        reception: "",
-        etc: "",
-        manager: "-",
-        console: {
+        desid: updateQuery.desid, // 디자이너 ID
+        important: false, // 중요한 여부
+        history: "", // 히스토리 텍스트
+        career: "", // 경력 정보
+        issue: "", // 이슈 정보
+        family: "", // 가족 정보
+        partner: "", // 파트너 정보
+        craft: "", // 공예 정보
+        styling: "", // 스타일링 정보
+        reception: "", // 접수 정보
+        etc: "", // 기타 정보
+        manager: "-", // 담당 매니저
+        console: { // 콘솔 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
-        checklist: {
+        checklist: { // 체크리스트 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
-        report: {
+        report: { // 보고서 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
-        request: {
+        request: { // 요청 관련 정보
           analytics: {
-            page: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            send: [], // 발송 분석 정보
           }
         },
-        possible: {
+        possible: { // 가능성 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
-        project: {
+        project: { // 프로젝트 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
-        schedule: {
+        schedule: { // 일정 관련 정보
           analytics: {
-            page: [],
-            update: [],
-            send: [],
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
         },
       };
     } else if (/project/gi.test(method)) {
+      // 프로젝트 히스토리 데이터 설정
       collection = "projectHistory";
-      sortStandard = "proid";
-      projectManager = '-';
+      sortStandard = "proid"; // 프로젝트 ID를 정렬 기준으로 사용합니다.
+      projectManager = '-'; // 기본 프로젝트 매니저를 설정합니다.
+
+      // 프로젝트 매니저 정보 설정 (옵션에 따라 secondMongo에서 가져올 수 있음)
       if (SELFMONGOBOO) {
         if (option.secondMongo !== undefined && option.secondMongo !== null) {
           temp = await this.getProjectById(updateQuery.proid, { selfMongo: option.secondMongo });
@@ -4573,243 +5744,313 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
           }
         }
       }
+
       dummy = {
-        proid: updateQuery.proid,
-        history: "",
-        designer: "",
-        client: "",
-        photo: "",
-        contents: {
+        proid: updateQuery.proid, // 프로젝트 ID
+        history: "", // 프로젝트 히스토리 텍스트
+        designer: "", // 디자이너 정보
+        client: "", // 고객 정보
+        photo: "", // 사진 정보
+        contents: { // 컨텐츠 정보
           blog: {
             portfolio: {
-              boo: false,
-              date: new Date(1800, 0, 1),
-              link: "",
+              boo: false, // 포트폴리오 여부
+              date: new Date(1800, 0, 1), // 포트폴리오 날짜 (기본값: 1800년 1월 1일)
+              link: "", // 포트폴리오 링크
             },
             review: {
-              boo: false,
-              date: new Date(1800, 0, 1),
-              link: "",
+              boo: false, // 리뷰 여부
+              date: new Date(1800, 0, 1), // 리뷰 날짜 (기본값: 1800년 1월 1일)
+              link: "", // 리뷰 링크
             }
           },
           instagram: {
             portfolio: {
-              boo: false,
-              date: new Date(1800, 0, 1),
-              link: "",
+              boo: false, // 포트폴리오 여부
+              date: new Date(1800, 0, 1), // 포트폴리오 날짜 (기본값: 1800년 1월 1일)
+              link: "", // 포트폴리오 링크
             },
             review: {
-              boo: false,
-              date: new Date(1800, 0, 1),
-              link: "",
+              boo: false, // 리뷰 여부
+              date: new Date(1800, 0, 1), // 리뷰 날짜 (기본값: 1800년 1월 1일)
+              link: "", // 리뷰 링크
             }
           }
         },
-        important: false,
-        issue: "",
-        request: {
+        important: false, // 중요한 여부
+        issue: "", // 이슈 정보
+        request: { // 요청 관련 정보
           analytics: {
-            make: [],
-            page: [],
-            update: [],
-            send: [],
+            make: [], // 생성된 분석 정보
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
           client: {
-            name: "",
-            phone: "",
-            family: "",
-            address: "",
-            budget: "",
-            etc: "",
+            name: "", // 고객 이름
+            phone: "", // 고객 전화번호
+            family: "", // 고객 가족 정보
+            address: "", // 고객 주소
+            budget: "", // 고객 예산
+            etc: "", // 기타 정보
           },
           space: {
-            contract: "",
-            precheck: "",
-            empty: "",
-            movein: "",
-            special: "",
-            composition: "",
+            contract: "", // 계약 정보
+            precheck: "", // 사전 검사 정보
+            empty: "", // 빈 공간 정보
+            movein: "", // 입주 정보
+            special: "", // 특별 요구 사항
+            composition: "", // 공간 구성
           },
           service: {
-            service: "",
-            concept: "",
-            construct: "",
-            styling: ""
+            service: "", // 서비스 정보
+            concept: "", // 개념 정보
+            construct: "", // 구조 정보
+            styling: "" // 스타일링 정보
           },
           about: {
-            when: [],
-            where: [],
-            site: [],
-            construct: [],
-            styling: [],
-            budget: [],
-            progress: [],
+            when: [], // 시점 정보
+            where: [], // 위치 정보
+            site: [], // 사이트 정보
+            construct: [], // 구조 정보
+            styling: [], // 스타일링 정보
+            budget: [], // 예산 정보
+            progress: [], // 진행 상황
           }
         },
-        construct: {
-          name: "",
-          address: "",
+        construct: { // 구조 관련 정보
+          name: "", // 이름
+          address: "", // 주소
           payments: {
             first: {
-              date: new Date(1800, 0, 1),
-              etc: "",
+              date: new Date(1800, 0, 1), // 첫 번째 결제 날짜
+              etc: "", // 기타 정보
             },
             start: {
-              date: new Date(1800, 0, 1),
-              etc: "",
+              date: new Date(1800, 0, 1), // 시작 결제 날짜
+              etc: "", // 기타 정보
             },
             middle: {
-              date: new Date(1800, 0, 1),
-              etc: "",
+              date: new Date(1800, 0, 1), // 중간 결제 날짜
+              etc: "", // 기타 정보
             },
             remain: {
-              date: new Date(1800, 0, 1),
-              etc: "",
+              date: new Date(1800, 0, 1), // 남은 결제 날짜
+              etc: "", // 기타 정보
             },
           }
         },
-        schedule: {
+        schedule: { // 일정 관련 정보
           analytics: {
-            make: [],
-            page: [],
-            update: [],
-            send: [],
+            make: [], // 생성된 분석 정보
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
           progress: {
-            start: new Date(1800, 0, 1),
-            complete: new Date(1800, 0, 1),
-            send: new Date(1800, 0, 1),
+            start: new Date(1800, 0, 1), // 시작 날짜
+            complete: new Date(1800, 0, 1), // 완료 날짜
+            send: new Date(1800, 0, 1), // 발송 날짜
           },
           contents: {
-            title: "",
-            description: "",
-            color: "",
+            title: "", // 컨텐츠 제목
+            description: "", // 컨텐츠 설명
+            color: "", // 컨텐츠 색상
           },
           date: {
-            start: new Date(1800, 0, 1),
-            end: new Date(1800, 0, 1),
+            start: new Date(1800, 0, 1), // 시작 날짜
+            end: new Date(1800, 0, 1), // 종료 날짜
           },
-          children: []
+          children: [] // 자식 일정 정보
         },
-        purchase: {
+        purchase: { // 구매 관련 정보
           analytics: {
-            make: [],
-            page: [],
-            update: [],
-            send: [],
+            make: [], // 생성된 분석 정보
+            page: [], // 페이지 분석 정보
+            update: [], // 업데이트 분석 정보
+            send: [], // 발송 분석 정보
           },
-          date: new Date(1800, 0, 1),
-          requests: []
+          date: new Date(1800, 0, 1), // 구매 날짜
+          requests: [] // 구매 요청 목록
         },
-        manager: projectManager
+        manager: projectManager // 프로젝트 매니저 정보
       };
     } else if (/contents/gi.test(method)) {
+      // 컨텐츠 히스토리 데이터 설정
       collection = "contentsHistory";
-      sortStandard = "conid";
+      sortStandard = "conid"; // 컨텐츠 ID를 정렬 기준으로 사용합니다.
       dummy = {
-        conid: updateQuery.conid,
-        important: false,
-        issue: "",
-        manager: "-"
+        conid: updateQuery.conid, // 컨텐츠 ID
+        important: false, // 중요한 여부
+        issue: "", // 이슈 정보
+        manager: "-" // 담당 매니저
       };
     } else {
+      // method 값이 유효하지 않은 경우, 오류를 발생시킵니다.
       throw new Error("invalid method");
     }
 
+    // SELFMONGOBOO가 false인 경우, 기본 MongoDB 클라이언트를 사용하여 데이터베이스에 연결합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.connect();
     }
+
+    // 설정된 컬렉션에 히스토리 더미 데이터를 삽입합니다.
     await MONGOLOCALC.db(`miro81`).collection(collection).insertOne(dummy);
+
+    // SELFMONGOBOO가 false인 경우, MongoDB 연결을 종료합니다.
     if (!SELFMONGOBOO) {
       await MONGOLOCALC.close();
     }
 
+    // whereQuery 객체를 생성하여 업데이트할 히스토리 데이터를 지정합니다.
     whereQuery = {};
     whereQuery[sortStandard] = updateQuery[sortStandard];
 
-    await this.updateHistory(method, [ whereQuery, updateQuery ], option);
+    // 히스토리 데이터를 업데이트합니다.
+    await this.updateHistory(method, [whereQuery, updateQuery], option);
 
+    // 생성된 히스토리 데이터의 ID를 반환합니다.
     return updateQuery[sortStandard];
   } catch (e) {
+    // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
     console.log(e);
   }
 }
 
 // general mongo CRUD  --------------------------------------------------------------------
 
-BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+/**
+ * @method mongoCreate
+ * @description MongoDB의 특정 컬렉션에 새로운 문서를 생성하기 위한 메서드입니다. 이 메서드는 JSON 객체를 받아 MongoDB에 삽입하며,
+ *              옵션에 따라 JSON 객체 내의 JavaScript 함수를 인코딩하여 저장할 수 있습니다.
+ * @param {string} collection - MongoDB 컬렉션의 이름을 지정하는 문자열입니다.
+ * @param {Object} json - MongoDB에 삽입할 JSON 객체입니다. 이 객체 내에 JavaScript 함수가 포함된 경우, hexaJson 메서드를 통해 해당 함수가 인코딩될 수 있습니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스입니다. 기본적으로 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.hexaMode=false] - JSON 객체 내의 JavaScript 함수를 인코딩할지 여부를 결정합니다.
+ * @returns {Promise<string>} 성공 시 "success" 문자열을 반환하며, 실패 시 "fail"을 반환합니다.
+ */
+BackMaker.prototype.mongoCreate = async function (collection, json, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
-  try {
 
+  // Mother 클래스에서 필요한 MongoDB 유틸리티와 hexaJson 메서드를 가져옵니다.
+  // hexaJson은 JSON 객체 내에 포함된 JavaScript 함수를 인코딩하거나 복호화할 때 사용됩니다.
+  const { mongo, mongoinfo, hexaJson } = this.mother;
+
+  try {
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
     let MONGOC;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // hexaMode가 true로 설정된 경우, JSON 객체 내의 JavaScript 함수를 인코딩합니다.
+      // 이는 데이터베이스에 함수를 안전하게 저장하기 위해 필요합니다.
       if (option.hexaMode === true) {
         json = await hexaJson(json, true);
       }
+
+      // 인코딩된 JSON 객체를 지정된 컬렉션에 삽입합니다.
       await MONGOC.db(`miro81`).collection(collection).insertOne(json);
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       if (option.hexaMode === true) {
-        json = await hexaJson(json, true);
+        json = await hexaJson(json, true); // JSON 객체 내의 JavaScript 함수를 인코딩합니다.
       }
+
+      // 제공된 MongoDB 인스턴스를 사용하여 JSON 객체를 삽입합니다.
       await option.selfMongo.db(`miro81`).collection(collection).insertOne(json);
     }
 
+    // 작업이 성공적으로 완료되면 "success"를 반환합니다.
     return "success";
   } catch (e) {
+    // 작업 중 오류가 발생하면 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
     console.log(e);
+    return "fail";
   }
 }
 
-BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+/**
+ * @method mongoRead
+ * @description MongoDB의 특정 컬렉션에서 문서를 조회하기 위한 메서드입니다. 이 메서드는 조회 조건과 옵션을 받아
+ *              MongoDB에서 데이터를 검색하고, 필요에 따라 결과 데이터를 인코딩할 수 있습니다.
+ * @param {string} collection - MongoDB 컬렉션의 이름을 지정하는 문자열입니다.
+ * @param {Object} query - MongoDB에서 데이터를 검색하기 위한 조회 조건을 담은 객체입니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스입니다. 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.sort=null] - 데이터를 정렬하기 위한 정렬 조건입니다.
+ * @param {Object} [option.sortQuery=null] - 정렬 조건이 따로 지정되지 않은 경우 사용할 정렬 조건입니다.
+ * @param {number} [option.limit=null] - 검색된 데이터의 결과 수를 제한하기 위한 값입니다.
+ * @param {boolean} [option.hexaMode=false] - hexaJson 메서드를 사용하여 조회된 데이터를 인코딩할지 여부를 결정합니다.
+ * @returns {Promise<Array>} 검색된 문서의 배열을 반환합니다. 실패 시 빈 배열을 반환합니다.
+ */
+BackMaker.prototype.mongoRead = async function (collection, query, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
+
+  // Mother 클래스에서 필요한 MongoDB 유틸리티와 hexaJson 메서드를 가져옵니다.
+  // hexaJson은 JSON 객체 내에 포함된 JavaScript 함수를 인코딩하거나 복호화할 때 사용됩니다.
+  const { mongo, mongoinfo, hexaJson } = this.mother;
+
   try {
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
     let MONGOC;
+    // tong 변수는 MongoDB에서 조회된 결과를 저장할 배열입니다.
     let tong;
+    // sortQuery 변수는 정렬 조건을 저장합니다.
     let sortQuery;
 
+    // sort 옵션이 지정되지 않은 경우, sortQuery를 확인하여 정렬 조건을 설정합니다.
     if (option.sort === undefined) {
-      sortQuery = null;
+      sortQuery = null; // 기본적으로 정렬 조건을 null로 설정
       if (option.sortQuery === undefined) {
-        sortQuery = null;
+        sortQuery = null; // sortQuery가 설정되지 않은 경우 null 유지
       } else {
-        sortQuery = option.sortQuery;
+        sortQuery = option.sortQuery; // sortQuery가 설정된 경우 이를 사용
       }
     } else {
-      sortQuery = option.sort;
+      sortQuery = option.sort; // sort 옵션이 설정된 경우 이를 사용
     }
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성하여 사용합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // sortQuery가 null인 경우, 데이터를 정렬하지 않고 검색합니다.
       if (sortQuery === null) {
         if (option.limit !== undefined && option.limit !== null) {
+          // limit 옵션이 설정된 경우, 검색된 결과 수를 제한합니다.
           tong = await MONGOC.db(`miro81`).collection(collection).find(query).limit(Number(option.limit)).toArray();
         } else {
+          // limit 옵션이 설정되지 않은 경우, 전체 데이터를 검색합니다.
           tong = await MONGOC.db(`miro81`).collection(collection).find(query).toArray();
         }
       } else {
+        // sortQuery가 설정된 경우, 해당 정렬 조건에 따라 데이터를 검색합니다.
         if (option.limit !== undefined && option.limit !== null) {
           tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
         } else {
           tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
         }
       }
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       if (sortQuery === null) {
         if (option.limit !== undefined && option.limit !== null) {
           tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).limit(Number(option.limit)).toArray();
@@ -4825,71 +6066,115 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
       }
     }
 
+    // hexaMode가 true로 설정된 경우, 조회된 데이터를 hexaJson 메서드를 통해 인코딩합니다.
     if (option.hexaMode === true) {
-      tong = await hexaJson(JSON.stringify(tong));
+      tong = await hexaJson(JSON.stringify(tong)); // 데이터를 문자열로 변환한 후 인코딩
     }
 
+    // 조회된 결과 데이터를 반환합니다.
     return tong;
   } catch (e) {
+    // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
     console.log(e);
     return [];
   }
 }
 
-BackMaker.prototype.mongoPick = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+/**
+ * @method mongoPick
+ * @description MongoDB의 특정 컬렉션에서 필요한 속성들만 선택하여 문서를 조회하기 위한 메서드입니다. 이 메서드는 조회 조건과 프로젝션을 받아,
+ *              필요한 속성만을 선택하여 데이터를 검색합니다. 
+ *              이는 전체 데이터를 가져오는 `mongoRead`와 달리 필요한 필드만 선택하여 효율적으로 데이터를 조회할 수 있는 방식입니다.
+ *              `mongoPick`과 `mongoRead`의 차이점:
+ *              `mongoRead`는 해당 컬렉션에서 문서를 통째로 가져오는 메서드입니다. 모든 필드를 포함한 전체 문서를 반환하기 때문에,
+ *              데이터의 양이 많아질수록 성능에 영향을 미칠 수 있습니다.
+ *              반면, `mongoPick`은 필요한 속성들만 선택하여 가져오는 메서드로, 불필요한 데이터를 제외하고 필요한 정보만을 선택하여 조회할 수 있습니다.
+ *              이를 통해 데이터 전송량을 줄이고 성능을 최적화할 수 있습니다. 
+ *              일반적으로 `mongoPick`이 더 효율적이고 권장됩니다.
+ * @param {string} collection - MongoDB 컬렉션의 이름을 지정하는 문자열입니다.
+ * @param {Array<Object>} queryArr - 첫 번째 객체는 검색 조건을, 두 번째 객체는 필요한 속성을 정의하는 프로젝션 객체입니다. 
+ *                                   배열 형식이며, 첫 번째 요소는 `whereQuery`, 두 번째 요소는 `projectQuery`입니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스입니다. 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @param {Object} [option.sort=null] - 데이터를 정렬하기 위한 정렬 조건입니다.
+ * @param {Object} [option.sortQuery=null] - 정렬 조건이 따로 지정되지 않은 경우 사용할 정렬 조건입니다.
+ * @param {number} [option.limit=null] - 검색된 데이터의 결과 수를 제한하기 위한 값입니다.
+ * @param {boolean} [option.hexaMode=false] - hexaJson 메서드를 사용하여 조회된 데이터를 인코딩할지 여부를 결정합니다.
+ * @returns {Promise<Array>} 검색된 문서의 배열을 반환합니다. 실패 시 빈 배열을 반환합니다.
+ */
+BackMaker.prototype.mongoPick = async function (collection, queryArr, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, hexaJson } = this.mother;
+
+  // Mother 클래스에서 필요한 MongoDB 유틸리티와 hexaJson 메서드를 가져옵니다.
+  // hexaJson은 JSON 객체 내에 포함된 JavaScript 함수를 인코딩하거나 복호화할 때 사용됩니다.
+  const { mongo, mongoinfo, hexaJson } = this.mother;
+
   try {
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
     let MONGOC;
+    // tong 변수는 MongoDB에서 조회된 결과를 저장할 배열입니다.
     let tong;
-    let cursor;
+    // sortQuery 변수는 정렬 조건을 저장합니다.
     let sortQuery;
 
+    // sort 옵션이 지정되지 않은 경우, sortQuery를 확인하여 정렬 조건을 설정합니다.
     if (option.sort === undefined) {
-      sortQuery = null;
+      sortQuery = null; // 기본적으로 정렬 조건을 null로 설정
       if (option.sortQuery === undefined) {
-        sortQuery = null;
+        sortQuery = null; // sortQuery가 설정되지 않은 경우 null 유지
       } else {
-        sortQuery = option.sortQuery;
+        sortQuery = option.sortQuery; // sortQuery가 설정된 경우 이를 사용
       }
     } else {
-      sortQuery = option.sort;
+      sortQuery = option.sort; // sort 옵션이 설정된 경우 이를 사용
     }
 
+    // queryArr가 배열인지 확인하고, 배열이 아니면 오류를 발생시킵니다.
     if (!Array.isArray(queryArr)) {
-      throw new Error("must be [ whereQuery, projectQuery ]");
+      throw new Error("queryArr는 [ whereQuery, projectQuery ] 형식의 배열이어야 합니다.");
     }
+    // queryArr의 모든 요소가 객체인지 확인하고, 객체가 아닌 경우 오류를 발생시킵니다.
     if (!queryArr.every((o) => { return (typeof o === "object" && o !== null) })) {
-      throw new Error("must be [ whereQuery, projectQuery ]");
+      throw new Error("queryArr의 모든 요소는 객체이어야 합니다.");
     }
+    // queryArr의 길이가 2가 아니면 오류를 발생시킵니다.
     if (queryArr.length !== 2) {
-      throw new Error("must be [ whereQuery, projectQuery ]");
+      throw new Error("queryArr는 [ whereQuery, projectQuery ] 형식의 배열이어야 합니다.");
     }
 
+    // projectQuery에 "_id" 필드를 0으로 설정하여 기본적으로 MongoDB의 _id 필드를 제외시킵니다.
     queryArr[1]["_id"] = 0;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성하여 사용합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // sortQuery가 null인 경우, 데이터를 정렬하지 않고 검색합니다.
       if (sortQuery === null) {
         if (option.limit !== undefined && option.limit !== null) {
+          // limit 옵션이 설정된 경우, 검색된 결과 수를 제한합니다.
           tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
         } else {
+          // limit 옵션이 설정되지 않은 경우, 전체 데이터를 검색합니다.
           tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
         }
       } else {
+        // sortQuery가 설정된 경우, 해당 정렬 조건에 따라 데이터를 검색합니다.
         if (option.limit !== undefined && option.limit !== null) {
           tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).limit(Number(option.limit)).toArray();
         } else {
           tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).toArray();
         }
       }
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       if (sortQuery === null) {
         if (option.limit !== undefined && option.limit !== null) {
           tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
@@ -4905,108 +6190,199 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
       }
     }
 
+    // hexaMode가 true로 설정된 경우, 조회된 데이터를 hexaJson 메서드를 통해 인코딩합니다.
     if (option.hexaMode === true) {
-      tong = await hexaJson(JSON.stringify(tong));
+      tong = await hexaJson(JSON.stringify(tong)); // 데이터를 문자열로 변환한 후 인코딩
     }
 
+    // 조회된 결과 데이터를 반환합니다.
     return tong;
   } catch (e) {
+    // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
     console.log(e);
     return [];
   }
 }
 
-BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null, unset: false }) {
-  const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
-  try {
-    const [ whereQuery, updateQuery ] = queryArr;
-    let MONGOC;
-    let unsetBoo;
-    let finalUpdateObj;
+/**
+ * @method mongoUpdate
+ * @description 이 메서드는 MongoDB의 특정 컬렉션에서 문서를 업데이트하기 위해 사용됩니다. `whereQuery`로 문서를 찾고, `updateQuery`로
+ *              해당 문서를 업데이트합니다. 또한, `unset` 옵션을 통해 필드를 제거할 수 있습니다. `hexaJson`과 같은 Mother의 유틸리티 메서드를
+ *              사용하는 경우, 데이터를 인코딩 또는 디코딩하여 저장할 수 있습니다.
+ *              `mongoUpdate`는 MongoDB의 문서를 업데이트하기 위한 메서드로, 데이터베이스에서 특정 조건에 맞는 문서를 찾아 
+ *              그 내용을 변경하거나, 경우에 따라 필드를 제거할 수 있는 기능을 제공합니다. 
+ *              이 메서드에서는 `hexaJson`과 같은 Mother의 유틸리티 메서드를 사용하여 
+ *              JSON 객체 내의 JavaScript 함수를 인코딩하거나 복호화할 수 있습니다. 
+ *              이는 복잡한 데이터 구조를 안전하게 저장할 수 있도록 도와줍니다.
+ * @param {string} collection - MongoDB 컬렉션의 이름을 지정하는 문자열입니다.
+ * @param {Array<Object>} queryArr - 첫 번째 객체는 업데이트할 문서를 찾기 위한 `whereQuery`, 두 번째 객체는 문서 업데이트를 위한 `updateQuery`입니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스입니다. 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @param {boolean} [option.unset=false] - true로 설정하면 필드를 제거하는 `$unset` 연산자를 사용합니다.
+ * @returns {Promise<string>} 작업의 성공 여부에 따라 "success" 또는 "fail"을 반환합니다.
+ */
 
+BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { selfMongo: null, unset: false }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
+  const instance = this;
+
+  // Mother 클래스에서 필요한 MongoDB 유틸리티를 가져옵니다.
+  const { mongo, mongoinfo } = this.mother;
+
+  try {
+    // queryArr 배열에서 whereQuery와 updateQuery를 추출합니다.
+    const [ whereQuery, updateQuery ] = queryArr;
+
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
+    let MONGOC;
+
+    // unsetBoo는 $unset 연산자를 사용할지 여부를 결정하는 부울 값입니다.
+    let unsetBoo;
+
+    // unset 옵션에 따라 unsetBoo를 설정합니다. 기본값은 false입니다.
     if (option.unset === null || option.unset === false || option.unset === undefined) {
       unsetBoo = false;
     } else if (option.unset === true) {
       unsetBoo = true;
     }
 
+    // 최종적으로 사용할 업데이트 객체를 finalUpdateObj에 저장합니다.
     finalUpdateObj = {};
     if (!unsetBoo) {
+      // unsetBoo가 false인 경우, $set 연산자를 사용하여 필드를 업데이트합니다.
       finalUpdateObj["$set"] = updateQuery;
     } else {
+      // unsetBoo가 true인 경우, $unset 연산자를 사용하여 필드를 제거합니다.
       finalUpdateObj["$unset"] = updateQuery;
     }
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성하여 사용합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // MongoDB의 해당 컬렉션에서 whereQuery에 맞는 문서를 finalUpdateObj로 업데이트합니다.
       await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       await option.selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
     }
+
+    // 작업이 성공적으로 완료되면 "success"를 반환합니다.
     return "success";
   } catch (e) {
+    // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
     console.log(e);
+    return "fail";
   }
 }
 
-BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+/**
+ * @method mongoDelete
+ * @description 이 메서드는 MongoDB에서 특정 문서를 삭제하기 위해 사용됩니다. 컬렉션에서 `query`에 해당하는 문서를 찾아 삭제합니다. 
+ *              이 과정에서 `hexaJson`과 같은 Mother의 유틸리티 메서드가 데이터의 보안을 위해 활용될 수 있습니다. 
+ *              일반적으로, 삭제 작업은 신중하게 수행되어야 하며, 이 메서드는 필요한 경우 MongoDB 인스턴스를 재사용할 수 있도록
+ *              `selfMongo` 옵션을 제공합니다. 작업이 성공적으로 완료되면 "success"를 반환하고, 오류가 발생하면 "fail"을 반환합니다.
+ * @param {string} collection - MongoDB 컬렉션의 이름을 나타냅니다.
+ * @param {Object} query - 삭제할 문서를 찾기 위한 조건을 담은 객체입니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스를 사용합니다. 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string>} 작업의 성공 여부에 따라 "success" 또는 "fail"을 반환합니다.
+ */
+
+BackMaker.prototype.mongoDelete = async function (collection, query, option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+
+  // Mother 클래스에서 필요한 MongoDB 유틸리티를 가져옵니다.
+  const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
     let MONGOC;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성하여 사용합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // MongoDB의 해당 컬렉션에서 query에 맞는 문서를 삭제합니다.
       await MONGOC.db(`miro81`).collection(collection).deleteOne(query);
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       await option.selfMongo.db(`miro81`).collection(collection).deleteOne(query);
     }
+
+    // 작업이 성공적으로 완료되면 "success"를 반환합니다.
     return "success";
   } catch (e) {
+    // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
     console.log(e);
+    return "fail";
   }
 }
 
-BackMaker.prototype.mongoListCollections = async function (option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+/**
+ * @method mongoListCollections
+ * @description 이 메서드는 MongoDB 데이터베이스 내의 모든 컬렉션 이름을 목록으로 반환합니다. 주어진 데이터베이스에 있는 모든 컬렉션의 이름을 가져오기 위해 사용되며, `selfMongo` 옵션이 설정된 경우 이를 통해 외부에서 지정된 MongoDB 인스턴스를 사용할 수 있습니다. 만약 `selfMongo` 옵션이 설정되지 않은 경우, 내부적으로 `mongo` 인스턴스를 생성하여 사용합니다. 이 메서드는 Mother의 MongoDB 연결 유틸리티를 사용하며, 연결 후 데이터를 가져온 뒤 연결을 닫습니다. 오류 발생 시 빈 배열을 반환합니다.
+ * @param {Object} [option={}] - 추가 옵션을 설정하는 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용자가 지정한 MongoDB 인스턴스를 사용합니다. 설정되지 않으면 내부적으로 생성된 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<string[]>} - 데이터베이스 내의 모든 컬렉션 이름을 담은 배열을 반환합니다.
+ */
+
+BackMaker.prototype.mongoListCollections = async function (option = { selfMongo: null }) {
+  // BackMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+
+  // Mother 클래스에서 필요한 MongoDB 유틸리티를 가져옵니다.
+  const { mongo, mongoinfo } = this.mother;
+
   try {
+    // MONGOC 변수는 사용할 MongoDB 클라이언트를 저장할 변수입니다.
     let MONGOC, allCollections_raw, allCollections;
 
+    // selfMongo 옵션이 설정되지 않은 경우, 내부적으로 MongoDB 클라이언트를 생성하여 사용합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      if (option.local !== undefined && option.local !== null) {
-        MONGOC = new mongo(mongolocalinfo);
-      } else {
-        MONGOC = new mongo(mongoinfo);
-      }
+      // Mother에서 제공한 mongoinfo를 사용하여 새로운 MongoDB 클라이언트를 생성합니다.
+      MONGOC = new mongo(mongoinfo);
+
+      // MongoDB에 연결합니다.
       await MONGOC.connect();
+
+      // MongoDB의 데이터베이스에서 모든 컬렉션의 목록을 가져옵니다.
       allCollections_raw = await MONGOC.db(`miro81`).listCollections().toArray();
+
+      // 작업이 완료되면 MongoDB 연결을 닫습니다.
       await MONGOC.close();
     } else {
+      // selfMongo 옵션이 설정된 경우, 해당 MongoDB 인스턴스를 사용하여 작업을 수행합니다.
       allCollections_raw = await option.selfMongo.db(`miro81`).listCollections().toArray();
     }
 
+    // 모든 컬렉션 이름을 배열에 저장합니다.
     allCollections = [];
     for (let { name } of allCollections_raw) {
       allCollections.push(name);
     }
 
+    // 모든 컬렉션 이름이 담긴 배열을 반환합니다.
     return allCollections;
   } catch (e) {
+    // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
     console.log(e);
+    return [];
   }
 }
 

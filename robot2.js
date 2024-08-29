@@ -124,20 +124,20 @@ Robot.prototype.dataConsole = function (noStatic = false) {
 Robot.prototype.renderFrontPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderFrontPhp(false);
+  await app.renderFrontPhp();
 }
 
 Robot.prototype.renderTestFrontPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderFrontPhp(true);
-  await app.renderDesignerPhp(true);
+  await app.renderFrontPhp();
+  await app.renderDesignerPhp();
 }
 
 Robot.prototype.renderDesignerPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderDesignerPhp(false);
+  await app.renderDesignerPhp();
 }
 
 Robot.prototype.aliveTest = function () {
