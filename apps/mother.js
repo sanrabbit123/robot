@@ -3762,7 +3762,7 @@ Mother.prototype.pasteToClipboard = function () {
 }
 
 /**
- * equalJson 메서드는 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
+ * equalJson 메서드는 JSON.parse와 같은 기능을 하는 메서드로 주어진 JSON string을 객체로 변환합니다. 다만 JSON.pare와 다른 점은 Date 객체를 string이 아닌 Date instance로 읽는다는 점입니다. 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
  * @param {string|Object} jsonString - JSON 문자열 또는 객체
  * @returns {Object|string} - 파싱된 JSON 객체 또는 원래의 JSON 문자열
  */
@@ -5038,7 +5038,13 @@ Mother.prototype.ipParsing = async function (ip) {
 }
 
 /**
- * serviceParsing 메서드는 주어진 서비스 객체 또는 문자열을 파싱하여 정보를 반환합니다.
+ * serviceParsing 메서드는 주어진 '홈리에종' 서비스 객체 또는 문자열을 파싱하여 정보를 반환합니다.
+ *  * '홈리에종' 서비스는 홈퍼니싱, 홈스타일링, 토탈 스타일링, 엑스트라 스타일링의 네 가지로 구성되어 있으며,
+ * 각각의 ID는 다음과 같습니다:
+ * - 홈퍼니싱: s2011_aa01s
+ * - 홈스타일링: s2011_aa02s
+ * - 토탈 스타일링: s2011_aa03s
+ * - 엑스트라 스타일링: s2011_aa04s
  * @param {object|string} serviceObj - 파싱할 서비스 객체 또는 문자열
  * @param {boolean} [startDateMode=false] - 시작 날짜 모드 여부
  * @param {boolean} [initialMode=false] - 초기 모드 여부
