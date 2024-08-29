@@ -1,3 +1,6 @@
+const CLIENT_DIR = process.cwd() + "/apps/backMaker/alive/client";
+const { Client, Clients } = require(CLIENT_DIR + "/addOn/generator.js");
+
 class ClientTypeCases extends Array {
   parsingCases(client) {
     const requestTypes = client.getType();
@@ -189,6 +192,75 @@ const withTools = function (Client) {
       arr.push(new ClientType(tempObj));
     }
     return arr;
+  }
+
+  Client.prototype.toMessage = function () {
+    const { request } = this.requests[0];
+    let message = "";
+
+    message += "문의일 : " + request.timeline.toString(true) + "\n";
+    message += "고객 아이디 : " + this.cliid + "\n";
+    message += "성함 : " + this.name + "\n";
+    message += "연락처 : " + this.phone + "\n";
+    message += "이메일 : " + this.email + "\n";
+    message += "주소 : " + request.space.address.value + "\n";
+    message += "평수 : " + request.space.pyeong.toMessage() + "\n";
+    if (!request.space.resident.living) {
+      message += "입주 예정일 : " + request.space.resident.expected.toString() + "\n";
+    } else {
+      message += "입주 예정일 : " + "거주중" + "\n";
+    }
+    message += "계약 형태 : " + request.space.contract.value + "\n";
+    message += "요청 사항 : " + request.etc.comment + "\n";
+
+    return message.replace(/\n$/, '');
+  }
+
+  Client.prototype.toPrint = function (addition = [], requestNumber = 0) {
+    const { request, analytics } = this.requests[requestNumber];
+    const indent = "    ";
+    const bar = "=============================================================";
+    const wordEaLength = 70;
+    let documentArr, comment, commentArr;
+    let tempStr;
+    let thisSerid;
+
+    documentArr = [];
+
+    documentArr.push(`상담 신청서  /  ${this.cliid}  /  ${request.timeline.toString(true)}\n`);
+    documentArr.push(bar + "\n");
+    documentArr.push(`${this.name} (${this.phone})\n`);
+    documentArr.push("주소 : " + request.space.address.value + "\n");
+    documentArr.push("평수 : " + request.space.pyeong.toMessage() + "\n");
+    if (!request.space.resident.living) {
+      documentArr.push("입주 예정일 : " + request.space.resident.expected.toString() + "\n");
+    } else {
+      documentArr.push("입주 예정일 : " + "거주중" + "\n");
+    }
+    documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
+    documentArr.push("예산 : " + request.budget.value + "\n");
+    documentArr.push("가구 구매 : " + request.furniture.value + "\n");
+    for (let text of addition) {
+      documentArr.push(text + "\n");
+    }
+    comment = "요청 사항 : " + request.etc.comment;
+    commentArr = [];
+    tempStr = '';
+    for (let i = 0; i < comment.length; i++) {
+      tempStr += comment[i];
+      if (i % wordEaLength === wordEaLength - 1) {
+        commentArr.push(tempStr);
+        tempStr = '';
+      }
+    }
+    commentArr.push(tempStr);
+
+    commentArr = commentArr.filter((s) => { return s !== ""; }).map((s) => { return s.trim() + "\n"; });
+
+    documentArr = documentArr.concat(commentArr);
+    documentArr = documentArr.map((s) => { return indent + s; });
+
+    return documentArr.join("\n");
   }
 
   Client.prototype.flatDeath = function () {
@@ -814,6 +886,14 @@ const withToolsArr = function (Clients) {
     return arr;
   }
 
+  Clients.prototype.toMessage = function () {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toMessage());
+    }
+    return arr;
+  }
+
   Clients.prototype.flatDeath = function () {
     let tong, tempArr;
     tong = [];
@@ -1053,7 +1133,8 @@ const withToolsArr = function (Clients) {
   return Clients;
 }
 
-module.exports = { Tools: {
-  withTools: withTools,
-  withToolsArr: withToolsArr,
-} };
+const Tools = function () {}
+Tools.withTools = withTools;
+Tools.withToolsArr = withToolsArr;
+
+module.exports = { Tools };
