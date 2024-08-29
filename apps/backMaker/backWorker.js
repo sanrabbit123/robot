@@ -1,77 +1,129 @@
-const BackWorker = function () {
-  this.dir = process.cwd() + "/apps/backMaker";
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  const BackMaker = require(this.dir + "/backMaker.js");
-  this.address = require(process.cwd() + "/apps/infoObj.js");
-  this.mother = new Mother();
-  this.back = new BackMaker();
-  this.mapDir = this.dir + "/map";
-  this.pastDir = this.dir + "/intoMap";
-  this.tempDir = process.cwd() + "/temp";
-  this.resourceDir = this.dir + "/resource";
-  this.aliveDir = this.dir + "/alive";
-  this.idFilterDir = this.dir + "/idFilter";
+/**
+ * @class BackWorker
+ * @description 홈리에종의 핵심 데이터를 관리하고 다양한 보고서 작성, 디자이너 레벨링, 가격 선정 및 추천 작업을 수행하는 클래스입니다.
+ */
+
+class BackWorker {
+  /**
+   * @constructor
+   * @description BackWorker 클래스의 인스턴스를 초기화합니다. 이 과정에서 여러 경로와 필요한 모듈들을 설정합니다.
+   */
+  constructor() {
+    this.dir = process.cwd() + "/apps/backMaker"; // 현재 작업 디렉토리의 "apps/backMaker" 경로를 설정합니다.
+    
+    const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 가져옵니다.
+    const BackMaker = require(this.dir + "/backMaker.js"); // BackMaker 모듈을 현재 경로에서 다시 불러옵니다.
+    
+    this.address = require(process.cwd() + "/apps/infoObj.js"); // 고객 정보를 처리하는 모듈을 가져옵니다.
+    this.mother = new Mother(); // Mother 클래스의 인스턴스를 생성하여 `this.mother`에 할당합니다.
+    this.back = new BackMaker(); // BackMaker 클래스의 인스턴스를 생성하여 `this.back`에 할당합니다.
+    
+    this.mapDir = this.dir + "/map"; // 맵 디렉토리 경로를 설정합니다.
+    this.pastDir = this.dir + "/intoMap"; // 과거 맵 데이터 디렉토리 경로를 설정합니다.
+    this.tempDir = process.cwd() + "/temp"; // 임시 파일을 저장할 디렉토리 경로를 설정합니다.
+    this.resourceDir = this.dir + "/resource"; // 리소스 디렉토리 경로를 설정합니다.
+    this.aliveDir = this.dir + "/alive"; // 활성 디렉토리 경로를 설정합니다.
+    this.idFilterDir = this.dir + "/idFilter"; // ID 필터 디렉토리 경로를 설정합니다.
+  }
 }
 
+/**
+ * @method setProposalToClient
+ * @description 고객 데이터에 프로젝트 제안 기록을 연결하는 메서드입니다. 프로젝트의 아이디를 고객 데이터 내에 삽입하여 고객과 프로젝트 간의 관계를 설정합니다.
+ * @param {Array<Date>} dateArray - 시작 및 종료 날짜를 포함하는 배열입니다. 예를 들어 [startDate, endDate] 형식입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<void>}
+ */
 BackWorker.prototype.setProposalToClient = async function (dateArray = [], option = { selfMongo: null }) {
-  const instance = this;
-  const back = this.back;
-  const { mongo, mongoinfo } = this.mother;
+  const instance = this; // 현재 인스턴스를 참조하기 위해 instance 변수에 this를 할당합니다.
+  const back = this.back; // BackMaker 클래스 인스턴스를 참조합니다.
+  const { mongo, mongoinfo } = this.mother; // Mother 클래스의 mongo 메서드와 mongoinfo 객체를 가져옵니다.
+
   try {
+    // dateArray가 배열이 아닌 경우를 처리합니다.
     if (!Array.isArray(dateArray)) {
+      // dateArray가 null 또는 undefined인 경우 빈 배열로 초기화합니다.
       if (dateArray === null || dateArray === undefined) {
         dateArray = [];
-      } else if (dateArray === "cron") {
-        const today = new Date();
-        const agoDay = new Date();
-        agoDay.setMonth(agoDay.getMonth() - 4);
-        dateArray = [ agoDay, today ];
-      } else {
-        throw new Error("arguments must be array and [ startDate, endDate ]");
+      } 
+      // dateArray가 "cron"인 경우, 4개월 전부터 오늘까지의 날짜 범위를 설정합니다.
+      else if (dateArray === "cron") {
+        const today = new Date(); // 오늘 날짜를 생성합니다.
+        const agoDay = new Date(); // 과거 날짜를 생성합니다.
+        agoDay.setMonth(agoDay.getMonth() - 4); // 4개월 전의 날짜로 설정합니다.
+        dateArray = [agoDay, today]; // 4개월 전부터 오늘까지의 날짜 배열을 만듭니다.
+      } 
+      // 그 외의 경우, 배열이 아니면 에러를 발생시킵니다.
+      else {
+        throw new Error("arguments must be array and [startDate, endDate]");
       }
     }
-    let MONGOC;
+
+    let MONGOC; // MongoDB 연결 객체를 선언합니다.
+
+    // option에 selfMongo가 설정되어 있지 않은 경우 새로운 MongoDB 연결을 생성합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      MONGOC = new mongo(mongoinfo);
-      await MONGOC.connect();
-    } else {
+      MONGOC = new mongo(mongoinfo); // MongoDB 클라이언트를 생성합니다.
+      await MONGOC.connect(); // MongoDB에 연결합니다.
+    } 
+    // 기존 MongoDB 연결이 있는 경우, 이를 사용합니다.
+    else {
       MONGOC = option.selfMongo;
     }
 
-    let searchQuery;
+    let searchQuery; // 검색 쿼리를 저장할 변수를 선언합니다.
+
+    // 날짜 배열이 비어 있는 경우, 모든 데이터를 검색하기 위해 빈 쿼리를 설정합니다.
     if (dateArray.length === 0) {
       searchQuery = {};
-    } else if (dateArray.length === 2) {
+    } 
+    // 날짜 배열에 시작일과 종료일이 포함된 경우, 해당 기간 내의 요청을 검색합니다.
+    else if (dateArray.length === 2) {
       searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": dateArray[0], "$lt": dateArray[1] } } } };
-    } else {
-      throw new Error("arguments must be array and [ startDate, endDate ]");
+    } 
+    // 날짜 배열이 잘못된 형식일 경우, 에러를 발생시킵니다.
+    else {
+      throw new Error("arguments must be array and [startDate, endDate]");
     }
 
+    // 고객 데이터를 검색합니다.
     const clients = await back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: MONGOC });
-    const allRequests = clients.getRequestsTong();
-    let projects, tempArr, tempArr2, matrix, timelines;
+    const allRequests = clients.getRequestsTong(); // 모든 요청 데이터를 가져옵니다.
+
+    let projects, tempArr, matrix, timelines;
     let whereQuery, updateQuery;
 
+    // 동기화 시작을 알리는 로그를 출력합니다.
     console.log(`\x1b[33m%s\x1b[0m`, `client-proposal sync start...`);
     console.log(``);
 
+    // 각 고객에 대해 반복하여 처리합니다.
     for (let { cliid, requests } of clients) {
+      // 고객 ID로 해당 고객의 프로젝트 데이터를 가져옵니다.
       projects = await back.getProjectsByQuery({ cliid }, { selfMongo: MONGOC });
 
-      tempArr = [];
+      tempArr = []; // 임시 배열을 초기화합니다.
+
+      // 각 프로젝트에 대해 반복하여 제안 정보를 임시 배열에 추가합니다.
       for (let p of projects) {
         tempArr.push({ proid: p.proid, date: p.proposal.date, contract: /^d/i.test(p.desid) });
       }
-      whereQuery = { cliid };
+      whereQuery = { cliid }; // 고객 ID로 검색할 쿼리를 설정합니다.
 
-      timelines = [];
+      timelines = []; // 타임라인 배열을 초기화합니다.
+
+      // 각 요청의 타임라인을 타임라인 배열에 추가합니다.
       for (let { request: { timeline } } of requests) {
         timelines.push(timeline);
       }
 
+      // 타임라인이 하나만 있는 경우, 해당 타임라인에 제안 정보를 추가합니다.
       if (timelines.length === 1) {
         updateQuery = { "requests.0.analytics.proposal": tempArr };
-      } else {
+      } 
+      // 타임라인이 여러 개 있는 경우, 각 타임라인에 맞는 제안 정보를 추가합니다.
+      else {
         updateQuery = {};
         matrix = [];
         for (let i = 0; i < timelines.length; i++) {
@@ -95,103 +147,136 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
         }
       }
 
-      await back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+      // 고객 데이터를 업데이트합니다.
+      await back.updateClient([whereQuery, updateQuery], { selfMongo: MONGOC });
     }
 
+    // MongoDB 연결을 종료합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.close();
     }
 
   } catch (e) {
+    // 에러가 발생하면 이를 로그에 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method aspirantToDesigner
+ * @description 디자이너 신청자(aspirant)를 홈리에종의 협업 인테리어 디자이너로 변환하는 메서드입니다. 신청자의 정보를 바탕으로 새로운 디자이너로 등록합니다.
+ * @param {Array<Object>} aspidArr - 지원자 ID와 계약 날짜가 포함된 객체 배열입니다.
+ * @param {Object} option - 설정 옵션 객체입니다.
+ * @param {Object} [option.selfMongo=null] - 사용할 MongoDB 인스턴스입니다. 설정되지 않으면 기본 MongoDB 인스턴스를 사용합니다.
+ * @returns {Promise<void>}
+ */
 BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { selfMongo: null }) {
-  /*
-  aspidArr = [
-    { aspid: "a2000_0000", contract: new Date() }
-  ];
-  */
+  /**
+   * @class AspidArr
+   * @description 지원자 ID와 계약 날짜가 포함된 배열을 확장한 클래스입니다. 배열의 각 요소는 지원자 정보 객체입니다.
+   */
   class AspidArr extends Array {
+    /**
+     * @constructor
+     * @param {Array<Object>} arr - 지원자 ID와 계약 날짜가 포함된 객체 배열입니다.
+     * @throws {Error} - 지원자 ID(aspid) 또는 계약 날짜(contract)가 누락된 경우 오류를 발생시킵니다.
+     */
     constructor(arr) {
       super();
       for (let i of arr) {
         if (i.aspid === undefined || i.contract === undefined) {
-          throw new Error("invaild aspid arr");
+          throw new Error("invalid aspid arr");
         }
-        this.push(i);
+        this.push(i); // 유효한 지원자 정보를 배열에 추가합니다.
       }
     }
+    
+    /**
+     * @method search
+     * @description 지원자 ID로 배열에서 해당 지원자의 계약 날짜를 검색합니다.
+     * @param {string} aspid - 검색할 지원자 ID입니다.
+     * @returns {Date|null} - 해당 지원자의 계약 날짜를 반환합니다. 찾지 못한 경우 null을 반환합니다.
+     */
     search(aspid) {
       let target = null;
       for (let i of this) {
         if (aspid === i.aspid) {
-          target = i.contract;
+          target = i.contract; // 지원자 ID가 일치하는 경우 해당 계약 날짜를 반환합니다.
           break;
         }
       }
       return target;
     }
   }
-  const instance = this;
-  const back = this.back;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend, requestSystem, equalJson } = this.mother;
-  const toUpdateQuery = async function (aspirant, contractDay) {
-    const today = new Date();
-    const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
-    let updateQuery = {};
-    let snsObj, tempObj;
 
-    updateQuery["designer"] = aspirant.designer;
-    updateQuery["information.contract.date"] = contractDay;
+  const instance = this; // 현재 인스턴스를 참조하기 위해 instance 변수에 this를 할당합니다.
+  const back = this.back; // BackMaker 인스턴스를 참조합니다.
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend, requestSystem, equalJson } = this.mother; // Mother 클래스의 여러 유틸리티 메서드를 가져옵니다.
 
-    //phone
+  /**
+   * @function toUpdateQuery
+   * @description 지원자의 정보를 바탕으로 디자이너로 등록하기 위한 업데이트 쿼리를 생성합니다.
+   * @param {Object} aspirant - 지원자 정보 객체입니다.
+   * @param {Date} contractDay - 계약 날짜입니다.
+   * @returns {Promise<Object|null>} - 생성된 업데이트 쿼리를 반환합니다. 필수 정보가 누락된 경우 null을 반환합니다.
+   */
+  const toUpdateQuery = async function(aspirant, contractDay) {
+    const today = new Date(); // 현재 날짜를 today 변수에 저장합니다.
+    const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")"; // 디자이너 이름과 지원자 ID를 조합한 문자열을 생성합니다.
+    let updateQuery = {}; // 업데이트 쿼리를 저장할 객체를 초기화합니다.
+    let snsObj, tempObj; // SNS 정보와 임시 객체를 저장할 변수를 선언합니다.
+
+    updateQuery["designer"] = aspirant.designer; // 디자이너 이름을 업데이트 쿼리에 추가합니다.
+    updateQuery["information.contract.date"] = contractDay; // 계약 날짜를 업데이트 쿼리에 추가합니다.
+
+    // 전화번호가 없는 경우, 오류 메시지를 전송하고 null을 반환합니다.
     if (aspirant.phone === "" || aspirant.phone === undefined || aspirant.phone === null) {
       await messageSend({ text: thisDesigner + " 디자이너의 핸드폰 번호가 없습니다!", channel: "#300_designer" });
       return null;
     }
-    updateQuery["information.phone"] = aspirant.phone;
+    updateQuery["information.phone"] = aspirant.phone; // 전화번호를 업데이트 쿼리에 추가합니다.
 
-    //email
+    // 이메일이 없는 경우, 오류 메시지를 전송하고 null을 반환합니다.
     if (aspirant.email === "" || aspirant.email === undefined || aspirant.email === null) {
       await messageSend({ text: thisDesigner + " 디자이너의 이메일이 없습니다!", channel: "#300_designer" });
       return null;
     }
-    updateQuery["information.email"] = aspirant.email;
+    updateQuery["information.email"] = aspirant.email; // 이메일을 업데이트 쿼리에 추가합니다.
 
-    //address
+    // 주소가 없는 경우, 오류 메시지를 전송하고 null을 반환합니다.
     if (aspirant.address === "" || aspirant.address === undefined || aspirant.address === null) {
       await messageSend({ text: thisDesigner + " 디자이너의 주소가 없습니다!", channel: "#300_designer" });
       return null;
     }
-    updateQuery["information.address"] = [ aspirant.address ];
+    updateQuery["information.address"] = [aspirant.address]; // 주소를 업데이트 쿼리에 추가합니다.
 
-    //birth
+    // 생년월일이 1920년 1월 1일 이후인 경우, 생년월일을 업데이트 쿼리에 추가합니다.
     if (aspirant.birth.valueOf() > (new Date(1920, 0, 1).valueOf())) {
       updateQuery["information.birth"] = new Date(JSON.stringify(aspirant.birth).slice(1, -1));
     }
 
-    //web and sns
+    // 웹사이트와 SNS 정보를 업데이트 쿼리에 추가합니다.
     updateQuery["information.personalSystem.webPage"] = aspirant.information.channel.web;
     updateQuery["information.personalSystem.sns"] = [];
     for (let link of aspirant.information.channel.sns) {
       tempObj = {};
-      tempObj.kind = "etc";
+      tempObj.kind = "etc"; // 기본 SNS 종류를 '기타'로 설정합니다.
       if (/naver/gi.test(link)) {
-        tempObj.kind = "Naver";
+        tempObj.kind = "Naver"; // 네이버 링크인 경우 종류를 'Naver'로 설정합니다.
       } else if (/insta/gi.test(link)) {
-        tempObj.kind = "Instagram";
+        tempObj.kind = "Instagram"; // 인스타그램 링크인 경우 종류를 'Instagram'으로 설정합니다.
       }
-      tempObj.href = link;
-      updateQuery["information.personalSystem.sns"].push(tempObj);
+      tempObj.href = link; // 링크 URL을 추가합니다.
+      updateQuery["information.personalSystem.sns"].push(tempObj); // SNS 정보를 업데이트 쿼리에 추가합니다.
     }
 
-    //career
+    // 경력 정보를 업데이트 쿼리에 추가합니다.
     if (aspirant.information.career.detail.length > 0 || aspirant.information.career.school.length > 0) {
       updateQuery["information.business.career.detail"] = equalJson(JSON.stringify(aspirant.information.career.detail));
       updateQuery["information.business.career.school"] = equalJson(JSON.stringify(aspirant.information.career.school));
-    } else {
+    } 
+    // 경력 정보가 없을 경우, 경력 시작 날짜를 계산하여 추가합니다.
+    else {
       if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
         today.setMonth(today.getMonth() - ((aspirant.information.career.interior.year * 12) + aspirant.information.career.interior.month));
         updateQuery["information.business.career.startY"] = today.getFullYear();
@@ -203,11 +288,12 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       }
     }
 
-    //account
+    // 계좌 정보가 없는 경우, 오류 메시지를 전송하고 null을 반환합니다.
     if (aspirant.information.account.number === "" || aspirant.information.account.number === null || aspirant.information.account.number === undefined) {
       await messageSend({ text: thisDesigner + " 디자이너의 계좌 번호가 없습니다!", channel: "#300_designer" });
       return null;
     }
+    // 계좌 정보를 업데이트 쿼리에 추가합니다.
     updateQuery["information.business.account"] = [
       {
         bankName: aspirant.information.account.bank,
@@ -216,11 +302,12 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       }
     ];
 
-    //classification and businessNumber
+    // 사업자 분류 및 사업자 번호를 업데이트 쿼리에 추가합니다.
     if (aspirant.information.company.classification === "" || aspirant.information.company.classification === null || aspirant.information.company.classification === undefined) {
       await messageSend({ text: thisDesigner + " 사업자 정보가 없습니다!", channel: "#300_designer" });
       return null;
     }
+    // 사업자 분류에 따라 정보 추가
     if (/개인/gi.test(aspirant.information.company.classification)) {
       if (/일반/gi.test(aspirant.information.company.classification)) {
         updateQuery["information.business.businessInfo.classification"] = "개인사업자(일반)";
@@ -242,74 +329,87 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       updateQuery["information.business.businessInfo.businessNumber"] = "";
     }
 
-    //setting
+    // 디자이너 설정 초기화
     updateQuery["setting.description"] = [
       " ",
       " ",
       " "
     ];
 
-    return updateQuery;
+    return updateQuery; // 최종적으로 생성된 업데이트 쿼리를 반환합니다.
   }
+
   try {
+    // 입력된 aspidArr가 배열이 아닌 경우 오류를 발생시킵니다.
     if (!Array.isArray(aspidArr)) {
       throw new Error("argument must be aspid arr");
     }
-    aspidArr = new AspidArr(aspidArr);
+    aspidArr = new AspidArr(aspidArr); // AspidArr 클래스의 인스턴스를 생성합니다.
 
-    let MONGOC;
+    let MONGOC; // MongoDB 연결 객체를 선언합니다.
+    
+    // option에 selfMongo가 설정되어 있지 않은 경우 새로운 MongoDB 연결을 생성합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
       MONGOC = new mongo(mongoinfo);
-      await MONGOC.connect();
+      await MONGOC.connect(); // MongoDB에 연결합니다.
     } else {
-      MONGOC = option.selfMongo;
+      MONGOC = option.selfMongo; // 기존 MongoDB 연결을 사용합니다.
     }
 
-    let whereQuery;
-    whereQuery = { "$or": [] };
+    let whereQuery; // 지원자 검색을 위한 쿼리를 저장할 변수를 선언합니다.
+    whereQuery = { "$or": [] }; // OR 조건으로 지원자들을 검색하기 위한 쿼리를 초기화합니다.
     for (let { aspid } of aspidArr) {
-      whereQuery["$or"].push({ aspid });
+      whereQuery["$or"].push({ aspid }); // 각 지원자 ID를 OR 조건에 추가합니다.
     }
 
-    const targetAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: MONGOC });
+    const targetAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: MONGOC }); // 지원자 정보를 가져옵니다.
     let aspirantJson, updateQuery, contractDay, newDesid, newDesigner, designerFolderResponse;
 
+    // 각 지원자에 대해 반복하여 처리합니다.
     for (let aspirant of targetAspirants) {
-      contractDay = aspidArr.search(aspirant.aspid);
-      aspirantJson = aspirant.toNormal();
-      updateQuery = await toUpdateQuery(aspirantJson, contractDay);
+      contractDay = aspidArr.search(aspirant.aspid); // 해당 지원자의 계약 날짜를 검색합니다.
+      aspirantJson = aspirant.toNormal(); // 지원자 정보를 일반 객체로 변환합니다.
+      updateQuery = await toUpdateQuery(aspirantJson, contractDay); // 지원자 정보를 바탕으로 업데이트 쿼리를 생성합니다.
       if (updateQuery !== null) {
-        newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
-        console.log("create designer success");
-        newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
+        newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC }); // 새로운 디자이너를 생성하고 ID를 반환받습니다.
+        console.log("create designer success"); // 디자이너 생성 성공 로그를 출력합니다.
+        newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC }); // 생성된 디자이너 정보를 가져옵니다.
         designerFolderResponse = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/designerFolder", { name: newDesigner.designer, subid: newDesigner.information.did }, { headers: { "Content-Type": "application/json" } })).data;
-        designerFolderResponse.desid = newDesid;
-        designerFolderResponse.date = new Date();
-        console.log(designerFolderResponse);
-        await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true });
+        designerFolderResponse.desid = newDesid; // 새로운 디자이너 ID를 폴더 응답 데이터에 추가합니다.
+        designerFolderResponse.date = new Date(); // 현재 날짜를 추가합니다.
+        console.log(designerFolderResponse); // 디자이너 폴더 응답 데이터를 로그에 출력합니다.
+        await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true }); // 디자이너 폴더 정보를 MongoDB에 저장합니다.
         await back.mongoCreate("realtimeDesigner", {
-          desid: newDesid,
+          desid: newDesid, // 새로운 디자이너 ID를 추가합니다.
           possible: [
             {
-              start: new Date(2024, 6, 24),
-              matrix: [ 1, 1, 1, 1, ],
-              end: new Date(2034, 6, 24),
+              start: new Date(2024, 6, 24), // 가능한 시작 날짜를 설정합니다.
+              matrix: [ 1, 1, 1, 1, ], // 가능한 상태 매트릭스를 설정합니다.
+              end: new Date(2034, 6, 24), // 가능한 종료 날짜를 설정합니다.
             }
           ],
-          projects: [],
-        }, { console: true });
+          projects: [], // 초기 프로젝트 리스트를 빈 배열로 설정합니다.
+        }, { console: true }); // 실시간 디자이너 정보를 MongoDB에 저장합니다.
       }
     }
 
+    // MongoDB 연결을 종료합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.close();
     }
 
-    //front desid
-    const compileFrontDesidScript = async function (newDesid) {
+    /**
+     * @function compileFrontDesidScript
+     * @description 새로운 디자이너 ID를 프론트엔드에서 사용할 수 있도록 스크립트를 컴파일합니다.
+     * @param {string} newDesid - 새로운 디자이너 ID입니다.
+     * @returns {Promise<void>}
+     */
+    const compileFrontDesidScript = async function(newDesid) {
       try {
-        const target = `${process.cwd()}/apps/backMaker/idFilter/designer.js`;
-        const hundredString = function (number) {
+        const target = `${process.cwd()}/apps/backMaker/idFilter/designer.js`; // 디자이너 ID 필터 스크립트 경로를 설정합니다.
+        
+        // 숫자를 세 자리 문자열로 변환하는 함수입니다. 예를 들어, 5는 "005"로 변환됩니다.
+        const hundredString = function(number) {
           if (number > 99) {
             return String(number);
           } else if (number < 10) {
@@ -318,6 +418,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
             return `0${String(number)}`;
           }
         }
+
         let code, func;
         let tempArr, tempArr2;
         let tong;
@@ -330,26 +431,27 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         let newCode;
         let margin, margin2;
 
-        code = await fileSystem(`readString`, [ target ]);
-        func = require(target);
-        tempArr = code.split("function");
+        code = await fileSystem(`readString`, [target]); // ID 필터 스크립트의 내용을 읽어옵니다.
+        func = require(target); // 필터 스크립트를 모듈로 가져옵니다.
+        tempArr = code.split("function"); // 함수별로 코드 내용을 나눕니다.
 
         tong = [];
         for (let i of tempArr) {
-          tempArr2 = [ ...i.matchAll(/de[0-9][0-9][0-9]/g) ];
+          tempArr2 = [...i.matchAll(/de[0-9][0-9][0-9]/g)]; // 디자이너 ID 패턴을 찾습니다.
           for (let j of tempArr2) {
-            tong.push(j[0])
+            tong.push(j[0]); // 찾은 ID를 tong 배열에 추가합니다.
           }
         }
-        tong = Array.from(new Set(tong));
+        tong = Array.from(new Set(tong)); // 중복된 ID를 제거합니다.
         tong.sort((a, b) => {
           return Number(b.replace(/[^0-9]/gi, '').replace(/^0/, '')) - Number(a.replace(/[^0-9]/gi, '').replace(/^0/, ''));
         });
 
-        latestFrontDesid = tong[0];
-        latestDesid = func.pastToNew(latestFrontDesid);
-        newFrontDesid = "de" + hundredString(Number(tong[0].replace(/[^0-9]/gi, '').replace(/^0/, '')) + 1);
+        latestFrontDesid = tong[0]; // 최신 디자이너 ID를 가져옵니다.
+        latestDesid = func.pastToNew(latestFrontDesid); // 최신 ID를 새로운 형식으로 변환합니다.
+        newFrontDesid = "de" + hundredString(Number(tong[0].replace(/[^0-9]/gi, '').replace(/^0/, '')) + 1); // 새로운 디자이너 ID를 생성합니다.
 
+        // 최신 ID와 관련된 코드를 찾고 새로운 ID를 삽입합니다.
         tempReg = new RegExp(`[ ]+case [\\"\\']${latestFrontDesid}[\\"\\']\\:[^;]+;[^;]+;`);
         result = code.match(tempReg);
         margin = result[0].split("case")[0];
@@ -358,6 +460,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         newCode = code.slice(0, result.index + result[0].length) + `\n${margin}case "${newFrontDesid}":\n${margin2}return "${newDesid}";\n${margin2}break;` + code.slice(result.index + result[0].length);
         code = newCode;
 
+        // 최신 디자이너 ID에 대한 변환 코드를 삽입합니다.
         tempReg = new RegExp(`[ ]+case [\\"\\']${latestDesid}[\\"\\']\\:[^;]+;[^;]+;`);
         result = code.match(tempReg);
         margin = result[0].split("case")[0];
@@ -366,20 +469,25 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         newCode = code.slice(0, result.index + result[0].length) + `\n${margin}case "${newDesid}":\n${margin2}return "${newFrontDesid}";\n${margin2}break;` + code.slice(result.index + result[0].length);
         code = newCode;
 
-        await fileSystem(`write`, [ target, code ]);
+        await fileSystem(`write`, [target, code]); // 변경된 코드를 파일에 저장합니다.
 
       } catch (e) {
-        console.log(e);
+        console.log(e); // 에러가 발생하면 로그에 출력합니다.
       }
     }
 
-    await compileFrontDesidScript(newDesid);
-    console.log("front desid make");
+    await compileFrontDesidScript(newDesid); // 새로운 디자이너 ID를 컴파일합니다.
+    console.log("front desid make"); // 컴파일 완료 로그를 출력합니다.
 
   } catch (e) {
-    console.log(e);
+    console.log(e); // 에러가 발생하면 로그에 출력합니다.
   }
 }
+
+
+
+
+
 
 BackWorker.prototype.newDesignerToFront = async function (porlid, index, designerName, option = { selfMongo: null }) {
   const instance = this;

@@ -3856,7 +3856,7 @@ Mother.prototype.capitalizeString = function (str) {
  */
 Mother.prototype.objectDeepCopy = function (obj) {
   /**
-   * equalJson 함수는 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
+   * equalJson 함수는 JSON.parse와 같은 기능을 하는 메서드로 주어진 JSON string을 객체로 변환합니다. 다만 JSON.pare와 다른 점은 Date 객체를 string이 아닌 Date instance로 읽는다는 점입니다. 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
    * @param {string|Object} jsonString - JSON 문자열 또는 객체
    * @returns {Object|string} - 파싱된 JSON 객체 또는 원래의 JSON 문자열
    */
@@ -3927,7 +3927,7 @@ Mother.prototype.objectDeepCopy = function (obj) {
 }
 
 /**
- * hexaJson 메서드는 입력된 함수나 객체를 암호화하거나 복호화합니다.
+ * hexaJson 메서드는 자바스크립트의 함수를 데이터베이스에 저장하기 위해 만들어진 메서드입니다. JSON안 에 자바스크립트 함수가 있을 때 그 함수만 인코딩해서 데이터베이스에 저장할 수 있게 해주는 기능과 인코딩된 함수를 디코딩 하는 역할까지 수행하는 메서드입니다.
  * @param {Function|Object|string} input - 암호화 또는 복호화할 입력
  * @param {boolean} [middleMode=false] - 중간 모드 여부
  * @returns {Promise<Function|Object|string|null>} - 암호화 또는 복호화된 결과
@@ -4064,7 +4064,7 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
   }
 
   /**
-   * equalJson 함수는 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
+   * equalJson 함수는 JSON.parse와 같은 기능을 하는 메서드로 주어진 JSON string을 객체로 변환합니다. 다만 JSON.pare와 다른 점은 Date 객체를 string이 아닌 Date instance로 읽는다는 점입니다. 주어진 JSON 문자열을 파싱하고, 문자열 내의 날짜 형식을 Date 객체로 변환합니다.
    * @param {string|Object} jsonString - JSON 문자열 또는 객체
    * @returns {Object|string} - 파싱된 JSON 객체 또는 원래의 JSON 문자열
    */
