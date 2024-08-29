@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: mother.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: mother.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Mother 클래스는 MongoDB 연결 정보와 기타 유틸리티를 초기화합니다.
  * 그리고 robot앱에서 활용되는 모든 모듈에서 유용한 메서드들을 제공합니다.
  * @constructor
@@ -40,7 +68,7 @@ class Mother {
 /**
  * 콘솔에서 사용자에게 질문을 하고 입력을 받습니다.
  * @param {string} question - 사용자에게 표시할 질문 문자열
- * @returns {Promise<string>} - 사용자의 입력을 포함하는 Promise
+ * @returns {Promise&lt;string>} - 사용자의 입력을 포함하는 Promise
  */
 Mother.prototype.consoleQ = function (question) {
   const readline = require(`readline`); // readline 모듈 가져오기
@@ -55,7 +83,7 @@ Mother.prototype.consoleQ = function (question) {
 
 /**
  * MongoDB 서비스가 활성 상태인지 확인하는 비동기 메서드입니다.
- * @returns {Promise<boolean>} - MongoDB가 활성 상태이면 true, 그렇지 않으면 false를 반환합니다.
+ * @returns {Promise&lt;boolean>} - MongoDB가 활성 상태이면 true, 그렇지 않으면 false를 반환합니다.
  */
 Mother.prototype.aliveMongo = async function () {
   try {
@@ -97,7 +125,7 @@ Mother.prototype.aliveMongo = async function () {
       activeStatus = activeStatusRaw.split(":")[1].trim();
       
       // MongoDB가 활성 상태인지 확인
-      aliveStatus = /^active/i.test(activeStatus) && /running/gi.test(activeStatus);
+      aliveStatus = /^active/i.test(activeStatus) &amp;&amp; /running/gi.test(activeStatus);
     } else {
       // Linux가 아닌 경우 false 반환
       aliveStatus = false;
@@ -116,7 +144,7 @@ Mother.prototype.aliveMongo = async function () {
  * @returns {string} - 변환된 쉘 링크 문자열
  */
 Mother.prototype.shellLink = function (str) {
-  const specialChars = /[ &()#%[\]{}@!+=~?$]/; // 특수 문자 정규 표현식
+  const specialChars = /[ &amp;()#%[\]{}@!+=~?$]/; // 특수 문자 정규 표현식
   const arr = str.split('/'); // 문자열을 '/'로 분리
   const newStr = arr.map((segment) => {
     // 각 세그먼트에 대해 처리
@@ -133,7 +161,7 @@ Mother.prototype.shellLink = function (str) {
  * 쉘 명령을 실행하는 메서드입니다.
  * @param {string|Array} command - 실행할 명령어 또는 명령어 배열
  * @param {Array|null} [args=null] - 명령어에 전달할 인수 배열
- * @returns {Promise<string|Array<string>>} - 명령어 실행 결과를 포함하는 Promise
+ * @returns {Promise&lt;string|Array&lt;string>>} - 명령어 실행 결과를 포함하는 Promise
  */
 Mother.prototype.shellExec = function (command, args = null) {
   // command가 문자열인 경우
@@ -222,7 +250,7 @@ Mother.prototype.shellExec = function (command, args = null) {
  * @param {string} url - 요청할 URL
  * @param {Object} [data={}] - 요청에 포함할 데이터
  * @param {Object} [config={}] - 요청에 대한 추가 설정
- * @returns {Promise<Object>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;Object>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
   // URL이 문자열인지 확인
@@ -272,13 +300,13 @@ Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
   nvpBoo = false;
 
   // 데이터와 설정에 따라 메서드와 플래그 설정
-  if (dataKeys.length === 0 && configKeys.length === 0) {
+  if (dataKeys.length === 0 &amp;&amp; configKeys.length === 0) {
     method = "get";
     data = {};
     config = {};
     dataBoo = false;
     configBoo = false;
-  } else if (dataKeys.length === 0 && configKeys.length > 0) {
+  } else if (dataKeys.length === 0 &amp;&amp; configKeys.length > 0) {
     method = "get";
     dataBoo = false;
     configBoo = true;
@@ -296,18 +324,18 @@ Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
       nvpBoo = true;
       dataString = "";
       for (let i in data) {
-        dataString += i.replace(/[\=\&]/g, '');
+        dataString += i.replace(/[\=\&amp;]/g, '');
         dataString += '=';
         if (typeof data[i] === "object") {
           if (data[i] instanceof Date) {
             dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
           } else {
-            dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+            dataString += JSON.stringify(data[i]).replace(/[\=\&amp;]/g, '').replace(/[ ]/g, '+');
           }
         } else {
-          dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+          dataString += String(data[i]).replace(/[\=\&amp;]/g, '').replace(/[ ]/g, '+');
         }
-        dataString += '&';
+        dataString += '&amp;';
       }
       data = dataString.slice(0, -1);
     } else {
@@ -336,7 +364,7 @@ Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
     getData = "?";
     getData += querystring.stringify(data);
     if (/\?/gi.test(url)) {
-      url = url + "&" + getData.slice(1);
+      url = url + "&amp;" + getData.slice(1);
     } else {
       url = url + getData;
     }
@@ -436,7 +464,7 @@ Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
 /**
  * 임시 디렉토리의 파일을 삭제하는 메서드입니다.
  * @param {string|null} [dir=null] - 삭제할 디렉토리 경로
- * @returns {Promise<string>} - 삭제 결과를 포함하는 Promise
+ * @returns {Promise&lt;string>} - 삭제 결과를 포함하는 Promise
  */
 Mother.prototype.tempDelete = function (dir = null) {
   const fs = require('fs');
@@ -447,7 +475,7 @@ Mother.prototype.tempDelete = function (dir = null) {
     let arr = str.split('/');
     let newStr = '';
     for (let i of arr) {
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      if (!/ /g.test(i) &amp;&amp; !/\&amp;/g.test(i) &amp;&amp; !/\(/g.test(i) &amp;&amp; !/\)/g.test(i) &amp;&amp; !/\#/g.test(i) &amp;&amp; !/\%/g.test(i) &amp;&amp; !/\[/g.test(i) &amp;&amp; !/\]/g.test(i) &amp;&amp; !/\{/g.test(i) &amp;&amp; !/\}/g.test(i) &amp;&amp; !/\@/g.test(i) &amp;&amp; !/\!/g.test(i) &amp;&amp; !/\=/g.test(i) &amp;&amp; !/\+/g.test(i) &amp;&amp; !/\~/g.test(i) &amp;&amp; !/\?/g.test(i) &amp;&amp; !/\$/g.test(i)) {
         newStr += i + '/';
       } else if (!/'/g.test(i)) {
         newStr += "'" + i + "'" + '/';
@@ -477,7 +505,7 @@ Mother.prototype.tempDelete = function (dir = null) {
         reject(err);
       } else {
         // 각 파일 삭제
-        for (let i = 0; i < filelist.length; i++) {
+        for (let i = 0; i &lt; filelist.length; i++) {
           if (filelist[i] !== `.DS_Store`) {
             exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
               if (error) {
@@ -503,51 +531,51 @@ Mother.prototype.todayMaker = function (startPoint = "month") {
 
   // 시작점에 따라 날짜 형식 결정
   if (startPoint === "month") {
-    if (today.getMonth() + 1 < 10) {
+    if (today.getMonth() + 1 &lt; 10) {
       dayString += '0' + String(today.getMonth() + 1);
     } else {
       dayString += String(today.getMonth() + 1);
     }
-    if (today.getDate() < 10) {
+    if (today.getDate() &lt; 10) {
       dayString += '0' + String(today.getDate());
     } else {
       dayString += String(today.getDate());
     }
-    if (today.getHours() < 10) {
+    if (today.getHours() &lt; 10) {
       dayString += '0' + String(today.getHours());
     } else {
       dayString += String(today.getHours());
     }
   } else if (startPoint === "year") {
     dayString += String(today.getFullYear()).slice(2, 4);
-    if (today.getMonth() + 1 < 10) {
+    if (today.getMonth() + 1 &lt; 10) {
       dayString += '0' + String(today.getMonth() + 1);
     } else {
       dayString += String(today.getMonth() + 1);
     }
-    if (today.getDate() < 10) {
+    if (today.getDate() &lt; 10) {
       dayString += '0' + String(today.getDate());
     } else {
       dayString += String(today.getDate());
     }
   } else if (startPoint === "total") {
     dayString += String(today.getFullYear()).slice(2, 4);
-    if (today.getMonth() + 1 < 10) {
+    if (today.getMonth() + 1 &lt; 10) {
       dayString += '0' + String(today.getMonth() + 1);
     } else {
       dayString += String(today.getMonth() + 1);
     }
-    if (today.getDate() < 10) {
+    if (today.getDate() &lt; 10) {
       dayString += '0' + String(today.getDate());
     } else {
       dayString += String(today.getDate());
     }
-    if (today.getHours() < 10) {
+    if (today.getHours() &lt; 10) {
       dayString += '0' + String(today.getHours());
     } else {
       dayString += String(today.getHours());
     }
-    if (today.getMinutes() < 10) {
+    if (today.getMinutes() &lt; 10) {
       dayString += '0' + String(today.getMinutes());
     } else {
       dayString += String(today.getMinutes());
@@ -562,7 +590,7 @@ Mother.prototype.todayMaker = function (startPoint = "month") {
  * 파일 시스템 작업을 수행하는 메서드입니다.
  * @param {string} sw - 수행할 작업 ("read", "write", "readDir" 등)
  * @param {Array} arr - 작업에 필요한 인수 배열
- * @returns {Promise<any>} - 작업 결과를 포함하는 Promise
+ * @returns {Promise&lt;any>} - 작업 결과를 포함하는 Promise
  */
 Mother.prototype.fileSystem = function (sw, arr) {
   const fs = require('fs'); // 파일 시스템 모듈 가져오기
@@ -686,7 +714,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
             reject(err); 
           } else { 
             resolve(Array.from(filelist).filter((str) => { 
-              return str !== ".DS_Store" && str !== "._.DS_Store"; 
+              return str !== ".DS_Store" &amp;&amp; str !== "._.DS_Store"; 
             })); 
           }
         });
@@ -919,7 +947,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
  * @param {string} url - 요청할 URL
  * @param {Object} [data={}] - 요청에 포함할 데이터
  * @param {Object} [config={}] - 요청에 대한 추가 설정
- * @returns {Promise<Object>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;Object>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   const axios = require("axios"); // axios 모듈 가져오기
@@ -946,13 +974,13 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   nvpBoo = false;
 
   // 데이터와 설정에 따라 메서드와 플래그 설정
-  if (dataKeys.length === 0 && configKeys.length === 0) {
+  if (dataKeys.length === 0 &amp;&amp; configKeys.length === 0) {
     method = "get";
     data = {};
     config = {};
     dataBoo = false;
     configBoo = false;
-  } else if (dataKeys.length === 0 && configKeys.length > 0) {
+  } else if (dataKeys.length === 0 &amp;&amp; configKeys.length > 0) {
     method = "get";
     dataBoo = false;
     configBoo = true;
@@ -970,18 +998,18 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       nvpBoo = true;
       dataString = "";
       for (let i in data) {
-        dataString += i.replace(/[\=\&]/g, '');
+        dataString += i.replace(/[\=\&amp;]/g, '');
         dataString += '=';
         if (typeof data[i] === "object") {
           if (data[i] instanceof Date) {
             dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
           } else {
-            dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+            dataString += JSON.stringify(data[i]).replace(/[\=\&amp;]/g, '').replace(/[ ]/g, '+');
           }
         } else {
-          dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+          dataString += String(data[i]).replace(/[\=\&amp;]/g, '').replace(/[ ]/g, '+');
         }
-        dataString += '&';
+        dataString += '&amp;';
       }
       data = dataString.slice(0, -1);
     }
@@ -1033,7 +1061,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       } else {
         form = new FormData();
         for (let key in data) {
-          if (typeof data[key] === "object" && data[key] !== null) {
+          if (typeof data[key] === "object" &amp;&amp; data[key] !== null) {
             if (data[key].constructor.name === "ReadStream") {
               if (/\.png$/gi.test(data[key].path)) {
                 form.append(key, data[key], { filename: data[key].path.split("/")[data[key].path.split("/").length - 1], contentType: "image/png" });
@@ -1106,7 +1134,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
  * JSON 데이터를 POST 요청으로 전송하는 메서드입니다.
  * @param {Object} data - 전송할 JSON 데이터
  * @param {string} url - 요청할 URL
- * @returns {Promise<Object>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;Object>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.ajaxJson = function (data, url) {
   // 데이터와 URL의 타입 확인
@@ -1130,7 +1158,7 @@ Mother.prototype.ajaxJson = function (data, url) {
     if (typeof json === "object") {
       for (let i in json) {
         if (typeof json[i] === "string") {
-          if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+          if (/^[\{\[]/.test(json[i].trim()) &amp;&amp; /[\}\]]$/.test(json[i].trim())) {
             try {
               temp = JSON.parse(json[i]);
               boo = true;
@@ -1174,7 +1202,7 @@ Mother.prototype.ajaxJson = function (data, url) {
  * @param {string} to - 요청할 URL
  * @param {number} [port=80] - 요청할 포트 번호
  * @param {Object} [headers={}] - 요청에 포함할 헤더
- * @returns {Promise<Object>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;Object>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   // 입력 유효성 검사
@@ -1183,7 +1211,7 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   }
 
   // port가 객체이고 headers가 비어있는 경우, headers로 간주
-  if (typeof port === "object" && Object.keys(headers).length === 0) {
+  if (typeof port === "object" &amp;&amp; Object.keys(headers).length === 0) {
     headers = port;
     port = 80;
   }
@@ -1213,7 +1241,7 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   // URL 경로 분리 및 재조합
   pathArr = target.split('/');
   pathString = '/';
-  for (let i = 0; i < pathArr.length; i++) {
+  for (let i = 0; i &lt; pathArr.length; i++) {
     if (i !== 0) {
       pathString += pathArr[i] + '/';
     }
@@ -1282,7 +1310,7 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
  * @param {string} to - 요청할 URL
  * @param {number|null} [port=null] - 요청할 포트 번호
  * @param {Object|null} [headers=null] - 요청에 포함할 헤더
- * @returns {Promise<Buffer>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;Buffer>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
   let http; // HTTP 모듈을 저장할 변수
@@ -1323,7 +1351,7 @@ Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
     if (typeof headers !== "object") {
       throw new Error("headers must be object"); // 헤더가 객체가 아니면 에러 발생
     }
-    if (typeof headers.headers === "object" && headers.headers !== null) {
+    if (typeof headers.headers === "object" &amp;&amp; headers.headers !== null) {
       option.headers = headers.headers; // headers 객체가 있으면 설정
     } else {
       option.headers = headers; // 그렇지 않으면 headers를 그대로 설정
@@ -1357,7 +1385,7 @@ Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
  * @param {string} to - 요청할 URL
  * @param {Object} [data={}] - 요청에 포함할 데이터
  * @param {Object} [config={}] - 요청에 포함할 추가 설정
- * @returns {Promise<string>} - 요청 결과를 포함하는 Promise
+ * @returns {Promise&lt;string>} - 요청 결과를 포함하는 Promise
  */
 Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
   // 입력 값의 타입을 확인하고, 올바르지 않으면 에러를 발생시킵니다.
@@ -1391,7 +1419,7 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
   }
 
   // config 객체에 headers 속성이 객체로 존재하는지 확인합니다.
-  if (typeof config.headers === "object" && config.headers !== null) {
+  if (typeof config.headers === "object" &amp;&amp; config.headers !== null) {
     // headers 객체의 각 키-값 쌍을 curl 명령어에 추가합니다.
     for (let key in config.headers) {
       command += "-H \"" + key + ": " + config.headers[key].replace(/\"/gi, '') + "\" ";
@@ -1427,7 +1455,7 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
  * @param {string|null} [dir=null] - 스크립트를 저장할 디렉토리
  * @param {boolean} [clean=true] - 실행 전 디렉토리를 정리할지 여부
  * @param {boolean} [silent=false] - 실행 중 출력을 숨길지 여부
- * @returns {Promise<string>} - 실행 결과를 포함하는 Promise
+ * @returns {Promise&lt;string>} - 실행 결과를 포함하는 Promise
  */
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
   // 파일 시스템 모듈과 child_process 모듈에서 exec, execSync 함수를 가져옵니다.
@@ -1440,7 +1468,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
     let newStr = ''; // 변환된 경로를 저장할 변수를 선언합니다.
     for (let i of arr) {
       // 경로의 각 부분을 검사하여 특수 문자가 있는지 확인합니다.
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      if (!/ /g.test(i) &amp;&amp; !/\&amp;/g.test(i) &amp;&amp; !/\(/g.test(i) &amp;&amp; !/\)/g.test(i) &amp;&amp; !/\#/g.test(i) &amp;&amp; !/\%/g.test(i) &amp;&amp; !/\[/g.test(i) &amp;&amp; !/\]/g.test(i) &amp;&amp; !/\{/g.test(i) &amp;&amp; !/\}/g.test(i) &amp;&amp; !/\@/g.test(i) &amp;&amp; !/\!/g.test(i) &amp;&amp; !/\=/g.test(i) &amp;&amp; !/\+/g.test(i) &amp;&amp; !/\~/g.test(i) &amp;&amp; !/\?/g.test(i) &amp;&amp; !/\$/g.test(i)) {
         newStr += i + '/'; // 특수 문자가 없으면 그대로 추가합니다.
       } else if (!/'/g.test(i)) {
         newStr += "'" + i + "'" + '/'; // 작은 따옴표가 없으면 작은 따옴표로 감쌉니다.
@@ -1470,7 +1498,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
           reject(err); // 에러가 발생하면 Promise를 reject합니다.
         } else {
           // 파일 목록을 순회하며 .DS_Store 파일을 제외한 모든 파일을 삭제합니다.
-          for (let i = 0; i < filelist.length; i++) {
+          for (let i = 0; i &lt; filelist.length; i++) {
             if (filelist[i] !== `.DS_Store`) {
               execSync(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
             }
@@ -1524,7 +1552,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
  * @param {string} target - 실행할 Python 스크립트의 경로
  * @param {Array} [args=[]] - 스크립트에 전달할 인수
  * @param {Object} [inputObj={}] - 스크립트에 전달할 입력 객체
- * @returns {Promise<string|Object>} - 실행 결과를 포함하는 Promise
+ * @returns {Promise&lt;string|Object>} - 실행 결과를 포함하는 Promise
  */
 Mother.prototype.pythonExecute = function (target, args = [], inputObj = {}) {
   // 파일 시스템 모듈과 child_process 모듈에서 exec 함수를 가져옵니다.
@@ -1537,7 +1565,7 @@ Mother.prototype.pythonExecute = function (target, args = [], inputObj = {}) {
   targetArr = target.split('/'); // 경로를 '/'로 분리하여 배열로 만듭니다.
   for (let i of targetArr) {
     // 경로의 각 부분을 검사하여 특수 문자가 있는지 확인합니다.
-    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+    if (!/ /g.test(i) &amp;&amp; !/\&amp;/g.test(i) &amp;&amp; !/\(/g.test(i) &amp;&amp; !/\)/g.test(i) &amp;&amp; !/\#/g.test(i) &amp;&amp; !/\%/g.test(i) &amp;&amp; !/\[/g.test(i) &amp;&amp; !/\]/g.test(i) &amp;&amp; !/\{/g.test(i) &amp;&amp; !/\}/g.test(i) &amp;&amp; !/\@/g.test(i) &amp;&amp; !/\!/g.test(i) &amp;&amp; !/\=/g.test(i) &amp;&amp; !/\+/g.test(i) &amp;&amp; !/\~/g.test(i) &amp;&amp; !/\?/g.test(i) &amp;&amp; !/\$/g.test(i)) {
       targetLink += i + '/'; // 특수 문자가 없으면 그대로 추가합니다.
     } else if (!/'/g.test(i)) {
       targetLink += "'" + i + "'" + '/'; // 작은 따옴표가 없으면 작은 따옴표로 감쌉니다.
@@ -1585,7 +1613,7 @@ Mother.prototype.pythonExecute = function (target, args = [], inputObj = {}) {
 
 /**
  * ipCheck 메서드는 현재 IP 주소를 확인하고, 해당 IP 주소에 대한 정보를 반환합니다.
- * @returns {Promise<Object>} - IP 주소와 관련된 정보를 포함하는 Promise
+ * @returns {Promise&lt;Object>} - IP 주소와 관련된 정보를 포함하는 Promise
  */
 Mother.prototype.ipCheck = function () {
   // 표준 정보 키를 정의합니다.
@@ -1618,7 +1646,7 @@ Mother.prototype.ipCheck = function () {
       number = 0;
 
       // IP 주소가 특정 범위에 있는지 확인합니다.
-      if (/^223/.test(ip) && Number(ip.split('.')[1]) >= 32 && Number(ip.split('.')[1]) <= 63) {
+      if (/^223/.test(ip) &amp;&amp; Number(ip.split('.')[1]) >= 32 &amp;&amp; Number(ip.split('.')[1]) &lt;= 63) {
         // IP 주소가 특정 범위에 있으면 SKT로 설정합니다.
         obj.name = "skt";
         obj.rawObj = ADDRESS[standardInfo];
@@ -1653,7 +1681,7 @@ Mother.prototype.ipCheck = function () {
           // 네트워크 인터페이스에서 MAC 주소를 추출합니다.
           for (let i in networkInterfaces) {
             for (let { mac, family } of networkInterfaces[i]) {
-              if (/4/g.test(family) && Number(mac.replace(/[^0-9]/g, '')) !== 0) {
+              if (/4/g.test(family) &amp;&amp; Number(mac.replace(/[^0-9]/g, '')) !== 0) {
                 macList.push(mac);
               }
             }
@@ -1711,7 +1739,7 @@ Mother.prototype.orderSystem = function (type, number) {
   a = 'a'.charCodeAt(0);
   s = 's'.charCodeAt(0);
   z = 'z'.charCodeAt(0);
-  for (let i = a; i < z + 1; i++) {
+  for (let i = a; i &lt; z + 1; i++) {
     num = i + (s - a);
     if (num > z) {
       lastInitialArr.push(String.fromCharCode(num - z - 1 + a));
@@ -1760,7 +1788,7 @@ Mother.prototype.orderSystem = function (type, number) {
     // 각 자리수를 계산합니다.
     index0 = 0;
     index1 = 0;
-    for (let i = 0; i < ABC.length; i++) {
+    for (let i = 0; i &lt; ABC.length; i++) {
       if (ABC[i] === target[0]) {
         index0 = i;
       }
@@ -1790,7 +1818,7 @@ Mother.prototype.zeroAddition = function (number) {
     throw new Error("input must be number");
   }
   // 숫자가 10보다 작으면 앞에 0을 추가하고, 그렇지 않으면 숫자를 문자열로 변환하여 반환합니다.
-  return (number < 10 ? `0${String(number)}` : String(number));
+  return (number &lt; 10 ? `0${String(number)}` : String(number));
 }
 
 /**
@@ -1844,7 +1872,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
     num = 0;
 
     // toArr 배열의 각 요소에서 시작 슬래시를 제거합니다.
-    for (let i = 0; i < toArr.length; i++) {
+    for (let i = 0; i &lt; toArr.length; i++) {
       if (/^\//.test(toArr[i])) {
         toArr[i] = toArr[i].slice(1);
       }
@@ -1947,7 +1975,7 @@ Mother.prototype.generalFileUpload = function (url, fromArr, toArr, etcPost = {}
   // Promise 객체를 반환합니다.
   return new Promise((resolve, reject) => {
     // toArr 배열의 각 요소에서 시작 슬래시를 제거합니다.
-    for (let i = 0; i < toArr.length; i++) {
+    for (let i = 0; i &lt; toArr.length; i++) {
       if (/^\//.test(toArr[i])) {
         toArr[i] = toArr[i].slice(1);
       }
@@ -2029,13 +2057,13 @@ Mother.prototype.getDateMatrix = function (year, month) {
   let tempObj, tempArr, tempArr2, tempArr3;
 
   // year와 month가 주어지지 않거나 "today"인 경우 현재 날짜를 사용합니다.
-  if (year === "today" || (year === undefined && month === undefined)) {
+  if (year === "today" || (year === undefined &amp;&amp; month === undefined)) {
     tempObj = new Date();
     year = tempObj.getFullYear();
     month = tempObj.getMonth();
   } 
   // year가 문자열이고 month가 주어지지 않았으며, year에 '-'가 포함된 경우
-  else if (typeof year === "string" && month === undefined && /\-/g.test(year)) {
+  else if (typeof year === "string" &amp;&amp; month === undefined &amp;&amp; /\-/g.test(year)) {
     // 날짜 문자열이 "YYYY-MM-DD" 형식인 경우
     if (year.length === 10) {
       tempArr = year.split("-");
@@ -2067,7 +2095,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
     const today = new Date(year, month, 1);
     let newMonth, lastDate;
     // 27일부터 32일까지 날짜를 설정하여 월이 변경되는 시점을 찾습니다.
-    for (let i = 27; i < 33; i++) {
+    for (let i = 27; i &lt; 33; i++) {
       today.setDate(i);
       newMonth = today.getMonth();
       if (month !== newMonth) {
@@ -2209,7 +2237,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
     yearMatrix() {
       let arr = [];
       // 12개월을 순회합니다.
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i &lt; 12; i++) {
         // 각 월의 날짜 매트릭스를 배열에 추가합니다.
         arr.push(motherInstance.getDateMatrix(this.year, i));
       }
@@ -2224,7 +2252,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
     nextYearMatrix() {
       let arr = [];
       // 12개월을 순회합니다.
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i &lt; 12; i++) {
         // 다음 해의 각 월의 날짜 매트릭스를 배열에 추가합니다.
         arr.push(motherInstance.getDateMatrix(this.year + 1, i));
       }
@@ -2239,7 +2267,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
     previousYearMatrix() {
       let arr = [];
       // 12개월을 순회합니다.
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i &lt; 12; i++) {
         // 이전 해의 각 월의 날짜 매트릭스를 배열에 추가합니다.
         arr.push(motherInstance.getDateMatrix(this.year - 1, i));
       }
@@ -2259,7 +2287,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
       // 이전 달의 날짜 매트릭스를 배열의 앞에 추가합니다.
       tempMatrix = this.previousMatrix();
       arr.unshift(tempMatrix);
-      for (let i = 1; i < range; i++) {
+      for (let i = 1; i &lt; range; i++) {
         tempMatrix = tempMatrix.previousMatrix();
         arr.unshift(tempMatrix);
       }
@@ -2270,7 +2298,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
       // 다음 달의 날짜 매트릭스를 배열에 추가합니다.
       tempMatrix = this.nextMatrix();
       arr.push(tempMatrix);
-      for (let i = 1; i < range; i++) {
+      for (let i = 1; i &lt; range; i++) {
         tempMatrix = tempMatrix.nextMatrix();
         arr.push(tempMatrix);
       }
@@ -2301,7 +2329,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
 
       // 첫 주가 모두 null인지 확인합니다.
       boo = true;
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i &lt; 7; i++) {
         if (arr[i] !== null) {
           boo = false;
         }
@@ -2309,14 +2337,14 @@ Mother.prototype.getDateMatrix = function (year, month) {
 
       // 첫 주가 모두 null인 경우 배열에서 제거합니다.
       if (boo) {
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i &lt; 7; i++) {
           arr.shift();
         }
       }
 
       // 배열을 7일 단위로 나눕니다.
       tong = [];
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 0; i &lt; arr.length; i++) {
         if (i % 7 === 0) {
           tempArr = [];
         }
@@ -2334,14 +2362,14 @@ Mother.prototype.getDateMatrix = function (year, month) {
       // 마지막 배열의 길이가 7이 아닌 경우 null로 채웁니다.
       length = tong[tong.length - 1].length;
       if (length !== 7) {
-        for (let i = 0; i < 7 - length; i++) {
+        for (let i = 0; i &lt; 7 - length; i++) {
           tong[tong.length - 1].push(null);
         }
       }
 
       // 마지막 배열이 모두 null인지 확인합니다.
       boo = true;
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i &lt; 7; i++) {
         if (tong[tong.length - 1][i] !== null) {
           boo = false;
         }
@@ -2404,7 +2432,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
           num = Number(num);
         }
       }
-      if (num < 10) {
+      if (num &lt; 10) {
         return '0' + String(num);
       } else {
         return String(num);
@@ -2426,17 +2454,17 @@ Mother.prototype.getDateMatrix = function (year, month) {
 
   // 첫 번째 요일이 0이 아닌 경우 null로 채웁니다.
   if (firstDay !== 0) {
-    for (let i = 0; i < firstDay - 1; i++) {
+    for (let i = 0; i &lt; firstDay - 1; i++) {
       arr.push(null);
     }
   } else {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i &lt; 6; i++) {
       arr.push(null);
     }
   }
 
   // 첫 번째 날짜부터 마지막 날짜까지 순회합니다.
-  for (let i = firstDate; i < lastDate + 1; i++) {
+  for (let i = firstDate; i &lt; lastDate + 1; i++) {
     tempDate = new Date(year, month, i);
     arr.push(tempDate.getDay());
     // 배열의 길이가 7의 배수인 경우 배열을 추가하고 초기화합니다.
@@ -2447,9 +2475,9 @@ Mother.prototype.getDateMatrix = function (year, month) {
   }
 
   // 배열의 길이가 7이 아닌 경우 null로 채웁니다.
-  if (arr.length !== 7 && arr.length !== 0) {
+  if (arr.length !== 7 &amp;&amp; arr.length !== 0) {
     pastLength = arr.length;
-    for (let i = 0; i < 7 - pastLength; i++) {
+    for (let i = 0; i &lt; 7 - pastLength; i++) {
       arr.push(null);
     }
     tong.push(arr);
@@ -2458,7 +2486,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
   num = 1;
   // 배열을 순회하며 DateFactor 객체를 생성합니다.
   for (let arr of tong) {
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i &lt; arr.length; i++) {
       if (arr[i] !== null) {
         arr[i] = new DateFactor(year, month, num, i);
         num++;
@@ -2478,7 +2506,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
  * @param {string} target - 대상 디렉토리 경로
  * @param {boolean} [liteMode=false] - 라이트 모드 여부
  * @param {function} [liteCallBack=null] - 라이트 모드 콜백 함수
- * @returns {Promise<Array|Object>} - 파일 및 디렉토리 구조를 포함하는 배열 또는 객체
+ * @returns {Promise&lt;Array|Object>} - 파일 및 디렉토리 구조를 포함하는 배열 또는 객체
  */
 Mother.prototype.treeParsing = async function (target, liteMode = false, liteCallBack = null) {
   // 대상 경로가 '.'으로 시작하면 현재 작업 디렉토리를 기준으로 경로를 설정합니다.
@@ -2501,7 +2529,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
     // 경로의 각 부분을 순회합니다.
     for (let i of arr) {
       // 특정 문자가 포함되지 않은 경우 그대로 추가합니다.
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      if (!/ /g.test(i) &amp;&amp; !/\&amp;/g.test(i) &amp;&amp; !/\(/g.test(i) &amp;&amp; !/\)/g.test(i) &amp;&amp; !/\#/g.test(i) &amp;&amp; !/\%/g.test(i) &amp;&amp; !/\[/g.test(i) &amp;&amp; !/\]/g.test(i) &amp;&amp; !/\{/g.test(i) &amp;&amp; !/\}/g.test(i) &amp;&amp; !/\@/g.test(i) &amp;&amp; !/\!/g.test(i) &amp;&amp; !/\=/g.test(i) &amp;&amp; !/\+/g.test(i) &amp;&amp; !/\~/g.test(i) &amp;&amp; !/\?/g.test(i) &amp;&amp; !/\$/g.test(i)) {
         newStr += i + '/';
       } 
       // 작은 따옴표가 포함되지 않은 경우 작은 따옴표로 감싸서 추가합니다.
@@ -2525,7 +2553,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   /**
    * lsAl 함수는 주어진 경로의 파일 및 디렉토리 목록을 반환합니다.
    * @param {string} target - 대상 경로
-   * @returns {Promise<string>} - 파일 및 디렉토리 목록
+   * @returns {Promise&lt;string>} - 파일 및 디렉토리 목록
    */
   const lsAl = function (target) {
     return new Promise(function (resolve, reject) {
@@ -2544,7 +2572,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   /**
    * exist 함수는 주어진 경로가 존재하는지 확인합니다.
    * @param {string} target - 대상 경로
-   * @returns {Promise<boolean>} - 경로 존재 여부
+   * @returns {Promise&lt;boolean>} - 경로 존재 여부
    */
   const exist = function (target) {
     const fs = require('fs');
@@ -2567,7 +2595,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
       /**
        * makeFileArr 함수는 주어진 경로의 파일 및 디렉토리 정보를 배열로 반환합니다.
        * @param {string} target - 대상 경로
-       * @returns {Promise<Array>} - 파일 및 디렉토리 정보 배열
+       * @returns {Promise&lt;Array>} - 파일 및 디렉토리 정보 배열
        */
       const makeFileArr = async function (target) {
         try {
@@ -2588,7 +2616,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
           for (let i of fileList) {
             newArr = [];
             for (let j of i.split(" ")) {
-              if (j !== '' && j !== ' ') {
+              if (j !== '' &amp;&amp; j !== ' ') {
                 newArr.push(j);
               }
             }
@@ -2610,7 +2638,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
             // 파일 이름을 설정합니다.
             if (i.length > 9) {
               str = '';
-              for (let j = 8; j < i.length; j++) {
+              for (let j = 8; j &lt; i.length; j++) {
                 str += i[j];
                 str += ' ';
               }
@@ -2638,7 +2666,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
           tempArr3 = [];
           // 특정 파일 및 디렉토리를 필터링합니다.
           for (let i of tempArr2) {
-            if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
+            if (i.fileName !== '.' &amp;&amp; i.fileName !== ".." &amp;&amp; !/\-\>/gi.test(i.fileName) &amp;&amp; i.fileName !== ".DS_Store") {
               tempArr3.push(i);
             }
           }
@@ -2677,7 +2705,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
         /**
          * setTree 함수는 주어진 경로의 파일 및 디렉토리 구조를 트리 형태로 설정합니다.
          * @param {string} target - 대상 경로
-         * @returns {Promise<Object>} - 트리 구조 객체
+         * @returns {Promise&lt;Object>} - 트리 구조 객체
          */
         const setTree = async function (target) {
           try {
@@ -2704,7 +2732,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
 
               /**
                * returnFlat 메서드는 평탄화된 파일 및 디렉토리 배열을 반환합니다.
-               * @returns {Promise<Array>} - 평탄화된 파일 및 디렉토리 배열
+               * @returns {Promise&lt;Array>} - 평탄화된 파일 및 디렉토리 배열
                */
               async returnFlat() {
                 try {
@@ -2741,14 +2769,14 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
               /**
                * returnIndexFlat 메서드는 주어진 인덱스의 파일 및 디렉토리 배열을 반환합니다.
                * @param {number|string} index - 인덱스 또는 "min" 또는 "max"
-               * @returns {Promise<Array>} - 파일 및 디렉토리 배열
+               * @returns {Promise&lt;Array>} - 파일 및 디렉토리 배열
                */
               async returnIndexFlat(index) {
                 try {
                   if (this.minLength === undefined) {
                     await this.setLength();
                   }
-                  if (index !== "min" && index !== "max") {
+                  if (index !== "min" &amp;&amp; index !== "max") {
                     if (typeof index !== "number") {
                       throw new Error("input must be number");
                     }
@@ -2772,7 +2800,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
 
               /**
                * returnFlatMatrix 메서드는 평탄화된 파일 및 디렉토리 배열의 매트릭스를 반환합니다.
-               * @returns {Promise<Array>} - 평탄화된 파일 및 디렉토리 배열의 매트릭스
+               * @returns {Promise&lt;Array>} - 평탄화된 파일 및 디렉토리 배열의 매트릭스
                */
               async returnFlatMatrix() {
                 try {
@@ -2780,7 +2808,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
                     await this.setLength();
                   }
                   let result = [];
-                  for (let i = this.minLength; i < this.maxLength + 1; i++) {
+                  for (let i = this.minLength; i &lt; this.maxLength + 1; i++) {
                     result.push(await this.returnIndexFlat(i));
                   }
                   return result;
@@ -2875,7 +2903,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
 
             // 길이별로 배열을 생성합니다.
             lengthArr = [];
-            for (let i = minLength; i < maxLength + 1; i++) {
+            for (let i = minLength; i &lt; maxLength + 1; i++) {
               temp = [];
               for (let j of filterSplitJoin) {
                 if (j.length === i) {
@@ -2897,9 +2925,9 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
             const directoryParsing = function (arr) {
               for (let obj of arr) {
                 if (obj.directory) {
-                  for (let i = 0; i < filterSplitJoin.length; i++) {
+                  for (let i = 0; i &lt; filterSplitJoin.length; i++) {
                     if (filterSplitJoin[i].directory) {
-                      if ((new RegExp('^' + obj.absolute)).test(filterSplitJoin[i].absolute) && (obj.length + 1 === filterSplitJoin[i].length)) {
+                      if ((new RegExp('^' + obj.absolute)).test(filterSplitJoin[i].absolute) &amp;&amp; (obj.length + 1 === filterSplitJoin[i].length)) {
                         obj.files.push(filterSplitJoin[i]);
                       }
                     }
@@ -2951,7 +2979,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
  * @param {string} target - 대상 디렉토리 경로
  * @param {boolean} [searchMode=false] - 검색 모드 여부
  * @param {string} [keyword=''] - 검색 키워드
- * @returns {Promise<Array>} - 파일 및 디렉토리 구조를 포함하는 배열
+ * @returns {Promise&lt;Array>} - 파일 및 디렉토리 구조를 포함하는 배열
  */
 Mother.prototype.leafParsing = async function (target, searchMode = false, keyword = '') {
   // target이 문자열이 아닌 경우 오류를 발생시킵니다.
@@ -2976,7 +3004,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
     // 경로의 각 부분을 순회합니다.
     for (let i of arr) {
       // 특정 문자가 포함되지 않은 경우 그대로 추가합니다.
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      if (!/ /g.test(i) &amp;&amp; !/\&amp;/g.test(i) &amp;&amp; !/\(/g.test(i) &amp;&amp; !/\)/g.test(i) &amp;&amp; !/\#/g.test(i) &amp;&amp; !/\%/g.test(i) &amp;&amp; !/\[/g.test(i) &amp;&amp; !/\]/g.test(i) &amp;&amp; !/\{/g.test(i) &amp;&amp; !/\}/g.test(i) &amp;&amp; !/\@/g.test(i) &amp;&amp; !/\!/g.test(i) &amp;&amp; !/\=/g.test(i) &amp;&amp; !/\+/g.test(i) &amp;&amp; !/\~/g.test(i) &amp;&amp; !/\?/g.test(i) &amp;&amp; !/\$/g.test(i)) {
         // 경로 부분을 새로운 경로 문자열에 추가합니다.
         newStr += i + '/';
       } 
@@ -3002,7 +3030,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
   /**
    * lsAl 함수는 주어진 경로의 파일 및 디렉토리 목록을 반환합니다.
    * @param {string} target - 대상 경로
-   * @returns {Promise<string>} - 파일 및 디렉토리 목록
+   * @returns {Promise&lt;string>} - 파일 및 디렉토리 목록
    */
   const lsAl = function (target) {
     // Promise를 반환합니다.
@@ -3025,7 +3053,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
   /**
    * execPromise 함수는 주어진 명령어를 실행하고 결과를 반환합니다.
    * @param {string} command - 실행할 명령어
-   * @returns {Promise<string>} - 명령어 실행 결과
+   * @returns {Promise&lt;string>} - 명령어 실행 결과
    */
   const execPromise = function (command) {
     // Promise를 반환합니다.
@@ -3112,7 +3140,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
    * findTarget 함수는 주어진 경로에서 검색 대상 파일 및 디렉토리를 찾습니다.
    * @param {string} where - 검색할 경로
    * @param {string} searchTarget - 검색 대상
-   * @returns {Promise<Array>} - 검색된 파일 및 디렉토리 배열
+   * @returns {Promise&lt;Array>} - 검색된 파일 및 디렉토리 배열
    */
   const findTarget = function (where, searchTarget) {
     // 파일 목록과 폴더 목록을 저장할 변수를 초기화합니다.
@@ -3126,7 +3154,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
           return i.trim();
         }).filter((i) => {
           // 빈 문자열과 특정 파일을 필터링합니다.
-          return i !== '' && i !== ".DS_Store" && !/^\.\_/.test(i);
+          return i !== '' &amp;&amp; i !== ".DS_Store" &amp;&amp; !/^\.\_/.test(i);
         });
         // execPromise 함수를 사용하여 디렉토리를 찾습니다.
         return execPromise(`find ${shellLink(where)} -name "*${searchTarget.trim()}*" -type d`);
@@ -3136,7 +3164,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
           return i.trim();
         }).filter((i) => {
           // 빈 문자열과 특정 파일을 필터링합니다.
-          return i !== '' && i !== ".DS_Store" && !/^\.\_/.test(i);
+          return i !== '' &amp;&amp; i !== ".DS_Store" &amp;&amp; !/^\.\_/.test(i);
         });
         // 결과를 저장할 배열을 초기화합니다.
         tong = [];
@@ -3179,7 +3207,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
   /**
    * makeFileArr 함수는 주어진 경로의 파일 및 디렉토리 정보를 배열로 반환합니다.
    * @param {string} target - 대상 경로
-   * @returns {Promise<Array>} - 파일 및 디렉토리 정보 배열
+   * @returns {Promise&lt;Array>} - 파일 및 디렉토리 정보 배열
    */
   const makeFileArr = async function (target) {
     try {
@@ -3212,7 +3240,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
         // 각 단어를 분리하여 배열에 추가합니다.
         for (let j of i.split(" ")) {
           // 빈 문자열이 아닌 경우 배열에 추가합니다.
-          if (j !== '' && j !== ' ') {
+          if (j !== '' &amp;&amp; j !== ' ') {
             newArr.push(j);
           }
         }
@@ -3239,7 +3267,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
           // 파일 이름을 초기화합니다.
           str = '';
           // 파일 이름을 결합합니다.
-          for (let j = 8; j < i.length; j++) {
+          for (let j = 8; j &lt; i.length; j++) {
             str += i[j];
             str += ' ';
           }
@@ -3271,7 +3299,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       tempArr3 = [];
       // 특정 파일 및 디렉토리를 필터링합니다.
       for (let i of tempArr2) {
-        if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
+        if (i.fileName !== '.' &amp;&amp; i.fileName !== ".." &amp;&amp; !/\-\>/gi.test(i.fileName) &amp;&amp; i.fileName !== ".DS_Store") {
           tempArr3.push(i);
         }
       }
@@ -3335,7 +3363,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
  * returnRandoms 메서드는 주어진 숫자(num)만큼의 랜덤 숫자 배열을 반환합니다.
  * @param {number} [num=10] - 생성할 랜덤 숫자의 개수
  * @param {boolean} [length=false] - 길이 기반 정렬 여부
- * @returns {Promise<Array>} - 랜덤 숫자 배열
+ * @returns {Promise&lt;Array>} - 랜덤 숫자 배열
  */
 Mother.prototype.returnRandoms = function (num = 10, length = false) {
   // crypto 모듈을 가져옵니다.
@@ -3411,7 +3439,7 @@ Mother.prototype.returnRandoms = function (num = 10, length = false) {
  * @param {boolean} option.makeKey - 키를 생성할지 여부
  * @param {string|null} option.iv - 초기화 벡터
  * @param {string} option.digest - 출력 형식
- * @returns {Promise<string>} - 암호화된 문자열
+ * @returns {Promise&lt;string>} - 암호화된 문자열
  */
 Mother.prototype.cryptoString = function (password, string, option = { algorithm: "aes-192-cbc", makeKey: true, iv: null, digest: "hex" }) {
   // 입력 값이 유효한지 확인합니다.
@@ -3435,7 +3463,7 @@ Mother.prototype.cryptoString = function (password, string, option = { algorithm
     throw new Error("invaild algorithm");
   }
   // 옵션에 지정된 digest가 유효한지 확인합니다.
-  if (option.digest !== "hex" && option.digest !== "base64" && option.digest !== "latin1") {
+  if (option.digest !== "hex" &amp;&amp; option.digest !== "base64" &amp;&amp; option.digest !== "latin1") {
     throw new Error("invaild digest");
   }
   // makeKey 옵션이 boolean 타입인지 확인합니다.
@@ -3508,7 +3536,7 @@ Mother.prototype.cryptoString = function (password, string, option = { algorithm
  * @param {boolean} option.makeKey - 키를 생성할지 여부
  * @param {string|null} option.iv - 초기화 벡터
  * @param {string} option.digest - 입력 형식
- * @returns {Promise<string>} - 복호화된 문자열
+ * @returns {Promise&lt;string>} - 복호화된 문자열
  */
 Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: "aes-192-cbc", makeKey: true, iv: null, digest: "hex" }) {
   // 입력 값이 유효한지 확인합니다.
@@ -3532,7 +3560,7 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
     throw new Error("invaild algorithm");
   }
   // 옵션에 지정된 digest가 유효한지 확인합니다.
-  if (option.digest !== "hex" && option.digest !== "base64" && option.digest !== "latin1") {
+  if (option.digest !== "hex" &amp;&amp; option.digest !== "base64" &amp;&amp; option.digest !== "latin1") {
     throw new Error("invaild digest");
   }
   // makeKey 옵션이 boolean 타입인지 확인합니다.
@@ -3550,7 +3578,7 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
   digest = option.digest;
 
   // 해시가 hex 형식이고 유효하지 않은 문자가 포함된 경우
-  if (digest === "hex" && hash.replace(/[0-9a-f]/g, '') !== '') {
+  if (digest === "hex" &amp;&amp; hash.replace(/[0-9a-f]/g, '') !== '') {
     // Promise를 반환하여 해시를 그대로 반환합니다.
     return new Promise((resolve, reject) => {
       resolve(hash);
@@ -3626,7 +3654,7 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
  * @param {boolean} option.front - 프론트 데이터베이스를 사용할지 여부
  * @param {boolean} option.center - 센터 데이터베이스를 사용할지 여부
  * @param {boolean} option.test - 테스트 데이터베이스를 사용할지 여부
- * @returns {Promise<Object>} - 쿼리 결과를 포함한 Promise 객체
+ * @returns {Promise&lt;Object>} - 쿼리 결과를 포함한 Promise 객체
  */
 Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true, center: false, test: false }) {
   // mysql2 모듈을 가져옵니다.
@@ -3797,7 +3825,7 @@ Mother.prototype.equalJson = function (jsonString) {
         // 속성 값이 문자열인 경우
         if (typeof json[i] === "string") {
           // 문자열이 JSON 형식인지 확인합니다.
-          if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+          if (/^[\{\[]/.test(json[i].trim()) &amp;&amp; /[\}\]]$/.test(json[i].trim())) {
             try {
               // 문자열을 JSON 객체로 파싱합니다.
               temp = JSON.parse(json[i]);
@@ -3891,7 +3919,7 @@ Mother.prototype.objectDeepCopy = function (obj) {
           // 속성 값이 문자열인 경우
           if (typeof json[i] === "string") {
             // 문자열이 JSON 형식인지 확인합니다.
-            if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            if (/^[\{\[]/.test(json[i].trim()) &amp;&amp; /[\}\]]$/.test(json[i].trim())) {
               try {
                 // 문자열을 JSON 객체로 파싱합니다.
                 temp = JSON.parse(json[i]);
@@ -3917,7 +3945,7 @@ Mother.prototype.objectDeepCopy = function (obj) {
     return equal(jsonString);
   }
   // 입력이 객체이고 null이 아닌 경우
-  if (typeof obj === "object" && obj !== null) {
+  if (typeof obj === "object" &amp;&amp; obj !== null) {
     // 객체를 JSON 문자열로 변환한 후 equalJson 함수를 호출하여 깊은 복사된 객체를 반환합니다.
     return equalJson(JSON.stringify(obj));
   } else {
@@ -3930,20 +3958,20 @@ Mother.prototype.objectDeepCopy = function (obj) {
  * hexaJson 메서드는 입력된 함수나 객체를 암호화하거나 복호화합니다.
  * @param {Function|Object|string} input - 암호화 또는 복호화할 입력
  * @param {boolean} [middleMode=false] - 중간 모드 여부
- * @returns {Promise<Function|Object|string|null>} - 암호화 또는 복호화된 결과
+ * @returns {Promise&lt;Function|Object|string|null>} - 암호화 또는 복호화된 결과
  */
 Mother.prototype.hexaJson = async function (input, middleMode = false) {
   // 비동기 함수의 생성자를 가져옵니다.
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
   
   // 함수 시작과 끝을 나타내는 토큰을 정의합니다.
-  const tokenStart = "__hexaFunctionStart__<<<";
+  const tokenStart = "__hexaFunctionStart__&lt;&lt;&lt;";
   const tokenEnd = ">>>__hexaFunctionEnd__";
   
   /**
    * hexaFunction 함수는 입력된 함수나 문자열을 암호화하거나 복호화합니다.
    * @param {Function|string} input - 암호화 또는 복호화할 입력
-   * @returns {Promise<string|Function>} - 암호화된 문자열 또는 복호화된 함수
+   * @returns {Promise&lt;string|Function>} - 암호화된 문자열 또는 복호화된 함수
    */
   const hexaFunction = async function (input) {
     try {
@@ -3957,7 +3985,7 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
       /**
        * 문자열을 암호화하여 헥사 문자열로 변환합니다.
        * @param {string} string - 암호화할 문자열
-       * @returns {Promise<string>} - 암호화된 헥사 문자열
+       * @returns {Promise&lt;string>} - 암호화된 헥사 문자열
        */
       const toHex = (string) => {
         return new Promise((resolve, reject) => {
@@ -3982,7 +4010,7 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
       /**
        * 헥사 문자열을 복호화하여 함수 문자열로 변환합니다.
        * @param {string} hash - 복호화할 헥사 문자열
-       * @returns {Promise<string>} - 복호화된 함수 문자열
+       * @returns {Promise&lt;string>} - 복호화된 함수 문자열
        */
       const toFunction = (hash) => {
         return new Promise((resolve, reject) => {
@@ -4022,7 +4050,7 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
         return tokenStart + (await toHex(input.toString())) + tokenEnd;
       } else if (typeof input === "string") {
         // 입력이 문자열인 경우
-        if ((new RegExp('^' + tokenStart)).test(input) && (new RegExp(tokenEnd + '$')).test(input)) {
+        if ((new RegExp('^' + tokenStart)).test(input) &amp;&amp; (new RegExp(tokenEnd + '$')).test(input)) {
           // 문자열이 암호화된 함수인 경우 복호화합니다.
           input = input.replace(new RegExp('^' + tokenStart), '').replace(new RegExp(tokenEnd + '$'), '');
           functionString = await toFunction(input);
@@ -4099,7 +4127,7 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
           // 속성 값이 문자열인 경우
           if (typeof json[i] === "string") {
             // 문자열이 JSON 형식인지 확인합니다.
-            if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            if (/^[\{\[]/.test(json[i].trim()) &amp;&amp; /[\}\]]$/.test(json[i].trim())) {
               try {
                 // 문자열을 JSON 객체로 파싱합니다.
                 temp = JSON.parse(json[i]);
@@ -4138,14 +4166,14 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
         /**
          * toJson 함수는 객체의 각 속성을 순회하며 함수인 경우 암호화합니다.
          * @param {Object} obj - 순회할 객체
-         * @returns {Promise<Object>} - 암호화된 객체
+         * @returns {Promise&lt;Object>} - 암호화된 객체
          */
         const toJson = async function (obj) {
           try {
             for (let i in obj) {
               if (typeof obj[i] === "function") {
                 obj[i] = await hexaFunction(obj[i]);
-              } else if (typeof obj[i] === "object" && obj[i] !== null) {
+              } else if (typeof obj[i] === "object" &amp;&amp; obj[i] !== null) {
                 obj[i] = await toJson(obj[i]);
               }
             }
@@ -4171,14 +4199,14 @@ Mother.prototype.hexaJson = async function (input, middleMode = false) {
         /**
          * toObj 함수는 객체의 각 속성을 순회하며 암호화된 문자열인 경우 복호화합니다.
          * @param {Object} obj - 순회할 객체
-         * @returns {Promise<Object>} - 복호화된 객체
+         * @returns {Promise&lt;Object>} - 복호화된 객체
          */
         const toObj = async function (obj) {
           try {
             for (let i in obj) {
-              if (typeof obj[i] === "string" && (new RegExp('^' + tokenStart)).test(obj[i])) {
+              if (typeof obj[i] === "string" &amp;&amp; (new RegExp('^' + tokenStart)).test(obj[i])) {
                 obj[i] = await hexaFunction(obj[i]);
-              } else if (typeof obj[i] === "object" && obj[i] !== null) {
+              } else if (typeof obj[i] === "object" &amp;&amp; obj[i] !== null) {
                 obj[i] = await toObj(obj[i]);
               }
             }
@@ -4259,7 +4287,7 @@ Mother.prototype.autoComma = function (str, manVersion = false) {
   count = Math.ceil(str.length / 3);
   countArr = [];
   // count만큼 반복하여 3자리씩 나눌 인덱스를 countArr에 저장합니다.
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i &lt; count; i++) {
     countArr.push([ 3 * i, 3 * (i + 1) ]);
   }
   // countArr이 빈 배열인 경우 에러를 던집니다.
@@ -4270,8 +4298,8 @@ Mother.prototype.autoComma = function (str, manVersion = false) {
   // countArr을 순회하며 각 구간의 숫자를 tempArr에 저장합니다.
   for (let arr of countArr) {
     temp = '';
-    for (let i = arr[0]; i < arr[1]; i++) {
-      if (str.length - 1 - i < 0) {
+    for (let i = arr[0]; i &lt; arr[1]; i++) {
+      if (str.length - 1 - i &lt; 0) {
         temp += '';
       } else {
         temp = str[str.length - 1 - i] + temp;
@@ -4314,13 +4342,13 @@ Mother.prototype.dateToString = function (date, detail = false, dayOption = fals
     throw new Error("second input must be boolean");
   }
   // 숫자가 10보다 작은 경우 앞에 0을 추가하는 함수입니다.
-  const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+  const zeroAddition = (num) => { return (num &lt; 10) ? `0${String(num)}` : String(num); }
   // 빈 날짜 값을 나타내는 상수입니다.
   const emptyDateValue = (new Date(1900, 0, 1)).valueOf();
   // 미래 날짜 값을 나타내는 상수입니다.
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   // 날짜 값이 빈 날짜 값 이하인 경우 "해당 없음"을 반환합니다.
-  if (date.valueOf() <= emptyDateValue) {
+  if (date.valueOf() &lt;= emptyDateValue) {
     return "해당 없음";
   // 날짜 값이 미래 날짜 값 이상인 경우 "예정"을 반환합니다.
   } else if (date.valueOf() >= futureDateValue) {
@@ -4359,7 +4387,7 @@ Mother.prototype.dateToHangul = function (date, shortYear = false) {
   // 미래 날짜 값을 나타내는 상수입니다.
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   // 날짜 값이 빈 날짜 값 이하인 경우 "해당 없음"을 반환합니다.
-  if (date.valueOf() <= emptyDateValue) {
+  if (date.valueOf() &lt;= emptyDateValue) {
     return "해당 없음";
   // 날짜 값이 미래 날짜 값 이상인 경우 "예정"을 반환합니다.
   } else if (date.valueOf() >= futureDateValue) {
@@ -4401,13 +4429,13 @@ Mother.prototype.stringToDate = function (str) {
   if (str === "예정" || str === "진행중" || str === "미정") return new Date(3800, 0, 1);
 
   // 숫자가 10보다 작은 경우 앞에 0을 추가하는 함수입니다.
-  const zeroAddition = num => (num < 10 ? `0${num}` : String(num));
+  const zeroAddition = num => (num &lt; 10 ? `0${num}` : String(num));
 
   // 연, 월, 일을 받아 Date 객체를 생성하는 함수입니다.
   const parseDate = (year, month = 1, day = 1) => new Date(Number(year), Number(month) - 1, Number(day));
 
   // ISO 8601 형식의 문자열인 경우 Date 객체로 변환하여 반환합니다.
-  if (/T/.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /-/.test(str) && /:/.test(str)) {
+  if (/T/.test(str) &amp;&amp; /Z$/.test(str) &amp;&amp; /^[0-9]/.test(str) &amp;&amp; /-/.test(str) &amp;&amp; /:/.test(str)) {
     const date = new Date(str);
     if (!isNaN(date.getTime())) return date;
   }
@@ -4521,7 +4549,7 @@ Mother.prototype.stringToDate = function (str) {
   }
 
   // 변환된 문자열이 유효한 날짜 형식인지 확인합니다.
-  if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(str) && !/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/.test(str)) {
+  if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(str) &amp;&amp; !/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/.test(str)) {
     throw new Error("not date string : " + str);
   }
 
@@ -4589,7 +4617,7 @@ Mother.prototype.linkToString = function (link) {
   } else {
     // 링크를 '/'로 분리하여 배열로 만듭니다.
     linkArr = link.split("/");
-    if (linkArr.length < 3) {
+    if (linkArr.length &lt; 3) {
       throw new Error("invalid link");
     }
     // 프로토콜과 호스트를 추출합니다.
@@ -4607,7 +4635,7 @@ Mother.prototype.linkToString = function (link) {
 
     // 검색 문자열을 객체로 변환합니다.
     if (search !== "") {
-      getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
+      getObj = search.split("&amp;").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
     } else {
       getObj = [];
     }
@@ -4616,16 +4644,16 @@ Mother.prototype.linkToString = function (link) {
     pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
 
     // 검색 문자열이 비어있는지 확인하고, 최종 링크를 구성합니다.
-    if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
+    if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&amp;") === '') {
       filteredLink = protocol + "://" + host + pathName;
     } else {
-      filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&");
+      filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&amp;");
     }
   }
 
   // 링크의 특정 문자를 토큰으로 변환합니다.
   filteredLink = filteredLink.replace(/[\=]/gi, tokens.equal);
-  filteredLink = filteredLink.replace(/[\&]/gi, tokens.amp);
+  filteredLink = filteredLink.replace(/[\&amp;]/gi, tokens.amp);
   filteredLink = filteredLink.replace(/[\?]/gi, tokens.question);
   filteredLink = filteredLink.replace(/[\-]/gi, tokens.hypen);
   filteredLink = filteredLink.replace(/[\/]/gi, tokens.slash);
@@ -4680,7 +4708,7 @@ Mother.prototype.stringToLink = function (string) {
 
   // 토큰을 원래의 문자로 변환합니다.
   filteredLink = filteredLink.replace(new RegExp(tokens.equal, "gi"), "=");
-  filteredLink = filteredLink.replace(new RegExp(tokens.amp, "gi"), "&");
+  filteredLink = filteredLink.replace(new RegExp(tokens.amp, "gi"), "&amp;");
   filteredLink = filteredLink.replace(new RegExp(tokens.question, "gi"), "?");
   filteredLink = filteredLink.replace(new RegExp(tokens.hypen, "gi"), "-");
   filteredLink = filteredLink.replace(new RegExp(tokens.slash, "gi"), "/");
@@ -4705,7 +4733,7 @@ Mother.prototype.stringToLink = function (string) {
  */
 Mother.prototype.jsonToString = function (json) {
   // 입력이 문자열이나 객체가 아닌 경우 에러를 던집니다.
-  if (typeof json !== "string" && typeof json !== "object") {
+  if (typeof json !== "string" &amp;&amp; typeof json !== "object") {
     throw new Error("invalid input");
   }
 
@@ -4790,8 +4818,8 @@ Mother.prototype.stringToJson = function (string) {
       // JSON 문자열에서 특정 패턴을 찾아 변환합니다.
       let filtered;
       filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-      filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
-      filtered = filtered.replace(/\&\&nbsp\;/g, "&nbsp;");
+      filtered = filtered.replace(/nbsp\;/g, "&amp;nbsp;");
+      filtered = filtered.replace(/\&amp;\&amp;nbsp\;/g, "&amp;nbsp;");
 
       // 변환된 문자열을 함수로 실행하여 객체로 변환합니다.
       const tempFunc = new Function("const obj = " + filtered + "; return obj;");
@@ -4802,7 +4830,7 @@ Mother.prototype.stringToJson = function (string) {
       if (typeof json === "object") {
         for (let i in json) {
           if (typeof json[i] === "string") {
-            if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            if (/^[\{\[]/.test(json[i].trim()) &amp;&amp; /[\}\]]$/.test(json[i].trim())) {
               try {
                 temp = JSON.parse(json[i]);
                 boo = true;
@@ -4868,11 +4896,11 @@ Mother.prototype.colorParsing = function (str) {
   // 입력이 문자열인 경우
   if (typeof str === "string") {
     // 문자열이 '#'로 시작하고 길이가 7인 경우 첫 문자를 제거합니다.
-    if (/^\#/.test(str) && str.length === 7) {
+    if (/^\#/.test(str) &amp;&amp; str.length === 7) {
       str = str.slice(1);
     }
     // 문자열의 길이가 6이 아니거나 유효한 16진수 문자가 아닌 경우 에러를 던집니다.
-    if (str.length !== 6 && str.replace(/[^0-9a-f]/gi, '') === '') {
+    if (str.length !== 6 &amp;&amp; str.replace(/[^0-9a-f]/gi, '') === '') {
       throw new Error("invaild input");
     }
 
@@ -4915,7 +4943,7 @@ Mother.prototype.colorParsing = function (str) {
     // 숫자를 16진수 문자열로 변환하는 함수입니다.
     const convertNum = (num) => {
       const convertStr = (n) => {
-        if (n < 10) {
+        if (n &lt; 10) {
           return String(n);
         } else {
           return String.fromCharCode(n + 87);
@@ -5079,7 +5107,7 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false, i
     }
 
     // serid에 언더스코어가 포함된 경우
-    if (/_/gi.test(serid) && serid.split('_').length === 2) {
+    if (/_/gi.test(serid) &amp;&amp; serid.split('_').length === 2) {
       serid = serid.split('_')[1];
       // serid에 따라 서비스 종류를 설정합니다.
       if (/aa01s/gi.test(serid)) {
@@ -5307,304 +5335,180 @@ Mother.prototype.diskReading = function (mode = "check", arr = []) {
   }
 }
 
-/**
- * errorLog 메서드는 주어진 텍스트를 에러 로그로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
- * @returns {Promise} - 에러 로그 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.errorLog = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
+      text = text.text;
     } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우
     if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 로그를 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-  // axios 모듈을 가져옵니다.
   const axios = require("axios");
-  // 로그 컬렉션 이름을 설정합니다.
   const collection = "errorLog";
-  // 로그를 기록할 채널을 설정합니다.
   const channel = "#error_log";
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 
-/**
- * aliveLog 메서드는 주어진 텍스트를 alive 로그로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
- * @returns {Promise} - alive 로그 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.aliveLog = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
+      text = text.text;
     } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우
     if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 로그를 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-  // axios 모듈을 가져옵니다.
   const axios = require("axios");
-  // 로그 컬렉션 이름을 설정합니다.
   const collection = "errorLog";
-  // 로그를 기록할 채널을 설정합니다.
   const channel = "#alive_log";
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 
-/**
- * cronLog 메서드는 주어진 텍스트를 cron 로그로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
- * @returns {Promise} - cron 로그 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.cronLog = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
+      text = text.text;
     } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우
     if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 로그를 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-  // axios 모듈을 가져옵니다.
   const axios = require("axios");
-  // 로그 컬렉션 이름을 설정합니다.
   const collection = "errorLog";
-  // 로그를 기록할 채널을 설정합니다.
   const channel = "#cron_log";
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 
-/**
- * alertLog 메서드는 주어진 텍스트를 alert 로그로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
- * @returns {Promise} - alert 로그 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.alertLog = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
+      text = text.text;
     } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우
     if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 로그를 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-  // axios 모듈을 가져옵니다.
   const axios = require("axios");
-  // 로그 컬렉션 이름을 설정합니다.
   const collection = "errorLog";
-  // 로그를 기록할 채널을 설정합니다.
   const channel = "#alert_log";
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 
-/**
- * expressLog 메서드는 주어진 서버, 스트림, 모드 및 요청 객체를 사용하여 로그를 기록합니다.
- * @param {string} server - 서버 이름
- * @param {object} stream - 로그를 기록할 스트림 객체
- * @param {string} mode - 로그 모드 (route, start, alert, log, error, cron, alive)
- * @param {object} [req={}] - 요청 객체 (기본값은 빈 객체)
- * @returns {Promise} - 로그 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
-  // server가 문자열이 아닌 경우 에러를 던집니다.
   if (typeof server !== "string") {
     throw new Error("server name need");
   }
-  // stream이 객체가 아니거나 null인 경우 에러를 던집니다.
   if (typeof stream !== "object" || stream === null) {
     throw new Error("invalid input 0");
   }
-  // mode가 문자열이 아닌 경우 에러를 던집니다.
   if (typeof mode !== "string") {
     throw new Error("mode need");
   }
-
-  // 로그 ID에 사용할 키워드를 설정합니다.
   const idKeyword = "log";
-
-  // 고유한 16진수 문자열을 생성하는 함수입니다.
   const uniqueHex = function () {
-    const x = 16; // 16진수 기반
-    const length = 11; // 추가할 랜덤 문자열의 길이
-    const uniqueNumber = (new Date()).valueOf(); // 현재 시간을 밀리초 단위로 가져옵니다.
-    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ]; // 16진수 문자 배열
-    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; // 랜덤 키워드 배열
+    const x = 16;
+    const length = 11;
+    const uniqueNumber = (new Date()).valueOf();
+    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ];
+    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ];
     let uniqueNumber_copied;
     let maxExponent;
     let cArr;
     let temp;
     let hexString;
-
-    // uniqueNumber를 복사합니다.
     uniqueNumber_copied = uniqueNumber;
     maxExponent = 0;
-
-    // uniqueNumber보다 작거나 같은 최대 지수를 찾습니다.
-    while (Math.pow(x, maxExponent) <= uniqueNumber) {
+    while (Math.pow(x, maxExponent) &lt;= uniqueNumber) {
       maxExponent++;
     }
-
     cArr = [];
-
-    // uniqueNumber를 16진수로 변환합니다.
-    for (let i = 0; i < maxExponent; i++) {
+    for (let i = 0; i &lt; maxExponent; i++) {
       temp = ((uniqueNumber_copied / Math.pow(x, i)) % x);
       cArr.push(temp);
       uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i));
     }
-
-    // 16진수 문자열로 변환합니다.
     hexString = cArr.map((index) => { return hexChars[index] }).join('');
-
-    // 랜덤한 16진수 문자열을 추가합니다.
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i &lt; length; i++) {
       hexString += hexChars[Math.floor(hexChars.length * Math.random())];
     }
-
-    // 최종 고유 16진수 문자열을 반환합니다.
-    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           hexChars[Math.floor(hexChars.length * Math.random())] + 
-           randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           String(uniqueNumber) + 'A' + hexString;
+    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
   }
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
     let obj;
     let thisId;
     let thisIp;
 
-    // 로그 ID를 생성합니다.
     thisId = idKeyword + "_" + server + "_" + uniqueHex() + String((new Date()).valueOf());
-    thisIp = "unknown"; // 기본 IP 주소는 "unknown"으로 설정합니다.
+    thisIp = "unknown";
 
-    // 모드가 "route"인 경우
     if (mode === "route") {
-      // 요청 헤더에서 IP 주소를 가져옵니다.
       thisIp = (req.headers["x-forwarded-for"] || req.socket.remoteAddress);
       if (typeof thisIp === "string") {
-        thisIp = thisIp.replace(/[^0-9\.]/gi, ''); // IP 주소에서 숫자와 점(.)만 남깁니다.
+        thisIp = thisIp.replace(/[^0-9\.]/gi, '');
       } else {
-        thisIp = "unknown"; // IP 주소가 문자열이 아닌 경우 "unknown"으로 설정합니다.
+        thisIp = "unknown";
       }
-
-      // 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5618,11 +5522,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           origin: (req.headers.origin || "unknown"),
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "start") {
-      // 모드가 "start"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5630,11 +5531,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         mode: mode,
         data: {}
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write(JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "alert") {
-      // 모드가 "alert"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5644,11 +5542,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "log") {
-      // 모드가 "log"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5658,11 +5553,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "error") {
-      // 모드가 "error"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5672,11 +5564,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "cron") {
-      // 모드가 "cron"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5686,11 +5575,8 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "alive") {
-      // 모드가 "alive"인 경우 로그 객체를 생성합니다.
       obj = {
         id: thisId,
         server: server,
@@ -5700,587 +5586,337 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-
-      // 로그를 스트림에 기록합니다.
       stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     }
 
-    // Promise를 해결합니다.
     resolve(obj);
   })
 }
 
-/**
- * emergencyAlarm 메서드는 주어진 텍스트를 긴급 알람으로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
- * @returns {Promise} - 긴급 알람 기록 결과를 반환하는 Promise
- * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
- */
 Mother.prototype.emergencyAlarm = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
+      text = text.text;
     } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우
     if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
+      throw new Error("invaild input");
     }
   }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 긴급 알람을 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/emergencyAlarm";
-  // axios 모듈을 가져옵니다.
   const axios = require("axios");
-
-  // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    axios.post(recordUrl, { text }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 
-/**
- * @method messageSend
- * @description 주어진 메시지를 특정 채널로 전송하며, 음성 여부, 대상, 그리고 페어리(fairy) 옵션을 설정할 수 있습니다.
- * @param {string|object} text - 전송할 메시지 텍스트 또는 메시지 정보를 담고 있는 객체.
- * @param {string} [channel="silent"] - 메시지를 보낼 채널 이름. 기본값은 "silent"입니다.
- * @param {boolean} [voice=false] - 메시지를 음성으로 전송할지 여부. 기본값은 false입니다.
- * @param {Array|null} [target=null] - 메시지의 타겟 대상. 기본값은 null입니다.
- * @param {boolean} [fairy=false] - 페어리(fairy) 옵션 여부. 기본값은 false입니다.
- * @returns {Promise} 메시지 전송 결과를 담고 있는 Promise를 반환합니다.
- */
 Mother.prototype.messageSend = function (text, channel = "silent", voice = false, target = null, fairy = false) {
-  
-  // text가 객체이고 null이 아닌 경우 처리
-  if (typeof text === "object" && text !== null) {
-
-    // text.text와 text.channel이 각각 문자열인지 확인
-    if (typeof text.text === "string" && typeof text.channel === "string") {
-
-      // 채널을 객체에서 가져온 값으로 설정
+  if (typeof text === "object" &amp;&amp; text !== null) {
+    if (typeof text.text === "string" &amp;&amp; typeof text.channel === "string") {
       channel = text.channel;
-
-      // 음성 여부를 객체에서 가져온 값으로 설정, 기본적으로 false로 설정
       if (text.voice === true) {
         voice = true;
       } else {
         voice = false;
       }
-
-      // 타겟이 배열인지 확인하고 배열이면 해당 값으로 설정
       if (Array.isArray(text.target)) {
         target = text.target;
       }
-
-      // 페어리(fairy) 옵션 설정, 없으면 기본값으로 false 설정
       fairy = text.fairy === undefined ? false : text.fairy;
-
-      // 메시지 텍스트를 객체에서 가져온 값으로 설정
       text = text.text;
     } else {
-      // text.text 또는 text.channel이 유효한 문자열이 아닌 경우 오류 발생
       throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아니거나, channel이 문자열이 아닌 경우 오류 발생
     if (typeof text !== "string" || typeof channel !== "string") {
       throw new Error("invaild input");
     }
   }
-
-  // 음성 옵션이 true가 아닌 경우 false로 설정
   if (voice !== true) {
     voice = false;
   }
-
-  // 페어리(fairy) 옵션이 true가 아닌 경우 false로 설정
   if (fairy !== true) {
     fairy = false;
   }
-
-  // infoObj.js 파일에서 주소 정보를 가져옴
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-
-  // 메시지 로그를 기록할 URL을 설정
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-
-  // HTTP 요청을 위해 axios 모듈을 가져옴
   const axios = require("axios");
-
-  // 메시지 로그를 저장할 컬렉션 이름을 설정
   const collection = "messageLog";
-
-  // 비어 있는 Promise를 반환하는 함수 정의
   const emptyPromise = () => {
     return new Promise((resolve, reject) => {
       resolve({ status: 200, message: "done" });
     });
   }
-
-  // 메시지 전송 및 처리 결과를 반환하는 Promise 생성
   return new Promise((resolve, reject) => {
-
-    // axios를 사용하여 메시지 로그를 기록하는 HTTP POST 요청을 보냄
     axios.post(recordUrl, { text, channel, collection, voice, target, fairy }, { headers: { "Content-Type": "application/json" } }).then((res) => {
-
-      // 응답 상태가 200이 아니면 오류로 간주하고 reject 호출
       if (res.status !== 200) {
         reject(res);
       } else {
-        // 상태가 200이면 빈 Promise 반환
         return emptyPromise();
       }
     }).then((res) => {
-      // 빈 Promise의 결과를 확인하고 상태가 200이 아니면 reject 호출
       if (res.status !== 200) {
         reject(res);
       } else {
-        // 최종적으로 성공적으로 처리되면 resolve 호출
         resolve(res);
       }
     }).catch((err) => {
-      // 처리 중 오류가 발생하면 reject 호출
       reject(err);
     });
   });
 }
 
-/**
- * @method messageLog
- * @description 주어진 메시지를 로깅합니다. 메시지는 특정 채널에 기록되며, 채널 정보가 없을 경우 기본적으로 "silent" 채널에 기록됩니다.
- * @param {string|object} text - 로깅할 메시지 텍스트 또는 메시지 정보를 담고 있는 객체.
- * @returns {Promise} 메시지 로그 결과를 담고 있는 Promise를 반환합니다.
- */
 Mother.prototype.messageLog = function (text) {
-  
-  // 채널을 저장할 변수를 선언합니다.
   let channel;
-
-  // text가 객체이고 null이 아닌지 확인합니다.
-  if (typeof text === "object" && text !== null) {
-
-    // 객체의 text 속성이 문자열인지 확인합니다.
+  if (typeof text === "object" &amp;&amp; text !== null) {
     if (typeof text.text === "string") {
-
-      // 채널 정보를 객체에서 가져옵니다.
       channel = text.channel;
-
-      // 메시지 텍스트를 객체에서 가져온 값으로 설정합니다.
       text = text.text;
     } else {
-      // text.text가 유효한 문자열이 아닌 경우 오류를 발생시킵니다.
       throw new Error("invaild input");
     }
   } else {
-    // text가 문자열이 아닌 경우 오류를 발생시킵니다.
     if (typeof text !== "string") {
       throw new Error("invaild input");
     }
   }
-
-  // 채널 정보가 문자열인지 확인하고, 그렇지 않다면 기본값인 "silent"로 설정합니다.
   if (typeof channel !== "string") {
     channel = "silent";
   }
-
-  // infoObj.js 파일에서 주소 정보를 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-
-  // 메시지 로그를 기록할 URL을 설정합니다.
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-
-  // HTTP 요청을 위해 axios 모듈을 가져옵니다.
   const axios = require("axios");
-
-  // 메시지 로그를 저장할 컬렉션 이름을 설정합니다.
   const collection = "messageLog";
-
-  // 메시지 로그 결과를 반환하는 Promise를 생성합니다.
   return new Promise((resolve, reject) => {
-
-    // axios를 사용하여 메시지 로그를 기록하는 HTTP POST 요청을 보냅니다.
     axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
-
-      // 응답 상태가 200이 아닌 경우 오류로 간주하고 reject를 호출합니다.
       if (res.status !== 200) {
         reject(res);
       } else {
-        // 상태가 200이면 resolve를 호출하여 성공적으로 처리된 결과를 반환합니다.
         resolve(res);
       }
     }).catch((err) => {
-      // 처리 중 오류가 발생하면 reject를 호출하여 오류를 반환합니다.
       reject(err);
     });
   });
 }
 
-/**
- * @method getHoliday
- * @description 서버로부터 휴일 정보를 가져옵니다. stringMode가 true이면 날짜 문자열 배열을 반환하고, false이면 Date 객체 배열을 반환합니다.
- * @param {boolean} [stringMode=false] - 반환될 데이터의 형식을 결정합니다. true이면 문자열 형식, false이면 Date 객체 형식으로 반환합니다.
- * @returns {Promise<Array<string>|Array<Date>>} 휴일 정보를 담고 있는 Promise를 반환합니다.
- */
 Mother.prototype.getHoliday = function (stringMode = false) {
-  
-  // infoObj.js 파일에서 주소 정보를 가져옵니다.
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-
-  // 휴일 정보를 요청할 대상 URL을 설정합니다.
   const targetUrl = "https://" + ADDRESS.contentsinfo.host + ":3000/getHoliday";
-
-  // HTTP 요청을 위해 axios 모듈을 가져옵니다.
   const axios = require("axios");
-
-  // 휴일 정보를 가져오는 Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-
-    // axios를 사용하여 서버에 POST 요청을 보냅니다.
     axios.post(targetUrl, { data: null }, { headers: { "Content-Type": "application/json" } }).then((res) => {
-
-      // 응답 상태가 200이 아닌 경우 reject를 호출하여 오류를 반환합니다.
       if (res.status !== 200) {
         reject(res);
       } else {
-        // 응답 데이터에서 휴일 정보를 추출합니다.
         const result = res.data.holiday;
-
-        // stringMode가 true이면 문자열 배열을 resolve로 반환합니다.
         if (stringMode) {
           resolve(result);
         } else {
-          // stringMode가 false이면 날짜 문자열을 Date 객체로 변환하여 반환합니다.
           resolve(result.map((str) => {
-            // 문자열을 연도, 월, 일로 분리합니다.
             const arr = str.split("-");
-            const year = Number(arr[0]); // 연도를 숫자로 변환
-            const month = Number(arr[1]); // 월을 숫자로 변환
-            const date = Number(arr[2]); // 일을 숫자로 변환
-            // 연도, 월, 일을 사용해 Date 객체를 생성하여 반환합니다.
-            return new Date(year, month - 1, date, 9, 0, 0); // 월은 0부터 시작하므로 1을 빼줍니다.
+            const year = Number(arr[0]);
+            const month = Number(arr[1]);
+            const date = Number(arr[2]);
+            return new Date(year, month - 1, date, 9, 0, 0);
           }));
         }
       }
     }).catch((err) => {
-      // 요청 중 오류가 발생하면 reject를 호출하여 오류를 반환합니다.
       reject(err);
     });
   });
 }
 
-/**
- * @method uniqueValue
- * @description 주어진 타입에 따라 고유한 값을 생성합니다. 지원되는 타입은 "number", "string", "hex", "uuid"입니다.
- * @param {string} [type="number"] - 생성할 고유 값의 타입을 지정합니다. "number", "string", "hex", "uuid" 중 하나를 선택할 수 있습니다.
- * @returns {number|string} 주어진 타입에 따라 생성된 고유 값을 반환합니다.
- */
 Mother.prototype.uniqueValue = function (type = "number") {
-
-  // 타입이 "number"인 경우, 현재 시간을 밀리초 단위로 나타내는 값에 무작위 숫자를 더해 고유한 숫자를 생성합니다.
   if (type === "number") {
     return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));
-
-  // 타입이 "string"인 경우, 현재 시간을 밀리초 단위로 나타내는 값에 무작위 숫자를 더해 고유한 문자열을 생성합니다.
   } else if (type === "string") {
     return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
-
-  // 타입이 "hex"인 경우, 고유한 16진수 문자열을 생성합니다.
   } else if (type === "hex") {
-    const x = 16; // 16진수(헥사) 변환을 위한 기준 값
-    const length = 11; // 추가로 생성할 랜덤 16진수 문자의 길이
-    const uniqueNumber = (new Date()).valueOf(); // 현재 시간을 밀리초 단위로 나타내는 값
-    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ]; // 16진수 문자 목록
-    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; // 추가적으로 사용할 랜덤 키워드 목록
-    let uniqueNumber_copied; // 현재 시간을 저장할 변수
-    let maxExponent; // 최대 지수 값을 저장할 변수
-    let cArr; // 16진수 변환 후 값을 저장할 배열
-    let temp; // 계산 중간 값을 저장할 변수
-    let hexString; // 최종 16진수 문자열을 저장할 변수
-
-    uniqueNumber_copied = uniqueNumber; // 고유한 숫자를 복사합니다.
-    maxExponent = 0; // 초기 지수 값을 0으로 설정합니다.
-
-    // 고유 숫자를 표현할 수 있는 최대 지수를 계산합니다.
-    while (Math.pow(x, maxExponent) <= uniqueNumber) {
+    const x = 16;
+    const length = 11;
+    const uniqueNumber = (new Date()).valueOf();
+    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ];
+    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ];
+    let uniqueNumber_copied;
+    let maxExponent;
+    let cArr;
+    let temp;
+    let hexString;
+    uniqueNumber_copied = uniqueNumber;
+    maxExponent = 0;
+    while (Math.pow(x, maxExponent) &lt;= uniqueNumber) {
       maxExponent++;
     }
-
-    cArr = []; // 16진수로 변환된 값을 저장할 배열을 초기화합니다.
-
-    // 고유 숫자를 16진수로 변환하여 배열에 저장합니다.
-    for (let i = 0; i < maxExponent; i++) {
-      temp = ((uniqueNumber_copied / Math.pow(x, i)) % x); // 해당 자리의 16진수 값을 계산합니다.
-      cArr.push(temp); // 계산된 값을 배열에 추가합니다.
-      uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i)); // 계산된 값을 고유 숫자에서 제외합니다.
+    cArr = [];
+    for (let i = 0; i &lt; maxExponent; i++) {
+      temp = ((uniqueNumber_copied / Math.pow(x, i)) % x);
+      cArr.push(temp);
+      uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i));
     }
-
-    // 16진수 배열을 문자로 변환하여 연결합니다.
     hexString = cArr.map((index) => { return hexChars[index] }).join('');
-
-    // 추가적인 무작위 16진수 문자를 hexString에 추가합니다.
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i &lt; length; i++) {
       hexString += hexChars[Math.floor(hexChars.length * Math.random())];
     }
-
-    // 무작위로 생성된 키워드와 고유 숫자, 추가 16진수 문자열을 조합하여 최종 16진수 문자열을 반환합니다.
-    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           hexChars[Math.floor(hexChars.length * Math.random())] + 
-           randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + 
-           String(uniqueNumber) + 'A' + hexString;
-
-  // 타입이 "uuid"인 경우, UUID v4 형식의 고유 문자열을 생성합니다.
+    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
   } else if (type === "uuid") {
-    const { v4 } = require("uuid"); // uuid 모듈에서 v4 함수를 가져옵니다.
-    return v4(); // UUID v4를 생성하여 반환합니다.
-
-  // 지정된 타입이 없는 경우, 기본적으로 "string" 타입으로 고유 값을 생성합니다.
+    const { v4 } = require("uuid");
+    return v4();
   } else {
     return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
   }
 }
 
-/**
- * @method setQueue
- * @description 일정 시간 후에 주어진 콜백 함수를 실행하는 큐를 설정합니다.
- * @param {function} callback - 지연된 시간 후에 실행될 함수입니다.
- * @param {number} [delay=0] - 콜백 함수가 실행되기 전까지 대기할 시간(밀리초 단위)입니다. 기본값은 0입니다.
- * @throws {Error} callback이 함수가 아닌 경우 예외를 발생시킵니다.
- */
 Mother.prototype.setQueue = function (callback, delay = 0) {
-
-  // callback이 함수인지 확인하고, 그렇지 않으면 예외를 발생시킵니다.
   if (typeof callback !== "function") {
     throw new Error("invaild input");
   }
-
-  // delay가 숫자인지 확인하고, 그렇지 않으면 기본값 0을 설정합니다.
   if (typeof delay !== "number") {
     delay = 0;
   }
-
-  // 고유한 임시 큐의 이름을 저장할 변수를 선언합니다.
   let propertyName, timeoutId;
-
-  // 고유한 임시 큐 이름을 생성합니다.
   propertyName = "tempQueue_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
-
-  // setTimeout을 사용하여 지정된 지연 시간 후에 콜백 함수를 실행하고, 타이머를 제거합니다.
   timeoutId = setTimeout(() => {
-    callback(); // 지정된 콜백 함수를 실행합니다.
-    clearTimeout(timeoutId); // 타이머를 제거하여 메모리 누수를 방지합니다.
+    callback();
+    clearTimeout(timeoutId);
   }, delay);
 }
 
-/**
- * @method pureServer
- * @description 주어진 모드에 따라 순수 서버 클래스를 생성하거나, 서버를 실행합니다.
- * @param {string} [mode="class"] - 동작 모드를 설정합니다. "class", "server", "listen", "run" 중 하나를 선택할 수 있습니다.
- * @param {object|null} [app=null] - 서버 모드에서 사용할 PureServer 인스턴스입니다.
- * @param {number} [port=8000] - 서버가 수신 대기할 포트 번호입니다. 기본값은 8000입니다.
- * @returns {Function|undefined} PureServer 클래스를 반환하거나, 서버를 실행합니다.
- * @throws {Error} 잘못된 입력이 주어졌을 경우 예외를 발생시킵니다.
- */
 Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000) {
-
-  /**
-   * @class PureServer
-   * @description HTTP 요청을 처리할 서버 클래스입니다.
-   */
-  class PureServer {
-    constructor() {
-      // 라우팅 정보(HTTP 메서드, 경로, 콜백)를 저장할 배열을 초기화합니다.
-      this.matrix = [];
+  const PureServer = function () {
+    this.matrix = [];
+  }
+  PureServer.prototype.get = function (path, callback) {
+    if (typeof callback !== "function") {
+      throw new Error("invaild input");
     }
-
-    /**
-     * @method get
-     * @description GET 요청에 대한 라우트를 추가합니다.
-     * @param {string|Array<string>} path - 요청 경로 또는 경로 배열입니다.
-     * @param {function} callback - 요청이 일치할 때 실행될 함수입니다.
-     * @throws {Error} 잘못된 입력이 주어졌을 경우 예외를 발생시킵니다.
-     */
-    get(path, callback) {
-      // 콜백이 함수인지 확인합니다.
-      if (typeof callback !== "function") {
-        throw new Error("invaild input");
-      }
-
-      // 경로가 배열인 경우, 각각의 경로에 대해 GET 라우트를 추가합니다.
-      if (Array.isArray(path)) {
-        for (let str of path) {
-          // 경로가 문자열인지 확인합니다.
-          if (typeof str !== "string") {
-            throw new Error("invaild input");
-          }
-          // 경로가 '/'로 시작하지 않으면 앞에 '/'를 추가합니다.
-          if (!/^\//.test(str)) {
-            str = '/' + str;
-          }
-          // GET 라우트를 matrix에 추가합니다.
-          this.matrix.push([
-            "GET",
-            str,
-            callback
-          ]);
+    if (Array.isArray(path)) {
+      for (let str of path) {
+        if (typeof str !== "string") {
+          throw new Error("invaild input");
         }
-      } else if (typeof path === "string") {
-        // 경로가 문자열인 경우, '/'로 시작하지 않으면 앞에 '/'를 추가합니다.
-        if (!/^\//.test(path)) {
-          path = '/' + path;
+        if (!/^\//.test(str)) {
+          str = '/' + str;
         }
-        // GET 라우트를 matrix에 추가합니다.
         this.matrix.push([
           "GET",
-          path,
+          str,
           callback
         ]);
-      } else {
-        throw new Error("invaild input");
       }
+    } else if (typeof path === "string") {
+      if (!/^\//.test(path)) {
+        path = '/' + path;
+      }
+      this.matrix.push([
+        "GET",
+        path,
+        callback
+      ]);
+    } else {
+      throw new Error("invaild input");
     }
-
-    /**
-     * @method post
-     * @description POST 요청에 대한 라우트를 추가합니다.
-     * @param {string|Array<string>} path - 요청 경로 또는 경로 배열입니다.
-     * @param {function} callback - 요청이 일치할 때 실행될 함수입니다.
-     * @throws {Error} 잘못된 입력이 주어졌을 경우 예외를 발생시킵니다.
-     */
-    post(path, callback) {
-      // 콜백이 함수인지 확인합니다.
-      if (typeof callback !== "function") {
-        throw new Error("invaild input");
-      }
-
-      // 경로가 배열인 경우, 각각의 경로에 대해 POST 라우트를 추가합니다.
-      if (Array.isArray(path)) {
-        for (let str of path) {
-          // 경로가 문자열인지 확인합니다.
-          if (typeof str !== "string") {
-            throw new Error("invaild input");
-          }
-          // 경로가 '/'로 시작하지 않으면 앞에 '/'를 추가합니다.
-          if (!/^\//.test(str)) {
-            str = '/' + str;
-          }
-          // POST 라우트를 matrix에 추가합니다.
-          this.matrix.push([
-            "POST",
-            str,
-            callback
-          ]);
+  }
+  PureServer.prototype.post = function (path, callback) {
+    if (typeof callback !== "function") {
+      throw new Error("invaild input");
+    }
+    if (Array.isArray(path)) {
+      for (let str of path) {
+        if (typeof str !== "string") {
+          throw new Error("invaild input");
         }
-      } else if (typeof path === "string") {
-        // 경로가 문자열인 경우, '/'로 시작하지 않으면 앞에 '/'를 추가합니다.
-        if (!/^\//.test(path)) {
-          path = '/' + path;
+        if (!/^\//.test(str)) {
+          str = '/' + str;
         }
-        // POST 라우트를 matrix에 추가합니다.
         this.matrix.push([
           "POST",
-          path,
+          str,
           callback
         ]);
-      } else {
-        throw new Error("invaild input");
       }
+    } else if (typeof path === "string") {
+      if (!/^\//.test(path)) {
+        path = '/' + path;
+      }
+      this.matrix.push([
+        "POST",
+        path,
+        callback
+      ]);
+    } else {
+      throw new Error("invaild input");
     }
-
-    /**
-     * @method server
-     * @description HTTP 서버 요청을 처리하는 함수입니다.
-     * @returns {Function} HTTP 서버의 요청 이벤트 핸들러를 반환합니다.
-     */
-    server() {
-      const instance = this; // 현재 PureServer 인스턴스를 참조합니다.
-
-      return async function (req, res) {
+  }
+  PureServer.prototype.server = function () {
+    const instance = this;
+    return async function (req, res) {
+      try {
+        const buffers = [];
+        for await (const chunk of req) {
+          buffers.push(chunk);
+        }
+        const data = Buffer.concat(buffers).toString();
         try {
-          const buffers = [];
-          // 요청 데이터를 스트림으로 읽어들입니다.
-          for await (const chunk of req) {
-            buffers.push(chunk);
-          }
-          // 읽어들인 데이터를 하나의 문자열로 결합합니다.
-          const data = Buffer.concat(buffers).toString();
-          try {
-            // 요청 본문을 JSON 형식으로 파싱합니다.
-            req.body = JSON.parse(data);
-          } catch (e) {
-            req.body = {};
-            if (data !== "") {
-              req.body.raw = data; // JSON 파싱이 실패하면 raw 데이터를 저장합니다.
-            }
-          }
-
-          let boo = false; // 요청이 처리되었는지 여부를 추적합니다.
-
-          // 응답 헤더 설정 메서드를 정의합니다.
-          res.set = function (obj) {
-            return res.writeHead(200, obj);
-          }
-          res.send = res.end; // 응답을 끝내는 메서드에 별칭을 추가합니다.
-
-          // 요청 메서드와 경로가 matrix에 정의된 라우트와 일치하는지 확인합니다.
-          for (let [method, path, callback] of instance.matrix) {
-            if (method === req.method && path === req.url.trim()) {
-              boo = true; // 요청이 처리되었음을 표시합니다.
-              res.writeHead(200, {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-              });
-              await callback(req, res); // 라우트에 연결된 콜백 함수를 실행합니다.
-            }
-          }
-
-          // 요청이 처리되지 않은 경우, 기본 오류 메시지를 반환합니다.
-          if (!boo) {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ data: 'error' }));
-          }
+          req.body = JSON.parse(data);
         } catch (e) {
-          console.log(e); // 서버 오류를 콘솔에 출력합니다.
-          res.writeHead(500, { "Content-Type": "application/json" });
+          req.body = {};
+          if (data !== "") {
+            req.body.raw = data;
+          }
+        }
+        let boo;
+
+        res.set = function (obj) {
+          return res.writeHead(200, obj);
+        }
+        res.send = res.end;
+
+        boo = false;
+        for (let [ method, path, callback ] of instance.matrix) {
+          if (method === req.method &amp;&amp; path === req.url.trim()) {
+            boo = true;
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+              "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+            });
+            await callback(req, res);
+          }
+        }
+        if (!boo) {
+          res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ data: 'error' }));
         }
+      } catch (e) {
+        console.log(e);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: 'error' }));
       }
     }
   }
-
-  // mode가 "class"인 경우 PureServer 클래스를 반환합니다.
   if (mode === "class") {
     return PureServer;
-
-  // mode가 "server", "listen", "run" 중 하나인 경우 서버를 실행합니다.
   } else if (mode === "server" || mode === "listen" || mode === "run") {
-    // app이 PureServer의 인스턴스인지 확인합니다.
     if (typeof app.constructor === "function") {
       if (app.constructor.name === "PureServer") {
-        const http = require("http"); // http 모듈을 가져옵니다.
-        const server = http.createServer(); // HTTP 서버를 생성합니다.
-        server.on("request", app.server()); // 서버 요청 이벤트 핸들러를 설정합니다.
-        server.listen(port); // 서버를 지정된 포트에서 수신 대기합니다.
+        const http = require("http");
+        const server = http.createServer();
+        server.on("request", app.server());
+        server.listen(port);
         console.log(`\x1b[33m%s\x1b[0m`, `Pure server launching in ${String(port)}`);
       } else {
         throw new Error("invaild input");
@@ -6293,203 +5929,108 @@ Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000)
   }
 }
 
-/**
- * @method xyConverting
- * @description 2차원 배열(행렬)의 행과 열을 변환합니다.
- * @param {Array<Array<any>>} original - 변환할 2차원 배열(행렬)입니다.
- * @returns {Array<Array<any>>} 변환된 2차원 배열(행렬)을 반환합니다.
- * @throws {Error} 입력이 배열이 아니거나, 행렬이 아닌 경우 예외를 발생시킵니다.
- */
 Mother.prototype.xyConverting = function (original) {
-
-  // 입력이 배열인지 확인합니다. 배열이 아닌 경우 오류를 발생시킵니다.
   if (!Array.isArray(original)) {
     throw new Error("input must be array");
   }
-
-  // 입력된 배열이 비어있지 않은 경우, 모든 요소가 배열인지 확인합니다.
   if (original.length > 0) {
     if (!original.every((arr) => { return Array.isArray(arr); })) {
       throw new Error("input must be matrix");
     }
   }
-
-  // 변환된 배열을 저장할 변수를 선언합니다.
   let converted, tempArr;
 
-  // 변환된 배열을 초기화합니다.
   converted = [];
-
-  // 입력된 배열이 비어있지 않은 경우에만 변환을 수행합니다.
   if (original.length > 0) {
-
-    // 첫 번째 행의 길이만큼 반복합니다. (즉, 열의 개수만큼 반복합니다.)
-    for (let i = 0; i < original[0].length; i++) {
-
-      // 임시 배열을 초기화합니다.
+    for (let i = 0; i &lt; original[0].length; i++) {
       tempArr = [];
-
-      // 각 행을 순회하면서 i번째 요소를 임시 배열에 추가합니다.
       for (let arr of original) {
         tempArr.push(arr[i]);
       }
-
-      // 임시 배열을 변환된 배열에 추가합니다.
       converted.push(tempArr);
     }
   }
 
-  // 변환된 배열을 반환합니다.
   return converted;
 }
 
-/**
- * @method promiseTogether
- * @description 주어진 Promise 배열을 모두 처리한 후 결과를 반환하는 새로운 Promise를 생성합니다. 모든 Promise가 성공적으로 완료되면 true를 반환하고, 하나라도 실패하면 해당 오류를 반환합니다.
- * @param {Array<Promise>} promiseArr - 처리할 Promise 객체들의 배열입니다.
- * @returns {Promise<boolean>} 모든 Promise가 성공적으로 완료되면 true를 반환하는 Promise를 반환합니다.
- * @throws {Error} 입력이 배열이 아니거나, 배열의 모든 요소가 Promise 인스턴스가 아닌 경우 예외를 발생시킵니다.
- */
 Mother.prototype.promiseTogether = function (promiseArr) {
-
-  // 입력이 배열인지 확인합니다. 배열이 아닌 경우 오류를 발생시킵니다.
   if (!Array.isArray(promiseArr)) {
     throw new Error("invaild input");
   }
-
-  // 배열의 모든 요소가 Promise 인스턴스인지 확인합니다. 그렇지 않은 경우 오류를 발생시킵니다.
   if (!promiseArr.every((obj) => { return obj instanceof Promise })) {
     throw new Error("invaild input");
   }
-
-  // 모든 Promise를 처리하는 새로운 Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-
-    // 처리해야 할 Promise의 개수를 저장합니다.
     const workLength = promiseArr.length;
-
-    // 각 Promise의 성공 여부를 저장할 배열을 초기화합니다.
     let promiseTong, interval, timeout;
 
     promiseTong = [];
 
-    // 각 Promise를 순회하면서 처리합니다.
-    for (let i = 0; i < workLength; i++) {
+    for (let i = 0; i &lt; workLength; i++) {
       promiseArr[i].then(() => {
-        // Promise가 성공하면 배열에 true를 추가합니다.
         promiseTong.push(true);
       }).catch((err) => {
-        // Promise가 실패하면 reject를 호출하여 오류를 반환합니다.
         reject(err);
-      });
+      })
     }
 
-    // 일정 간격(interval)으로 모든 Promise가 완료되었는지 확인합니다.
     interval = setInterval(() => {
-      // 모든 Promise가 완료된 경우
       if (promiseTong.length >= workLength) {
-        // 0ms 후에 resolve를 호출하여 true를 반환합니다.
         timeout = setTimeout(() => {
           resolve(true);
-          clearTimeout(timeout); // 타임아웃을 제거합니다.
+          clearTimeout(timeout);
         }, 0);
-        clearInterval(interval); // 인터벌을 제거합니다.
+        clearInterval(interval);
       }
-    }, 100); // 100ms 간격으로 체크합니다.
+    }, 100);
   });
 }
 
-/**
- * @method localUnique
- * @description 로컬 시스템의 네트워크 인터페이스에서 고유한 MAC 주소 기반 식별자를 생성합니다.
- * @returns {string} MAC 주소 기반의 고유 식별자 문자열을 반환합니다.
- */
 Mother.prototype.localUnique = function () {
-
-  // 네트워크 인터페이스 정보를 저장할 변수를 선언합니다.
   let networkInterfaces, macTargets;
-
-  // os 모듈을 사용하여 시스템의 네트워크 인터페이스 정보를 가져옵니다.
   networkInterfaces = require("os").networkInterfaces();
-
-  // 네트워크 인터페이스의 각 값을 배열로 변환하고 평탄화한 뒤,
-  // IPv4 주소를 가진 객체만 필터링하고, 루프백 주소(127.0.0.1)가 아닌 주소만 필터링합니다.
-  macTargets = Object.values(networkInterfaces)
-    .flat() // 중첩된 배열을 단일 배열로 평탄화합니다.
-    .filter((obj) => { return obj.family === "IPv4" }) // IPv4 주소만 필터링합니다.
-    .filter((obj) => { return obj.address !== "127.0.0.1" }) // 루프백 주소를 제외합니다.
-    .map((obj) => {
-      return obj.mac; // MAC 주소만 추출합니다.
-    });
-
-  // 추출한 MAC 주소들을 정렬합니다.
+  macTargets = Object.values(networkInterfaces).flat().filter((obj) => { return obj.family === "IPv4" }).filter((obj) => { return obj.address !== "127.0.0.1" }).map((obj) => {
+    return obj.mac;
+  });
   macTargets.sort();
-
-  // 가장 첫 번째 MAC 주소를 가져와 문자열을 수정하여 고유 식별자를 생성합니다.
-  // "fa"로 시작하고, 콜론(:)을 "0000"으로 대체하여 반환합니다.
   return "fa" + macTargets[0].trim().replace(/\:/gi, "0000");
 }
 
-/**
- * @method mediaQuery
- * @description 주어진 코드에서 미디어 쿼리 조건에 따라 동적 콘텐츠를 삽입하거나 대체하는 변환 작업을 수행합니다.
- * @param {string} code - 변환할 코드 문자열입니다.
- * @returns {Object} 변환된 조건 문자열과 코드 문자열을 포함하는 객체를 반환합니다.
- * @throws {Error} 파싱 중 오류가 발생한 경우 예외를 발생시킵니다.
- */
 Mother.prototype.mediaQuery = function (code) {
-
-  // 미디어 쿼리 조건을 정의하는 배열입니다.
   const conditions = [
-    "window.innerWidth > 1450", // 화면 너비가 1450px보다 큰 경우
-    "window.innerWidth <= 1450 && window.innerWidth > 1100", // 화면 너비가 1450px 이하이고 1100px보다 큰 경우
-    "window.innerWidth <= 1100 && window.innerWidth > 900", // 화면 너비가 1100px 이하이고 900px보다 큰 경우
-    "window.innerWidth <= 900 && window.innerWidth > 760", // 화면 너비가 900px 이하이고 760px보다 큰 경우
-    "window.innerWidth <= 760" // 화면 너비가 760px 이하인 경우
+    "window.innerWidth > 1450",
+    "window.innerWidth &lt;= 1450 &amp;&amp; window.innerWidth > 1100",
+    "window.innerWidth &lt;= 1100 &amp;&amp; window.innerWidth > 900",
+    "window.innerWidth &lt;= 900 &amp;&amp; window.innerWidth > 760",
+    "window.innerWidth &lt;= 760"
   ];
-
-  // 프로토타입 상수를 업데이트하는 문자열입니다.
   const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
-
-  // 코드에서 특정 패턴을 찾기 위한 정규 표현식입니다.
-  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
-
-  // 코드에서 특정 패턴을 대체하기 위한 함수입니다.
+  const matchReg = /[\n;]([^\n\;]*)\&lt;\%\%([^\%]+)\%\%\>[;]?/g;
   const replacer = function (match, p1, p2, offset, string) {
-    const safeWall = "\n\n"; // 안전한 구분을 위한 개행 문자열
+    const safeWall = "\n\n";
     let tempValue, tempArr, tempStr;
 
-    // 코드에서 앞뒤 공백을 제거하고, 불필요한 문자를 제거한 후 처리합니다.
-    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
-
-    // 조건에 해당하는 내용을 추출합니다.
-    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
-
-    // 결과를 저장할 문자열을 초기화합니다.
+    tempValue = p1.replace(/[\n;]/g, '').replace(/\&lt;\%\%/g, '').trim();
+    tempArr = p2.replace(/\&lt;\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
     tempStr = "";
-
-    // 조건 배열의 길이가 미디어 쿼리 조건의 길이보다 큰지 확인합니다.
     if (tempArr.length > conditions.length) {
       throw new Error("parse error");
     }
-
-    // 조건을 반복하며 변환된 코드를 생성합니다.
-    for (let j = 0; j < tempArr.length; j++) {
+    for (let j = 0; j &lt; tempArr.length; j++) {
       tempStr += " } else if (" + conditions[j] + ") { ";
-      tempStr += "\n";
+      tempStr += "\n"
       tempStr += tempValue;
       tempStr += " ";
       tempStr += tempArr[j];
       tempStr += ";\n";
     }
-
-    // 첫 번째 "else if"를 제거하고 코드에 적용합니다.
     tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
     return tempStr;
   }
+  let updateProto;
 
-  // 프로토타입을 업데이트하는 문자열을 생성합니다.
-  let updateProto = '';
+  updateProto = '';
   updateProto += updateProtoConst;
   updateProto += " = ";
   updateProto += "[";
@@ -6500,99 +6041,59 @@ Mother.prototype.mediaQuery = function (code) {
   }
   updateProto += "];\n";
 
-  // 코드에서 특정 패턴을 찾아 대체합니다.
   code = code.replace(matchReg, replacer);
-
-  // 코드에서 "<&& ... &&>" 패턴을 찾아 대체합니다.
-  code = code.replace(/\<\&\&([^\&]+)\&\&\>/g, (match, p1) => {
+  code = code.replace(/\&lt;\&amp;\&amp;([^\&amp;]+)\&amp;\&amp;\>/g, (match, p1) => {
     let tempValue, tempArr, tempStr;
-
-    // 패턴에서 조건을 추출하여 배열로 만듭니다.
-    tempArr = p1.replace(/\<\&\&/g, '').replace(/\&\&\>/g, '').trim().split("|");
-
-    // 배열에서 각 요소의 공백을 제거합니다.
+    tempArr = p1.replace(/\&lt;\&amp;\&amp;/g, '').replace(/\&amp;\&amp;\>/g, '').trim().split("|");
     tempArr = tempArr.map((str) => { return str.trim(); });
-
-    // 중첩된 삼항 연산자를 사용하여 조건에 맞는 값을 반환합니다.
     return `(${conditions[0]} ? ${tempArr[0]} : (${conditions[1]} ? ${tempArr[1]} : (${conditions[2]} ? ${tempArr[2]} : (${conditions[3]} ? ${tempArr[3]} : ${tempArr[4]}))))`;
   });
 
-  // 조건과 변환된 코드를 포함하는 객체를 반환합니다.
   return { conditions: updateProto, code };
 }
 
-/**
- * @method processSystem
- * @description 시스템의 프로세스를 관리하는 함수로, 프로세스 목록을 가져오거나 특정 프로세스를 종료할 수 있습니다.
- * @param {string} mode - 동작 모드를 설정합니다. "list", "kill", "find", "pid" 중 하나를 선택할 수 있습니다.
- * @param {Array<string>} [processNameKeywords=[]] - "kill", "find", "pid" 모드에서 사용할 프로세스 이름 키워드 배열입니다.
- * @returns {Promise<Array|number|string|null>} 
- * - "list" 모드: 프로세스 목록을 반환합니다.
- * - "find" 또는 "pid" 모드: 특정 프로세스의 PID를 반환합니다.
- * - "kill" 모드: 프로세스를 종료하고 "done"을 반환합니다.
- * - 해당 프로세스가 없으면 null을 반환합니다.
- * @throws {Error} 잘못된 입력이 주어졌을 경우 예외를 발생시킵니다.
- */
 Mother.prototype.processSystem = async function (mode, processNameKeywords = []) {
-
-  // mode가 문자열인지 확인합니다. 문자열이 아닌 경우 오류를 발생시킵니다.
   if (typeof mode !== "string") {
     throw new Error("invalid input, must be mode");
   }
-
-  // 프로세스 목록을 가져오는 함수입니다.
   const processList = function () {
-    const { spawn } = require("child_process"); // child_process 모듈의 spawn 함수를 가져옵니다.
-    const ps = spawn("ps", ["-ax"]); // "ps -ax" 명령어를 실행하여 모든 프로세스 정보를 가져옵니다.
-    
+    const { spawn } = require("child_process");
+    const ps = spawn("ps", [ "-ax" ]);
     return new Promise((resolve, reject) => {
       let out, processList;
-
-      out = ""; // 명령어 출력 결과를 저장할 변수를 초기화합니다.
-
-      // 표준 출력을 받을 때마다 데이터를 out 변수에 추가합니다.
+      out = "";
       ps.stdout.on("data", (data) => { out += String(data); });
-
-      // 표준 에러 출력을 받을 때 오류를 reject를 통해 반환합니다.
       ps.stderr.on("data", (data) => { reject(String(data)); });
-
-      // 프로세스가 종료되면 결과를 처리합니다.
       ps.on("close", (code) => {
-        // 출력된 데이터를 줄 단위로 나누고, 각 줄을 정리하여 프로세스 목록을 생성합니다.
         processList = out.split("\n").slice(1).map((str) => {
-          return str.trim(); // 각 줄의 양쪽 공백을 제거합니다.
+          return str.trim();
         }).map((str) => {
-          const arr = str.split(/[0-9]\:[0-9][0-9]/); // 시간 형식 기준으로 문자열을 나눕니다.
+          const arr = str.split(/[0-9]\:[0-9][0-9]/);
           if (arr.length >= 2) {
-            return arr; // 유효한 프로세스 정보만 반환합니다.
+            return arr;
           } else {
-            return null; // 유효하지 않은 정보는 null로 반환합니다.
+            return null;
           }
         }).filter((arr) => {
-          return arr !== null; // null이 아닌 정보만 필터링합니다.
-        }).map(([first, second]) => {
-          return [Number(first.split(" ")[0].trim()), second.split(" ").slice(1).join(" ")]; // PID와 프로세스 이름을 추출합니다.
-        }).map(([pid, process]) => {
-          return { pid, process }; // PID와 프로세스 이름을 객체로 반환합니다.
+          return arr !== null;
+        }).map(([ first, second ]) => {
+          return [ Number(first.split(" ")[0].trim()), second.split(" ").slice(1).join(" ") ];
+        }).map(([ pid, process ]) => {
+          return { pid, process };
         });
-
-        // 프로세스 목록을 resolve를 통해 반환합니다.
         resolve(processList);
       });
     });
   }
-
-  // 프로세스를 종료하는 함수입니다.
   const killProcess = function (pid) {
-    const { exec } = require("child_process"); // child_process 모듈의 exec 함수를 가져옵니다.
-    
+    const { exec } = require("child_process");
     return new Promise((resolve, reject) => {
       exec("kill -9 " + String(pid), { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
-          reject(error); // 오류가 발생하면 reject를 호출합니다.
+          reject(error);
         } else {
           if (typeof stdout === "string") {
-            resolve(stdout.trim()); // 성공적으로 종료되었으면 결과를 반환합니다.
+            resolve(stdout.trim());
           } else {
             resolve(stdout);
           }
@@ -6600,399 +6101,258 @@ Mother.prototype.processSystem = async function (mode, processNameKeywords = [])
       });
     });
   }
-
   try {
-    // mode가 "list"인 경우, 프로세스 목록을 반환합니다.
     if (mode === "list") {
       return await processList();
-
-    // mode가 "kill", "find", "pid"인 경우, 프로세스 종료 또는 PID 찾기를 수행합니다.
     } else if (mode === "kill" || mode === "find" || mode === "pid") {
-
-      // processNameKeywords가 배열인지 확인합니다. 배열이 아닌 경우 오류를 발생시킵니다.
       if (!Array.isArray(processNameKeywords)) {
         throw new Error("keywords box must be array");
       }
-
-      // 프로세스 목록을 가져옵니다.
       const list = await processList();
       let targetPid;
 
-      targetPid = null; // 대상 프로세스의 PID를 저장할 변수를 초기화합니다.
-
-      // 목록에서 프로세스 이름이 키워드와 일치하는 프로세스를 찾습니다.
+      targetPid = null;
       for (let { pid, process } of list) {
         if (processNameKeywords.map((str) => { return new RegExp(str, "gi"); }).every((reg) => { return reg.test(process) })) {
-          targetPid = pid; // 일치하는 프로세스의 PID를 저장합니다.
+          targetPid = pid;
         }
       }
-
-      // mode가 "find" 또는 "pid"인 경우, PID를 반환합니다.
       if (mode === "find" || mode === "pid") {
         return targetPid;
-
-      // mode가 "kill"인 경우, 프로세스를 종료합니다.
       } else {
         if (targetPid !== null) {
-          await killProcess(targetPid); // 프로세스를 종료합니다.
-          return "done"; // 종료 후 "done"을 반환합니다.
+          await killProcess(targetPid);
+          return "done";
         } else {
-          console.log("there is no process"); // 해당 프로세스가 없으면 메시지를 출력합니다.
-          return null; // null을 반환합니다.
+          console.log("there is no process");
+          return null;
         }
       }
     }
   } catch (e) {
-    console.log(e); // 오류가 발생하면 로그를 출력합니다.
+    console.log(e);
   }
 }
 
-/**
- * @method sha256Hmac
- * @description 주어진 키와 메시지를 사용하여 SHA-256 HMAC(Hash-based Message Authentication Code)를 생성합니다.
- * @param {string|Buffer} key - HMAC을 생성할 때 사용할 비밀 키입니다.
- * @param {string|Buffer} message - 해시할 메시지입니다.
- * @param {string} [type="base64"] - 생성된 HMAC의 출력 형식을 지정합니다. 기본값은 "base64"입니다. "hex", "latin1" 등 다른 형식도 사용할 수 있습니다.
- * @returns {string|Buffer} 지정된 형식으로 인코딩된 HMAC 문자열 또는 Buffer를 반환합니다.
- */
 Mother.prototype.sha256Hmac = function (key, message, type = "base64") {
-
-  // crypto 모듈을 가져옵니다. 이 모듈은 다양한 암호화 기능을 제공합니다.
   const crypto = require("crypto");
-
-  // createHmac 메서드를 사용하여 SHA-256 알고리즘과 주어진 키로 HMAC 객체를 생성합니다.
-  // update 메서드를 사용하여 주어진 메시지를 HMAC 객체에 추가합니다.
-  // digest 메서드를 사용하여 지정된 형식으로 결과를 출력합니다.
-  return crypto.createHmac("sha256", key) // SHA-256 HMAC 객체를 생성합니다.
-               .update(message) // 메시지를 HMAC 객체에 추가하여 해시를 계산합니다.
-               .digest(type); // 결과를 지정된 형식으로 반환합니다.
+  return crypto.createHmac("sha256", key).update(message).digest(type);
 }
 
-/**
- * @method stringToBase64
- * @description 주어진 문자열을 Base64 인코딩된 문자열로 변환합니다.
- * @param {string} str - Base64로 인코딩할 문자열입니다.
- * @returns {string} Base64로 인코딩된 문자열을 반환합니다.
- */
 Mother.prototype.stringToBase64 = function (str) {
-
-  // iconv-lite 모듈을 가져옵니다. 이 모듈은 문자열의 인코딩을 변환하는 기능을 제공합니다.
   const iconv = require("iconv-lite");
-
-  // 주어진 문자열을 UTF-8로 인코딩한 후, Base64 형식의 문자열로 변환하여 반환합니다.
-  return iconv.encode(str, "utf-8") // 문자열을 UTF-8 인코딩으로 변환합니다.
-               .toString("base64"); // UTF-8로 인코딩된 데이터를 Base64 문자열로 변환하여 반환합니다.
+  return iconv.encode(str, "utf-8").toString("base64");
 }
 
-/**
- * @method base64ToString
- * @description Base64로 인코딩된 데이터를 UTF-8 문자열로 디코딩합니다.
- * @param {string} data - UTF-8 문자열로 디코딩할 Base64 인코딩된 데이터입니다.
- * @returns {string} 디코딩된 UTF-8 문자열을 반환합니다.
- */
 Mother.prototype.base64ToString = function (data) {
-
-  // iconv-lite 모듈을 가져옵니다. 이 모듈은 인코딩을 변환하는 기능을 제공합니다.
   const iconv = require("iconv-lite");
-
-  // Base64로 인코딩된 데이터를 Buffer 객체로 변환한 후, 이를 UTF-8 문자열로 디코딩하여 반환합니다.
-  return iconv.decode(
-    Buffer.from(data, "base64"), // Base64 인코딩된 문자열을 Buffer 객체로 변환합니다.
-    "utf-8" // Buffer 객체를 UTF-8 문자열로 디코딩합니다.
-  );
+  return iconv.decode(Buffer.from(data, "base64"), "utf-8");
 }
 
-/**
- * @method variableArray
- * @description 주어진 길이와 콜백 함수에 따라 배열을 생성합니다. 이 메서드는 Python의 range() 함수와 유사한 기능을 수행합니다.
- * @param {number} length - 생성할 배열의 길이입니다.
- * @param {function|null} [callback=null] - 각 배열 요소를 초기화할 때 사용할 콜백 함수입니다. 함수가 제공되지 않으면 기본적으로 인덱스 값이 요소로 사용됩니다.
- * @returns {Array} 생성된 배열을 반환합니다.
- * @throws {Error} length가 숫자가 아닌 경우 예외를 발생시킵니다.
- */
 Mother.prototype.variableArray = function (length, callback = null) {
-
-  // length가 숫자인지 확인합니다. 숫자가 아닌 경우 오류를 발생시킵니다.
   if (typeof length !== "number") {
-    throw new Error("invaild input");
+    throw new Error("invaild input")
   }
-
-  // 결과 배열을 저장할 targetArray 변수를 초기화합니다.
   let targetArray = [];
-
-  // 주어진 길이만큼 반복하여 배열을 생성합니다.
-  for (let i = 0; i < length; i++) {
-
-    // 콜백 함수가 제공된 경우, 콜백 함수의 반환값을 배열에 추가합니다.
+  for (let i = 0; i &lt; length; i++) {
     if (typeof callback === "function") {
       targetArray.push(callback(i));
-
-    // 콜백 함수가 제공되지 않은 경우, 인덱스 값을 배열에 추가합니다.
     } else {
       targetArray.push(i);
     }
   }
-
-  // 생성된 배열을 반환합니다.
   return targetArray;
 }
 
-/**
- * @method autoHypenPhone
- * @description 입력된 핸드폰 번호 문자열에 자동으로 하이픈(-)을 추가하여 포맷팅합니다. 주로 고객이 핸드폰 번호를 입력할 때 사용됩니다.
- * @param {string} m - 하이픈을 추가할 핸드폰 번호 문자열입니다.
- * @returns {string} 하이픈이 추가된 포맷팅된 핸드폰 번호를 반환합니다.
- */
 Mother.prototype.autoHypenPhone = function (m) {
-
-  // 입력된 문자열 m의 양쪽 공백을 제거합니다.
   let str = m.trim();
-
-  // 문자열에서 숫자가 아닌 모든 문자를 제거합니다.
   str = str.replace(/[^0-9]/g, '');
-
-  // 결과를 저장할 임시 변수 tmp를 초기화합니다.
   let tmp = '';
-
-  // 문자열 길이가 4 미만인 경우, 하이픈 없이 그대로 반환합니다.
-  if (str.length < 4) {
+  if (str.length &lt; 4) {
     return str;
-
-  // 문자열 길이가 4 이상 7 미만인 경우, 3자리 뒤에 하이픈을 추가합니다.
-  } else if (str.length < 7) {
-    tmp += str.substr(0, 3); // 처음 3자리를 tmp에 추가합니다.
-    tmp += '-';              // 하이픈을 추가합니다.
-    tmp += str.substr(3);    // 나머지 문자열을 tmp에 추가합니다.
+  } else if (str.length &lt; 7) {
+    tmp += str.substr(0,3);
+    tmp += '-';
+    tmp += str.substr(3);
     return tmp;
-
-  // 문자열 길이가 7 이상 11 미만인 경우, 3자리와 3자리 뒤에 하이픈을 추가합니다.
-  } else if (str.length < 11) {
-    tmp += str.substr(0, 3); // 처음 3자리를 tmp에 추가합니다.
-    tmp += '-';              // 하이픈을 추가합니다.
-    tmp += str.substr(3, 3); // 다음 3자리를 tmp에 추가합니다.
-    tmp += '-';              // 하이픈을 추가합니다.
-    tmp += str.substr(6);    // 나머지 문자열을 tmp에 추가합니다.
+  } else if (str.length &lt; 11) {
+    tmp += str.substr(0, 3);
+    tmp += '-';
+    tmp += str.substr(3, 3);
+    tmp += '-';
+    tmp += str.substr(6);
     return tmp;
-
-  // 문자열 길이가 11자리 이상인 경우, 3자리와 4자리 뒤에 하이픈을 추가합니다.
   } else {
-    tmp += str.substr(0, 3); // 처음 3자리를 tmp에 추가합니다.
-    tmp += '-';              // 하이픈을 추가합니다.
-    tmp += str.substr(3, 4); // 다음 4자리를 tmp에 추가합니다.
-    tmp += '-';              // 하이픈을 추가합니다.
-    tmp += str.substr(7);    // 나머지 문자열을 tmp에 추가합니다.
+    tmp += str.substr(0, 3);
+    tmp += '-';
+    tmp += str.substr(3, 4);
+    tmp += '-';
+    tmp += str.substr(7);
     return tmp;
   }
 }
 
-/**
- * @method designerCareer
- * @description 디자이너의 총 경력을 계산하여 반환합니다. wordingMode가 true일 경우, HTML 형식의 경력 문자열을 반환하고, false일 경우에는 [연, 월] 배열을 반환합니다.
- * @param {Object} designer - 디자이너 정보를 담고 있는 객체입니다. 디자이너의 경력 시작 연도와 월, 관련 경력 등을 포함합니다.
- * @param {boolean} [wordingMode=false] - true일 경우, HTML 형식의 경력 문자열을 반환하고, false일 경우, [연, 월] 배열을 반환합니다.
- * @returns {string|Array<number>} 계산된 경력을 HTML 형식의 문자열 또는 [연, 월] 배열로 반환합니다.
- */
 Mother.prototype.designerCareer = function (designer, wordingMode = false) {
-
-  // 현재 날짜를 가져옵니다.
   const today = new Date();
-
-  // 디자이너의 경력을 계산하기 위한 변수를 선언합니다.
   let careerSubtract;
   let year, month;
   let sumCareer;
   let finalYear, finalMonth;
 
-  // 경력 계산을 위해 현재 연도와 월을 디자이너의 경력 시작 연도와 월과 비교하여 차이를 계산합니다.
-  careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) // 현재 연도와 월을 월 단위로 환산하여 계산합니다.
-                 - ((designer.information.business.career.startY * 12) + designer.information.business.career.startM); // 경력 시작 연도와 월을 월 단위로 환산하여 계산합니다.
+  careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((designer.information.business.career.startY * 12) + designer.information.business.career.startM);
 
-  // 연 단위 경력을 계산합니다.
-  year = Math.floor(careerSubtract / 12); // 총 경력에서 연 단위 부분을 계산합니다.
+  year = Math.floor(careerSubtract / 12);
+  month = (careerSubtract % 12);
 
-  // 월 단위 경력을 계산합니다.
-  month = (careerSubtract % 12); // 총 경력에서 남은 월 단위를 계산합니다.
+  sumCareer = (year * 12) + month + (designer.information.business.career.relatedY * 12) + designer.information.business.career.relatedM;
 
-  // 총 경력(경력 시작 후 연차와 추가 경력 연차를 합산)을 월 단위로 계산합니다.
-  sumCareer = (year * 12) + month // 경력 시작 후 연차를 월 단위로 환산하여 계산합니다.
-            + (designer.information.business.career.relatedY * 12) + designer.information.business.career.relatedM; // 추가 경력 연차를 월 단위로 환산하여 합산합니다.
+  finalYear = Math.floor(sumCareer / 12);
+  finalMonth = (sumCareer % 12);
 
-  // 최종적으로 연 단위와 월 단위로 나누어 계산합니다.
-  finalYear = Math.floor(sumCareer / 12); // 최종 경력에서 연 단위 부분을 계산합니다.
-  finalMonth = (sumCareer % 12); // 최종 경력에서 남은 월 단위를 계산합니다.
-
-  // wordingMode가 true인 경우, HTML 형식의 경력 문자열을 반환합니다.
   if (wordingMode) {
-    return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
-
-  // wordingMode가 false인 경우, [연, 월] 배열을 반환합니다.
+    return `경력&amp;nbsp;&amp;nbsp;&lt;b%|%b>&amp;nbsp;&amp;nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
   } else {
-    return [finalYear, finalMonth];
+    return [ finalYear, finalMonth ];
   }
 }
 
-/**
- * @method chromeOpen
- * @description 주어진 URL을 사용하여 Chrome 브라우저를 실행하고 해당 페이지를 엽니다. 운영 체제에 따라 적절한 명령어를 사용합니다.
- * @param {string} url - 열고자 하는 웹 페이지의 URL입니다.
- * @returns {Promise<string>} Chrome 실행 결과를 반환하는 Promise입니다.
- * @throws {Error} 알 수 없는 운영 체제일 경우 예외를 발생시킵니다.
- */
 Mother.prototype.chromeOpen = async function (url) {
-
-  // 현재 Mother 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
-
-  // child_process 모듈에서 exec 함수를 가져옵니다. 이 함수는 명령어를 실행하는 데 사용됩니다.
-  const { exec } = require('child_process');
-
-  // os 모듈을 가져와 현재 운영 체제의 종류를 확인합니다.
-  const os = require('os');
-  const thisOs = os.type(); // 현재 운영 체제의 종류를 가져옵니다.
-
-  // 사용할 운영 체제를 저장할 변수를 선언합니다.
+  const { exec } = require(`child_process`);
+  const os = require(`os`);
+  const thisOs = os.type();
   let targetOs;
+  let finalUrl;
 
-  // 현재 운영 체제의 종류에 따라 targetOs 변수를 설정합니다.
   if (/Linux/gi.test(thisOs)) {
-    targetOs = "linux"; // 운영 체제가 Linux인 경우
+    targetOs = "linux";
   } else if (/Darwin/gi.test(thisOs)) {
-    targetOs = "mac"; // 운영 체제가 macOS인 경우
+    targetOs = "mac";
   } else if (/Windows/gi.test(thisOs)) {
-    targetOs = "windows"; // 운영 체제가 Windows인 경우
+    targetOs = "windows";
   } else {
-    throw new Error("unknown os"); // 알 수 없는 운영 체제일 경우 오류를 발생시킵니다.
+    throw new Error("unknown os");
   }
 
-  // URL에서 특수 문자를 이스케이프 처리하여 명령어에 사용할 수 있도록 수정합니다.
-  let finalUrl = url.replace(/\?/gi, "\\?");
-  finalUrl = finalUrl.replace(/\&/gi, "\\&");
+  finalUrl = url.replace(/\?/gi, "\\?");
+  finalUrl = finalUrl.replace(/\&amp;/gi, "\\&amp;");
   finalUrl = finalUrl.replace(/\=/gi, "\\=");
   finalUrl = finalUrl.replace(/\+/gi, "\\+");
 
-  // Linux 운영 체제인 경우
   if (targetOs === "linux") {
     return new Promise((resolve, reject) => {
-      // google-chrome 명령어를 사용하여 Chrome을 실행하고 URL을 엽니다.
       exec(`google-chrome ${finalUrl} --start-maximized`, (error, stdout, stderr) => {
         setTimeout(() => {
-          resolve(stdout); // 실행 결과를 반환합니다.
+          resolve(stdout);
         }, 0);
       });
     });
-
-  // Windows 운영 체제인 경우
   } else if (targetOs === "windows") {
-    const path = require("path"); // path 모듈을 가져옵니다.
-    const { sep, normalize } = path; // path 모듈에서 sep(경로 구분자)과 normalize(경로 정규화) 함수를 가져옵니다.
-    const { exec, execFile } = require("child_process"); // child_process 모듈에서 exec와 execFile 함수를 가져옵니다.
-    const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe"; // Windows에서 Chrome 실행 파일의 경로를 설정합니다.
+    const path = require("path");
+    const { sep, normalize } = path;
+    const { exec, execFile } = require("child_process");
+    const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe";
     return new Promise((resolve, reject) => {
-      // execFile 명령어를 사용하여 Chrome을 실행하고 URL을 엽니다.
-      execFile(normalize(chrome), ["--start-maximized", finalUrl], (error, stdout, stderr) => {
+      execFile(normalize(chrome), [ "--start-maximized", finalUrl ], (error, stdout, stderr) => {
         setTimeout(() => {
-          resolve(stdout); // 실행 결과를 반환합니다.
+          resolve(stdout);
         }, 0);
       });
     });
-
-  // macOS 운영 체제인 경우
   } else if (targetOs === "mac") {
     return new Promise((resolve, reject) => {
-      // macOS에서 Google Chrome을 실행하는 명령어를 사용하여 URL을 엽니다.
       exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${finalUrl}`, (error, stdout, stderr) => {
         setTimeout(() => {
-          resolve(stdout); // 실행 결과를 반환합니다.
+          resolve(stdout);
         }, 0);
       });
     });
   }
 }
 
-/**
- * @method homeliaisonAnalytics
- * @description 서버사이드에서 웹 사용자 로그를 분석하기 위한 함수입니다. 이 함수는 Google Analytics를 참고하여 만들어진 프론트 웹 사용자 로그 분석기로, 서버 사이드에서 메타의 픽셀처럼 이벤트를 전송하고 분석할 수 있게 설계되었습니다.
- * @param {Object} obj - 분석할 로그 데이터 객체입니다. 이 객체는 action과 data 속성을 포함해야 합니다.
- * @param {string} [infoName="officeinfo"] - 사용할 정보 객체의 이름입니다. 기본값은 "officeinfo"입니다.
- * @returns {Promise<Object|null>} 서버로 전송된 로그의 응답 객체를 반환합니다. 오류가 발생하면 null을 반환합니다.
- * @throws {Error} 입력 데이터가 유효하지 않거나, 지정된 정보 객체가 존재하지 않을 경우 예외를 발생시킵니다.
- */
 Mother.prototype.homeliaisonAnalytics = async function (obj, infoName = "officeinfo") {
-
-  // 필요한 모듈을 가져옵니다.
-  const axios = require("axios"); // HTTP 요청을 보내기 위해 axios 모듈을 사용합니다.
-  const crypto = require("crypto"); // 고유한 ID 생성을 위해 crypto 모듈을 사용합니다.
-  const address = require(`${process.cwd()}/apps/infoObj.js`); // 서버의 주소 정보를 가져옵니다.
-
+  const axios = require("axios");
+  const crypto = require("crypto");
+  const address = require(`${process.cwd()}/apps/infoObj.js`);
   try {
-    // obj가 객체이고 null이 아닌지 확인합니다. 유효하지 않으면 오류를 발생시킵니다.
     if (typeof obj !== "object" || obj === null) {
       throw new Error("invalid input");
     }
-
-    // obj.action이 문자열이고 obj.data가 정의되어 있는지 확인합니다. 유효하지 않으면 오류를 발생시킵니다.
     if (typeof obj.action !== "string" || obj.data === undefined) {
       throw new Error("invalid input");
     }
-
-    // obj.data가 객체이고 null이 아닌지 확인합니다. 유효하지 않으면 오류를 발생시킵니다.
     if (typeof obj.data !== "object" || obj.data === null) {
       throw new Error("invalid input");
     }
-
-    // infoName이 문자열인지 확인합니다. 유효하지 않으면 오류를 발생시킵니다.
     if (typeof infoName !== "string") {
       throw new Error("invalid input");
     }
-
-    // infoName에 해당하는 주소 정보가 존재하는지 확인합니다. 존재하지 않으면 오류를 발생시킵니다.
     if (address[infoName] === undefined) {
       throw new Error("invalid info name");
     }
+    const idKeyword = "homeliaisonServer";
+    const userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
+    const randomHex0 = crypto.randomBytes(8).toString("hex");
+    const randomHex1 = crypto.randomBytes(4).toString("hex");
+    const timeValue = String((new Date()).valueOf()).slice(0, -3);
+    const token = "_";
+    const thisId = idKeyword + token + randomHex0 + token + timeValue + token + randomHex1;
+    const thisInfo = address[infoName];
+    const url = "https://" + address.testinfo.host + ":3000/getAnalytics";
+    let res;
+    let dataObject;
 
-    // 서버 사이드에서 로그를 분석하기 위한 고유 ID와 사용자 에이전트를 설정합니다.
-    const idKeyword = "homeliaisonServer"; // ID의 고유 키워드입니다.
-    const userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"; // 서버에서 사용할 사용자 에이전트입니다.
-    const randomHex0 = crypto.randomBytes(8).toString("hex"); // 8바이트의 랜덤한 HEX 값을 생성합니다.
-    const randomHex1 = crypto.randomBytes(4).toString("hex"); // 4바이트의 랜덤한 HEX 값을 생성합니다.
-    const timeValue = String((new Date()).valueOf()).slice(0, -3); // 현재 시간을 초 단위로 가져옵니다.
-    const token = "_"; // ID 구분을 위한 구분자입니다.
-    const thisId = idKeyword + token + randomHex0 + token + timeValue + token + randomHex1; // 최종 고유 ID를 생성합니다.
-    const thisInfo = address[infoName]; // 지정된 정보 객체를 가져옵니다.
-    const url = "https://" + address.testinfo.host + ":3000/getAnalytics"; // 로그를 전송할 서버의 URL입니다.
+    dataObject = {};
 
-    // 전송할 데이터를 저장할 객체를 초기화합니다.
-    let dataObject = {};
-
-    // 로그 데이터 객체를 구성합니다.
-    dataObject.page = "serverSide"; // 페이지 정보를 "serverSide"로 설정합니다.
-    dataObject.standard = new Date(); // 현재 시간을 표준 시간으로 설정합니다.
-    dataObject.action = obj.action; // 전달받은 action을 설정합니다.
-    dataObject.data = obj.data; // 전달받은 data를 설정합니다.
-    dataObject.id = thisId; // 생성된 고유 ID를 설정합니다.
+    dataObject.page = "serverSide";
+    dataObject.standard = new Date();
+    dataObject.action = obj.action;
+    dataObject.data = obj.data;
+    dataObject.id = thisId;
     dataObject.info = {
-      ip: thisInfo.ip.outer, // 외부 IP 주소를 설정합니다.
-      userAgent: userAgent, // 사용자 에이전트를 설정합니다.
-      referer: "", // 참조 URL을 빈 문자열로 설정합니다.
-      requestUrl: "", // 요청 URL을 빈 문자열로 설정합니다.
-      pageTitle: "", // 페이지 제목을 빈 문자열로 설정합니다.
+      ip: thisInfo.ip.outer,
+      userAgent: userAgent,
+      referer: "",
+      requestUrl: "",
+      pageTitle: "",
     };
 
-    // 로그 데이터를 서버로 전송하고 응답을 반환합니다.
-    let res = await axios.post(url, dataObject, {
+    res = await axios.post(url, dataObject, {
       headers: {
-        "Content-Type": "application/json", // 요청 헤더를 JSON 형식으로 설정합니다.
-        "User-Agent": userAgent, // 요청 헤더에 사용자 에이전트를 추가합니다.
+        "Content-Type": "application/json",
+        "User-Agent": userAgent,
       }
     });
 
-    return res; // 서버의 응답 객체를 반환합니다.
+    return res;
 
   } catch (e) {
-    // 오류가 발생하면 콘솔에 오류를 출력하고 null을 반환합니다.
     console.log(e);
     return null;
   }
 }
 
 module.exports = Mother;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DateMatrix.html">DateMatrix</a></li><li><a href="Disk.html">Disk</a></li><li><a href="Mother.html">Mother</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Thu Aug 29 2024 13:16:12 GMT+0900 (Korean Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

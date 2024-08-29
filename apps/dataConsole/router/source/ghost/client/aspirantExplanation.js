@@ -97,7 +97,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 28 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
+    subTitleSize = <%% 36, 36, 34, 30, 5 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 10, 2.2 %%>;
 
@@ -125,7 +125,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     if (media[0] && window.innerHeight > 1100) {
       firstBasePaddingTop = 60;
       titleHeight = 142;
-      subTitleSize = 19;
+      subTitleSize = 32;
       firstBasePaddingBottom = 200;
       illustMarginTop = 180;
       plusRatio = 0.8;
@@ -157,86 +157,8 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         }
       }
     });
-  
-    createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
-      },
-      children: [
-        {
-          mode: "img",
-          attribute: {
-            src: desktop ? AspirantExplanationJs.binaryPath + "/titleSvg0.svg" : AspirantExplanationJs.binaryPath + "/titleSvg1.svg",
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            height: String(titleHeight) + ea,
-          }
-        }
-      ]
-    });
-    createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
-        marginTop: String(subTitleMarginTop) + ea,
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
-      },
-      children: [
-        {
-          text: "홈리에종 디자이너 파트너십 지원",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            color: colorExtended.black,
-            fontWeight: String(subTitleWeight),
-            fontSize: String(subTitleSize) + ea,
-          }
-        }
-      ]
-    });
-    createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
-        marginTop: String(illustMarginTop) + ea,
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
-      },
-      children: [
-        {
-          mode: "img",
-          attribute: {
-            src: mainIllust,
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(plusWidth) + ea,
-            left: String(-1 * ((plusWidth - standardWidth) / 2)) + ea,
-          }
-        }
-      ]
-    });
+
+    
     createNode({
       mother: firstBase,
       attribute: {
@@ -4492,7 +4414,6 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           await instance.insertThirdBox();
           await instance.insertFourthBox();
           await instance.insertFifthBox();
-          await instance.insertSixthBox();
           instance.resizeEvent();
           instance.postIframeEvent();
 

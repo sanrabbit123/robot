@@ -4735,10 +4735,10 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
           }
   
           if (map.find((obj) => { return obj.property === "homepage" }) !== undefined) {
-            map.find((obj) => { return obj.property === "homepage" }).value = linkToString(map.find((obj) => { return obj.property === "homepage" }).value.trim());
+            map.find((obj) => { return obj.property === "homepage" }).value = (map.find((obj) => { return obj.property === "homepage" }).value.trim());
           }
           if (map.find((obj) => { return obj.property === "sns" }) !== undefined) {
-            map.find((obj) => { return obj.property === "sns" }).value = linkToString(map.find((obj) => { return obj.property === "sns" }).value.trim());
+            map.find((obj) => { return obj.property === "sns" }).value = (map.find((obj) => { return obj.property === "sns" }).value.trim());
           }
 
           if (typeof instance.clientSessionId === "string") {
