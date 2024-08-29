@@ -10,27 +10,6 @@ const DataConsole = function () {
   this.ghostDir = this.sourceDir + "/ghost";
   this.frontDir = this.sourceDir + "/front";
   this.middleModuleDir = this.middleDir + "/module";
-  this.webHistory = [
-    {
-      date: new Date(2024, 3, 30),
-      version: "web240430",
-      port: 48901,
-    },
-    {
-      date: new Date(2024, 4, 27),
-      version: "web240527",
-      port: 48902,
-    },
-  ];
-  this.testModeInfo = {
-    host: this.address.officeinfo.test.host,
-    ip: this.address.officeinfo.test.ip.inner,
-    port: 443,
-    log: this.address.officeinfo.test.port,
-    path: "/home/" + this.address.officeinfo.test.user,
-    name: this.address.officeinfo.test.user,
-    version: this.webHistory.find((o) => { return o.version === "web240527" }).port,
-  };
 }
 
 DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
@@ -133,7 +112,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result;
@@ -153,7 +132,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
     numbersString = "const NUMBERSHOST = \"" + NUMBERSHOST + "\"";
     parserString = "";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
 
@@ -234,17 +213,15 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPatch, DataMiddle, mini = false, testMode = false) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPatch, DataMiddle) {
   const instance = this;
   const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
-  const { testModeInfo } = this;
-  const { minify } = require("terser");
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.officeinfo.host + ":3002";
   const BRIDGEHOST = "https://" + this.address.secondinfo.host + ":3003";
-  const LOGHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.log) : "https://" + this.address.officeinfo.ghost.host + ":3000";
-  const FRONTHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.version) : "https://" + this.address.frontinfo.host;
+  const LOGHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
+  const FRONTHOST = "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.officeinfo.host + ":3002";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3003";
   const CONTENTSHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
@@ -316,7 +293,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
     let staticDirList;
     let staticTempDir, staticTempDirList_raw, staticTempDirList;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result, moduleString;
@@ -345,13 +322,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
     for (let { kinds, dir, file } of staticDirList) {
       if (kinds === "GHOST:CLIENT") {
         if (file === "general.js") {
-          if (!testMode) {
-            ghostClientGeneral = dir + "/" + file;
-            ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
-          } else {
-            ghostClientGeneral = testDir + "/" + file;
-            ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
-          }
+          ghostClientGeneral = dir + "/" + file;
+          ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
         }
       } else if (kinds === "GHOST:DESIGNER") {
         if (file === "general.js") {
@@ -375,9 +347,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
     parserString = "";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
-    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/polyfill.js` ]);
 
     //write local js
     console.log(`set middle target :`, staticDirList);
@@ -410,33 +381,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
       //set browser js
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
-      if (testMode) {
-        testHomeLiaisonAnalytics = [
-          `GeneralJs.homeliaisonAnalytics = function (obj) {`,
-          `  let dimension, gtagObject;`,
-          `  return new Promise((resolve, reject) => {`,
-          `    if (typeof obj !== "object" || obj === null) {`,
-          `      resolve(null);`,
-          `    } else {`,
-          `      const json = {`,
-          `        date: {`,
-          `          now: new Date(),`,
-          `        },`,
-          `        data: {`,
-          `          page: obj.page,`,
-          `          action: obj.action,`,
-          `          id: "",`,
-          `          value: { ...obj.data }`,
-          `        }`,
-          `      };`,
-          `      resolve(json);`,
-          `    }`,
-          `  });`,
-          `}`,
-        ].join("\n");
-        generalString = generalString + "\n\n\n\n" + testHomeLiaisonAnalytics;
-      }
-
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//g, (name.slice(0, 1).toUpperCase() + name.slice(1)));
 
@@ -543,18 +487,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
         resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`);
 
       } else {
-
-        if (mini) {
-          result = (await minify(result, {
-            mangle: false,
-            keep_classnames: true,
-            keep_fnames: true
-          })).code;
-        }
-
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
         resultFromArr.push(`${staticFolder}/middle/${i}`);
-
       }
 
     }
@@ -566,10 +500,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
   }
 }
 
-DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
+DataConsole.prototype.renderFrontPhp = async function () {
   const instance = this;
   const { fileSystem, shellLink, shellExec, equalJson, requestSystem, consoleQ } = this.mother;
-  const { ghostDir, testModeInfo } = this;
+  const { ghostDir } = this;
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
@@ -579,7 +513,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
+    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "clientEvaluation", to: "evaluation", path: "/middle/evaluation" },
@@ -727,10 +661,10 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
   }
 }
 
-DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
+DataConsole.prototype.renderDesignerPhp = async function () {
   const instance = this;
   const { fileSystem, shellLink, shellExec, equalJson, requestSystem, consoleQ } = this.mother;
-  const { ghostDir, testModeInfo } = this;
+  const { ghostDir } = this;
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
@@ -741,7 +675,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, true, testMode);
+    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
     const targetMap = [
       { from: "designerAbout", to: "about", path: "/middle/designerAbout" },
       { from: "designerBoard", to: "dashboard", path: "/middle/designerBoard" },
@@ -1140,7 +1074,7 @@ DataConsole.prototype.connect = async function () {
         sleep(500).then(() => {
           return instance.renderStatic(staticFolder, DataPatch);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, false, false);
+          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
         }).then(() => {
           console.log(`static done`);
         }).catch((err) => {
@@ -1150,7 +1084,7 @@ DataConsole.prototype.connect = async function () {
         fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
           return instance.renderStatic(staticFolder, DataPatch);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle, false, false);
+          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
         }).then(() => {
           console.log(`static done`);
           return shellExec("rm", [ "-rf", process.env.HOME + "/" + tempProcessName ]);
