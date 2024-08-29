@@ -18,14 +18,11 @@ const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongologinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo);
   this.MONGOLOCALC = new mongo(mongolocalinfo);
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
   this.MONGOLOGC = new mongo(mongotestinfo);
-  this.MONGOLOGCREAL = new mongo(mongologinfo);
-  this.MONGOSECONDC = new mongo(mongosecondinfo);
-  this.MONGOCONTENTSC = new mongo(mongocontentsinfo);
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -71,9 +68,16 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
+    
     
 
 
+
+
+
+    
 
     
     // const selfMongo = this.MONGOC;
