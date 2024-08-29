@@ -1,3 +1,20 @@
+Object.prototype.toNormal = function () {
+  let obj = {};
+  for (let key in this) {
+    if (this[key].constructor.name !== "Object" && this[key].constructor.name !== "Function" && this[key].constructor.name !== "Array" && this[key].constructor.name !== "String" && this[key].constructor.name !== "Number" && this[key].constructor.name !== "Boolean" && this[key].constructor.name !== "Date") {
+      if (typeof this[key]["toNormal"] === "function") {
+        obj[key] = this[key].toNormal();
+      } else {
+        obj[key] = this[key];
+      }
+    } else {
+      obj[key] = this[key];
+    }
+  }
+  delete obj.toNormal;
+  return obj;
+}
+
 class Address {
   constructor(rawString) {
     this.raw = this.value = rawString;

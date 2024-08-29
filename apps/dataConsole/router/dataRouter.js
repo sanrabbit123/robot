@@ -1,15 +1,18 @@
+const Mother = require(`${process.cwd()}/apps/mother.js`);
+const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+const express = require('express');
+const router = express.Router();
+
 const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
-  const Mother = require(`${process.cwd()}/apps/mother.js`);
-  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.work = new BackWorker();
@@ -33,8 +36,6 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLO
   this.human = humanInstance;
   this.bankCode = BillMaker.returnBankCode("", "matrix");
 }
-
-//STATIC FUNCTIONS --------------------------------------------------------------------------
 
 DataRouter.timeouts = {};
 
@@ -3931,10 +3932,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         logger.error("Console 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
       });
 
-      thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
-      message += thisClient.toMessage();
-      message += "\n";
-      message += "세션 아이디 : " + sessionId.join(", ");
+      thisClient = await back.getClientById(cliid, { selfMongo });
+      message += "새로운 상담 문의가 왔습니다!" + " " + "성함 : " + thisClient.name + "(" + thisClient.cliid + ") " + "연락처 : " + thisClient.phone + "\n";
 
       messageSend({ text: message, channel: "#401_consulting" }).then(() => {
         return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
@@ -6683,132 +6682,6 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_getUpdateUser = function () {
-  const instance = this;
-  const back = this.back;
-  const { requestSystem, equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/getUsers", "/updateUser" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const selfMongo = instance.mongo;
-      if (req.url === "/getUsers") {
-        if (req.body.whereQuery === undefined) {
-          throw new Error("invaild post");
-        }
-        const { whereQuery } = equalJson(req.body);
-        const users = await back.getUsersByQuery(whereQuery, { selfMongo });
-        res.send(JSON.stringify(users.toNormal()));
-      } else if (req.url === "/updateUser") {
-        const { whereQuery, updateQuery } = equalJson(req.body);
-        await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
-        res.send(JSON.stringify({ message: "done" }));
-      }
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_getUpdateUser): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_userSubmit = function () {
-  const instance = this;
-  const back = this.back;
-  const kakao = this.kakao;
-  const { equalJson, requestSystem, dateToString, messageSend } = this.mother;
-  let obj = {};
-  obj.link = [ "/userSubmit" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.map === undefined) {
-        throw new Error("invaild post");
-      }
-      const selfMongo = instance.mongo;
-      const map = equalJson(req.body.map);
-      let useid;
-      let name, phone, email, address, targets, etc, oid, rsp;
-      let updateQuery;
-      let message;
-
-      // filtering
-      name = map.name.replace(/[^a-zA-Z가-힣]/gi, '');
-      phone = map.phone.replace(/[^0-9\-]/gi, '');
-      email = map.email.trim();
-      address = map.address.trim();
-      targets = Number(map.targets);
-      etc = map.etc.trim();
-      oid = map.oid.trim();
-      rsp = equalJson(map.rsp);
-
-      // create user
-      updateQuery = { name, phone, email };
-      updateQuery["service.serid"] = "s2011_aa05s";
-      updateQuery["service.xValue"] = "B";
-      updateQuery["request.timeline"] = new Date();
-      updateQuery["request.status"] = "결제 완료";
-      updateQuery["request.alarm"] = true;
-      updateQuery["request.space.address"] = address;
-      updateQuery["request.space.targets"] = targets;
-      updateQuery["request.comments.init"] = etc;
-      updateQuery["request.payment.date"] = new Date();
-      updateQuery["request.payment.oid"] = oid;
-      if (rsp.paid_amount === undefined || Number.isNaN(Number(rsp.paid_amount))) {
-        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.amount));
-      } else {
-        updateQuery["request.payment.amount.consumer"] = Math.floor(Number(rsp.paid_amount));
-      }
-      updateQuery["request.payment.amount.vat"] = Math.floor(updateQuery["request.payment.amount.consumer"] / 11);
-      updateQuery["request.payment.amount.supply"] = Math.floor(updateQuery["request.payment.amount.consumer"] - updateQuery["request.payment.amount.vat"]);
-      updateQuery["request.payment.info.method"] = "카드(" + (typeof rsp.card_name === "string" ? rsp.card_name.replace(/카드/gi, '') : "알 수 없음") + ")";
-      updateQuery["request.payment.info.proof"] = "이니시스";
-      updateQuery["request.payment.info.to"] = name;
-      updateQuery["request.payment.info.data"] = [ rsp ];
-      updateQuery["response.status"] = "지정 대기";
-
-      useid = await back.createUser(updateQuery, { selfMongo });
-
-      // alimtalk
-      await kakao.sendTalk("miniConsulting", name, phone, {
-        client: name,
-        host: instance.address.frontinfo.host,
-        path: "miniGuide",
-        useid: useid,
-      });
-
-      // slack
-      message = "새로운 미니 서비스 결제가 일어났습니다!" + "\n";
-      message += "문의일 : " + dateToString(updateQuery["request.timeline"], true) + "\n";
-      message += "고객 아이디 : " + useid + "\n";
-      message += "성함 : " + name + "\n";
-      message += "연락처 : " + phone + "\n";
-      message += "이메일 : " + email + "\n";
-      message += "주소 : " + address + "\n";
-      message += "공간 개수 : " + String(targets) + "\n";
-      message += "요청 사항 : " + etc + "\n";
-      await messageSend({ text: message, channel: "#405_mini" });
-
-      res.send(JSON.stringify({ useid }));
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_userSubmit): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_designerFeeTable = function () {
   const instance = this;
   const work = this.work;
@@ -8839,9 +8712,7 @@ DataRouter.prototype.rou_post_createStylingContract = function () {
           }
         }
 
-        ({ request, analytics } = client.requests[requestNumber]);
-        request = request.toNormal();
-        analytics = analytics.toNormal();
+        ({ request, analytics } = client.toNormal().requests[requestNumber]);
 
         widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
@@ -9166,9 +9037,7 @@ DataRouter.prototype.rou_post_createConstructContract = function () {
                 }
               }
 
-              ({ request, analytics } = client.requests[requestNumber]);
-              request = request.toNormal();
-              analytics = analytics.toNormal();
+              ({ request, analytics } = client.toNormal().requests[requestNumber]);
 
               widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
@@ -13256,10 +13125,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         work.designerCuration(cliid, 4, targetSerid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
           for (let obj of detail) {
-            detailUpdate.push(obj.toNormal());
-          }
-          if (client.phone === "010-2747-3403") {
-            detailUpdate = [];
+            detailUpdate.push(obj);
           }
 
           updateQuery["desid"] = "";

@@ -1133,7 +1133,7 @@ BackWorker.prototype.designerTendencySync = async function () {
     let whereQuery, updateQuery;
 
     for (let designer of designers) {
-      thisTendency = designer.analytics.styling.tendency.toNormal();
+      thisTendency = designer.toNormal().analytics.styling.tendency;
       num = 0;
       for (let { desid, contents } of contentsArr) {
         if (designer.desid === desid) {
@@ -2638,8 +2638,8 @@ BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid
       online = false;
     }
 
-    startDate = client.requests[requestNumber].analytics.date.space.movein.toNormal();
-    endDate = client.requests[requestNumber].analytics.date.space.movein.toNormal();
+    startDate = client.toNormal().requests[requestNumber].analytics.date.space.movein;
+    endDate = client.toNormal().requests[requestNumber].analytics.date.space.movein;
     startDate.setDate(startDate.getDate() - serviceParsing({ online, serid, xValue }, true));
 
     startDate.setDate(startDate.getDate() + dateMargin);

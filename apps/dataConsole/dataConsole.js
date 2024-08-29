@@ -791,43 +791,6 @@ DataConsole.prototype.renderDesignerPhp = async function () {
   }
 }
 
-DataConsole.prototype.mergeRouter = async function (middle = true) {
-  const instance = this;
-  const { fileSystem, shellLink } = this.mother;
-  try {
-    const routerFragments = this.dir + "/router/fragments";
-    const routerFragmentsDir_raw = await fileSystem(`readDir`, [ routerFragments ]);
-    const finalStringConst = "dataRouter.js";
-    let routerFragmentsDir, codeString;
-
-    routerFragmentsDir = [];
-    for (let i of routerFragmentsDir_raw) {
-      if (i !== `.DS_Store`) {
-        if (middle) {
-          routerFragmentsDir.push(i);
-        } else {
-          if (!/middle/gi.test(i.split('_')[1]) && !/ghost/gi.test(i.split('_')[1])) {
-            routerFragmentsDir.push(i);
-          }
-        }
-      }
-    }
-    routerFragmentsDir.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
-
-    codeString = '';
-    for (let i of routerFragmentsDir) {
-      codeString += await fileSystem(`readString`, [ routerFragments + "/" + i ]);
-      codeString += "\n\n";
-    }
-
-    await fileSystem(`write`, [ `${this.dir}/router/${finalStringConst}`, codeString ]);
-    const DataRouter = require(`${this.dir}/router/${finalStringConst}`);
-    return DataRouter;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoofficeinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
@@ -921,7 +884,7 @@ DataConsole.prototype.connect = async function () {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-    const DataRouter = await this.mergeRouter(DataMiddle !== null);
+    const DataRouter = require(`${this.dir}/router/dataRouter.js`);
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();

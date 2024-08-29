@@ -6758,11 +6758,13 @@ TransferRouter.prototype.rou_post_printClient = function () {
       const { cliid, history } = equalJson(req.body);
       const mode = (req.body.mode === undefined ? "general" : req.body.mode );
       const requestNumber = Number(req.body.requestNumber);
-      const client = await back.getClientById(cliid, { selfMongo, withTools: true });
+      const client = await back.getClientById(cliid, { selfMongo });
       let text;
       let webReport;
 
-      text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ], requestNumber);
+      text = client.name + " / " + client.cliid + " / " + client.phone;
+      text += "\n\n";
+      text += JSON.stringify(client.toNormal().requests[requestNumber].request, null, 2);
       text += "\n\n";
       webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + "/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
       text += webReport;
