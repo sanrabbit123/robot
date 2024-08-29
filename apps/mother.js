@@ -6438,7 +6438,7 @@ Mother.prototype.localUnique = function () {
 
 /**
  * @method mediaQuery
- * @description 주어진 코드에서 미디어 쿼리 조건에 따라 동적 콘텐츠를 삽입하거나 대체하는 변환 작업을 수행합니다.
+ * @description 주어진 프론트 자바스크립트 코드에서 미디어 쿼리 조건에 따라 동적 콘텐츠를 삽입하거나 대체하는 변환 작업을 수행합니다.
  * @param {string} code - 변환할 코드 문자열입니다.
  * @returns {Object} 변환된 조건 문자열과 코드 문자열을 포함하는 객체를 반환합니다.
  * @throws {Error} 파싱 중 오류가 발생한 경우 예외를 발생시킵니다.
