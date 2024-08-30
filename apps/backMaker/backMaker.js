@@ -864,7 +864,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
 
     // withTools 옵션이 true인 경우, 고객 객체에 추가 도구를 포함합니다.
     if (option.withTools) {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
       Client = Tools.withTools(Client);
     }
 
@@ -964,7 +964,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
       }
     } else {
       // withTools 옵션이 true인 경우, 도구를 포함한 고객 객체 배열을 생성합니다.
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
       Client = Tools.withTools(Client); // 도구를 포함한 Client 클래스를 생성합니다.
       Clients = Tools.withToolsArr(Clients); // 도구를 포함한 Clients 배열을 생성합니다.
       clientsArr = new Clients(); // 빈 Clients 배열을 생성합니다.
@@ -1037,7 +1037,7 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
       }
     } else {
       // withTools 옵션이 true인 경우, 도구를 포함한 고객 객체 배열을 생성합니다.
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
       Client = Tools.withTools(Client); // 도구를 포함한 Client 클래스를 생성합니다.
       Clients = Tools.withToolsArr(Clients); // 도구를 포함한 Clients 배열을 생성합니다.
       clientsArr = new Clients(); // 빈 Clients 배열을 생성합니다.

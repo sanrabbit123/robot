@@ -1,4 +1,3 @@
-// sample data
 const AspirantSampleData = {
   "aspid": "a2404_aa03s",
   "designer": "김윤아",
@@ -154,7 +153,6 @@ const AspirantSampleData = {
   }
 }
 
-// aspirant schema
 const AspirantMap = {
   main: function () {
     let dummy;
