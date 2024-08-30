@@ -26,7 +26,7 @@ class BackMaker {
     this.dir = process.cwd() + "/apps/backMaker";
     
     // map 디렉토리 경로를 설정합니다.
-    this.mapDir = this.dir + "/map";
+    this.mapDir = this.dir + "/alive";
     
     // 임시 파일을 저장할 temp 디렉토리 경로를 설정합니다.
     this.tempDir = process.cwd() + "/temp";
@@ -1183,7 +1183,7 @@ BackMaker.prototype.returnClientDummies = function (subject) {
   const instance = this;
 
   // 고객 데이터 맵핑을 위한 client.js 파일을 가져옵니다.
-  const map = require(`${this.mapDir}/client.js`);
+  const map = require(`${this.mapDir}/client/addOn/generator.js`).ClientMap;
 
   // 더미 데이터를 저장할 변수를 선언합니다.
   let dummy;
@@ -1206,7 +1206,7 @@ BackMaker.prototype.returnClientRequest = function () {
   const instance = this;
 
   // 고객 데이터 맵핑을 위한 client.js 파일을 가져옵니다.
-  const map = require(`${this.mapDir}/client.js`);
+  const map = require(`${this.mapDir}/client/addOn/generator.js`).ClientMap;
 
   // 요청(request) 데이터를 저장할 변수를 선언합니다.
   let request;
@@ -1241,7 +1241,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
   const button = "client";
 
   // 고객 데이터 맵핑을 위한 client.js 파일을 가져옵니다.
-  const map = require(`${this.mapDir}/client.js`);
+  const map = require(`${this.mapDir}/client/addOn/generator.js`).ClientMap;
 
   try {
     // 더미 데이터, 최신 고객, 최신 고객 배열을 저장할 변수를 선언합니다.
@@ -2243,7 +2243,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
   const button = "contents";
 
   // 콘텐츠 데이터를 위한 매핑 객체를 가져옵니다.
-  const map = require(`${this.mapDir}/contents.js`);
+  const map = require(`${this.mapDir}/contents/addOn/generator.js`).ContentsMap;
 
   try {
     // 더미 데이터와 최신 콘텐츠 데이터를 저장할 변수를 선언합니다.
@@ -2675,7 +2675,7 @@ BackMaker.prototype.createService = async function (updateQuery, option = { self
   const { mongo, mongoinfo } = this.mother; // Mother 클래스의 mongo 및 mongoinfo 속성을 불러옵니다.
   const MONGOC = new mongo(mongoinfo); // MongoDB 연결 객체를 생성합니다.
   const button = "service"; // 데이터베이스 컬렉션 이름을 "service"로 설정합니다.
-  const map = require(`${this.mapDir}/service.js`); // 서비스 맵을 가져옵니다.
+  const map = require(`${this.mapDir}/service/addOn/generator.js`).ServiceMap // 서비스 맵을 가져옵니다.
 
   try {
     let dummy, dummySetting, latestService, latestServiceArr; // 서비스 생성에 필요한 변수들입니다.
@@ -3100,7 +3100,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
   // 디자이너 데이터 맵핑을 위한 designer.js 파일을 가져옵니다.
   // map 객체를 통해 기본 데이터 구조 및 설정을 불러옵니다.
-  const map = require(`${this.mapDir}/designer.js`);
+  const map = require(`${this.mapDir}/designer/addOn/generator.js`).DesignerMap;
 
   try {
     // 변수들을 선언합니다.
@@ -3843,7 +3843,7 @@ BackMaker.prototype.returnProjectDummies = function (subject) {
 
   // 프로젝트 맵핑 데이터를 가져오기 위해 project.js 파일을 require로 불러옵니다.
   // map 객체는 project.js에서 내보내는 데이터를 포함합니다.
-  const map = require(`${this.mapDir}/project.js`);
+  const map = require(`${this.mapDir}/project/addOn/generator.js`).ProjectMap;
 
   // 주어진 subject(주제)에 해당하는 더미 데이터를 map 객체에서 가져옵니다.
   // map.sub 메서드를 사용하여 주제에 맞는 데이터를 불러옵니다.
@@ -3881,7 +3881,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
   // 프로젝트 맵핑 데이터를 가져오기 위해 project.js 파일을 require로 불러옵니다.
   // map 객체는 project.js에서 내보내는 데이터를 포함합니다.
-  const map = require(`${this.mapDir}/project.js`);
+  const map = require(`${this.mapDir}/project/addOn/generator.js`).ProjectMap;
 
   try {
     // 여러 변수를 선언합니다.
@@ -4304,7 +4304,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
 
   // 프로젝트 맵핑 데이터를 가져오기 위해 aspirant.js 파일을 require로 불러옵니다.
   // map 객체는 aspirant.js에서 내보내는 데이터를 포함합니다.
-  const map = require(`${this.mapDir}/aspirant.js`);
+  const map = require(`${this.mapDir}/aspirant/addOn/generator.js`).AspirantMap;
 
   try {
     // 여러 변수를 선언합니다.
@@ -4768,7 +4768,7 @@ BackMaker.prototype.createBuilder = async function (updateQuery, option = { self
 
   // 프로젝트 맵핑 데이터를 가져오기 위해 builder.js 파일을 require로 불러옵니다.
   // map 객체는 builder.js에서 내보내는 데이터를 포함합니다.
-  const map = require(`${this.mapDir}/builder.js`);
+  const map = require(`${this.mapDir}/builder/addOn/generator.js`).BuilderMap;
 
   try {
     // 여러 변수를 선언합니다.

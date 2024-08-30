@@ -522,62 +522,152 @@ const ContentsMap = {
   }
 }
 
+/**
+ * @class DateParse
+ * Date 클래스를 확장하여 날짜 처리 기능을 제공하는 클래스입니다.
+ * 문자열 형식의 날짜를 Date 객체로 변환하거나, Date 객체를 다양한 형식으로 변환할 수 있습니다.
+ */
 class DateParse extends Date {
 
+  /**
+   * @constructor
+   * 주어진 dateObject를 Date 객체로 변환하여 초기화합니다.
+   * 문자열 형식의 날짜가 주어진 경우, 해당 문자열을 분석하여 Date 객체로 변환합니다.
+   * @param {string|Date} dateObject - 변환할 날짜 문자열 또는 Date 객체
+   * @throws {Error} 유효하지 않은 날짜 형식이 주어진 경우 예외를 발생시킵니다.
+   */
   constructor(dateObject) {
+    // 임시 배열 변수를 선언합니다.
     let tempArr0, tempArr1, tempArr2;
+
+    // dateObject가 문자열인 경우
     if (typeof dateObject === "string") {
+      // 날짜 문자열이 "YYYY-MM-DD HH:MM:SS" 형식인 경우
       if (dateObject.length === 19) {
+        // 날짜와 시간을 분리하여 tempArr0에 저장합니다.
         tempArr0 = dateObject.split(" ");
+        // 날짜 부분을 "-"로 분리하여 tempArr1에 저장합니다.
         tempArr1 = tempArr0[0].split("-");
+        // 시간 부분을 ":"로 분리하여 tempArr2에 저장합니다.
         tempArr2 = tempArr0[1].split(":");
-        super(new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2]), Number(tempArr2[0]), Number(tempArr2[1]), Number(tempArr2[2])));
-      } else if (dateObject.length === 10) {
+        // 분리된 연, 월, 일, 시, 분, 초 정보를 이용해 Date 객체를 생성하고, 상위 클래스(Date)의 생성자를 호출합니다.
+        super(new Date(
+          Number(tempArr1[0]), 
+          Number(tempArr1[1]) - 1, 
+          Number(tempArr1[2]), 
+          Number(tempArr2[0]), 
+          Number(tempArr2[1]), 
+          Number(tempArr2[2])
+        ));
+      } 
+      // 날짜 문자열이 "YYYY-MM-DD" 형식인 경우
+      else if (dateObject.length === 10) {
+        // 날짜를 "-"로 분리하여 tempArr1에 저장합니다.
         tempArr1 = dateObject.split("-");
-        super(new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2])));
-      } else {
+        // 분리된 연, 월, 일 정보를 이용해 Date 객체를 생성하고, 상위 클래스(Date)의 생성자를 호출합니다.
+        super(new Date(
+          Number(tempArr1[0]), 
+          Number(tempArr1[1]) - 1, 
+          Number(tempArr1[2])
+        ));
+      } 
+      // 유효하지 않은 날짜 형식인 경우
+      else {
+        // 예외를 발생시킵니다.
         throw new Error("invalid date object");
       }
-    } else {
+    } 
+    // dateObject가 문자열이 아닌 경우
+    else {
+      // dateObject를 ISO 문자열로 변환한 후 Date 객체로 초기화합니다.
       super(dateObject.toISOString());
     }
   }
 
+  /**
+   * @method zeroAddition
+   * 숫자가 10보다 작은 경우 앞에 0을 추가하여 2자리 문자열로 반환합니다.
+   * @param {number} number - 2자리로 변환할 숫자
+   * @returns {string} 2자리 숫자 문자열
+   */
   static zeroAddition(number) {
+    // 숫자가 10보다 큰 경우 그대로 문자열로 반환합니다.
     if (number > 9) {
       return String(number);
-    } else {
+    } 
+    // 숫자가 10보다 작은 경우 앞에 0을 추가하여 문자열로 반환합니다.
+    else {
       return '0' + String(number);
     }
   }
 
+  /**
+   * @method toString
+   * Date 객체를 "YYYY-MM-DD" 또는 "YYYY-MM-DD HH:MM:SS" 형식의 문자열로 변환합니다.
+   * @param {boolean} [detail=false] - 시간 정보까지 포함할지 여부
+   * @returns {string} 변환된 날짜 문자열
+   */
   toString(detail = false) {
+    // 연도, 월, 일, 시, 분, 초 정보를 각각 추출합니다.
     const year = this.getFullYear();
     const month = this.getMonth() + 1;
     const day = this.getDate();
     const hours = this.getHours();
     const minutes = this.getMinutes();
     const seconds = this.getSeconds();
+
+    // detail이 true인 경우 "YYYY-MM-DD HH:MM:SS" 형식으로 변환합니다.
     if (detail) {
+      // 연도가 1800년인 경우 "1800-01-01"로 반환합니다.
       if (year === 1800) {
         return "1800-01-01";
-      } else {
-        return (DateParse.zeroAddition(year) + "-" + DateParse.zeroAddition(month) + "-" + DateParse.zeroAddition(day) + " " + DateParse.zeroAddition(hours) + ":" + DateParse.zeroAddition(minutes) + ":" + DateParse.zeroAddition(seconds));
+      } 
+      // 그렇지 않으면 연, 월, 일, 시, 분, 초를 모두 포함한 문자열을 반환합니다.
+      else {
+        return (
+          DateParse.zeroAddition(year) + "-" + 
+          DateParse.zeroAddition(month) + "-" + 
+          DateParse.zeroAddition(day) + " " + 
+          DateParse.zeroAddition(hours) + ":" + 
+          DateParse.zeroAddition(minutes) + ":" + 
+          DateParse.zeroAddition(seconds)
+        );
       }
-    } else {
+    } 
+    // detail이 false인 경우 "YYYY-MM-DD" 형식으로 변환합니다.
+    else {
+      // 연도가 1800년인 경우 "1800-01-01"로 반환합니다.
       if (year === 1800) {
         return "1800-01-01";
-      } else {
-        return (DateParse.zeroAddition(year) + "-" + DateParse.zeroAddition(month) + "-" + DateParse.zeroAddition(day));
+      } 
+      // 그렇지 않으면 연, 월, 일만 포함한 문자열을 반환합니다.
+      else {
+        return (
+          DateParse.zeroAddition(year) + "-" + 
+          DateParse.zeroAddition(month) + "-" + 
+          DateParse.zeroAddition(day)
+        );
       }
     }
   }
 
+  /**
+   * @method toNormal
+   * DateParse 객체를 일반 Date 객체로 변환합니다.
+   * @returns {Date} 변환된 Date 객체
+   */
   toNormal() {
+    // 현재 객체의 ISO 문자열 표현을 사용하여 새로운 Date 객체를 반환합니다.
     return new Date(this.toISOString());
   }
 
+  /**
+   * @method toSixString
+   * Date 객체를 "YYMMDD" 형식의 6자리 문자열로 변환합니다.
+   * @returns {string} 변환된 6자리 날짜 문자열
+   */
   toSixString() {
+    // 날짜를 "YYYY-MM-DD" 형식의 문자열로 변환한 후, 앞 두 자리를 제외한 "YYMMDD" 형식으로 잘라서 반환합니다.
     let date = this.toString(false);
     return (date.slice(2, 4) + date.slice(5, 7) + date.slice(8, 10));
   }
