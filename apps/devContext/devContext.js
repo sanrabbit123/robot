@@ -15,16 +15,18 @@ const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 
-const DevContext = function () {
-  this.mother = new Mother();
-  this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  this.MONGOC = new mongo(mongoinfo);
-  this.MONGOLOCALC = new mongo(mongolocalinfo);
-  this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
-  this.MONGOLOGC = new mongo(mongotestinfo);
-  this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.dir = `${process.cwd()}/apps/devContext`;
+class DevContext {
+  constructor () {
+    this.mother = new Mother();
+    this.back = new BackMaker();
+    const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+    this.MONGOC = new mongo(mongoinfo);
+    this.MONGOLOCALC = new mongo(mongolocalinfo);
+    this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
+    this.MONGOLOGC = new mongo(mongotestinfo);
+    this.address = require(`${process.cwd()}/apps/infoObj.js`);
+    this.dir = `${process.cwd()}/apps/devContext`;
+  }
 }
 
 DevContext.prototype.launching = async function () {
