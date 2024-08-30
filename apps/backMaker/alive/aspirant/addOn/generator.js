@@ -584,6 +584,70 @@ class DateParse extends Date {
 }
 
 /**
+ * @class Menu
+ * @extends String
+ * @description 주어진 값들 중 하나 또는 여러 개를 선택하여 관리하는 클래스입니다. Enum과 유사한 역할을 하며, 단일 선택 또는 다중 선택 모드를 지원합니다.
+ */
+class Menu extends String {
+
+  /**
+   * @constructor
+   * @param {string|string[]} value - 초기 값 또는 값들의 배열입니다.
+   * @param {string[]} items - 선택 가능한 값들의 배열입니다.
+   * @param {boolean} [multiple=false] - 다중 선택 모드 여부를 지정합니다. 기본값은 false입니다.
+   * @description 주어진 값이 유효한지 검사하고, 유효하다면 해당 값을 설정합니다. 다중 선택 모드인 경우, 유효한 값들만 필터링하여 저장합니다.
+   */
+  constructor(value, items, multiple = false) {
+    // value가 배열인 경우 빈 문자열로 초기화하고, 그렇지 않으면 해당 값을 상위 클래스(String)로 전달하여 초기화합니다.
+    if (Array.isArray(value)) {
+      super(''); // 다중 선택 모드에서 상위 클래스(String)를 빈 문자열로 초기화합니다.
+    } else {
+      super(value); // 단일 선택 모드에서 상위 클래스(String)를 주어진 값으로 초기화합니다.
+    }
+
+    this.value = null; // 단일 선택된 값을 저장하기 위한 속성입니다. 초기값은 null입니다.
+    this.values = null; // 다중 선택된 값들을 저장하기 위한 속성입니다. 초기값은 null입니다.
+    this.items = items; // 선택 가능한 값들의 목록을 items 속성에 저장합니다.
+
+    let temp; // 임시 배열을 선언합니다. 다중 선택 모드에서 사용됩니다.
+
+    // 단일 선택 모드인 경우
+    if (!multiple) {
+      // 주어진 값이 선택 가능한 값 목록에 포함되어 있는지 확인합니다.
+      if (items.includes(value)) {
+        this.value = value; // 포함되어 있다면 해당 값을 value 속성에 저장합니다.
+      } else {
+        this.value = "알 수 없음"; // 포함되어 있지 않다면 "알 수 없음"을 value 속성에 저장합니다.
+      }
+    }
+    // 다중 선택 모드인 경우
+    else {
+      temp = []; // 임시 배열을 빈 배열로 초기화합니다.
+      for (let i of value) { // 주어진 값 배열에서 각 값을 반복합니다.
+        if (items.includes(i)) { // 각 값이 선택 가능한 값 목록에 포함되어 있는지 확인합니다.
+          temp.push(i); // 포함되어 있다면 임시 배열에 추가합니다.
+        }
+      }
+      this.values = temp; // 필터링된 값을 values 속성에 저장합니다.
+    }
+  }
+
+  /**
+   * @method toNormal
+   * @description 현재 선택된 값을 반환합니다. 단일 선택 모드인 경우 단일 값을 반환하고, 다중 선택 모드인 경우 선택된 값들의 배열을 반환합니다.
+   * @returns {string|string[]} 선택된 값 또는 값들의 배열을 반환합니다.
+   */
+  toNormal() {
+    if (this.values === null) { // 다중 선택된 값이 없는 경우 (단일 선택 모드)
+      return this.value; // 단일 값을 반환합니다.
+    } else {
+      return this.values; // 다중 선택된 값들의 배열을 반환합니다.
+    }
+  }
+  
+}
+
+/**
  * @class Aspirant
  * 디자이너 신청자 정보를 처리하는 클래스입니다.
  * JSON 데이터를 받아 해당 정보를 처리하고, 필요한 데이터를 변환하거나 반환하는 메서드를 포함합니다.

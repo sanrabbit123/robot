@@ -67,10 +67,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    
+    const aspirants = await back.getAspirantsByQuery({});
 
-
-    
+    console.log(aspirants[10]);
+    console.log(aspirants[10].toNormal());
     
 
     
