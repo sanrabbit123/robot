@@ -72,8 +72,6 @@ DevContext.prototype.launching = async function () {
 
     
     
-
-    
     // const selfMongo = this.MONGOC;
     // const collection = "contents";
     // let rows;

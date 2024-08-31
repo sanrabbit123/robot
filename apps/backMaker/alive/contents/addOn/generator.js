@@ -386,139 +386,153 @@ const ContentsSampleData = {
   }
 }
 
+/**
+ * @description 홈리에종에서 발행한 인테리어 프로젝트 웹 콘텐츠의 스키마와 기본값을 정의하는 JSON 생성기 함수.
+ * 이 함수는 프로젝트 콘텐츠에 대한 기본 구조와 데이터 형식을 제공합니다.
+ */
 const ContentsMap = {
+  /**
+   * 메인 콘텐츠 구조를 정의하는 함수.
+   * @returns {Object} 기본 콘텐츠 구조를 담고 있는 객체를 반환합니다.
+   */
   main: function () {
     let dummy;
     dummy = {
       structure: {
-        conid: "",
-        desid: "",
-        cliid: "",
-        proid: "",
+        conid: "", // 콘텐츠 ID, 해당 콘텐츠를 고유하게 식별하는 문자열.
+        desid: "", // 디자인 ID, 해당 디자인을 고유하게 식별하는 문자열.
+        cliid: "", // 클라이언트 ID, 클라이언트를 고유하게 식별하는 문자열.
+        proid: "", // 프로젝트 ID, 해당 프로젝트를 고유하게 식별하는 문자열.
         contents: {
           portfolio: {
-            pid: "",
-            date: new Date(1800, 0, 1),
+            pid: "", // 포트폴리오 ID, 포트폴리오를 고유하게 식별하는 문자열.
+            date: new Date(1800, 0, 1), // 포트폴리오 생성 날짜, 기본값은 1800년 1월 1일.
             spaceInfo: {
-              space: "",
-              pyeong: 0,
-              region: "",
-              method: "",
-              budget: "3,000만원",
+              space: "", // 공간 이름 (예: 아파트 이름).
+              pyeong: 0, // 평수, 기본값은 0.
+              region: "", // 지역 정보 (예: 서울시 강남구).
+              method: "", // 리모델링 또는 홈스타일링 방법 (예: 홈스타일링).
+              budget: "3,000만원", // 예산, 기본값은 "3,000만원".
             },
             title: {
-              main: "",
-              sub: "",
+              main: "", // 메인 제목, 콘텐츠의 주제 또는 주요 제목.
+              sub: "", // 서브 제목, 추가적인 설명 또는 보조 제목.
             },
             color: {
-              main: "",
-              sub: "",
-              title: "",
+              main: "", // 메인 색상 코드 (예: "#FFFFFF").
+              sub: "", // 서브 색상 코드 (예: "#CCCCCC").
+              title: "", // 제목 색상 코드 (예: "#000000").
             },
             detailInfo: {
-              photodae: [],
+              photodae: [], // 포토데이 정보를 담은 배열.
               photosg: {
-                first: 0,
-                last: 0,
+                first: 0, // 첫 번째 사진의 인덱스, 기본값은 0.
+                last: 0, // 마지막 사진의 인덱스, 기본값은 0.
               },
-              slide: [],
-              tag: [],
-              service: "",
+              slide: [], // 슬라이드쇼에 포함될 사진 인덱스 배열.
+              tag: [], // 태그 목록 배열, 검색 또는 분류를 위한 키워드.
+              service: "", // 제공된 서비스의 유형 (예: "홈스타일링").
               sort: {
-                key8: 0,
-                key9: 0,
+                key8: 0, // 정렬을 위한 키 8, 기본값은 0.
+                key9: 0, // 정렬을 위한 키 9, 기본값은 0.
               },
               tendency: {
                 style: {
-                  modern: 0,
-                  classic: 0,
-                  natural: 0,
-                  mixmatch: 0,
-                  scandinavian: 0,
-                  vintage: 0,
-                  oriental: 0,
-                  exotic: 0,
+                  modern: 0, // 스타일 경향: 모던, 기본값은 0.
+                  classic: 0, // 스타일 경향: 클래식, 기본값은 0.
+                  natural: 0, // 스타일 경향: 내추럴, 기본값은 0.
+                  mixmatch: 0, // 스타일 경향: 믹스매치, 기본값은 0.
+                  scandinavian: 0, // 스타일 경향: 스칸디나비아, 기본값은 0.
+                  vintage: 0, // 스타일 경향: 빈티지, 기본값은 0.
+                  oriental: 0, // 스타일 경향: 오리엔탈, 기본값은 0.
+                  exotic: 0, // 스타일 경향: 이국적, 기본값은 0.
                 },
                 texture: {
-                  darkWood: 0,
-                  whiteWood: 0,
-                  coating: 0,
-                  metal: 0
+                  darkWood: 0, // 텍스처 경향: 다크 우드, 기본값은 0.
+                  whiteWood: 0, // 텍스처 경향: 화이트 우드, 기본값은 0.
+                  coating: 0, // 텍스처 경향: 코팅, 기본값은 0.
+                  metal: 0, // 텍스처 경향: 메탈, 기본값은 0.
                 },
                 color: {
-                  darkWood: 0,
-                  whiteWood: 0,
-                  highContrast: 0,
-                  vivid: 0,
-                  white: 0,
-                  mono: 0,
-                  bright: 0,
-                  dark: 0,
+                  darkWood: 0, // 색상 경향: 다크 우드, 기본값은 0.
+                  whiteWood: 0, // 색상 경향: 화이트 우드, 기본값은 0.
+                  highContrast: 0, // 색상 경향: 높은 대비, 기본값은 0.
+                  vivid: 0, // 색상 경향: 비비드, 기본값은 0.
+                  white: 0, // 색상 경향: 화이트, 기본값은 0.
+                  mono: 0, // 색상 경향: 모노, 기본값은 0.
+                  bright: 0, // 색상 경향: 밝은 색, 기본값은 0.
+                  dark: 0, // 색상 경향: 어두운 색, 기본값은 0.
                 },
                 density: {
-                  maximun: 0,
-                  minimum: 0,
+                  maximun: 0, // 밀도 경향: 최대, 기본값은 0.
+                  minimum: 0, // 밀도 경향: 최소, 기본값은 0.
                 }
               },
             },
             contents: {
-              suggestion: "Designer's\nSuggestion",
-              detail: [],
+              suggestion: "Designer's\nSuggestion", // 디자이너의 제안, 기본값은 "Designer's Suggestion".
+              detail: [], // 세부 내용 배열, 각 내용은 객체 형태로 구성.
             }
           },
           review: {
-            rid: "",
-            date: new Date(1800, 0, 1),
+            rid: "", // 리뷰 ID, 해당 리뷰를 고유하게 식별하는 문자열.
+            date: new Date(1800, 0, 1), // 리뷰 작성 날짜, 기본값은 1800년 1월 1일.
             title: {
-              main: "",
-              sub: "",
+              main: "", // 리뷰의 메인 제목.
+              sub: "", // 리뷰의 서브 제목.
             },
             detailInfo: {
-              photodae: [],
-              order: 0,
+              photodae: [], // 포토데이 정보 배열.
+              order: 0, // 정렬 순서, 기본값은 0.
             },
             contents: {
-              detail: [],
+              detail: [], // 리뷰 내용 배열, 각 내용은 객체 형태로 구성.
             }
           }
         },
         photos: {
-          first: 0,
-          last: 0,
-          detail: [],
+          first: 0, // 첫 번째 사진의 인덱스, 기본값은 0.
+          last: 0, // 마지막 사진의 인덱스, 기본값은 0.
+          detail: [], // 사진 세부 정보 배열, 각 사진은 객체 형태로 구성.
         },
         service: {
-          serid: "s2011_aa02s",
-          xValue: "B",
-          online: false,
+          serid: "s2011_aa02s", // 서비스 ID, 기본값은 "s2011_aa02s".
+          xValue: "B", // 서비스 레벨 또는 유형, 기본값은 "B".
+          online: false, // 온라인 여부, 기본값은 false (오프라인).
         },
       }
     };
-    return dummy;
+    return dummy; // 기본 구조가 설정된 객체를 반환.
   },
+
+  /**
+   * 주어진 주제에 따라 서브 콘텐츠 구조를 정의하는 함수.
+   * @param {string} subject - 서브 콘텐츠의 주제 (예: "contents.portfolio.contents.detail").
+   * @returns {Object|null} 주제에 맞는 기본 서브 콘텐츠 구조를 반환. 주제가 없으면 null 반환.
+   */
   sub: function (subject) {
     let dummy = null;
     if (subject === "contents.portfolio.contents.detail") {
       dummy = {
-        photo: [],
-        title: "",
-        contents: "",
+        photo: [], // 사진 배열, 해당 포트폴리오 내용에 포함될 사진.
+        title: "", // 세부 내용의 제목.
+        contents: "", // 세부 내용의 본문.
       };
     } else if (subject === "contents.review.contents.detail") {
       dummy = {
-        type: "",
-        photos: [],
+        type: "", // 리뷰 콘텐츠 유형.
+        photos: [], // 사진 배열, 리뷰에 포함될 사진.
         contents: [
           {
-            question: "",
-            answer: "",
+            question: "", // Q&A 형식의 질문.
+            answer: "", // Q&A 형식의 답변.
           }
         ]
       };
     } else if (subject === "photos.detail") {
-      dummy = { index: 0, gs: 'g' };
+      dummy = { index: 0, gs: 'g' }; // 사진의 인덱스와 그레이드 정보, 기본값으로 인덱스 0, 그레이드 "g".
     }
-    return dummy;
+    return dummy; // 서브 콘텐츠 구조가 설정된 객체를 반환.
   }
 }
 
@@ -738,801 +752,1394 @@ class Menu extends String {
   
 }
 
+/**
+ * Contents 클래스는 홈리에종에서 발행한 인테리어 프로젝트 웹 콘텐츠 데이터를 다루는 클래스입니다.
+ * 이 클래스는 JSON 데이터를 기반으로 객체를 생성하고, 다양한 속성 및 메서드를 통해 데이터에 접근하고 조작할 수 있도록 구성되어 있습니다.
+ */
 class Contents {
-  constructor (json) {
+  /**
+   * 생성자는 주어진 JSON 데이터를 기반으로 Contents 객체를 초기화합니다.
+   * @param {Object} json - 콘텐츠 데이터를 담고 있는 JSON 객체
+   */
+  constructor(json) {
+    /** @property {string} conid - 콘텐츠 ID */
     this.conid = json.conid;
+    /** @property {string} desid - 디자이너 ID */
     this.desid = json.desid;
+    /** @property {string} cliid - 클라이언트 ID */
     this.cliid = json.cliid;
+    /** @property {string} proid - 프로젝트 ID */
     this.proid = json.proid;
+    /** @property {Object} contents - 콘텐츠 상세 정보 */
     this.contents = new this.#ContentsTong(json.contents);
+    /** @property {Object} photos - 사진 정보 */
     this.photos = new this.#PhotoTong(json.photos);
+    /** @property {Object} service - 서비스 정보 */
     this.service = new this.#Service(json.service);
   }
 
+  /**
+   * #Service 클래스는 Contents 클래스 내부에서 사용되는 비공개(Private) 클래스입니다.
+   * 서비스에 대한 정보를 처리하고, 이를 일반 객체 형태로 변환하는 메서드를 제공합니다.
+   */
   #Service = class {
-    constructor (json) {
+    /**
+     * 생성자는 주어진 JSON 데이터를 기반으로 #Service 객체를 초기화합니다.
+     * @param {Object} json - 서비스 정보를 담고 있는 JSON 객체
+     */
+    constructor(json) {
+      /** @property {string} serid - 서비스 ID */
       this.serid = json.serid;
+      /** @property {string} xValue - 서비스의 xValue 속성 */
       this.xValue = json.xValue;
+      /** @property {boolean} online - 서비스의 온라인 여부 (Boolean으로 변환) */
       this.online = Boolean(json.online);
     }
 
-    toNormal () {
+    /**
+     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+     * @returns {Object} 변환된 객체
+     */
+    toNormal() {
+      /** 변환된 데이터를 저장할 빈 객체를 생성 */
       let obj = {};
+      /** @property {string} obj.serid - 변환된 객체의 서비스 ID */
       obj.serid = this.serid;
+      /** @property {string} obj.xValue - 변환된 객체의 xValue */
       obj.xValue = this.xValue;
+      /** @property {boolean} obj.online - 변환된 객체의 온라인 여부 */
       obj.online = this.online;
+      /** @returns {Object} 변환된 객체를 반환 */
       return obj;
     }
   }
 
+  /**
+   * #PhotoTong 클래스는 Contents 클래스 내부에서 사용되는 비공개(Private) 클래스입니다.
+   * 프로젝트 내 사진들의 정보를 처리하고, 이를 일반 객체 형태로 변환하는 메서드를 제공합니다.
+   */
   #PhotoTong = class {
-    constructor (json) {
+    /**
+     * 생성자는 주어진 JSON 데이터를 기반으로 #PhotoTong 객체를 초기화합니다.
+     * @param {Object} json - 사진 관련 정보를 담고 있는 JSON 객체
+     */
+    constructor(json) {
+      /** @property {number} first - 첫 번째 사진의 인덱스 */
       this.first = json.first;
+      /** @property {number} last - 마지막 사진의 인덱스 */
       this.last = json.last;
+
+      // #PhotoDetails 클래스의 인스턴스를 생성하여 배열로 초기화
       let arr, temp;
       arr = new this.#PhotoDetails();
+      
+      // json.detail 배열의 각 항목을 #PhotoDetail 인스턴스로 변환하여 arr 배열에 추가
       for (let i of json.detail) {
         temp = new this.#PhotoDetail(i);
         arr.push(temp);
       }
+      
+      /** @property {Array} detail - 사진 상세 정보 객체들을 담고 있는 배열 */
       this.detail = arr;
     }
-  
-    toNormal () {
+
+    /**
+     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+     * @returns {Object} 변환된 객체
+     */
+    toNormal() {
+      /** 변환된 데이터를 저장할 빈 객체를 생성 */
       let obj = {};
+      /** @property {number} obj.first - 변환된 객체의 첫 번째 사진 인덱스 */
       obj.first = Number(this.first);
+      /** @property {number} obj.last - 변환된 객체의 마지막 사진 인덱스 */
       obj.last = Number(this.last);
+      /** @property {Array} obj.detail - 변환된 객체의 사진 상세 정보 배열 */
       obj.detail = this.detail.toNormal();
+      
+      /** @returns {Object} 변환된 객체를 반환 */
       return obj;
     }
-  
+
+    /**
+     * #PhotoDetail 클래스는 각 사진의 세부 정보를 관리하는 비공개 클래스입니다.
+     */
     #PhotoDetail = class {
-      constructor (json) {
+      /**
+       * 생성자는 주어진 JSON 데이터를 기반으로 #PhotoDetail 객체를 초기화합니다.
+       * @param {Object} json - 사진 세부 정보를 담고 있는 JSON 객체
+       */
+      constructor(json) {
+        /** @property {number} index - 사진의 인덱스 */
         this.index = json.index;
+        /** @property {string} gs - 사진의 'gs' 속성 (예: 'g' 또는 's') */
         this.gs = json.gs;
       }
-    
-      toNormal () {
+      
+      /**
+       * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+       * @returns {Object} 변환된 객체
+       */
+      toNormal() {
+        /** 변환된 데이터를 저장할 빈 객체를 생성 */
         let obj = {};
+        /** @property {number} obj.index - 변환된 객체의 사진 인덱스 */
         obj.index = Number(this.index);
+        /** @property {string} obj.gs - 변환된 객체의 'gs' 속성 */
         obj.gs = this.gs;
+        
+        /** @returns {Object} 변환된 객체를 반환 */
         return obj;
       }
     }
     
+    /**
+     * #PhotoDetails 클래스는 여러 사진의 세부 정보를 관리하는 배열을 확장한 비공개 클래스입니다.
+     * 이 클래스는 배열로 확장되어 배열의 기능을 유지하면서 추가적인 메서드를 제공합니다.
+     */
     #PhotoDetails = class extends Array {
+      /**
+       * 배열에 포함된 모든 #PhotoDetail 객체를 일반적인 객체 형태로 변환하여 반환합니다.
+       * @returns {Array} 변환된 객체들의 배열
+       */
       toNormal() {
+        /** 변환된 객체들을 저장할 배열을 생성 */
         let arr = [];
+        // 배열의 각 요소를 toNormal 메서드를 통해 변환하여 arr 배열에 추가
         for (let i of this) {
           arr.push(i.toNormal());
         }
+        
+        /** @returns {Array} 변환된 객체들의 배열을 반환 */
         return arr;
       }
     }
   }
 
+  /**
+   * #ContentsTong 클래스는 Contents 클래스 내부에서 사용되는 비공개(Private) 클래스입니다.
+   * 포트폴리오와 리뷰 관련 데이터를 처리하고, 이를 일반 객체 형태로 변환하는 메서드를 제공합니다.
+   */
   #ContentsTong = class {
-    constructor (json) {
-      this.portfolio = new this.#Porfolio(json.portfolio);
-      this.review = new this.#Review(json.review);
-    }
-  
-    toNormal () {
-      let obj = {};
-      obj.portfolio = this.portfolio.toNormal();
-      obj.review = this.review.toNormal();
-      return obj;
+    /**
+     * 생성자는 주어진 JSON 데이터를 기반으로 #ContentsTong 객체를 초기화합니다.
+     * @param {Object} json - 포트폴리오와 리뷰 정보를 담고 있는 JSON 객체
+     */
+    constructor(json) {
+        /** 
+         * 포트폴리오 데이터를 관리하는 #Porfolio 클래스의 인스턴스를 생성합니다.
+         * @property {Object} portfolio 
+         */
+        this.portfolio = new this.#Porfolio(json.portfolio);
+        /** 
+         * 리뷰 데이터를 관리하는 #Review 클래스의 인스턴스를 생성합니다.
+         * @property {Object} review 
+         */
+        this.review = new this.#Review(json.review);
     }
 
-    #Review = class {
-      constructor (json) {
-        this.rid = json.rid;
-        this.date = new DateParse(json.date);
-        this.title = new this.#Title(json.title);
-        this.detailInfo = new this.#ReviewDetailInfo(json.detailInfo);
-        this.contents = new this.#ReviewContents(json.contents);
-      }
-    
-      toNormal () {
+    /**
+     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+     * @returns {Object} 변환된 객체
+     */
+    toNormal() {
         let obj = {};
-        obj.rid = this.rid;
-        obj.date = this.date.toNormal();
-        obj.title = this.title.toNormal();
-        obj.detailInfo = this.detailInfo.toNormal();
-        obj.contents = this.contents.toNormal();
+        /** 포트폴리오 데이터를 변환하여 일반 객체로 반환합니다. */
+        obj.portfolio = this.portfolio.toNormal();
+        /** 리뷰 데이터를 변환하여 일반 객체로 반환합니다. */
+        obj.review = this.review.toNormal();
         return obj;
-      }
-    
-      #ReviewDetailInfo = class {
-        constructor (json) {
-          let arr0;
-          arr0 = new this.#Photodae();
-          for (let i of json.photodae) {
-            arr0.push(i);
-          }
-          this.photodae = arr0;
-          this.order = json.order;
+    }
+
+    /**
+     * #Review 클래스는 리뷰 데이터를 관리하는 비공개 클래스입니다.
+     */
+    #Review = class {
+        /**
+         * 생성자는 주어진 JSON 데이터를 기반으로 #Review 객체를 초기화합니다.
+         * @param {Object} json - 리뷰 정보를 담고 있는 JSON 객체
+         */
+        constructor(json) {
+            /** @property {string} rid - 리뷰 ID */
+            this.rid = json.rid;
+            /** @property {Object} date - 리뷰 작성 날짜를 관리하는 DateParse 객체 */
+            this.date = new DateParse(json.date);
+            /** @property {Object} title - 리뷰 제목을 관리하는 #Title 클래스의 인스턴스 */
+            this.title = new this.#Title(json.title);
+            /** @property {Object} detailInfo - 리뷰 상세 정보를 관리하는 #ReviewDetailInfo 클래스의 인스턴스 */
+            this.detailInfo = new this.#ReviewDetailInfo(json.detailInfo);
+            /** @property {Object} contents - 리뷰 내용을 관리하는 #ReviewContents 클래스의 인스턴스 */
+            this.contents = new this.#ReviewContents(json.contents);
         }
-      
-        toNormal () {
-          let obj = {};
-          obj.photodae = this.photodae.toNormal();
-          obj.order = this.order;
-          return obj;
-        }
-      
-        #Photodae = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i);
-            }
-            return arr;
-          }
-        }
-      }
-      
-      #ReviewContents = class {
-        constructor (json) {
-          let temp, arr;
-          arr = new this.#ReviewContentsDetails();
-          for (let i of json.detail) {
-            temp = new this.#ReviewContentsDetail(i);
-            arr.push(temp);
-          }
-          this.detail = arr;
-        }
-      
-        toNormal () {
-          let obj = {};
-          obj.detail = this.detail.toNormal();
-          return obj;
-        }
-      
-        #ReviewContentsDetail = class {
-          constructor (json) {
-            let arr0, arr1;
-            let temp;
-            arr0 = new this.#Photos();
-            arr1 = new this.#QuestionAnswers();
-            for (let i of json.photos) {
-              arr0.push(i);
-            }
-            for (let i of json.contents) {
-              temp = new this.#QuestionAnswer(i);
-              arr1.push(temp);
-            }
-            this.type = json.type;
-            this.photos = arr0;
-            this.contents = arr1;
-          }
-        
-          toNormal () {
+
+        /**
+         * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+         * @returns {Object} 변환된 객체
+         */
+        toNormal() {
             let obj = {};
-            obj.type = this.type;
-            obj.photos = this.photos.toNormal();
+            obj.rid = this.rid;
+            obj.date = this.date.toNormal();
+            obj.title = this.title.toNormal();
+            obj.detailInfo = this.detailInfo.toNormal();
             obj.contents = this.contents.toNormal();
             return obj;
-          }
-        
-          #QuestionAnswer = class {
-            constructor (json) {
-              this.question = json.question;
-              this.answer = json.answer;
+        }
+
+        /**
+         * #ReviewDetailInfo 클래스는 리뷰의 상세 정보를 관리하는 비공개 클래스입니다.
+         */
+        #ReviewDetailInfo = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #ReviewDetailInfo 객체를 초기화합니다.
+             * @param {Object} json - 리뷰의 상세 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                let arr0 = new this.#Photodae();
+                for (let i of json.photodae) {
+                    arr0.push(i);
+                }
+                /** @property {Array} photodae - 사진 ID 목록을 저장하는 배열 */
+                this.photodae = arr0;
+                /** @property {number} order - 리뷰의 순서 */
+                this.order = json.order;
             }
-          
-            toNormal () {
-              let obj = {};
-              obj.question = this.question;
-              obj.answer = this.answer;
-              return obj;
-            }
-          }
-          
-          #Photos = class extends Array {
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
             toNormal() {
-              let arr = [];
-              for (let i of this) {
-                arr.push(i);
-              }
-              return arr;
+                let obj = {};
+                obj.photodae = this.photodae.toNormal();
+                obj.order = this.order;
+                return obj;
             }
-          }
-          
-          #QuestionAnswers = class extends Array {
+
+            /**
+             * #Photodae 클래스는 사진 ID 목록을 관리하는 비공개 배열 확장 클래스입니다.
+             */
+            #Photodae = class extends Array {
+                /**
+                 * 배열에 포함된 모든 값을 그대로 반환합니다.
+                 * @returns {Array} 변환된 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i);
+                    }
+                    return arr;
+                }
+            }
+        }
+
+        /**
+         * #ReviewContents 클래스는 리뷰의 콘텐츠를 관리하는 비공개 클래스입니다.
+         */
+        #ReviewContents = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #ReviewContents 객체를 초기화합니다.
+             * @param {Object} json - 리뷰의 콘텐츠 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                let arr = new this.#ReviewContentsDetails();
+                for (let i of json.detail) {
+                    let temp = new this.#ReviewContentsDetail(i);
+                    arr.push(temp);
+                }
+                /** @property {Array} detail - 리뷰 세부 정보를 담은 배열 */
+                this.detail = arr;
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
             toNormal() {
-              let arr = [];
-              for (let i of this) {
-                arr.push(i.toNormal());
-              }
-              return arr;
+                let obj = {};
+                obj.detail = this.detail.toNormal();
+                return obj;
             }
-          }
-        }
-        
-        #ReviewContentsDetails = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i.toNormal());
+
+            /**
+             * #ReviewContentsDetail 클래스는 리뷰의 각 세부 항목을 관리하는 비공개 클래스입니다.
+             */
+            #ReviewContentsDetail = class {
+                /**
+                 * 생성자는 주어진 JSON 데이터를 기반으로 #ReviewContentsDetail 객체를 초기화합니다.
+                 * @param {Object} json - 리뷰 세부 항목 정보를 담고 있는 JSON 객체
+                 */
+                constructor(json) {
+                    let arr0 = new this.#Photos();
+                    let arr1 = new this.#QuestionAnswers();
+                    for (let i of json.photos) {
+                        arr0.push(i);
+                    }
+                    for (let i of json.contents) {
+                        let temp = new this.#QuestionAnswer(i);
+                        arr1.push(temp);
+                    }
+                    /** @property {string} type - 리뷰 세부 항목의 타입 */
+                    this.type = json.type;
+                    /** @property {Array} photos - 사진 ID 배열 */
+                    this.photos = arr0;
+                    /** @property {Array} contents - 질문과 답변을 담은 배열 */
+                    this.contents = arr1;
+                }
+
+                /**
+                 * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                 * @returns {Object} 변환된 객체
+                 */
+                toNormal() {
+                    let obj = {};
+                    obj.type = this.type;
+                    obj.photos = this.photos.toNormal();
+                    obj.contents = this.contents.toNormal();
+                    return obj;
+                }
+
+                /**
+                 * #QuestionAnswer 클래스는 리뷰 항목의 질문과 답변을 관리하는 비공개 클래스입니다.
+                 */
+                #QuestionAnswer = class {
+                    /**
+                     * 생성자는 주어진 JSON 데이터를 기반으로 #QuestionAnswer 객체를 초기화합니다.
+                     * @param {Object} json - 질문과 답변 정보를 담고 있는 JSON 객체
+                     */
+                    constructor(json) {
+                        /** @property {string} question - 질문 내용 */
+                        this.question = json.question;
+                        /** @property {string} answer - 답변 내용 */
+                        this.answer = json.answer;
+                    }
+
+                    /**
+                     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                     * @returns {Object} 변환된 객체
+                     */
+                    toNormal() {
+                        let obj = {};
+                        obj.question = this.question;
+                        obj.answer = this.answer;
+                        return obj;
+                    }
+                }
+
+                /**
+                 * #Photos 클래스는 사진 ID 배열을 관리하는 비공개 배열 확장 클래스입니다.
+                 */
+                #Photos = class extends Array {
+                    /**
+                     * 배열에 포함된 모든 값을 그대로 반환합니다.
+                     * @returns {Array} 변환된 배열
+                     */
+                    toNormal() {
+                        let arr = [];
+                        for (let i of this) {
+                            arr.push(i);
+                        }
+                        return arr;
+                    }
+                }
+
+                /**
+                 * #QuestionAnswers 클래스는 질문과 답변의 배열을 관리하는 비공개 배열 확장 클래스입니다.
+                 */
+                #QuestionAnswers = class extends Array {
+                    /**
+                     * 배열에 포함된 모든 #QuestionAnswer 객체를 일반적인 객체 형태로 변환하여 반환합니다.
+                     * @returns {Array} 변환된 객체들의 배열
+                     */
+                    toNormal() {
+                        let arr = [];
+                        for (let i of this) {
+                            arr.push(i.toNormal());
+                        }
+                        return arr;
+                    }
+                }
             }
-            return arr;
-          }
+
+            /**
+             * #ReviewContentsDetails 클래스는 리뷰의 각 세부 항목을 관리하는 배열을 확장한 비공개 클래스입니다.
+             */
+            #ReviewContentsDetails = class extends Array {
+                /**
+                 * 배열에 포함된 모든 #ReviewContentsDetail 객체를 일반적인 객체 형태로 변환하여 반환합니다.
+                 * @returns {Array} 변환된 객체들의 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i.toNormal());
+                    }
+                    return arr;
+                }
+            }
         }
-      }
-      
-      #Title = class {
-        constructor (json) {
-          this.main = json.main;
-          this.sub = json.sub;
+
+        /**
+         * #Title 클래스는 제목 정보를 관리하는 비공개 클래스입니다.
+         */
+        #Title = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #Title 객체를 초기화합니다.
+             * @param {Object} json - 제목 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                /** @property {string} main - 메인 제목 */
+                this.main = json.main;
+                /** @property {string} sub - 서브 제목 */
+                this.sub = json.sub;
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.main = this.main;
+                obj.sub = this.sub;
+                return obj;
+            }
+
+            /**
+             * 메인 및 서브 제목의 다양한 형태를 반환합니다.
+             * @returns {Object} 제목의 다양한 케이스를 담은 객체
+             */
+            getAllCases() {
+                let obj = {};
+                obj.main = [];
+                obj.main.push(this.main);
+                obj.main.push(this.main.replace(/, /, "\n"));
+
+                obj.sub = [];
+                obj.sub.push(this.sub.replace(/, /, " "));
+                obj.sub.push(this.sub.replace(/, /, "\n"));
+
+                return obj;
+            }
         }
-      
-        toNormal () {
-          let obj = {};
-          obj.main = this.main;
-          obj.sub = this.sub;
-          return obj;
-        }
-        
-        getAllCases () {
-          let obj = {};
-          obj.main = [];
-          obj.main.push(this.main);
-          obj.main.push(this.main.replace(/, /, "\n"));
-          obj.sub = [];
-          obj.sub.push(this.sub.replace(/, /, " "));
-          obj.sub.push(this.sub.replace(/, /, "\n"));
-          return obj;
-        }
-      }
     }
 
+    /**
+     * #Porfolio 클래스는 포트폴리오 데이터를 관리하는 비공개 클래스입니다.
+     */
     #Porfolio = class {
-      constructor (json) {
-        this.pid = json.pid;
-        this.date = new DateParse(json.date);
-        this.spaceInfo = new this.#SpaceInfo(json.spaceInfo);
-        this.title = new this.#Title(json.title);
-        this.color = new this.#Color(json.color);
-        this.detailInfo = new this.#PorfolioDetailInfo(json.detailInfo);
-        this.contents = new this.#PorfolioContents(json.contents);
-      }
-    
-      toNormal () {
-        let obj = {};
-        obj.pid = this.pid;
-        obj.date = this.date.toNormal();
-        obj.spaceInfo = this.spaceInfo.toNormal();
-        obj.title = this.title.toNormal();
-        obj.color = this.color.toNormal();
-        obj.detailInfo = this.detailInfo.toNormal();
-        obj.contents = this.contents.toNormal();
-        return obj;
-      }
-      
-      #PorfolioContents = class {
-        constructor (json) {
-          let temp;
-          let arr = new this.#PorfolioContentsDetails();
-          for (let i of json.detail) {
-            temp = new this.#PorfolioContentsDetail(i);
-            arr.push(temp);
-          }
-          this.suggestion = json.suggestion;
-          this.detail = arr;
+        /**
+         * 생성자는 주어진 JSON 데이터를 기반으로 #Porfolio 객체를 초기화합니다.
+         * @param {Object} json - 포트폴리오 정보를 담고 있는 JSON 객체
+         */
+        constructor(json) {
+            /** @property {string} pid - 포트폴리오 ID */
+            this.pid = json.pid;
+            /** @property {Object} date - 포트폴리오 날짜를 관리하는 DateParse 객체 */
+            this.date = new DateParse(json.date);
+            /** @property {Object} spaceInfo - 공간 정보를 관리하는 #SpaceInfo 클래스의 인스턴스 */
+            this.spaceInfo = new this.#SpaceInfo(json.spaceInfo);
+            /** @property {Object} title - 포트폴리오 제목을 관리하는 #Title 클래스의 인스턴스 */
+            this.title = new this.#Title(json.title);
+            /** @property {Object} color - 포트폴리오 색상 정보를 관리하는 #Color 클래스의 인스턴스 */
+            this.color = new this.#Color(json.color);
+            /** @property {Object} detailInfo - 포트폴리오 상세 정보를 관리하는 #PorfolioDetailInfo 클래스의 인스턴스 */
+            this.detailInfo = new this.#PorfolioDetailInfo(json.detailInfo);
+            /** @property {Object} contents - 포트폴리오 콘텐츠를 관리하는 #PorfolioContents 클래스의 인스턴스 */
+            this.contents = new this.#PorfolioContents(json.contents);
         }
-      
-        toNormal () {
-          let obj = {};
-          obj.suggestion = this.suggestion;
-          obj.detail = this.detail.toNormal();
-          return obj;
-        }
-      
-        keyMatrix () {
-          return this.detail.keyMatrix();
-        }
-      
-        #PorfolioContentsDetail = class {
-          constructor (json) {
-            this.photo = json.photo;
-            this.title = json.title;
-            this.contents = json.contents;
-          }
-        
-          toNormal () {
+
+        /**
+         * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+         * @returns {Object} 변환된 객체
+         */
+        toNormal() {
             let obj = {};
-            obj.photo = this.photo;
-            obj.title = this.title;
-            obj.contents = this.contents;
-            return obj;
-          }
-        }
-        
-        #PorfolioContentsDetails = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i.toNormal());
-            }
-            return arr;
-          }
-        
-          keyMatrix() {
-            let result = {};
-            let arr = [];
-            let tempArr;
-            result.rooms = [];
-            for (let i = 1; i < this.length; i++) {
-              tempArr = this[i].photo;
-              arr.push(tempArr);
-              result.rooms.push(this[i].title);
-            }
-            result.photos = arr;
-            return result;
-          }
-        }
-      }
-      
-      #PorfolioDetailInfo = class {
-        constructor (json) {
-          let arr0, arr1, arr2;
-          arr0 = new this.#Photodae();
-          arr1 = new this.#Slide();
-          arr2 = new this.#Tag();
-          for (let i of json.photodae) {
-            arr0.push(i);
-          }
-          for (let i of json.slide) {
-            arr1.push(i);
-          }
-          for (let i of json.tag) {
-            arr2.push(i);
-          }
-          this.photodae = arr0;
-          this.photosg = new this.#Photosg(json.photosg);
-          this.slide = arr1;
-          this.tag = arr2;
-          this.service = json.service;
-          this.sort = new this.#Sort(json.sort);
-          this.tendency = new this.#StylingTendency(json.tendency);
-        }
-      
-        toNormal () {
-          let obj = {};
-          obj.photodae = this.photodae.toNormal();
-          obj.photosg = this.photosg.toNormal();
-          obj.slide = this.slide.toNormal();
-          obj.tag = this.tag.toNormal();
-          obj.service = this.service;
-          obj.sort = this.sort.toNormal();
-          obj.tendency = this.tendency.toNormal();
-          return obj;
-        }
-      
-        #Slide = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i);
-            }
-            return arr;
-          }
-        }
-      
-        #Photodae = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i);
-            }
-            return arr;
-          }
-        }
-      
-        #Tag = class extends Array {
-          toNormal() {
-            let arr = [];
-            for (let i of this) {
-              arr.push(i);
-            }
-            return arr;
-          }
-        }
-      
-        #Photosg = class {
-          constructor (json) {
-            this.first = Number(json.first);
-            this.last = Number(json.last);
-          }
-          toNormal () {
-            let obj = {};
-            obj.first = Number(this.first);
-            obj.last = Number(this.last);
-            return obj;
-          }
-        }
-        
-        #Sort = class {
-          constructor (json) {
-            this.key8 = json.key8;
-            this.key9 = json.key9;
-          }
-          toNormal () {
-            let obj = {};
-            obj.key8 = this.key8;
-            obj.key9 = this.key9;
-            return obj;
-          }
-        }
-      
-        #StylingTendency = class {
-          constructor (json) {
-            this.style = new this.#TendencyStyle(json.style);
-            this.texture = new this.#TendencyTexture(json.texture);
-            this.color = new this.#TendencyColor(json.color);
-            this.density = new this.#TendencyDensity(json.density);
-          }
-        
-          toNormal () {
-            let obj = {};
-            obj.style = this.style.toNormal();
-            obj.texture = this.texture.toNormal();
+            obj.pid = this.pid;
+            obj.date = this.date.toNormal();
+            obj.spaceInfo = this.spaceInfo.toNormal();
+            obj.title = this.title.toNormal();
             obj.color = this.color.toNormal();
-            obj.density = this.density.toNormal();
+            obj.detailInfo = this.detailInfo.toNormal();
+            obj.contents = this.contents.toNormal();
             return obj;
-          }
-          
-          toMatrix (keymode = false) {
-            const keys = [ "style", "texture", "color", "density" ];
-            const keyArr = [
-              [
-                "modern",
-                "classic",
-                "natural",
-                "mixmatch",
-                "scandinavian",
-                "vintage",
-                "oriental",
-                "exotic",
-              ],
-              [
-                "darkWood",
-                "whiteWood",
-                "coating",
-                "metal",
-              ],
-              [
-                "darkWood",
-                "whiteWood",
-                "highContrast",
-                "vivid",
-                "white",
-                "mono",
-                "bright",
-                "dark",
-              ],
-              [
-                "maximun",
-                "minimum",
-              ]
-            ];
-            let result;
-            result = [];
-            for (let i = 0; i < keys.length; i++) {
-              for (let key of keyArr[i]) {
-                result.push(this[keys[i]][key]);
-              }
-            }
-            if (keymode) {
-              return keyArr.flat();
-            } else {
-              return result;
-            }
-          }
-        
-          #TendencyDensity = class {
-            constructor (json) {
-              this.maximun = json.maximun;
-              this.minimum = json.minimum;
-            }
-          
-            toNormal () {
-              let obj = {};
-              obj.maximun = this.maximun;
-              obj.minimum = this.minimum;
-              return obj;
-            }
-          }
-          
-          #TendencyColor = class {
-            constructor (json) {
-              this.darkWood = json.darkWood;
-              this.whiteWood = json.whiteWood;
-              this.highContrast = json.highContrast;
-              this.vivid = json.vivid;
-              this.white = json.white;
-              this.mono = json.mono;
-              this.bright = json.bright;
-              this.dark = json.dark;
-            }
-          
-            toNormal () {
-              let obj = {};
-              obj.darkWood = this.darkWood;
-              obj.whiteWood = this.whiteWood;
-              obj.highContrast = this.highContrast;
-              obj.vivid = this.vivid;
-              obj.white = this.white;
-              obj.mono = this.mono;
-              obj.bright = this.bright;
-              obj.dark = this.dark;
-              return obj;
-            }
-          }
-          
-          #TendencyTexture = class {
-            constructor (json) {
-              this.darkWood = json.darkWood;
-              this.whiteWood = json.whiteWood;
-              this.coating = json.coating;
-              this.metal = json.metal;
-            }
-          
-            toNormal () {
-              let obj = {};
-              obj.darkWood = this.darkWood;
-              obj.whiteWood = this.whiteWood;
-              obj.coating = this.coating;
-              obj.metal = this.metal;
-              return obj;
-            }
-          }
-          
-          #TendencyStyle = class {
-            constructor (json) {
-              this.modern = json.modern;
-              this.classic = json.classic;
-              this.natural = json.natural;
-              this.mixmatch = json.mixmatch;
-              this.scandinavian = json.scandinavian;
-              this.vintage = json.vintage;
-              this.oriental = json.oriental;
-              this.exotic = json.exotic;
-            }
-          
-            toNormal () {
-              let obj = {};
-              obj.modern = this.modern;
-              obj.classic = this.classic;
-              obj.natural = this.natural;
-              obj.mixmatch = this.mixmatch;
-              obj.scandinavian = this.scandinavian;
-              obj.vintage = this.vintage;
-              obj.oriental = this.oriental;
-              obj.exotic = this.exotic;
-              return obj;
-            }
-          }
         }
-      
-      }
-      
-      #SpaceInfo = class {
-        constructor (json) {
-          this.space = json.space;
-          this.pyeong = Number(json.pyeong);
-          this.region = json.region;
-          this.method = json.method;
-          this.budget = json.budget;
-        }
-      
-        toNormal () {
-          let obj = {};
-          obj.space = this.space;
-          obj.pyeong = Number(this.pyeong);
-          obj.region = this.region;
-          obj.method = this.method;
-          obj.budget = this.budget;
-          return obj;
-        }
-      }
-      
-      #Title = class {
-        constructor (json) {
-          this.main = json.main;
-          this.sub = json.sub;
-        }
-        toNormal () {
-          let obj = {};
-          obj.main = this.main;
-          obj.sub = this.sub;
-        
-          return obj;
-        }
-        getAllCases () {
-          let obj = {};
-          let tempArr, tempArr2, temp, tempResult;
-          let pyIndex;
-        
-          obj.main = [];
-          obj.main.push(this.main);
-          obj.main.push(this.main.replace(/, /, "\n"));
-        
-          tempArr = this.main.split(", ");
-          obj.main.push(tempArr[1]);
-        
-          tempArr2 = tempArr[1].split(" ");
-          pyIndex = 0;
-          for (let i = 0; i < tempArr2.length; i++) {
-            if (/py/gi.test(tempArr2[i])) {
-              pyIndex = i;
+
+        /**
+         * #PorfolioContents 클래스는 포트폴리오의 콘텐츠를 관리하는 비공개 클래스입니다.
+         */
+        #PorfolioContents = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #PorfolioContents 객체를 초기화합니다.
+             * @param {Object} json - 포트폴리오의 콘텐츠 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                let temp;
+                let arr = new this.#PorfolioContentsDetails();
+                for (let i of json.detail) {
+                    temp = new this.#PorfolioContentsDetail(i);
+                    arr.push(temp);
+                }
+                /** @property {string} suggestion - 디자이너의 제안 내용 */
+                this.suggestion = json.suggestion;
+                /** @property {Array} detail - 포트폴리오 세부 정보를 담은 배열 */
+                this.detail = arr;
             }
-          }
-        
-          tempResult = '';
-          temp = '';
-          for (let i = 0; i < pyIndex; i++) {
-            temp += tempArr2[i] + ' ';
-          }
-          tempResult = temp.slice(0, -1);
-        
-          temp = '';
-          for (let i = pyIndex; i < tempArr2.length; i++) {
-            temp += tempArr2[i] + ' ';
-          }
-          tempResult = tempResult + "\n" + temp.slice(0, -1);
-          obj.main.push(tempResult);
-        
-          obj.sub = [];
-          obj.sub.push(this.sub);
-          obj.sub.push(this.sub.replace(/, /, "\n"));
-        
-          return obj;
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.suggestion = this.suggestion;
+                obj.detail = this.detail.toNormal();
+                return obj;
+            }
+
+            /**
+             * 포트폴리오 콘텐츠의 키 매트릭스를 반환합니다.
+             * @returns {Object} 키 매트릭스를 담은 객체
+             */
+            keyMatrix() {
+                return this.detail.keyMatrix();
+            }
+
+            /**
+             * #PorfolioContentsDetail 클래스는 포트폴리오의 각 세부 항목을 관리하는 비공개 클래스입니다.
+             */
+            #PorfolioContentsDetail = class {
+                /**
+                 * 생성자는 주어진 JSON 데이터를 기반으로 #PorfolioContentsDetail 객체를 초기화합니다.
+                 * @param {Object} json - 포트폴리오 세부 항목 정보를 담고 있는 JSON 객체
+                 */
+                constructor(json) {
+                    /** @property {Array} photo - 사진 정보 배열 */
+                    this.photo = json.photo;
+                    /** @property {string} title - 포트폴리오 세부 항목의 제목 */
+                    this.title = json.title;
+                    /** @property {string} contents - 포트폴리오 세부 항목의 내용 */
+                    this.contents = json.contents;
+                }
+
+                /**
+                 * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                 * @returns {Object} 변환된 객체
+                 */
+                toNormal() {
+                    let obj = {};
+                    obj.photo = this.photo;
+                    obj.title = this.title;
+                    obj.contents = this.contents;
+                    return obj;
+                }
+            }
+
+            /**
+             * #PorfolioContentsDetails 클래스는 포트폴리오의 각 세부 항목을 관리하는 배열을 확장한 비공개 클래스입니다.
+             */
+            #PorfolioContentsDetails = class extends Array {
+                /**
+                 * 배열에 포함된 모든 #PorfolioContentsDetail 객체를 일반적인 객체 형태로 변환하여 반환합니다.
+                 * @returns {Array} 변환된 객체들의 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i.toNormal());
+                    }
+                    return arr;
+                }
+
+                /**
+                 * 포트폴리오 콘텐츠의 키 매트릭스를 생성하여 반환합니다.
+                 * @returns {Object} 키 매트릭스를 담은 객체
+                 */
+                keyMatrix() {
+                    let result = {};
+                    let arr = [];
+                    let tempArr;
+                    result.rooms = [];
+                    for (let i = 1; i < this.length; i++) {
+                        tempArr = this[i].photo;
+                        arr.push(tempArr);
+                        result.rooms.push(this[i].title);
+                    }
+                    result.photos = arr;
+                    return result;
+                }
+            }
         }
-      }
-      
-      #Color = class {
-        constructor (json) {
-          this.main = json.main;
-          this.sub = json.sub;
-          this.title = json.title;
+
+        /**
+         * #PorfolioDetailInfo 클래스는 포트폴리오의 상세 정보를 관리하는 비공개 클래스입니다.
+         */
+        #PorfolioDetailInfo = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #PorfolioDetailInfo 객체를 초기화합니다.
+             * @param {Object} json - 포트폴리오의 상세 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                let arr0 = new this.#Photodae();
+                let arr1 = new this.#Slide();
+                let arr2 = new this.#Tag();
+                for (let i of json.photodae) {
+                    arr0.push(i);
+                }
+                for (let i of json.slide) {
+                    arr1.push(i);
+                }
+                for (let i of json.tag) {
+                    arr2.push(i);
+                }
+                /** @property {Array} photodae - 사진 ID 목록을 저장하는 배열 */
+                this.photodae = arr0;
+                /** @property {Object} photosg - 첫 번째와 마지막 사진의 정보를 저장하는 #Photosg 클래스의 인스턴스 */
+                this.photosg = new this.#Photosg(json.photosg);
+                /** @property {Array} slide - 슬라이드에 사용될 사진들의 ID 배열 */
+                this.slide = arr1;
+                /** @property {Array} tag - 태그 배열 */
+                this.tag = arr2;
+                /** @property {string} service - 제공된 서비스 정보 */
+                this.service = json.service;
+                /** @property {Object} sort - 정렬 정보를 관리하는 #Sort 클래스의 인스턴스 */
+                this.sort = new this.#Sort(json.sort);
+                /** @property {Object} tendency - 스타일 경향을 관리하는 #StylingTendency 클래스의 인스턴스 */
+                this.tendency = new this.#StylingTendency(json.tendency);
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.photodae = this.photodae.toNormal();
+                obj.photosg = this.photosg.toNormal();
+                obj.slide = this.slide.toNormal();
+                obj.tag = this.tag.toNormal();
+                obj.service = this.service;
+                obj.sort = this.sort.toNormal();
+                obj.tendency = this.tendency.toNormal();
+                return obj;
+            }
+
+            /**
+             * #Slide 클래스는 슬라이드 사진 ID 배열을 관리하는 비공개 배열 확장 클래스입니다.
+             */
+            #Slide = class extends Array {
+                /**
+                 * 배열에 포함된 모든 값을 그대로 반환합니다.
+                 * @returns {Array} 변환된 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i);
+                    }
+                    return arr;
+                }
+            }
+
+            /**
+             * #Photodae 클래스는 포트폴리오의 사진 ID 목록을 관리하는 비공개 배열 확장 클래스입니다.
+             */
+            #Photodae = class extends Array {
+                /**
+                 * 배열에 포함된 모든 값을 그대로 반환합니다.
+                 * @returns {Array} 변환된 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i);
+                    }
+                    return arr;
+                }
+            }
+
+            /**
+             * #Tag 클래스는 포트폴리오의 태그 목록을 관리하는 비공개 배열 확장 클래스입니다.
+             */
+            #Tag = class extends Array {
+                /**
+                 * 배열에 포함된 모든 값을 그대로 반환합니다.
+                 * @returns {Array} 변환된 배열
+                 */
+                toNormal() {
+                    let arr = [];
+                    for (let i of this) {
+                        arr.push(i);
+                    }
+                    return arr;
+                }
+            }
+
+            /**
+             * #Photosg 클래스는 포트폴리오의 첫 번째와 마지막 사진 정보를 관리하는 비공개 클래스입니다.
+             */
+            #Photosg = class {
+                /**
+                 * 생성자는 주어진 JSON 데이터를 기반으로 #Photosg 객체를 초기화합니다.
+                 * @param {Object} json - 첫 번째와 마지막 사진 정보를 담고 있는 JSON 객체
+                 */
+                constructor(json) {
+                    /** @property {number} first - 첫 번째 사진의 ID */
+                    this.first = Number(json.first);
+                    /** @property {number} last - 마지막 사진의 ID */
+                    this.last = Number(json.last);
+                }
+                /**
+                 * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                 * @returns {Object} 변환된 객체
+                 */
+                toNormal() {
+                    let obj = {};
+                    obj.first = Number(this.first);
+                    obj.last = Number(this.last);
+                    return obj;
+                }
+            }
+
+            /**
+             * #Sort 클래스는 포트폴리오의 정렬 정보를 관리하는 비공개 클래스입니다.
+             */
+            #Sort = class {
+                /**
+                 * 생성자는 주어진 JSON 데이터를 기반으로 #Sort 객체를 초기화합니다.
+                 * @param {Object} json - 정렬 정보를 담고 있는 JSON 객체
+                 */
+                constructor(json) {
+                    /** @property {number} key8 - 정렬 키 8 */
+                    this.key8 = json.key8;
+                    /** @property {number} key9 - 정렬 키 9 */
+                    this.key9 = json.key9;
+                }
+                /**
+                 * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                 * @returns {Object} 변환된 객체
+                 */
+                toNormal() {
+                    let obj = {};
+                    obj.key8 = this.key8;
+                    obj.key9 = this.key9;
+                    return obj;
+                }
+            }
+
+            /**
+             * #StylingTendency 클래스는 스타일 경향을 관리하는 비공개 클래스입니다.
+             */
+            #StylingTendency = class {
+                /**
+                 * 생성자는 주어진 JSON 데이터를 기반으로 #StylingTendency 객체를 초기화합니다.
+                 * @param {Object} json - 스타일 경향 정보를 담고 있는 JSON 객체
+                 */
+                constructor(json) {
+                    /** @property {Object} style - 스타일 경향 정보를 관리하는 #TendencyStyle 클래스의 인스턴스 */
+                    this.style = new this.#TendencyStyle(json.style);
+                    /** @property {Object} texture - 질감 경향 정보를 관리하는 #TendencyTexture 클래스의 인스턴스 */
+                    this.texture = new this.#TendencyTexture(json.texture);
+                    /** @property {Object} color - 색상 경향 정보를 관리하는 #TendencyColor 클래스의 인스턴스 */
+                    this.color = new this.#TendencyColor(json.color);
+                    /** @property {Object} density - 밀도 경향 정보를 관리하는 #TendencyDensity 클래스의 인스턴스 */
+                    this.density = new this.#TendencyDensity(json.density);
+                }
+
+                /**
+                 * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                 * @returns {Object} 변환된 객체
+                 */
+                toNormal() {
+                    let obj = {};
+                    obj.style = this.style.toNormal();
+                    obj.texture = this.texture.toNormal();
+                    obj.color = this.color.toNormal();
+                    obj.density = this.density.toNormal();
+                    return obj;
+                }
+
+                /**
+                 * 스타일, 질감, 색상, 밀도에 대한 데이터를 배열 형태로 반환합니다.
+                 * @param {boolean} keymode - 키모드 활성화 여부
+                 * @returns {Array} 키 배열 또는 값 배열
+                 */
+                toMatrix(keymode = false) {
+                    const keys = ["style", "texture", "color", "density"];
+                    const keyArr = [
+                        [
+                            "modern",
+                            "classic",
+                            "natural",
+                            "mixmatch",
+                            "scandinavian",
+                            "vintage",
+                            "oriental",
+                            "exotic",
+                        ],
+                        [
+                            "darkWood",
+                            "whiteWood",
+                            "coating",
+                            "metal",
+                        ],
+                        [
+                            "darkWood",
+                            "whiteWood",
+                            "highContrast",
+                            "vivid",
+                            "white",
+                            "mono",
+                            "bright",
+                            "dark",
+                        ],
+                        [
+                            "maximun",
+                            "minimum",
+                        ]
+                    ];
+                    let result = [];
+                    for (let i = 0; i < keys.length; i++) {
+                        for (let key of keyArr[i]) {
+                            result.push(this[keys[i]][key]);
+                        }
+                    }
+                    if (keymode) {
+                        return keyArr.flat();
+                    } else {
+                        return result;
+                    }
+                }
+
+                /**
+                 * #TendencyDensity 클래스는 밀도 경향을 관리하는 비공개 클래스입니다.
+                 */
+                #TendencyDensity = class {
+                    /**
+                     * 생성자는 주어진 JSON 데이터를 기반으로 #TendencyDensity 객체를 초기화합니다.
+                     * @param {Object} json - 밀도 경향 정보를 담고 있는 JSON 객체
+                     */
+                    constructor(json) {
+                        /** @property {number} maximun - 최대 밀도 */
+                        this.maximun = json.maximun;
+                        /** @property {number} minimum - 최소 밀도 */
+                        this.minimum = json.minimum;
+                    }
+
+                    /**
+                     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                     * @returns {Object} 변환된 객체
+                     */
+                    toNormal() {
+                        let obj = {};
+                        obj.maximun = this.maximun;
+                        obj.minimum = this.minimum;
+                        return obj;
+                    }
+                }
+
+                /**
+                 * #TendencyColor 클래스는 색상 경향을 관리하는 비공개 클래스입니다.
+                 */
+                #TendencyColor = class {
+                    /**
+                     * 생성자는 주어진 JSON 데이터를 기반으로 #TendencyColor 객체를 초기화합니다.
+                     * @param {Object} json - 색상 경향 정보를 담고 있는 JSON 객체
+                     */
+                    constructor(json) {
+                        /** @property {number} darkWood - 어두운 나무 색상 */
+                        this.darkWood = json.darkWood;
+                        /** @property {number} whiteWood - 밝은 나무 색상 */
+                        this.whiteWood = json.whiteWood;
+                        /** @property {number} highContrast - 고대비 색상 */
+                        this.highContrast = json.highContrast;
+                        /** @property {number} vivid - 선명한 색상 */
+                        this.vivid = json.vivid;
+                        /** @property {number} white - 흰색 */
+                        this.white = json.white;
+                        /** @property {number} mono - 단색 */
+                        this.mono = json.mono;
+                        /** @property {number} bright - 밝은 색상 */
+                        this.bright = json.bright;
+                        /** @property {number} dark - 어두운 색상 */
+                        this.dark = json.dark;
+                    }
+
+                    /**
+                     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                     * @returns {Object} 변환된 객체
+                     */
+                    toNormal() {
+                        let obj = {};
+                        obj.darkWood = this.darkWood;
+                        obj.whiteWood = this.whiteWood;
+                        obj.highContrast = this.highContrast;
+                        obj.vivid = this.vivid;
+                        obj.white = this.white;
+                        obj.mono = this.mono;
+                        obj.bright = this.bright;
+                        obj.dark = this.dark;
+                        return obj;
+                    }
+                }
+
+                /**
+                 * #TendencyTexture 클래스는 질감 경향을 관리하는 비공개 클래스입니다.
+                 */
+                #TendencyTexture = class {
+                    /**
+                     * 생성자는 주어진 JSON 데이터를 기반으로 #TendencyTexture 객체를 초기화합니다.
+                     * @param {Object} json - 질감 경향 정보를 담고 있는 JSON 객체
+                     */
+                    constructor(json) {
+                        /** @property {number} darkWood - 어두운 나무 질감 */
+                        this.darkWood = json.darkWood;
+                        /** @property {number} whiteWood - 밝은 나무 질감 */
+                        this.whiteWood = json.whiteWood;
+                        /** @property {number} coating - 코팅 질감 */
+                        this.coating = json.coating;
+                        /** @property {number} metal - 금속 질감 */
+                        this.metal = json.metal;
+                    }
+
+                    /**
+                     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                     * @returns {Object} 변환된 객체
+                     */
+                    toNormal() {
+                        let obj = {};
+                        obj.darkWood = this.darkWood;
+                        obj.whiteWood = this.whiteWood;
+                        obj.coating = this.coating;
+                        obj.metal = this.metal;
+                        return obj;
+                    }
+                }
+
+                /**
+                 * #TendencyStyle 클래스는 스타일 경향을 관리하는 비공개 클래스입니다.
+                 */
+                #TendencyStyle = class {
+                    /**
+                     * 생성자는 주어진 JSON 데이터를 기반으로 #TendencyStyle 객체를 초기화합니다.
+                     * @param {Object} json - 스타일 경향 정보를 담고 있는 JSON 객체
+                     */
+                    constructor(json) {
+                        /** @property {number} modern - 모던 스타일 */
+                        this.modern = json.modern;
+                        /** @property {number} classic - 클래식 스타일 */
+                        this.classic = json.classic;
+                        /** @property {number} natural - 내추럴 스타일 */
+                        this.natural = json.natural;
+                        /** @property {number} mixmatch - 믹스매치 스타일 */
+                        this.mixmatch = json.mixmatch;
+                        /** @property {number} scandinavian - 스칸디나비아 스타일 */
+                        this.scandinavian = json.scandinavian;
+                        /** @property {number} vintage - 빈티지 스타일 */
+                        this.vintage = json.vintage;
+                        /** @property {number} oriental - 오리엔탈 스타일 */
+                        this.oriental = json.oriental;
+                        /** @property {number} exotic - 이국적인 스타일 */
+                        this.exotic = json.exotic;
+                    }
+
+                    /**
+                     * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+                     * @returns {Object} 변환된 객체
+                     */
+                    toNormal() {
+                        let obj = {};
+                        obj.modern = this.modern;
+                        obj.classic = this.classic;
+                        obj.natural = this.natural;
+                        obj.mixmatch = this.mixmatch;
+                        obj.scandinavian = this.scandinavian;
+                        obj.vintage = this.vintage;
+                        obj.oriental = this.oriental;
+                        obj.exotic = this.exotic;
+                        return obj;
+                    }
+                }
+            }
         }
-        toNormal () {
-          let obj = {};
-          obj.main = this.main;
-          obj.sub = this.sub;
-          obj.title = this.title;
-          return obj;
+
+        /**
+         * #SpaceInfo 클래스는 포트폴리오의 공간 정보를 관리하는 비공개 클래스입니다.
+         */
+        #SpaceInfo = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #SpaceInfo 객체를 초기화합니다.
+             * @param {Object} json - 공간 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                /** @property {string} space - 공간 유형 (예: 거실, 침실 등) */
+                this.space = json.space;
+                /** @property {number} pyeong - 평수 (공간의 크기) */
+                this.pyeong = Number(json.pyeong);
+                /** @property {string} region - 지역 정보 */
+                this.region = json.region;
+                /** @property {string} method - 시공 방법 */
+                this.method = json.method;
+                /** @property {string} budget - 예산 */
+                this.budget = json.budget;
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.space = this.space;
+                obj.pyeong = Number(this.pyeong);
+                obj.region = this.region;
+                obj.method = this.method;
+                obj.budget = this.budget;
+                return obj;
+            }
         }
-      }
-    
-      keyMatrix () {
-        return this.contents.keyMatrix();
-      }
+
+        /**
+         * #Title 클래스는 포트폴리오의 제목 정보를 관리하는 비공개 클래스입니다.
+         */
+        #Title = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #Title 객체를 초기화합니다.
+             * @param {Object} json - 제목 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                /** @property {string} main - 메인 제목 */
+                this.main = json.main;
+                /** @property {string} sub - 서브 제목 */
+                this.sub = json.sub;
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.main = this.main;
+                obj.sub = this.sub;
+                return obj;
+            }
+
+            /**
+             * 메인 및 서브 제목의 다양한 형태를 반환합니다.
+             * @returns {Object} 제목의 다양한 케이스를 담은 객체
+             */
+            getAllCases() {
+                let obj = {};
+                let tempArr, tempArr2, temp, tempResult;
+                let pyIndex;
+
+                obj.main = [];
+                obj.main.push(this.main);
+                obj.main.push(this.main.replace(/, /, "\n"));
+
+                tempArr = this.main.split(", ");
+                obj.main.push(tempArr[1]);
+
+                tempArr2 = tempArr[1].split(" ");
+                pyIndex = 0;
+                for (let i = 0; i < tempArr2.length; i++) {
+                    if (/py/gi.test(tempArr2[i])) {
+                        pyIndex = i;
+                    }
+                }
+
+                tempResult = '';
+                temp = '';
+                for (let i = 0; i < pyIndex; i++) {
+                    temp += tempArr2[i] + ' ';
+                }
+                tempResult = temp.slice(0, -1);
+
+                temp = '';
+                for (let i = pyIndex; i < tempArr2.length; i++) {
+                    temp += tempArr2[i] + ' ';
+                }
+                tempResult = tempResult + "\n" + temp.slice(0, -1);
+                obj.main.push(tempResult);
+
+                obj.sub = [];
+                obj.sub.push(this.sub);
+                obj.sub.push(this.sub.replace(/, /, "\n"));
+
+                return obj;
+            }
+        }
+
+        /**
+         * #Color 클래스는 포트폴리오의 색상 정보를 관리하는 비공개 클래스입니다.
+         */
+        #Color = class {
+            /**
+             * 생성자는 주어진 JSON 데이터를 기반으로 #Color 객체를 초기화합니다.
+             * @param {Object} json - 색상 정보를 담고 있는 JSON 객체
+             */
+            constructor(json) {
+                /** @property {string} main - 메인 색상 */
+                this.main = json.main;
+                /** @property {string} sub - 서브 색상 */
+                this.sub = json.sub;
+                /** @property {string} title - 타이틀 색상 */
+                this.title = json.title;
+            }
+
+            /**
+             * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+             * @returns {Object} 변환된 객체
+             */
+            toNormal() {
+                let obj = {};
+                obj.main = this.main;
+                obj.sub = this.sub;
+                obj.title = this.title;
+                return obj;
+            }
+        }
+
+        /**
+         * 포트폴리오 콘텐츠의 키 매트릭스를 반환합니다.
+         * @returns {Object} 키 매트릭스를 담은 객체
+         */
+        keyMatrix() {
+            return this.contents.keyMatrix();
+        }
     }
   }
-
-  toNormal () {
+  
+  /**
+   * 객체의 모든 속성을 일반적인 객체 형태로 변환합니다.
+   * @returns {Object} 변환된 객체
+   */
+  toNormal() {
     let obj = {};
+    /** @property {string} obj.conid - 변환된 객체의 콘텐츠 ID */
     obj.conid = this.conid;
+    /** @property {string} obj.desid - 변환된 객체의 디자이너 ID */
     obj.desid = this.desid;
+    /** @property {string} obj.cliid - 변환된 객체의 클라이언트 ID */
     obj.cliid = this.cliid;
+    /** @property {string} obj.proid - 변환된 객체의 프로젝트 ID */
     obj.proid = this.proid;
+    /** @property {Object} obj.contents - 변환된 객체의 콘텐츠 상세 정보 */
     obj.contents = this.contents.toNormal();
+    /** @property {Object} obj.photos - 변환된 객체의 사진 정보 */
     obj.photos = this.photos.toNormal();
+    /** @property {Object} obj.service - 변환된 객체의 서비스 정보 */
     obj.service = this.service.toNormal();
+    /** @returns {Object} 변환된 객체를 반환 */
     return obj;
   }
-  
+
+  /**
+   * 객체를 JSON 형식의 문자열로 변환합니다.
+   * @returns {string} JSON 문자열
+   */
   toJson = () => {
+    /** @returns {string} 변환된 JSON 문자열을 반환 */
     return JSON.stringify(this.toNormal(), null, 2);
   }
-  
+
+  /**
+   * 객체를 JSON 형식의 문자열로 변환하는 메서드로, toJson과 동일한 기능을 합니다.
+   * @returns {string} JSON 문자열
+   */
   toDeath = () => {
+    /** @returns {string} 변환된 JSON 문자열을 반환 */
     return JSON.stringify(this.toNormal(), null, 2);
   }
-  
+
+  /**
+   * 콘텐츠의 제목을 가져옵니다.
+   * @param {string} main - "portfolio" 또는 "review" 중 선택
+   * @param {string} sub - "main" 또는 "sub" 중 선택
+   * @returns {string} 해당하는 제목 문자열
+   */
   getTitle = (main = "portfolio", sub = "main") => {
+    /** 콘텐츠 객체에서 포트폴리오와 리뷰를 구조 분해 할당 */
     const { contents: { portfolio, review } } = this;
+    /** 포트폴리오 또는 리뷰의 제목을 반환 */
     switch (main) {
       case "portfolio":
         switch (sub) {
           case "main":
+            /** @returns {string} 포트폴리오의 메인 제목 */
             return portfolio.title.main;
-            break;
           case "sub":
+            /** @returns {string} 포트폴리오의 서브 제목 */
             return portfolio.title.sub;
-            break;
         }
         break;
       case "review":
         switch (sub) {
           case "main":
+            /** @returns {string} 리뷰의 메인 제목 */
             return review.title.main;
-            break;
           case "sub":
+            /** @returns {string} 리뷰의 서브 제목 */
             return review.title.sub;
-            break;
         }
         break;
     }
   }
-  
+
+  /**
+   * 포트폴리오와 리뷰의 모든 제목 변형을 객체로 반환합니다.
+   * @returns {Object} 포트폴리오와 리뷰의 모든 제목 변형 객체
+   */
   returnTitleObject = () => {
+    /** 포트폴리오와 리뷰의 제목 객체를 구조 분해 할당 */
     const { contents: { portfolio: { title: portfolioTitle }, review: { title: reviewTitle } } } = this;
+    /** 빈 객체를 생성 */
     let obj = {};
+    /** 포트폴리오 제목의 모든 변형을 객체에 추가 */
     obj.portfolio = portfolioTitle.getAllCases();
+    /** 리뷰 제목의 모든 변형을 객체에 추가 */
     obj.review = reviewTitle.getAllCases();
+    /** @returns {Object} 포트폴리오와 리뷰 제목의 모든 변형 객체를 반환 */
     return obj;
   }
-  
+
+  /**
+   * 콘텐츠의 공간 정보를 반환합니다.
+   * @returns {string} 공간 정보
+   */
   getSpace = () => {
+    /** 콘텐츠 객체에서 공간 정보를 반환 */
     const { contents: { portfolio: { spaceInfo } } } = this;
+    /** @returns {string} 공간 이름을 반환 */
     return spaceInfo.space;
   }
-  
+
+  /**
+   * 콘텐츠의 평수 정보를 반환합니다.
+   * @returns {number} 평수 정보
+   */
   getPyeong = () => {
+    /** 콘텐츠 객체에서 평수 정보를 반환 */
     const { contents: { portfolio: { spaceInfo } } } = this;
+    /** @returns {number} 평수를 반환 */
     return spaceInfo.pyeong;
   }
-  
+
+  /**
+   * 콘텐츠의 지역 정보를 반환합니다.
+   * @returns {string} 지역 정보
+   */
   getRegion = () => {
+    /** 콘텐츠 객체에서 지역 정보를 반환 */
     const { contents: { portfolio: { spaceInfo } } } = this;
+    /** @returns {string} 지역 정보를 반환 */
     return spaceInfo.region;
   }
-  
+
+  /**
+   * 콘텐츠의 작업 방법 정보를 반환합니다.
+   * @returns {string} 작업 방법 정보
+   */
   getMethod = () => {
+    /** 콘텐츠 객체에서 작업 방법 정보를 반환 */
     const { contents: { portfolio: { spaceInfo } } } = this;
+    /** @returns {string} 작업 방법 정보를 반환 */
     return spaceInfo.method;
   }
-  
+
+  /**
+   * 포트폴리오 ID를 반환합니다.
+   * @returns {string} 포트폴리오 ID
+   */
   getPid = () => {
+    /** @returns {string} 포트폴리오 ID를 반환 */
     return this.contents.portfolio.pid;
   }
-  
+
+  /**
+   * 리뷰 ID를 반환합니다.
+   * @returns {string} 리뷰 ID
+   */
   getRid = () => {
+    /** @returns {string} 리뷰 ID를 반환 */
     return this.contents.review.rid;
   }
-  
+
+  /**
+   * 원본 사진 경로 목록을 반환합니다.
+   * @returns {Array<string>} 원본 사진 경로 배열
+   */
   toOriginalPath = () => {
+    /** 사진 경로를 저장할 빈 배열을 생성 */
     let arr = [];
+    /** 모든 사진에 대해 경로를 생성하여 배열에 추가 */
     for (let i = 0; i < this.photos.detail.length; i++) {
       arr.push(`/corePortfolio/original/${this.contents.portfolio.pid}/i${String(i + 1)}${this.contents.portfolio.pid}.jpg`);
     }
+    /** @returns {Array<string>} 생성된 사진 경로 배열을 반환 */
     return arr;
   }
-  
+
+  /**
+   * 포트폴리오의 상세 내용을 반환합니다.
+   * @returns {Array} 포트폴리오 상세 내용 배열
+   */
   getPortfolioDetail = () => {
+    /** @returns {Array} 포트폴리오의 상세 내용을 반환 */
     return this.contents.portfolio.contents.detail;
   }
-  
+
+  /**
+   * 리뷰의 상세 내용을 반환합니다.
+   * @returns {Array} 리뷰 상세 내용 배열
+   */
   getReviewDetail = () => {
+    /** @returns {Array} 리뷰의 상세 내용을 반환 */
     return this.contents.review.contents.detail;
   }
-  
+
+  /**
+   * 사진의 gs 값을 배열로 반환합니다.
+   * @returns {Array<string>} gs 값 배열
+   */
   getGsArr = () => {
+    /** 사진의 gs 값을 저장할 빈 배열을 생성 */
     let arr = [];
+    /** 모든 사진의 gs 값을 배열에 추가 */
     for (let { gs } of this.photos.detail) {
       arr.push(gs);
     }
+    /** @returns {Array<string>} gs 값 배열을 반환 */
     return arr;
   }
-  
+
+  /**
+   * 콘텐츠의 평탄화된 세부 내용을 반환합니다.
+   * @returns {Object} 평탄화된 포트폴리오와 리뷰 내용
+   */
   getContentsFlatDetail = () => {
+    /** 포트폴리오와 리뷰 세부 내용을 구조 분해 할당 */
     const { contents: { portfolio: { contents: { detail: portfolioDetail } }, review: { contents: { detail: reviewDetail } } } } = this;
+    /** 포트폴리오와 리뷰의 내용을 저장할 변수를 초기화 */
     let portfolio, review;
     let pastKey = null;
-  
+
+    /** 포트폴리오 내용을 초기화 */
     portfolio = "";
+    /** 포트폴리오의 각 세부 내용에 대해 루프 실행 */
     for (let { photo, title, contents, smallTalk: { title: smallTalkTitle, contents: smallTalkContents } } of portfolioDetail) {
+      /** 이전 키가 null이 아닐 경우, 포트폴리오 내용에 사진과 제목을 추가 */
       if (pastKey !== null) {
         portfolio += photo.join(", ");
         portfolio += "\n\n";
         portfolio += title;
         portfolio += "\n\n";
       }
+      /** 포트폴리오 내용에 콘텐츠를 추가 */
       portfolio += contents;
+      /** 스몰토크가 있을 경우, 포트폴리오 내용에 추가 */
       if (smallTalkTitle !== "") {
         portfolio += "\n\n";
         portfolio += smallTalkTitle;
@@ -1541,16 +2148,21 @@ class Contents {
       }
       portfolio += "\n\n";
     }
+    /** 포트폴리오 내용의 마지막 2개의 줄바꿈을 제거 */
     portfolio = portfolio.slice(0, -2);
-  
+
+    /** 리뷰 내용을 초기화 */
     review = "";
+    /** 리뷰의 각 세부 내용에 대해 루프 실행 */
     for (let { type, photos, contents } of reviewDetail) {
+      /** 리뷰 타입이 "init"일 경우, 답변 내용을 리뷰에 추가 */
       if (type === "init") {
         for (let { answer } of contents) {
           review += answer;
           review += "\n\n";
         }
       } else {
+        /** 리뷰에 사진과 질문/답변 내용을 추가 */
         review += photos.join(" ");
         review += "\n\n";
         for (let { question, answer } of contents) {
@@ -1561,56 +2173,83 @@ class Contents {
         }
       }
     }
+    /** 리뷰 내용의 마지막 2개의 줄바꿈을 제거 */
     review = review.slice(0, -2);
-  
+
+    /** @returns {Object} 평탄화된 포트폴리오와 리뷰 내용을 반환 */
     return { portfolio, review };
   }
-  
+
+  /**
+   * Google Docs에 사용할 상세 콘텐츠 정보를 반환합니다.
+   * @param {string} server - 서버 주소
+   * @returns {Object} Google Docs에 사용 가능한 포트폴리오 및 리뷰 데이터
+   */
   getGoogleDocsDetail = (server) => {
+    /** 서버 주소가 문자열이 아닌 경우 오류를 발생 */
     if (typeof server !== "string") {
       throw new Error("server address must")
     }
+    /** 클래스 내부에서 this를 참조할 self 변수를 초기화 */
     const self = this;
+    /** 코어 포트폴리오 경로를 초기화 */
     const corePortfolio = "/corePortfolio/listImage";
+    /** 포토 문자 지정 */
     const photoChar = 't';
+    /** 평탄화된 포트폴리오와 리뷰 내용을 가져옴 */
     const { portfolio, review } = this.getContentsFlatDetail();
+    /** 토큰 문자열 초기화 */
     const token = "___split___";
+    /** 임시 배열과 결과 객체를 초기화 */
     let tempArr, tempArr2, result;
-  
+
+    /** 결과 객체 초기화 */
     result = {};
-  
+
+    /** 포트폴리오 내용을 줄 단위로 분리하고, 각 줄을 트림 처리한 후 처리 */
     tempArr = portfolio.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
       let arr0, arr1;
+      /** 텍스트가 숫자로 시작하고 끝나며 '-' 문자가 있을 경우, 범위 처리 */
       if (/^[0-9]/.test(i) && /[0-9]$/.test(i) && /\-/gi.test(i)) {
+        /** 범위를 배열로 변환 */
         arr0 = i.split('-').map((j) => { return Number(j.trim()); });
+        /** 범위가 올바르지 않을 경우 오류 발생 */
         if (arr0.length !== 2) {
           throw new Error("invaild text");
         }
+        /** 범위 내의 각 숫자에 대해 URL을 생성하여 배열에 추가 */
         arr1 = [];
         for (let z = arr0[0]; z < arr0[1] + 1; z++) {
           arr1.push(server + corePortfolio + "/" + self.contents.portfolio.pid + "/" + photoChar + String(z) + self.contents.portfolio.pid + ".jpg" + token + String(z));
         }
         return arr1;
       } else {
+        /** 일반 텍스트의 경우 그대로 반환 */
         return i;
       }
     });
-  
+
+    /** 임시 배열을 평탄화하고, 각 항목을 다시 처리 */
     tempArr = tempArr.flat().map((i) => {
       if (/^http/.test(i)) {
-        return [ i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs ];
+        /** URL일 경우, URL과 관련된 gs 값을 반환 */
+        return [i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs];
       } else {
+        /** 일반 텍스트일 경우 그대로 반환 */
         return i;
       }
     });
-  
+
+    /** 포트폴리오 제목을 배열의 첫 번째 항목으로 추가 */
     tempArr.unshift("\n");
     tempArr.unshift(self.contents.portfolio.title.main);
+    /** 포트폴리오 결과를 설정 */
     result.portfolio = tempArr;
-  
+
+    /** 리뷰가 있을 경우 리뷰 내용을 처리 */
     result.review = [];
     if (review !== '') {
-  
+
       tempArr2 = review.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
         let arr0;
         if (/^[0-9]/.test(i) && /[0-9]$/.test(i)) {
@@ -1623,23 +2262,23 @@ class Contents {
           return i;
         }
       });
-  
+
       tempArr2 = tempArr2.flat().map((i) => {
         if (/^http/.test(i)) {
-          return [ i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs ];
+          return [i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs];
         } else {
           return i;
         }
       });
-  
+
       tempArr2.unshift("\n");
       tempArr2.unshift(self.contents.review.title.main);
       result.review = tempArr2;
     }
-  
+
+    /** @returns {Object} Google Docs에 사용할 포트폴리오 및 리뷰 데이터를 반환 */
     return result;
   }
-  
 }
 
 class ContentsArr extends Array {
