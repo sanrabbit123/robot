@@ -9,7 +9,6 @@ const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
   this.mongolocal = MONGOLOCALC;
   this.socket = socket;
   this.dir = `${process.cwd()}/apps/cronGhost`;
-  this.moduleDir = this.dir + "/module";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -75,52 +74,6 @@ CronRouter.prototype.rou_get_First = function () {
     }
   }
 
-  return obj;
-}
-
-CronRouter.prototype.rou_get_ServerSent = function () {
-  const instance = this;
-  const socket = this.socket;
-  const SseStream = require(`${this.moduleDir}/sseStream.js`);
-  let obj = {};
-  obj.link = [ "/sse/onlineDesigners" ];
-  obj.func = async function (req, res) {
-    try {
-      res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-
-      const sseStream = new SseStream(req);
-      let pusher;
-      let thisSet;
-      let thisSetString;
-      let pastSetString;
-
-      sseStream.pipe(res);
-      pastSetString = "[]";
-
-      pusher = setInterval(() => {
-        thisSet = Array.from(new Set([ ...socket.clients ].map((obj) => { return obj.__who__ })));
-        thisSet.sort();
-        thisSetString = JSON.stringify(thisSet);
-        if (thisSetString !== pastSetString) {
-          sseStream.write({ event: "message", data: thisSetString });
-        }
-        pastSetString = thisSetString;
-      }, 1000);
-
-      res.on("close", function () {
-        clearInterval(pusher);
-        sseStream.unpipe(res);
-      });
-
-    } catch (e) {
-      instance.mother.errorLog("CronGhost 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
   return obj;
 }
 

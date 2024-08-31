@@ -1,76 +1,359 @@
 const DesignerSampleData = {
+  /**
+   * 디자이너의 이름을 나타냅니다.
+   * @type {string}
+   */
   "designer": "오지은",
+
+  /**
+   * 디자이너의 고유 ID를 나타냅니다.
+   * @type {string}
+   */
   "desid": "d2310_aa07s",
+
+  /**
+   * 디자이너의 개인 정보와 계약 정보를 포함하는 객체입니다.
+   * @type {Object}
+   */
   "information": {
+    /**
+     * 디자이너와의 계약 상태와 계약 날짜를 포함하는 객체입니다.
+     * @type {Object}
+     */
     "contract": {
+      /**
+       * 현재 계약 상태를 나타내는 문자열입니다.
+       * @type {string}
+       * @example "협약 완료"
+       */
       "status": "협약 완료",
+
+      /**
+       * 계약이 체결된 날짜를 나타냅니다.
+       * @type {Date}
+       */
       "date": new Date("2023-10-24T15:00:00.000Z")
     },
+
+    /**
+     * 디자이너의 전화번호를 나타냅니다.
+     * @type {string}
+     * @example "010-2418-2308"
+     */
     "phone": "010-2418-2308",
+
+    /**
+     * 디자이너의 이메일 주소를 나타냅니다.
+     * @type {string}
+     * @example "dhwldms2308@naver.com"
+     */
     "email": "dhwldms2308@naver.com",
+
+    /**
+     * 디자이너의 생년월일을 나타내는 Date 객체입니다.
+     * @type {Date}
+     */
     "birth": new Date("1995-04-04T15:00:00.000Z"),
+
+    /**
+     * 디자이너의 결혼 여부를 나타내는 불리언 값입니다.
+     * @type {boolean}
+     * @example false
+     */
     "marry": false,
+
+    /**
+     * 디자이너의 자녀 정보를 담고 있는 배열입니다.
+     * @type {Array}
+     */
     "child": [],
+
+    /**
+     * 디자이너가 고양이를 키우고 있는지 여부를 나타내는 불리언 값입니다.
+     * @type {boolean}
+     */
     "cat": false,
+
+    /**
+     * 디자이너가 개를 키우고 있는지 여부를 나타내는 불리언 값입니다.
+     * @type {boolean}
+     */
     "dog": false,
+
+    /**
+     * 디자이너의 DID를 나타내는 문자열입니다.
+     * @type {string}
+     */
     "did": "d105",
+
+    /**
+     * 디자이너의 주소 정보를 담고 있는 배열입니다.
+     * @type {Array.<string>}
+     * @example ["경기 성남시 수정구 복정로 53 (복정동) 301호"]
+     */
     "address": [
       "경기 성남시 수정구 복정로 53 (복정동) 301호"
     ],
+
+    /**
+     * 디자이너의 주민등록번호를 나타내는 문자열입니다.
+     * @type {string}
+     * @example "950405-2472416"
+     */
     "residentNunber": "950405-2472416",
+
+    /**
+     * 디자이너의 개인 시스템 설정을 나타내는 객체입니다.
+     * @type {Object}
+     */
     "personalSystem": {
+      /**
+       * 디자이너가 쇼룸을 운영하는지 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       * @example false
+       */
       "showRoom": false,
+
+      /**
+       * 디자이너의 웹페이지 URL 정보를 담고 있는 배열입니다.
+       * @type {Array.<string>}
+       * @example []
+       */
       "webPage": [],
+
+      /**
+       * 디자이너의 SNS 정보들을 담고 있는 배열입니다.
+       * @type {Array.<string>}
+       * @example []
+       */
       "sns": []
     },
+
+    /**
+     * 디자이너의 비즈니스 정보를 담고 있는 객체입니다.
+     * @type {Object}
+     */
     "business": {
+      /**
+       * 디자이너의 경력 정보를 담고 있는 객체입니다.
+       * @type {Object}
+       */
       "career": {
+        /**
+         * 관련 경력 연수를 나타내는 숫자입니다.
+         * @type {number}
+         * @example 6
+         */
         "relatedY": 6,
+
+        /**
+         * 관련 경력 개월 수를 나타내는 숫자입니다.
+         * @type {number}
+         * @example 5
+         */
         "relatedM": 5,
+
+        /**
+         * 경력이 시작된 연도를 나타내는 숫자입니다.
+         * @type {number}
+         * @example 2023
+         */
         "startY": 2023,
+
+        /**
+         * 경력이 시작된 월을 나타내는 숫자입니다.
+         * @type {number}
+         * @example 10
+         */
         "startM": 10,
+
+        /**
+         * 경력의 세부 정보를 담고 있는 배열입니다.
+         * @type {Array.<Object>}
+         */
         "detail": [
           {
+            /**
+             * 회사 이름을 나타내는 문자열입니다.
+             * @type {string}
+             * @example "한스디자인"
+             */
             "company": "한스디자인",
+
+            /**
+             * 팀 이름을 나타내는 문자열입니다.
+             * @type {string}
+             * @example "디자인팀"
+             */
             "team": "디자인팀",
+
+            /**
+             * 역할을 나타내는 문자열입니다.
+             * @type {string}
+             * @example "모델하우스 디스플레이"
+             */
             "role": "모델하우스 디스플레이",
+
+            /**
+             * 태그를 나타내는 문자열입니다.
+             * @type {string}
+             * @example "모델하우스"
+             */
             "tag": "모델하우스",
+
+            /**
+             * 경력 시작 및 종료 날짜를 나타내는 객체입니다.
+             * @type {Object}
+             */
             "date": {
+              /**
+               * 경력 시작 날짜를 나타내는 Date 객체입니다.
+               * @type {Date}
+               */
               "start": new Date("2016-11-21T15:00:00.000Z"),
+
+              /**
+               * 경력 종료 날짜를 나타내는 Date 객체입니다.
+               * @type {Date}
+               */
               "end": new Date("2023-04-21T15:00:00.000Z")
             }
           }
         ],
+
+        /**
+         * 디자이너의 학력 정보를 담고 있는 배열입니다.
+         * @type {Array.<Object>}
+         */
         "school": [
           {
+            /**
+             * 학교 이름을 나타내는 문자열입니다.
+             * @type {string}
+             * @example "동서울대학교"
+             */
             "school": "동서울대학교",
+
+            /**
+             * 전공을 나타내는 문자열입니다.
+             * @type {string}
+             * @example "실내디자인"
+             */
             "major": "실내디자인",
+
+            /**
+             * 학업 시작 및 종료 날짜를 나타내는 객체입니다.
+             * @type {Object}
+             */
             "date": {
+              /**
+               * 학업 시작 날짜를 나타내는 Date 객체입니다.
+               * @type {Date}
+               */
               "start": new Date("2014-02-02T15:00:00.000Z"),
+
+              /**
+               * 학업 종료 날짜를 나타내는 Date 객체입니다.
+               * @type {Date}
+               */
               "end": new Date("2017-02-02T15:00:00.000Z")
             }
           }
         ]
       },
+
+      /**
+       * 디자이너의 계좌 정보를 담고 있는 배열입니다.
+       * @type {Array.<Object>}
+       */
       "account": [
         {
+          /**
+           * 은행 이름을 나타내는 문자열입니다.
+           * @type {string}
+           * @example "기업은행"
+           */
           "bankName": "기업은행",
+
+          /**
+           * 계좌 번호를 나타내는 문자열입니다.
+           * @type {string}
+           * @example "01024182308"
+           */
           "accountNumber": "01024182308",
+
+          /**
+           * 계좌 소유자 이름을 나타내는 문자열입니다.
+           * @type {string}
+           * @example "오지은"
+           */
           "to": "오지은"
         }
       ],
+
+      /**
+       * 디자이너의 사업자 정보를 담고 있는 객체입니다.
+       * @type {Object}
+       */
       "businessInfo": {
+        /**
+         * 디자이너의 사업자 분류를 나타내는 문자열입니다.
+         * @type {string}
+         * @example "프리랜서"
+         */
         "classification": "프리랜서",
+
+        /**
+         * 사업자 번호를 나타내는 문자열입니다.
+         * @type {string}
+         * @example "950405"
+         */
         "businessNumber": "950405",
+
+        /**
+         * 사업자 관련 파일 정보를 담고 있는 객체입니다.
+         * @type {Object}
+         */
         "files": {
+          /**
+           * 사업자 등록증 파일 존재 여부를 나타내는 불리언 값입니다.
+           * @type {boolean}
+           */
           "businessRegistration": false,
+
+          /**
+           * 통장 사본 파일 존재 여부를 나타내는 불리언 값입니다.
+           * @type {boolean}
+           */
           "bankBook": false,
+
+          /**
+           * 등록증 파일 존재 여부를 나타내는 불리언 값입니다.
+           * @type {boolean}
+           */
           "registrationCard": false
         }
       },
+
+      /**
+       * 디자이너의 서비스 관련 정보를 담고 있는 객체입니다.
+       * @type {Object}
+       */
       "service": {
+        /**
+         * 서비스 비용 정보를 담고 있는 객체입니다.
+         * @type {Object}
+         */
         "cost": {
+          /**
+           * 서비스 매트릭스를 나타내는 객체입니다.
+           * @type {Object}
+           */
           "matrix": {
+            /**
+             * 서비스 ID와 관련된 케이스 수를 나타내는 배열입니다.
+             * @type {Array.<Object>}
+             */
             "service": [
               {
                 "serid": "s2011_aa01s",
@@ -85,497 +368,336 @@ const DesignerSampleData = {
                 "case": 9
               }
             ],
+
+            /**
+             * 서비스가 온라인에서 제공되는지 여부를 나타내는 불리언 값입니다.
+             * @type {boolean}
+             */
             "online": true
           },
+
+          /**
+           * 서비스 수수료 비율을 나타내는 숫자입니다.
+           * @type {number}
+           * @example 30
+           */
           "percentage": 30,
+
+          /**
+           * 수수료 비율 변동 내역을 담고 있는 배열입니다.
+           * @type {Array}
+           */
           "percentageHistory": []
         },
+
+        /**
+         * 시공 관련 정보를 담고 있는 객체입니다.
+         * @type {Object}
+         */
         "construct": {
+          /**
+           * 시공 파트너 정보를 나타내는 문자열입니다.
+           * @type {string}
+           * @example ""
+           */
           "partner": "",
+
+          /**
+           * 시공 방법을 나타내는 문자열입니다.
+           * @type {string}
+           * @example ""
+           */
           "method": ""
         }
       }
     }
   },
+
+  /**
+   * 디자이너의 분석 데이터를 포함하는 객체입니다.
+   * @type {Object}
+   */
   "analytics": {
+    /**
+     * 디자이너의 지역 분석 정보를 담고 있는 객체입니다.
+     * @type {Object}
+     */
     "region": {
+      /**
+       * 디자이너의 교통 수단을 나타내는 문자열입니다.
+       * @type {string}
+       * @example "대중교통"
+       */
       "transportation": "대중교통",
+
+      /**
+       * 디자이너의 활동 범위를 나타내는 숫자입니다.
+       * @type {number}
+       * @example 50
+       */
       "range": 50,
+
+      /**
+       * 예상 비용을 나타내는 숫자입니다.
+       * @type {number}
+       * @example 70
+       */
       "expenses": 70,
+
+      /**
+       * 시공 비용을 나타내는 숫자입니다.
+       * @type {number}
+       * @example 50
+       */
       "construct": 50
     },
+
+    /**
+     * 프로젝트 관련 분석 정보를 담고 있는 객체입니다.
+     * @type {Object}
+     */
     "project": {
+      /**
+       * 프로젝트 시간 관련 정보를 담고 있는 객체입니다.
+       * @type {Object}
+       */
       "time": {
+        /**
+         * 첫 번째 프로젝트에 걸리는 시간을 나타내는 숫자입니다.
+         * @type {number}
+         * @example 7
+         */
         "first": 7,
+
+        /**
+         * 전체 프로젝트에 걸리는 시간을 나타내는 숫자입니다.
+         * @type {number}
+         * @example 30
+         */
         "entire": 30
       },
+
+      /**
+       * 프로젝트 관련 서류 작업 내역을 담고 있는 배열입니다.
+       * @type {Array}
+       */
       "paperWork": [],
+
+      /**
+       * CAD 작업 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "cad": true,
+
+      /**
+       * 콜라주 작업 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "collage": true,
+
+      /**
+       * 모델링 작업 수준을 나타내는 숫자입니다.
+       * @type {number}
+       * @example 2
+       */
       "modeling": 2,
+
+      /**
+       * 온라인 작업 가능 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "online": true,
+
+      /**
+       * 현재 거주 중인 상태에서 작업할 수 있는지 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "living": true,
+
+      /**
+       * 부분적으로 작업 가능한지 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "partial": true,
+
+      /**
+       * 프로젝트 매트릭스 데이터를 저장하는 배열입니다.
+       * @type {Array.<Array.<number>>}
+       */
       "matrix": [
-        [
-          1,
-          1,
-          1
-        ],
-        [
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0
-        ]
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
       ],
+
+      /**
+       * 프로젝트 운영 예산 정보를 담고 있는 객체입니다.
+       * @type {Object}
+       */
       "operationBudget": {
+        /**
+         * 최소 운영 예산을 나타내는 숫자입니다.
+         * @type {number}
+         * @example 5000000
+         */
         "min": 5000000,
+
+        /**
+         * 최대 운영 예산을 나타내는 숫자입니다.
+         * @type {number}
+         * @example 10000000
+         */
         "max": 10000000
       }
     },
+
+    /**
+     * 시공 능력 관련 정보를 담고 있는 객체입니다.
+     * @type {Object}
+     */
     "construct": {
+      /**
+       * 시공 능력을 나타내는 숫자입니다.
+       * @type {number}
+       * @example 0
+       */
       "ability": 0,
+
+      /**
+       * 시공 수준을 나타내는 숫자입니다.
+       * @type {number}
+       * @example 0
+       */
       "level": 0,
+
+      /**
+       * 감리 가능 여부를 나타내는 객체입니다.
+       * @type {Object}
+       */
       "possible": {
+        /**
+         * 감리 가능 여부를 나타내는 불리언 값입니다.
+         * @type {boolean}
+         */
         "supervision": true
       },
+
+      /**
+       * 시공 케이스에 대한 정보를 담고 있는 배열입니다.
+       * @type {Array.<Object>}
+       */
       "case": [
         {
+          /**
+           * 시공 케이스 이름을 나타내는 문자열입니다.
+           * @type {string}
+           * @example "homeStyling"
+           */
           "name": "homeStyling",
-          "contract": [
-            "협업사 계약"
-          ],
+
+          /**
+           * 시공 계약 형태를 나타내는 배열입니다.
+           * @type {Array.<string>}
+           * @example ["협업사 계약"]
+           */
+          "contract": ["협업사 계약"],
+
+          /**
+           * 시공 가능성 관련 옵션을 나타내는 배열입니다.
+           * @type {Array}
+           */
           "possible": []
         },
         {
           "name": "totalStyling",
-          "contract": [
-            "협업사 계약"
-          ],
+          "contract": ["협업사 계약"],
           "possible": []
         },
         {
           "name": "architecture",
-          "contract": [
-            "협업사 계약"
-          ],
+          "contract": ["협업사 계약"],
           "possible": []
         }
       ],
+
+      /**
+       * 시공 파트너 존재 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "partner": false,
+
+      /**
+       * 시공 파트너의 이름을 나타내는 문자열입니다.
+       * @type {string}
+       * @example ""
+       */
       "partnerName": "",
+
+      /**
+       * 자가 시공 여부를 나타내는 불리언 값입니다.
+       * @type {boolean}
+       */
       "own": false,
+
+      /**
+       * 자가 시공의 이름을 나타내는 문자열입니다.
+       * @type {string}
+       * @example ""
+       */
       "ownName": "",
+
+      /**
+       * 시공 범위를 나타내는 숫자입니다.
+       * @type {number}
+       * @example 2
+       */
       "range": 2,
+
+      /**
+       * 주요 시공 분야를 나타내는 문자열입니다.
+       * @type {string}
+       * @example ""
+       */
       "major": ""
     },
-    "styling": {
-      "level": 1,
-      "method": "순차 제안",
-      "tendency": {
-        "style": {
-          "modern": 10,
-          "classic": 0,
-          "natural": 5,
-          "mixmatch": 5,
-          "scandinavian": 5,
-          "vintage": 0,
-          "oriental": 0,
-          "exotic": 0
-        },
-        "texture": {
-          "darkWood": 5,
-          "whiteWood": 5,
-          "coating": 10,
-          "metal": 10
-        },
-        "color": {
-          "darkWood": 5,
-          "whiteWood": 5,
-          "highContrast": 8,
-          "vivid": 8,
-          "white": 10,
-          "mono": 10,
-          "bright": 10,
-          "dark": 8
-        },
-        "density": {
-          "maximun": 6,
-          "minimum": 6
+
+    /**
+     * 포트폴리오 관련 데이터를 담고 있는 객체입니다.
+     * @type {Object}
+     */
+    "portfolio": {
+      /**
+       * 포트폴리오의 위치를 나타내는 문자열입니다.
+       * @type {string}
+       * @example "경기 성남시 수정구 복정로 53 (복정동) 301호"
+       */
+      "location": "경기 성남시 수정구 복정로 53 (복정동) 301호",
+
+      /**
+       * 포트폴리오의 키워드를 담고 있는 배열입니다.
+       * @type {Array.<string>}
+       * @example ["현대 성우아파트"]
+       */
+      "keywords": ["현대 성우아파트"],
+
+      /**
+       * 포트폴리오의 구성 요소를 담고 있는 배열입니다.
+       * @type {Array.<Object>}
+       */
+      "elements": [
+        {
+          /**
+           * 포트폴리오의 이미지 경로를 나타내는 문자열입니다.
+           * @type {string}
+           * @example "/corePortfolio/listImage/p208/t1p208.jpg"
+           */
+          "path": "/corePortfolio/listImage/p208/t1p208.jpg"
         }
-      },
-      "furniture": {
-        "builtin": 1,
-        "builtinDetail": [],
-        "design": 3,
-        "designDetail": []
-      },
-      "fabric": {
-        "level": 3,
-        "curtain": [
-          "업체 연결"
-        ],
-        "bedding": [
-          "업체 연결"
-        ]
-      }
-    },
-    "purchase": {
-      "agencies": false,
-      "setting": {
-        "install": false,
-        "storage": false
-      }
-    },
-    "etc": {
-      "personality": [
-        {
-          "name": "현장(최초) 미팅 전 심도 있게 준비하는 편",
-          "value": false
-        },
-        {
-          "name": "고객 미팅 회수에 연연하지 않는 편",
-          "value": false
-        },
-        {
-          "name": "디자인 제안 속도가 상대적으로 빠른 편",
-          "value": false
-        },
-        {
-          "name": "디자인 기획을 리드하는 편",
-          "value": false
-        },
-        {
-          "name": "디자인 기획시 고객에게 맞추는 편",
-          "value": false
-        }
-      ],
-      "relation": "확인중"
-    },
-    "personality": {
-      "operation": 1,
-      "design": 1,
-      "efficient": 1,
-      "communication": 1,
-      "homeliaison": 1
-    },
-    "grade": -1
-  },
-  "realTime": {
-    "availableDate": []
-  },
-  "setting": {
-    "front": {
-      "introduction": {
-        "desktop": [
-          "안녕하세요 오지은 디자이너 입니다.",
-          "주거 모델하우스 실무 경험이 다수 있으며,",
-          "고객이 원하는 컨셉과 무드를 제안하여 만족하실 수 있는",
-          "공간을 만들어 드리도록 최선을 다하겠습니다. 감사합니다."
-        ],
-        "mobile": [
-          "안녕하세요 오지은 디자이너 입니다.",
-          "주거 모델하우스 실무 경험이 다수 있으며,",
-          "고객이 원하는 컨셉과 무드를 제안하여 만족하실 수 있는",
-          "공간을 만들어 드리도록 최선을 다하겠습니다. 감사합니다."
-        ]
-      },
-      "methods": [
-        "mth0",
-        "mth7"
-      ],
-      "photo": {
-        "porlid": "p369",
-        "index": "t2"
-      },
-      "order": 748
-    },
-    "proposal": [
-      {
-        "name": "기본 세팅",
-        "photo": [
-          {
-            "position": "0",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "styleText": "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g1.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g1.jpg"
-          },
-          {
-            "position": "1",
-            "sgTrue": "s",
-            "unionPo": "right",
-            "styleText": "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g2.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g2.jpg"
-          },
-          {
-            "position": "2",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-            "styleText": "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g4.jpg\");"
-          },
-          {
-            "position": "3",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-            "styleText": "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g7.jpg\");"
-          },
-          {
-            "position": "4",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-            "styleText": "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g8.jpg\");"
-          }
-        ],
-        "description": [
-          "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-          "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-          "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-        ]
-      },
-      {
-        "name": "기본 세팅",
-        "photo": [
-          {
-            "position": "0",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "styleText": "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g1.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g1.jpg"
-          },
-          {
-            "position": "1",
-            "sgTrue": "s",
-            "unionPo": "right",
-            "styleText": "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g2.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g2.jpg"
-          },
-          {
-            "position": "2",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-            "styleText": "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g4.jpg\");"
-          },
-          {
-            "position": "3",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-            "styleText": "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g7.jpg\");"
-          },
-          {
-            "position": "4",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-            "styleText": "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g8.jpg\");"
-          }
-        ],
-        "description": [
-          "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-          "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-          "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-        ]
-      },
-      {
-        "name": "기본 세팅",
-        "photo": [
-          {
-            "position": "0",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "styleText": "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g1.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g1.jpg"
-          },
-          {
-            "position": "1",
-            "sgTrue": "s",
-            "unionPo": "right",
-            "styleText": "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g2.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g2.jpg"
-          },
-          {
-            "position": "2",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-            "styleText": "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g4.jpg\");"
-          },
-          {
-            "position": "3",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-            "styleText": "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g7.jpg\");"
-          },
-          {
-            "position": "4",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-            "styleText": "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g8.jpg\");"
-          }
-        ],
-        "description": [
-          "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-          "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-          "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-        ]
-      },
-      {
-        "name": "기본 세팅",
-        "photo": [
-          {
-            "position": "0",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "styleText": "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g1.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g1.jpg"
-          },
-          {
-            "position": "1",
-            "sgTrue": "s",
-            "unionPo": "right",
-            "styleText": "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g2.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g2.jpg"
-          },
-          {
-            "position": "2",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-            "styleText": "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g4.jpg\");"
-          },
-          {
-            "position": "3",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-            "styleText": "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g7.jpg\");"
-          },
-          {
-            "position": "4",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-            "styleText": "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g8.jpg\");"
-          }
-        ],
-        "description": [
-          "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-          "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-          "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-        ]
-      },
-      {
-        "name": "기본 세팅",
-        "photo": [
-          {
-            "position": "0",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "styleText": "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g1.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g1.jpg"
-          },
-          {
-            "position": "1",
-            "sgTrue": "s",
-            "unionPo": "right",
-            "styleText": "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g2.jpg\");",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g2.jpg"
-          },
-          {
-            "position": "2",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-            "styleText": "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g4.jpg\");"
-          },
-          {
-            "position": "3",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-            "styleText": "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g7.jpg\");"
-          },
-          {
-            "position": "4",
-            "sgTrue": "g",
-            "unionPo": "union",
-            "imgSrc": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-            "styleText": "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"/rawDesigner/ghost/d2310_aa07s/g8.jpg\");"
-          }
-        ],
-        "description": [
-          "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-          "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-          "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-        ]
-      }
-    ],
-    "ghost": [
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g9.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g8.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g7.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g6.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g5.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g4.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g3.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g2.jpg",
-        "sgTrue": "s"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g10.jpg",
-        "sgTrue": "g"
-      },
-      {
-        "link": "/rawDesigner/ghost/d2310_aa07s/g1.jpg",
-        "sgTrue": "g"
-      }
-    ],
-    "description": [
-      "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-      "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-      "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다."
-    ]
+      ]
+    }
   }
-}
+};
 
 /**
  * @namespace DesignerMap

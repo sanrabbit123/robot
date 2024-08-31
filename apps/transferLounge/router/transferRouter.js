@@ -2477,55 +2477,6 @@ TransferRouter.prototype.rou_post_userKey = function () {
   return obj;
 }
 
-TransferRouter.prototype.rou_post_excelToMatrix = function () {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
-  const ExcelReader = require(`${process.cwd()}/apps/excelReader/excelReader.js`);
-  const excel = new ExcelReader();
-  let obj;
-  obj = {};
-  obj.link = [ "/excelToMatrix" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
-      form.parse(req, async function (err, fields, files) {
-        try {
-          if (!err) {
-            const filesKeys = Object.keys(files);
-            if (filesKeys.length === 0) {
-              throw new Error("invalid post");
-            }
-            const { sheetsName } = fields;
-            const file = files[filesKeys[0]];
-            const matrix = await excel.fileToMatrix(file.filepath, sheetsName)
-            await shellExec(`rm -rf ${shellLink(file.filepath)};`);
-            res.send(JSON.stringify(matrix));
-          } else {
-            logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 1): " + e.message).catch((e) => { console.log(e); });
-            res.send(JSON.stringify({ message: "error : " + e.message }));
-          }
-        } catch (e) {
-          logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 2): " + e.message).catch((e) => { console.log(e); });
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-    } catch (e) {
-      logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 3): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
 TransferRouter.prototype.rou_post_contractList = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;

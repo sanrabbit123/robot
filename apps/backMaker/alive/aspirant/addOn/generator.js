@@ -1,85 +1,133 @@
 const AspirantSampleData = {
+  // 신청자 ID
   "aspid": "a2404_aa03s",
+  // 신청자 이름
   "designer": "김윤아",
+  // 신청자 전화번호
   "phone": "010-7303-6343",
+  // 신청자 성별
   "gender": "여성",
+  // 신청자 생년월일
   "birth": new Date("1996-03-05T15:00:00.000Z"),
+  // 신청자 주소
   "address": "서울 마포구 염리동 141-1 4층",
+  // 신청자 이메일 주소
   "email": "kjh41000@naver.com",
+  // 미팅 관련 정보
   "meeting": {
-    "date": new Date(1800, 0, 1),
-    "status": "드랍",
+    // 미팅 날짜
+    "date": new Date(1800, 0, 1), // 아직 미팅이 예정되지 않았음을 의미
+    // 미팅 상태
+    "status": "드랍", // 현재 상태는 "드랍" 상태
+    // 미팅 메모
     "memo": "주거 포트폴리오 확인 어려움, 추가 자료 요청",
+    // 공통 미팅 정보
     "common": {
+      // 공통 미팅 날짜
       "date": new Date(1800, 0, 1),
+      // 공통 미팅 상태
       "status": "",
+      // 추가 정보
       "eight": []
     }
   },
+  // 캘린더 관련 정보
   "calendar": {
+    // 캘린더 어미 정보 (Mother 메서드 관련)
     "mother": "designerMeeting",
+    // 캘린더 ID
     "id": ""
   },
+  // 포트폴리오 정보 (현재는 없음)
   "portfolio": [],
+  // 제출 상태 관련 정보
   "submit": {
+    // 발표 관련 제출 상태
     "presentation": {
-      "date": new Date(1800, 0, 1),
-      "boo": false
+      "date": new Date(1800, 0, 1), // 아직 제출되지 않음
+      "boo": false // 발표 자료 미제출
     },
+    // 파트너십 관련 제출 상태
     "partnership": {
-      "date": new Date("2024-04-04T08:42:51.736Z"),
-      "boo": true
+      "date": new Date("2024-04-04T08:42:51.736Z"), // 파트너십 제출일
+      "boo": true // 파트너십 제출 완료
     },
+    // 최초 요청 관련 정보
     "firstRequest": {
-      "date": new Date("2024-04-04T08:42:51.736Z"),
-      "method": "partnership"
+      "date": new Date("2024-04-04T08:42:51.736Z"), // 최초 요청 날짜
+      "method": "partnership" // 요청 방식은 파트너십
     },
+    // 문서 제출 상태
     "documents": {
-      "date": new Date(1800, 0, 1),
-      "boo": false
+      "date": new Date(1800, 0, 1), // 문서 제출되지 않음
+      "boo": false // 문서 미제출
     },
+    // 등록 관련 제출 상태
     "registration": {
-      "date": new Date(1800, 0, 1),
-      "boo": false
+      "date": new Date(1800, 0, 1), // 등록 미완료
+      "boo": false // 등록 미제출
     },
+    // 미팅 관련 제출 상태
     "meeting": {
-      "date": new Date(1800, 0, 1),
-      "boo": false
+      "date": new Date(1800, 0, 1), // 미팅 날짜 미정
+      "boo": false // 미팅 미진행
     },
+    // 신청 경로
     "comeFrom": ""
   },
+  // 기타 정보
   "information": {
+    // 회사 정보
     "company": {
+      // 회사 이름
       "name": "프리랜서",
+      // 회사 분류
       "classification": "프리랜서",
+      // 사업자 번호
       "businessNumber": "960306",
+      // 대표자 이름
       "representative": "김윤아",
+      // 사업 시작일
       "start": new Date("2024-04-03T15:00:00.000Z")
     },
+    // 계좌 정보
     "account": {
+      // 은행 이름
       "bank": "우리은행",
+      // 계좌 번호
       "number": "1002258794239",
+      // 예금주
       "to": "김윤아",
+      // 기타 정보
       "etc": ""
     },
+    // 경력 정보
     "career": {
+      // 인테리어 경력
       "interior": {
-        "year": 0,
-        "month": 0
+        "year": 0, // 경력 연수
+        "month": 0 // 경력 월수
       },
+      // 스타일링 경력
       "styling": {
-        "year": 0,
-        "month": 0
+        "year": 0, // 경력 연수
+        "month": 0 // 경력 월수
       },
+      // 상세 경력
       "detail": [
         {
+          // 회사명
           "company": "헤르메스 디자인",
+          // 팀명
           "team": "공간기획팀",
+          // 역할
           "role": "기획, 설계 및 3D",
+          // 태그
           "tag": "건축 설계",
+          // 근무 기간
           "date": {
             "start": new Date("2023-11-30T15:00:00.000Z"),
-            "end": new Date("3799-12-31T15:00:00.000Z")
+            "end": new Date("3799-12-31T15:00:00.000Z") // 현재 근무 중을 의미
           }
         },
         {
@@ -89,66 +137,85 @@ const AspirantSampleData = {
           "tag": "리모델링",
           "date": {
             "start": new Date("2023-06-30T15:00:00.000Z"),
-            "end": new Date("2023-11-30T15:00:00.000Z")
+            "end": new Date("2023-11-30T15:00:00.000Z") // 종료된 근무
           }
         }
       ],
+      // 학력 정보
       "school": [
         {
           "school": "신안산대학교",
           "major": "국제비서학과",
           "date": {
-            "start": new Date("2016-02-29T15:00:00.000Z"),
-            "end": new Date("2019-01-31T15:00:00.000Z")
+            "start": new Date("2016-02-29T15:00:00.000Z"), // 입학일
+            "end": new Date("2019-01-31T15:00:00.000Z") // 졸업일
           }
         }
       ],
-      "about": "공간기획을 통해 홈스타일에 관한 지원을 희망하는 이유 중 가장 큰 것은 제가 직접 실무에서 경험을 쌓으며 실력을 키우고자 함에 있습니다. 제가 키워온 디자인 및 공간 기획의 지식과 능력을 직접 현장에 적용하여 사람들의 삶을 더욱 풍요롭고 편안하게 만들어 주는 과정에 참여하고 싶습니다.\n\n이를 통해 현장에서 발생하는 다양한 문제에 대처하고, 고객들의 다양한 요구에 맞추어 최적의 해결책을 찾아내는 과정에서 제 능력을 발휘하고자 합니다. 또한, 이러한 경험을 통해 새로운 아이디어를 발굴하고 창의적인 해결책을 모색하여 스타일 분야에서의 새로운 트렌드를 선도하는데 기여하고 싶습니다.\n\n더불어, 홈스타일은 개인의 취향과 삶의 방식을 반영하는 중요한 영역입니다. 따라서, 고객들과의 소통과 협력을 통해 그들의 요구와 선호도를 정확히 파악하고, 그에 맞는 최상의 디자인을 제공하는 것이 제 목표입니다. 이를 통해 고객들의 만족도를 높이고, 더 나은 홈스타일을 제공함으로써 그들의 삶의 질을 향상시키고자 합니다.\n\n이러한 지원동기를 바탕으로 공간기획을 통해 홈스타일에 관한 경험을 쌓고, 제 능력을 발전시켜 나가는데 최선을 다하겠습니다."
+      // 자기소개
+      "about": "공간기획을 통해 홈스타일에 관한 지원을 희망하는 이유 중 가장 큰 것은..."
     },
+    // 채널 정보
     "channel": {
+      // 웹 관련 정보
       "web": [],
+      // SNS 관련 정보
       "sns": [
         "https:www.instagram.comuyuona_"
       ],
+      // 클라우드 관련 정보
       "cloud": []
     }
   },
+  // 응답 관련 정보
   "response": {
-    "date": new Date(1800, 0, 1),
+    // 응답 날짜
+    "date": new Date(1800, 0, 1), // 응답 없음
+    // 장기 메모
     "long": "45 \n추가 포트폴리오 요청\n일단 3D라도 보내주시기로\n태도가 좋으신거같음",
+    // 탈락 사유
     "outreason": "",
+    // 담당자
     "manager": "리에종",
+    // 초기 상태
     "first": {
-      "status": "불합격",
-      "reason": ""
+      "status": "불합격", // 초기 상태는 불합격
+      "reason": "" // 불합격 사유 없음
     },
+    // 포트폴리오 관련 상태
     "portfolio": {
       "summary": "",
+      // 적합성 상태
       "proper": {
         "status": 0,
         "remodeling": false,
         "styling": false
       },
+      // 준비 상태
       "ready": {
         "home": false,
         "furnishing": false,
         "set": false
       },
+      // 추가 요청 상태
       "plus": {
         "needs": false,
         "request": new Date(1800, 0, 1),
-        "photo": new Date(1800, 0, 1),
+        "photo": new Date(1800, 0, 1)
       }
     }
   },
+  // 계약 관련 정보
   "contract": {
+    // 파트너십 계약 정보
     "partnership": {
-      "date": new Date(1800, 0, 1),
-      "id": ""
+      "date": new Date(1800, 0, 1), // 아직 계약되지 않음
+      "id": "" // 계약 ID 없음
     },
+    // 디자이너 계약 정보
     "designer": {
-      "date": new Date(1800, 0, 1),
-      "id": ""
+      "date": new Date(1800, 0, 1), // 아직 계약되지 않음
+      "id": "" // 계약 ID 없음
     }
   }
 }

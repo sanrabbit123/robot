@@ -4343,11 +4343,6 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           }
 
           loading = instance.mother.grayLoading();
-          // if (window.confirm("견적 관리 페이지로 갈까요?")) {
-          //   window.location.href = window.location.protocol + "//" + window.location.host + "/builder?mode=estimation&buiid=" + thisBuiid;
-          // }
-          //
-          // newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, PYTHONHOST + "/invoiceCreate", { equal: true });
 
           tempArr = value.split('-');
 
@@ -11752,7 +11747,7 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
       sheetsName: "내역서",
     }, "https://" + FILEHOST + "/publicSector/excel", { equal: true });
 
-    res2 = await ajaxJson({ matrix: res }, PYTHONHOST + "/invoiceRequest", { equal: true });
+    res2 = {}
 
     loading.remove();
 
@@ -15961,8 +15956,6 @@ BuilderJs.prototype.launching = async function () {
       this.grayBarWidth = 0;
       this.mother.grayBarWidth = 0;
       document.getElementById("grayLeftOpenButton").remove();
-      await this.estimationView();
-      this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 

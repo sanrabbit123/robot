@@ -1,56 +1,56 @@
 const BuilderSampleData = {
-  "buiid": "u2111_aa02s",
-  "builder": "조호익",
+  "buiid": "u2111_aa02s",  // 시공 소장님의 고유 식별자입니다.
+  "builder": "조호익",  // 시공 소장님의 이름입니다.
   "information": {
     "contract": {
-      "status": "협약 완료",
-      "date": new Date(1800, 0, 1),
+      "status": "협약 완료",  // 계약 상태를 나타내며, "협약 완료"를 의미합니다.
+      "date": new Date(1800, 0, 1),  // 계약 날짜를 나타내며, 기본적으로 1800년 1월 1일로 설정됩니다.
     },
-    "phone": "010-5350-0527",
-    "email": "chhi1106@naver.com",
+    "phone": "010-5350-0527",  // 시공 소장님의 연락처 전화번호입니다.
+    "email": "chhi1106@naver.com",  // 시공 소장님의 이메일 주소입니다.
     "address": [
-      "경기도 의정부시 장암동 101-7"
+      "경기도 의정부시 장암동 101-7"  // 시공 소장님의 주소를 나타냅니다.
     ],
     "business": {
-      "company": "태호금속",
+      "company": "태호금속",  // 시공 소장님이 소속된 회사 이름입니다.
       "career": {
-        "relatedY": 0,
-        "relatedM": 0,
-        "startY": 0,
-        "startM": 0
+        "relatedY": 0,  // 해당 분야의 경력 연수를 나타내며, 기본적으로 0년으로 설정됩니다.
+        "relatedM": 0,  // 해당 분야의 경력 개월수를 나타내며, 기본적으로 0개월로 설정됩니다.
+        "startY": 0,  // 해당 사업의 시작 연도를 나타내며, 기본적으로 0으로 설정됩니다.
+        "startM": 0,  // 해당 사업의 시작 월을 나타내며, 기본적으로 0으로 설정됩니다.
       },
       "account": [
         {
-          "bankName": "우리",
-          "accountNumber": "1002731851156",
-          "to": "태호금속"
+          "bankName": "우리",  // 시공 소장님의 계좌가 속한 은행 이름입니다.
+          "accountNumber": "1002731851156",  // 시공 소장님의 계좌 번호입니다.
+          "to": "태호금속"  // 계좌의 소유주(수취인) 이름입니다.
         }
       ],
       "businessInfo": {
-        "classification": "개인사업자(일반)",
-        "businessNumber": ""
+        "classification": "개인사업자(일반)",  // 시공 소장님의 사업자 유형을 나타내며, "개인사업자(일반)"입니다.
+        "businessNumber": ""  // 사업자 등록 번호를 나타내며, 기본적으로 빈 문자열로 설정됩니다.
       },
       "service": {
         "cost": {
-          "percentage": 5,
-          "percentageHistory": []
+          "percentage": 5,  // 서비스 비용 비율을 나타내며, 기본적으로 5%로 설정됩니다.
+          "percentageHistory": []  // 서비스 비용 비율 변경 이력을 나타내며, 기본적으로 빈 배열로 설정됩니다.
         },
         "designer": {
-          "partner": ""
+          "partner": ""  // 협력하는 디자이너의 이름을 나타내며, 기본적으로 빈 문자열로 설정됩니다.
         }
       }
     }
   },
   "analytics": {
     "region": {
-      "transportation": "자동차",
-      "range": 40,
-      "expenses": 50
+      "transportation": "자동차",  // 소장님의 주요 교통수단을 나타내며, "자동차"입니다.
+      "range": 40,  // 서비스 제공 범위를 킬로미터로 나타내며, 기본적으로 40km로 설정됩니다.
+      "expenses": 50  // 예상 경비를 나타내며, 기본적으로 50으로 설정됩니다.
     },
     "construct": {
-      "level": 1,
-      "cost": 2,
-      "available": []
+      "level": 1,  // 소장님의 시공 레벨을 나타내며, 기본적으로 1로 설정됩니다.
+      "cost": 2,  // 시공 비용을 나타내며, 기본적으로 2로 설정됩니다.
+      "available": []  // 사용 가능한 자원을 나타내며, 기본적으로 빈 배열로 설정됩니다.
     }
   }
 };

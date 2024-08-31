@@ -1,104 +1,187 @@
 const ContentsSampleData = {
-  "conid": "t2209_aa06s",
+  /**
+   * 콘텐츠 ID - 콘텐츠의 고유 식별자
+   * @type {string}
+   */
+  "conid": "t2209_aa06s", 
+
+  /**
+   * 디자이너 ID - 콘텐츠를 담당한 디자이너의 고유 식별자
+   * @type {string}
+   */
   "desid": "d2104_aa02s",
+
+  /**
+   * 고객 ID - 콘텐츠와 연관된 고객의 고유 식별자
+   * @type {string}
+   */
   "cliid": "c2201_aa02s",
+
+  /**
+   * 프로젝트 ID - 해당 콘텐츠와 연결된 프로젝트의 고유 식별자
+   * @type {string}
+   */
   "proid": "p2201_aa04s",
+
+  /**
+   * 콘텐츠에 포함된 상세 정보
+   * @type {Object}
+   */
   "contents": {
+    /**
+     * 포트폴리오 정보 - 프로젝트의 포트폴리오에 대한 상세 정보
+     * @type {Object}
+     */
     "portfolio": {
+      /**
+       * 포트폴리오 ID - 포트폴리오의 고유 식별자
+       * @type {string}
+       */
       "pid": "p208",
+
+      /**
+       * 포트폴리오 생성 날짜
+       * @type {Date}
+       */
       "date": new Date("2022-09-28T07:25:37.802Z"),
+
+      /**
+       * 공간 정보 - 프로젝트의 공간에 대한 정보
+       * @type {Object}
+       */
       "spaceInfo": {
+        /**
+         * 공간 이름 - 해당 프로젝트의 공간 명칭
+         * @type {string}
+         */
         "space": "현대 성우아파트",
+
+        /**
+         * 공간 평수 - 해당 공간의 크기 (평 단위)
+         * @type {number}
+         */
         "pyeong": 25,
+
+        /**
+         * 지역 - 프로젝트가 진행된 지역
+         * @type {string}
+         */
         "region": "경기 용인시",
+
+        /**
+         * 방식 - 프로젝트의 진행 방식
+         * @type {string}
+         */
         "method": "아파트 홈스타일링",
+
+        /**
+         * 예산 - 프로젝트에 할당된 예산
+         * @type {string}
+         */
         "budget": "1,000만원"
       },
+
+      /**
+       * 포트폴리오 제목 - 포트폴리오의 주제와 부제
+       * @type {Object}
+       */
       "title": {
+        /**
+         * 메인 제목 - 포트폴리오의 주요 제목
+         * @type {string}
+         */
         "main": "보다 나 같은 공간으로, 현대 성우아파트 25py 홈스타일링",
+
+        /**
+         * 부제 - 포트폴리오의 부제목
+         * @type {string}
+         */
         "sub": "보다 나 같은 공간으로, 현대 성우아파트 홈스타일링"
       },
+
+      /**
+       * 색상 정보 - 포트폴리오에서 사용된 색상들
+       * @type {Object}
+       */
       "color": {
+        /**
+         * 메인 색상 - 프로젝트의 주요 색상
+         * @type {string}
+         */
         "main": "#ececec",
+
+        /**
+         * 서브 색상 - 프로젝트의 보조 색상
+         * @type {string}
+         */
         "sub": "#d3d2d0",
+
+        /**
+         * 제목 색상 - 포트폴리오 제목의 색상
+         * @type {string}
+         */
         "title": "#606060"
       },
+
+      /**
+       * 세부 정보 - 프로젝트의 자세한 정보
+       * @type {Object}
+       */
       "detailInfo": {
-        "photodae": [
-          3,
-          2
-        ],
+        /**
+         * 포토 대지 - 포트폴리오에서 강조된 이미지 인덱스
+         * @type {number[]}
+         */
+        "photodae": [3, 2],
+
+        /**
+         * 사진 순서 - 첫 번째 및 마지막 사진의 순서 정보
+         * @type {Object}
+         */
         "photosg": {
           "first": 1,
           "last": 16
         },
-        "slide": [
-          1,
-          2,
-          5,
-          6,
-          7,
-          8,
-          12,
-          15,
-          16
-        ],
+
+        /**
+         * 슬라이드 이미지 - 슬라이드 쇼에 포함된 이미지 인덱스
+         * @type {number[]}
+         */
+        "slide": [1, 2, 5, 6, 7, 8, 12, 15, 16],
+
+        /**
+         * 태그 - 프로젝트와 관련된 키워드 목록
+         * @type {string[]}
+         */
         "tag": [
-          "공간으로",
-          "리모델링",
-          "상황이라",
-          "기본적인",
-          "재택근무",
-          "거실에서",
-          "하셔서",
-          "작업실",
-          "거실로",
-          "빼내어",
-          "작업실로",
-          "활용하고",
-          "드레스룸",
-          "미니서재로",
-          "목적인",
-          "프로젝트였습니다선호하시",
-          "스타일로",
-          "보아도",
-          "있었듯",
-          "화이트",
-          "그레이로",
-          "모노톤",
-          "모던한",
-          "분위기",
-          "추천드릴",
-          "때에도",
-          "유념하여",
-          "선정할",
-          "우드톤",
-          "가구들도",
-          "있었기",
-          "all",
-          "현대 성우아파트",
-          "25평",
-          "20평형",
-          "경기 용인시",
-          "현대",
-          "성우아파트",
-          "경기",
-          "용인시",
-          "홈퍼니싱",
-          "보다",
-          "나",
-          "같은",
-          "공간으로,",
-          "현대",
-          "성우아파트",
-          "25py",
-          "홈스타일링"
+          "공간으로", "리모델링", "상황이라", "기본적인", "재택근무", "거실에서",
+          "하셔서", "작업실", "거실로", "빼내어", "작업실로", "활용하고", "드레스룸",
+          "미니서재로", "목적인", "프로젝트였습니다선호하시", "스타일로", "보아도", "있었듯",
+          "화이트", "그레이로", "모노톤", "모던한", "분위기", "추천드릴", "때에도", "유념하여",
+          "선정할", "우드톤", "가구들도", "있었기", "all", "현대 성우아파트", "25평",
+          "20평형", "경기 용인시", "현대", "성우아파트", "경기", "용인시", "홈퍼니싱",
+          "보다", "나", "같은", "공간으로,", "현대", "성우아파트", "25py", "홈스타일링"
         ],
+
+        /**
+         * 서비스 유형 - 해당 프로젝트에서 제공된 서비스 종류
+         * @type {string}
+         */
         "service": "홈스타일링",
+
+        /**
+         * 분류 키 - 프로젝트 분류를 위한 내부 키 값
+         * @type {Object}
+         */
         "sort": {
           "key8": "690",
           "key9": "220918"
         },
+
+        /**
+         * 성향 - 프로젝트의 스타일, 텍스처, 색상, 밀도 등의 성향 정보
+         * @type {Object}
+         */
         "tendency": {
           "style": {
             "modern": 8,
@@ -132,8 +215,22 @@ const ContentsSampleData = {
           }
         }
       },
+
+      /**
+       * 포트폴리오 콘텐츠 - 세부 설명과 이미지들
+       * @type {Object}
+       */
       "contents": {
+        /**
+         * 제안 - 디자이너의 제안 설명
+         * @type {string}
+         */
         "suggestion": "Designer's\nSuggestion",
+
+        /**
+         * 세부 내용 - 각 방의 디자인 설명과 관련 사진 인덱스
+         * @type {Object[]}
+         */
         "detail": [
           {
             "title": "init",
@@ -189,20 +286,46 @@ const ContentsSampleData = {
         ]
       }
     },
+
+    /**
+     * 리뷰 정보 - 프로젝트에 대한 고객의 후기 정보
+     * @type {Object}
+     */
     "review": {
+      /**
+       * 리뷰 ID - 리뷰의 고유 식별자
+       * @type {string}
+       */
       "rid": "re202",
+
+      /**
+       * 리뷰 날짜 - 리뷰 작성 날짜
+       * @type {Date}
+       */
       "date": new Date("2022-09-28T07:25:37.802Z"),
+
+      /**
+       * 리뷰 제목 - 리뷰의 제목과 부제
+       * @type {Object}
+       */
       "title": {
         "main": "상담이라도 받아보자는, 마음에 시작해봤어요.",
         "sub": "상담이라도, 받아보자!"
       },
+
+      /**
+       * 리뷰 세부 정보 - 리뷰와 관련된 이미지 및 순서 정보
+       * @type {Object}
+       */
       "detailInfo": {
-        "photodae": [
-          9,
-          8
-        ],
+        "photodae": [9, 8],
         "order": 570
       },
+
+      /**
+       * 리뷰 콘텐츠 - 리뷰 내용 및 이미지들
+       * @type {Object[]}
+       */
       "contents": {
         "detail": [
           {
@@ -309,6 +432,11 @@ const ContentsSampleData = {
       }
     }
   },
+
+  /**
+   * 사진 정보 - 콘텐츠에 포함된 사진들에 대한 정보
+   * @type {Object}
+   */
   "photos": {
     "first": 1,
     "last": 16,
@@ -379,6 +507,11 @@ const ContentsSampleData = {
       }
     ]
   },
+
+  /**
+   * 서비스 정보 - 해당 콘텐츠와 관련된 서비스 정보
+   * @type {Object}
+   */
   "service": {
     "serid": "s2011_aa01s",
     "xValue": "B",
@@ -2281,120 +2414,177 @@ class Contents {
   }
 }
 
+/**
+ * 콘텐츠 인스턴스를 담는 배열 클래스
+ * 이 클래스는 콘텐츠 데이터를 배열로 관리하며, 다양한 메서드를 통해 데이터를 처리하고 조작하는 기능을 제공합니다.
+ * @class ContentsArr
+ * @extends {Array}
+ */
 class ContentsArr extends Array {
 
+  /**
+   * 배열에 있는 모든 콘텐츠 객체를 일반 객체로 변환하여 반환합니다.
+   * @returns {Array<Object>} 일반 객체로 변환된 콘텐츠 배열
+   */
   toNormal() {
-    let tong;
-    tong = [];
-    for (let i of this) {
-      tong.push(i.toNormal());
+    let tong; // 결과를 저장할 빈 배열 생성
+    tong = []; 
+    for (let i of this) { // 현재 배열에 있는 모든 요소에 대해
+      tong.push(i.toNormal()); // 각 요소를 toNormal 메서드로 변환한 뒤 결과 배열에 추가
     }
-    return tong;
+    return tong; // 변환된 배열 반환
   }
 
+  /**
+   * 모든 사진 데이터를 가져와서 반환합니다.
+   * @returns {PhotoArray} 모든 사진 데이터를 담은 배열
+   */
   getAllPhotos() {
-    const path = "/corePortfolio/listImage";
+    const path = "/corePortfolio/listImage"; // 사진의 기본 경로 설정
+    /**
+     * 사진 배열을 관리하는 클래스
+     * @class PhotoArray
+     * @extends {Array}
+     */
     class PhotoArray extends Array {
+      
+      /**
+       * 콘텐츠 ID로 사진을 검색합니다.
+       * @param {string} conid 콘텐츠 ID
+       * @returns {PhotoArray} 검색된 사진 배열
+       */
       searchByConid(conid) {
-        if (typeof conid !== "string") {
-          throw new Error("must be conid");
+        if (typeof conid !== "string") { // conid가 문자열이 아니면 오류 발생
+          throw new Error("must be conid"); 
         }
-        let result = new PhotoArray();
-        for (let i of this) {
-          if (i.conid === conid) {
-            result.push(i);
+        let result = new PhotoArray(); // 결과를 저장할 새 PhotoArray 인스턴스 생성
+        for (let i of this) { // 현재 배열의 모든 요소에 대해
+          if (i.conid === conid) { // conid가 일치하는 경우
+            result.push(i); // 결과 배열에 해당 요소 추가
           }
         }
-        return result;
+        return result; // 검색된 결과 반환
       }
+      
+      /**
+       * 방(Room)으로 사진을 검색합니다.
+       * @param {string} room 방 이름
+       * @returns {PhotoArray} 검색된 사진 배열
+       */
       searchByRoom(room) {
-        if (typeof room !== "string") {
-          throw new Error("must be room");
+        if (typeof room !== "string") { // room이 문자열이 아니면 오류 발생
+          throw new Error("must be room"); 
         }
-        let result = new PhotoArray();
-        for (let i of this) {
-          if (i.room === room) {
-            result.push(i);
+        let result = new PhotoArray(); // 결과를 저장할 새 PhotoArray 인스턴스 생성
+        for (let i of this) { // 현재 배열의 모든 요소에 대해
+          if (i.room === room) { // room이 일치하는 경우
+            result.push(i); // 결과 배열에 해당 요소 추가
           }
         }
-        return result;
+        return result; // 검색된 결과 반환
       }
     }
-    let temp, result;
-    result = new PhotoArray();
-    for (let { conid, desid, contents: { portfolio, review }, photos } of this) {
-      temp = JSON.parse(JSON.stringify(photos)).detail;
-      for (let obj of temp) {
-        obj.conid = conid;
-        obj.desid = desid;
-        obj.pid = portfolio.pid;
-        obj.pyeong = portfolio.spaceInfo.pyeong;
-        obj.room = "review";
-        for (let i = 1; i < portfolio.contents.detail.length; i++) {
-          if (portfolio.contents.detail[i].photo.includes(obj.index)) {
-            obj.room = portfolio.contents.detail[i].title;
+    
+    let temp, result; // 중간 결과와 최종 결과를 저장할 변수 선언
+    result = new PhotoArray(); // 최종 결과를 저장할 새 PhotoArray 인스턴스 생성
+    for (let { conid, desid, contents: { portfolio, review }, photos } of this) { // 현재 배열의 모든 콘텐츠에 대해 반복
+      temp = JSON.parse(JSON.stringify(photos)).detail; // photos 객체를 깊은 복사한 뒤 detail 속성만 추출
+      for (let obj of temp) { // 복사한 사진 데이터의 모든 요소에 대해 반복
+        obj.conid = conid; // 사진 객체에 콘텐츠 ID 추가
+        obj.desid = desid; // 사진 객체에 디자이너 ID 추가
+        obj.pid = portfolio.pid; // 사진 객체에 포트폴리오 ID 추가
+        obj.pyeong = portfolio.spaceInfo.pyeong; // 사진 객체에 공간 정보의 평수 추가
+        obj.room = "review"; // 기본 방 이름을 "review"로 설정
+        for (let i = 1; i < portfolio.contents.detail.length; i++) { // 포트폴리오의 각 콘텐츠 상세 정보에 대해
+          if (portfolio.contents.detail[i].photo.includes(obj.index)) { // 사진 인덱스가 일치하는 경우
+            obj.room = portfolio.contents.detail[i].title; // 방 이름을 해당 제목으로 설정
           }
         }
-        obj.keywords = [];
-        for (let t of portfolio.detailInfo.tag) {
-          obj.keywords.push(t);
+        obj.keywords = []; // 키워드 배열 초기화
+        for (let t of portfolio.detailInfo.tag) { // 각 태그에 대해
+          obj.keywords.push(t); // 키워드 배열에 태그 추가
         }
-        obj.keywords.push(portfolio.detailInfo.service);
-        obj.keywords = obj.keywords.filter((z) => { return z !== '' && z !== "all"; });
-        obj.file = `t${String(obj.index)}${obj.pid}.jpg`;
-        obj.path = path + "/" + obj.pid + "/" + obj.file;
+        obj.keywords.push(portfolio.detailInfo.service); // 서비스 정보를 키워드 배열에 추가
+        obj.keywords = obj.keywords.filter((z) => { return z !== '' && z !== "all"; }); // 빈 문자열이나 "all"을 제외한 키워드만 필터링
+        obj.file = `t${String(obj.index)}${obj.pid}.jpg`; // 파일 이름 생성
+        obj.path = path + "/" + obj.pid + "/" + obj.file; // 파일 경로 생성
       }
-      result.push(temp);
+      result.push(temp); // 중간 결과를 최종 결과에 추가
     }
-    result = result.flat();
-    return result;
+    result = result.flat(); // 다중 배열 구조를 평평하게 만듦
+    return result; // 최종 결과 반환
   }
 
+  /**
+   * 주어진 콘텐츠 ID 배열과 일치하는 콘텐츠를 반환합니다.
+   * @param {Array<string>} arr 콘텐츠 ID 배열
+   * @param {boolean} [normalMode=false] 일반 객체로 반환할지 여부
+   * @returns {ContentsArr|Array<Object>} 콘텐츠 배열 또는 일반 객체 배열
+   */
   conidArr(arr, normalMode = false) {
-    if (!Array.isArray(arr)) {
-      throw new Error("invaild input");
+    if (!Array.isArray(arr)) { // arr이 배열인지 확인
+      throw new Error("invaild input"); 
     }
-    if (!arr.every((c) => { return typeof c === "string"; })) {
-      throw new Error("invaild input");
+    if (!arr.every((c) => { return typeof c === "string"; })) { // 배열의 모든 요소가 문자열인지 확인
+      throw new Error("invaild input"); 
     }
-    let result;
-    if (!normalMode) {
-      result = new ContentsArr();
-      for (let obj of this) {
-        if (arr.includes(obj.conid)) {
-          result.push(obj);
+    let result; 
+    if (!normalMode) { // 일반 모드가 아닌 경우
+      result = new ContentsArr(); // 새로운 ContentsArr 생성
+      for (let obj of this) { // 현재 배열의 모든 요소에 대해
+        if (arr.includes(obj.conid)) { // 콘텐츠 ID가 주어진 배열에 포함되어 있는 경우
+          result.push(obj); // 결과 배열에 추가
         }
       }
-    } else {
-      result = [];
-      for (let conid of arr) {
-        for (let obj of this) {
-          if (conid === obj.conid) {
-            result.push(obj.toNormal());
+    } else { // 일반 모드인 경우
+      result = []; // 결과 배열 초기화
+      for (let conid of arr) { // 주어진 콘텐츠 ID 배열의 모든 요소에 대해
+        for (let obj of this) { // 현재 배열의 모든 요소에 대해
+          if (conid === obj.conid) { // 콘텐츠 ID가 일치하는 경우
+            result.push(obj.toNormal()); // 일반 객체로 변환하여 결과 배열에 추가
           }
         }
       }
     }
-    return result;
+    return result; // 결과 배열 반환
   }
 
 }
 
+/**
+ * Contents 클래스에 유용한 메서드를 추가하는 함수
+ * 이 함수는 Contents 클래스의 프로토타입에 여러 가지 메서드를 추가하여 콘텐츠 데이터를 처리하는 기능을 확장합니다.
+ * @param {Class} Contents 콘텐츠 클래스
+ * @returns {Class} 확장된 콘텐츠 클래스
+ */
 const withTools = function (Contents) {
 
+  /**
+   * 콘텐츠 데이터를 평탄화된 객체 형태로 변환합니다.
+   * @returns {Array<Object>} 평탄화된 객체의 배열
+   */
   Contents.prototype.flatDeath = function () {
-    const contents = this.toNormal();
-    const { conid, desid, contents: { portfolio, review }, photos } = contents;
-    const { pid, date: portfolioDate, spaceInfo, title, color, detailInfo, contents: portfolioContents } = portfolio;
-    const { space, pyeong, region, method } = spaceInfo;
-    const { photodae, photosg, slide, tag, service, sort: { key8, key9 } } = detailInfo;
-    const { rid, date: reviewDate, title: reviewTitle, detailInfo: reviewDetailInfo, contents: reviewContents } = review;
-    const dateToString = function (dateObject, detail = false) {
-      let dayString = '';
+    const contents = this.toNormal(); // 현재 콘텐츠 객체를 일반 객체로 변환
+    const { conid, desid, contents: { portfolio, review }, photos } = contents; // 콘텐츠, 포트폴리오, 리뷰 및 사진 정보 추출
+    const { pid, date: portfolioDate, spaceInfo, title, color, detailInfo, contents: portfolioContents } = portfolio; // 포트폴리오 세부 정보 추출
+    const { space, pyeong, region, method } = spaceInfo; // 공간 정보 추출
+    const { photodae, photosg, slide, tag, service, sort: { key8, key9 } } = detailInfo; // 포트폴리오 디테일 정보 추출
+    const { rid, date: reviewDate, title: reviewTitle, detailInfo: reviewDetailInfo, contents: reviewContents } = review; // 리뷰 정보 추출
 
+    /**
+     * 날짜 객체를 문자열로 변환합니다.
+     * @param {Date} dateObject 변환할 날짜 객체
+     * @param {boolean} [detail=false] 시간까지 포함할지 여부
+     * @returns {string} 변환된 날짜 문자열
+     */
+    const dateToString = function (dateObject, detail = false) {
+      let dayString = ''; // 날짜를 저장할 문자열 초기화
+
+      // 년도를 4자리 문자열로 변환하여 추가
       dayString += String(dateObject.getFullYear()).slice(0, 4);
       dayString += '-';
 
+      // 월을 2자리 문자열로 변환하여 추가
       if (dateObject.getMonth() + 1 < 10) {
         dayString += '0' + String(dateObject.getMonth() + 1);
       } else {
@@ -2403,12 +2593,14 @@ const withTools = function (Contents) {
 
       dayString += '-';
 
+      // 일을 2자리 문자열로 변환하여 추가
       if (dateObject.getDate() < 10) {
         dayString += '0' + String(dateObject.getDate());
       } else {
         dayString += String(dateObject.getDate());
       }
 
+      // detail이 true일 경우 시간도 문자열에 추가
       if (detail) {
         dayString += ' ';
         if (dateObject.getHours() < 10) {
@@ -2430,267 +2622,359 @@ const withTools = function (Contents) {
         }
       }
 
+      // 특정 조건에 따라 날짜 문자열 수정
       if (/^1[678]/.test(dayString)) {
         dayString = '-';
       } else if (/^3/.test(dayString)) {
         dayString = '예정';
       }
 
-      return dayString;
+      return dayString; // 최종 변환된 날짜 문자열 반환
     }
 
-    let tong = [];
-    let temp;
+    let tong = []; // 최종 결과를 저장할 배열 초기화
+    let temp; // 임시 객체를 저장할 변수 선언
 
     temp = {};
-    temp.standard = {
+    temp.standard = { // 표준 정보 객체 생성
       conid,
       pid
     };
-    temp.info = {
+    temp.info = { // 세부 정보 객체 생성
       desid,
       rid,
-      portfolioDate: dateToString(portfolioDate, true),
-      reviewDate: dateToString(reviewDate, true),
-      titleMain: title.main,
-      titleSub: title.sub,
-      reviewTitleMain: reviewTitle.main,
-      reviewTitleSub: reviewTitle.sub,
-      space,
-      pyeong,
-      region,
-      method,
-      color: (color.main + " / " + color.sub + " / " + color.title),
-      photodae: photodae.join(", "),
-      reviewPhotodae: reviewDetailInfo.photodae.join(", "),
-      photosg: (photosg.first + ", " + photosg.last),
-      slide: slide.join(", "),
-      tag: tag.join(", "),
-      service,
-      key8,
-      key9,
-      order: reviewDetailInfo.order,
+      portfolioDate: dateToString(portfolioDate, true), // 포트폴리오 날짜 문자열로 변환
+      reviewDate: dateToString(reviewDate, true), // 리뷰 날짜 문자열로 변환
+      titleMain: title.main, // 메인 제목
+      titleSub: title.sub, // 서브 제목
+      reviewTitleMain: reviewTitle.main, // 리뷰 메인 제목
+      reviewTitleSub: reviewTitle.sub, // 리뷰 서브 제목
+      space, // 공간 정보
+      pyeong, // 평수
+      region, // 지역
+      method, // 방법
+      color: (color.main + " / " + color.sub + " / " + color.title), // 색상 정보
+      photodae: photodae.join(", "), // 포토대 정보
+      reviewPhotodae: reviewDetailInfo.photodae.join(", "), // 리뷰 포토대 정보
+      photosg: (photosg.first + ", " + photosg.last), // 사진 정보
+      slide: slide.join(", "), // 슬라이드 정보
+      tag: tag.join(", "), // 태그 정보
+      service, // 서비스 정보
+      key8, // 키8
+      key9, // 키9
+      order: reviewDetailInfo.order, // 리뷰 주문 정보
     };
-    tong.push(temp);
+    tong.push(temp); // 생성된 객체를 결과 배열에 추가
 
-    return tong;
+    return tong; // 결과 배열 반환
   }
 
+  /**
+   * 평탄화된 데이터를 기반으로 차원 축소된 객체 배열을 반환합니다.
+   * @returns {Array<Object>} 차원 축소된 객체 배열
+   */
   Contents.prototype.dimensionSqueeze = function () {
-    const tong = this.flatDeath();
+    const tong = this.flatDeath(); // flatDeath 메서드를 호출하여 평탄화된 데이터를 가져옴
     let result, tempObj;
 
     result = [];
-    for (let { standard, info } of tong) {
+    for (let { standard, info } of tong) { // 각 평탄화된 데이터에 대해
       tempObj = {};
-      for (let i in standard) {
+      for (let i in standard) { // 표준 정보 복사
         tempObj[i] = standard[i];
       }
-      for (let i in info) {
+      for (let i in info) { // 세부 정보 복사
         tempObj[i] = info[i];
       }
-      tempObj.reviewOrder = tempObj.order;
-      delete tempObj.order;
-      result.push(tempObj);
+      tempObj.reviewOrder = tempObj.order; // 리뷰 주문 정보를 복사하여 reviewOrder로 저장
+      delete tempObj.order; // 원래 order 속성 삭제
+      result.push(tempObj); // 최종 객체를 결과 배열에 추가
     }
 
-    return result;
+    return result; // 최종 결과 배열 반환
   }
 
+  /**
+   * 이미지 경로를 생성하여 반환합니다.
+   * @returns {Object} 이미지 경로 정보 객체
+   */
   Contents.prototype.imagePath = function () {
+    /**
+     * 주요 이미지 정보를 담은 클래스
+     * @class KeyImages
+     */
     class KeyImages {
+      /**
+       * 객체를 배열 형태로 변환합니다.
+       * @returns {Array<Object>} 변환된 배열
+       */
       toArray() {
-        let arr = [];
+        let arr = []; // 결과를 저장할 배열 초기화
         let tempObj;
-        for (let i in this.rooms) {
-          tempObj = {};
-          tempObj.pid = this.pid;
-          tempObj.room = i;
-          tempObj.photos = this.rooms[i];
-          arr.push(tempObj);
+        for (let i in this.rooms) { // 각 방(Room) 정보에 대해
+          tempObj = {}; 
+          tempObj.pid = this.pid; // 포트폴리오 ID 복사
+          tempObj.room = i; // 방 이름 복사
+          tempObj.photos = this.rooms[i]; // 사진 정보 복사
+          arr.push(tempObj); // 결과 배열에 추가
         }
-        return arr;
+        return arr; // 최종 배열 반환
       }
     }
+
+    /**
+     * 이미지 경로를 생성하는 클래스
+     * @class ImagePath
+     */
     class ImagePath {
+      /**
+       * 리스트 이미지의 경로를 생성합니다.
+       * @returns {KeyImages} 생성된 이미지 정보 객체
+       */
       keyListImage() {
-        const { key: { rooms, photos }, listImage: images } = this;
-        let result = new KeyImages();
-        result.conid = this.conid;
-        result.pid = this.pid;
+        const { key: { rooms, photos }, listImage: images } = this; // 경로 생성에 필요한 정보 추출
+        let result = new KeyImages(); // 새로운 KeyImages 객체 생성
+        result.conid = this.conid; // 콘텐츠 ID 복사
+        result.pid = this.pid; // 포트폴리오 ID 복사
         result.rooms = {};
 
-        for (let i = 0; i < rooms.length; i++) {
-          result.rooms[rooms[i]] = [];
-          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) {
-            result.rooms[rooms[i]].push(images[j]);
+        for (let i = 0; i < rooms.length; i++) { // 각 방(Room) 정보에 대해
+          result.rooms[rooms[i]] = []; // 방에 해당하는 사진 배열 초기화
+          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) { // 각 사진 정보에 대해
+            result.rooms[rooms[i]].push(images[j]); // 해당 방에 사진 경로 추가
           }
         }
-        return result;
+        return result; // 최종 이미지 정보 객체 반환
       }
+
+      /**
+       * 원본 이미지의 경로를 생성합니다.
+       * @returns {KeyImages} 생성된 이미지 정보 객체
+       */
       keyOriginal() {
-        const { key: { rooms, photos }, original: images } = this;
-        let result = new KeyImages();
-        result.conid = this.conid;
-        result.pid = this.pid;
+        const { key: { rooms, photos }, original: images } = this; // 경로 생성에 필요한 정보 추출
+        let result = new KeyImages(); // 새로운 KeyImages 객체 생성
+        result.conid = this.conid; // 콘텐츠 ID 복사
+        result.pid = this.pid; // 포트폴리오 ID 복사
         result.rooms = {};
 
-        for (let i = 0; i < rooms.length; i++) {
-          result.rooms[rooms[i]] = [];
-          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) {
-            result.rooms[rooms[i]].push(images[j]);
+        for (let i = 0; i < rooms.length; i++) { // 각 방(Room) 정보에 대해
+          result.rooms[rooms[i]] = []; // 방에 해당하는 사진 배열 초기화
+          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) { // 각 사진 정보에 대해
+            result.rooms[rooms[i]].push(images[j]); // 해당 방에 사진 경로 추가
           }
         }
-        return result;
+        return result; // 최종 이미지 정보 객체 반환
       }
     }
-    const pid = this.contents.portfolio.pid;
-    let result = new ImagePath();
+
+    const pid = this.contents.portfolio.pid; // 포트폴리오 ID 추출
+    let result = new ImagePath(); // 새로운 ImagePath 객체 생성
     let tempObj;
 
-    result.conid = this.conid;
-    result.pid = pid;
-    result.key = this.contents.portfolio.keyMatrix();
+    result.conid = this.conid; // 콘텐츠 ID 복사
+    result.pid = pid; // 포트폴리오 ID 복사
+    result.key = this.contents.portfolio.keyMatrix(); // 포트폴리오 키 매트릭스 생성
 
-    result.listImage = [];
-    result.original = [];
+    result.listImage = []; // 리스트 이미지 경로 초기화
+    result.original = []; // 원본 이미지 경로 초기화
 
-    for (let i = 0; i < this.photos.detail.length; i++) {
+    for (let i = 0; i < this.photos.detail.length; i++) { // 각 사진 디테일에 대해
       tempObj = {};
-      tempObj.path = "/corePortfolio/listImage/" + pid + "/t" + this.photos.detail[i].index + pid + ".jpg";
-      tempObj.gs = this.photos.detail[i].gs;
-      result.listImage.push(tempObj);
+      tempObj.path = "/corePortfolio/listImage/" + pid + "/t" + this.photos.detail[i].index + pid + ".jpg"; // 리스트 이미지 경로 생성
+      tempObj.gs = this.photos.detail[i].gs; // 사진 GS 정보 추가
+      result.listImage.push(tempObj); // 리스트 이미지 경로 배열에 추가
       tempObj = {};
-      tempObj.path = "/corePortfolio/original/" + pid + "/i" + this.photos.detail[i].index + pid + ".jpg";
-      tempObj.gs = this.photos.detail[i].gs;
-      result.original.push(tempObj);
+      tempObj.path = "/corePortfolio/original/" + pid + "/i" + this.photos.detail[i].index + pid + ".jpg"; // 원본 이미지 경로 생성
+      tempObj.gs = this.photos.detail[i].gs; // 사진 GS 정보 추가
+      result.original.push(tempObj); // 원본 이미지 경로 배열에 추가
     }
 
-    return result;
+    return result; // 최종 이미지 경로 정보 객체 반환
   }
 
-  return Contents;
+  return Contents; // 확장된 Contents 클래스 반환
 }
 
+/**
+ * ContentsArr 클래스에 유용한 메서드를 추가하는 함수
+ * 이 함수는 ContentsArr 클래스의 프로토타입에 다양한 메서드를 추가하여 콘텐츠 배열 데이터를 처리하는 기능을 확장합니다.
+ * @param {Class} ContentsArr 콘텐츠 배열 클래스
+ * @returns {Class} 확장된 콘텐츠 배열 클래스
+ */
 const withToolsArr = function (ContentsArr) {
 
+  /**
+   * 콘텐츠 배열의 각 콘텐츠 데이터를 평탄화된 객체 형태로 변환하여 하나의 배열로 반환합니다.
+   * @returns {Array<Object>} 평탄화된 객체의 배열
+   */
   ContentsArr.prototype.flatDeath = function () {
     let tong, tempArr;
-    tong = [];
-    for (let i of this) {
-      tempArr = i.flatDeath();
+    tong = []; // 최종 결과를 담을 배열 초기화
+    for (let i of this) { // 배열의 각 콘텐츠에 대해
+      tempArr = i.flatDeath(); // 개별 콘텐츠를 평탄화된 객체로 변환
       for (let j of tempArr) {
-        tong.push(j);
+        tong.push(j); // 결과 배열에 추가
       }
     }
-    return tong;
+    return tong; // 최종 결과 배열 반환
   }
 
+  /**
+   * 차원 축소된 데이터베이스 모델을 생성합니다.
+   * @returns {Object|null} SQL 모델 및 데이터 객체 또는 null
+   */
   ContentsArr.prototype.dimensionSqueeze = function () {
-    const TABLE_NAME = "contents";
-    const LONG_TARGETS = [];
+    const TABLE_NAME = "contents"; // 테이블 이름 정의
+    const LONG_TARGETS = []; // TEXT로 저장할 긴 문자열 필드를 지정하는 배열 초기화
+
+    /**
+     * SQL 모델을 생성하는 클래스
+     * @class SqlModel
+     */
     class SqlModel {
+      /**
+       * SQL 모델 생성자
+       * @param {Object} sample 차원 축소된 데이터 샘플 객체
+       */
       constructor(sample) {
-        for (let i in sample) {
+        for (let i in sample) { // 샘플 객체의 각 필드를 순회
           if (typeof sample[i] === "string") {
-            this[i] = "VARCHAR(255)";
+            this[i] = "VARCHAR(255)"; // 문자열 타입은 VARCHAR(255)로 설정
           } else if (typeof sample[i] === "number") {
-            this[i] = "INT(11)";
+            this[i] = "INT(11)"; // 숫자 타입은 INT(11)로 설정
           } else if (typeof sample[i] === "boolean") {
-            this[i] = "INT(11)";
+            this[i] = "INT(11)"; // 불리언 타입은 INT(11)로 설정 (1 또는 0으로 저장)
           } else {
-            this[i] = "VARCHAR(255)";
+            this[i] = "VARCHAR(255)"; // 그 외 타입은 기본적으로 VARCHAR(255)로 설정
           }
           if (LONG_TARGETS.includes(i)) {
-            this[i] = "TEXT";
+            this[i] = "TEXT"; // 긴 문자열 필드는 TEXT로 설정
           }
         }
       }
 
+      /**
+       * 테이블 이름을 반환합니다.
+       * @returns {string} 테이블 이름
+       */
       getName() {
         return TABLE_NAME;
       }
 
+      /**
+       * SQL 테이블 생성 쿼리를 반환합니다.
+       * @returns {string} 테이블 생성 SQL 쿼리
+       */
       getCreateSql() {
-        let sql = "CREATE TABLE \`" + this.getName() + "\` (";
-        sql += "id INT(11) NOT NULL AUTO_INCREMENT,";
+        let sql = "CREATE TABLE `" + this.getName() + "` ("; // 테이블 생성 SQL 시작
+        sql += "id INT(11) NOT NULL AUTO_INCREMENT,"; // ID 필드 추가 (자동 증가)
         sql += " ";
         for (let i in this) {
-          sql += "\`";
+          sql += "`";
           sql += i;
-          sql += "\`";
-          sql += " ";
+          sql += "` ";
           sql += this[i];
           sql += ", ";
         }
-        sql += "PRIMARY KEY (id));";
-        return sql;
+        sql += "PRIMARY KEY (id));"; // 기본 키 설정
+        return sql; // 최종 SQL 반환
       }
 
+      /**
+       * SQL 테이블 삭제 쿼리를 반환합니다.
+       * @returns {string} 테이블 삭제 SQL 쿼리
+       */
       getDropSql() {
-        let sql = "DROP TABLE " + this.getName() + ";";
+        let sql = "DROP TABLE " + this.getName() + ";"; // 테이블 삭제 SQL
         return sql;
       }
 
     }
+
+    /**
+     * SQL 삽입 쿼리를 관리하는 배열 클래스
+     * @class SqlTong
+     */
     class SqlTong extends Array {
+      /**
+       * 테이블 이름을 반환합니다.
+       * @returns {string} 테이블 이름
+       */
       getName() {
         return TABLE_NAME;
       }
 
+      /**
+       * SQL 삽입 쿼리 배열을 반환합니다.
+       * @returns {Array<string>} SQL 삽입 쿼리 배열
+       */
       getInsertSql() {
         let arr = [];
         for (let i of this) {
-          arr.push(i.getInsertSql());
+          arr.push(i.getInsertSql()); // 각 요소에 대해 삽입 SQL 쿼리 생성 및 배열에 추가
         }
         return arr;
       }
 
     }
+
+    /**
+     * SQL 삽입 쿼리를 생성하는 클래스
+     * @class SqlTongFactor
+     */
     class SqlTongFactor {
+      /**
+       * SQL 삽입 쿼리 객체 생성자
+       * @param {Object} sample 차원 축소된 데이터 샘플 객체
+       */
       constructor(sample) {
-        for (let i in sample) {
+        for (let i in sample) { // 샘플 객체의 각 필드를 순회
           if (typeof sample[i] === "string") {
-            this[i] = sample[i];
+            this[i] = sample[i]; // 문자열 그대로 할당
           } else if (typeof sample[i] === "number") {
-            this[i] = sample[i];
+            this[i] = sample[i]; // 숫자 그대로 할당
           } else if (typeof sample[i] === "boolean") {
-            if (sample[i]) {
-              this[i] = 1;
-            } else {
-              this[i] = 0;
-            }
+            this[i] = sample[i] ? 1 : 0; // 불리언을 숫자 (1 또는 0)로 변환
           } else {
-            this[i] = JSON.stringify(sample[i]);
+            this[i] = JSON.stringify(sample[i]); // 그 외의 경우 JSON 문자열로 변환
           }
         }
       }
 
+      /**
+       * 테이블 이름을 반환합니다.
+       * @returns {string} 테이블 이름
+       */
       getName() {
         return TABLE_NAME;
       }
 
+      /**
+       * SQL 삽입 쿼리를 반환합니다.
+       * @returns {string} SQL 삽입 쿼리
+       */
       getInsertSql() {
-        let sql = "INSERT INTO \`" + this.getName() + "\` (";
+        let sql = "INSERT INTO `" + this.getName() + "` ("; // 삽입 SQL 시작
         for (let i in this) {
-          sql += "\`";
+          sql += "`";
           sql += i;
-          sql += "\`";
-          sql += ",";
+          sql += "`,";
         }
 
-        sql = sql.slice(0, -1);
-        sql += ") VALUES (";
+        sql = sql.slice(0, -1); // 마지막 쉼표 제거
+        sql += ") VALUES ("; // VALUES 부분 시작
 
         for (let i in this) {
           if (typeof this[i] === "number") {
-            sql += this[i];
+            sql += this[i]; // 숫자는 그대로 삽입
           } else {
-            if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/gi.test(this[i])) {
+            // 날짜 포맷에 맞는 경우 STR_TO_DATE 함수로 변환
+            if (/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/gi.test(this[i])) {
               sql += "STR_TO_DATE('";
               sql += this[i].replace(/'/g, '"');
               sql += "', '%Y-%m-%d')";
-            } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/gi.test(this[i])) {
+            } else if (/^[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/gi.test(this[i])) {
               sql += "STR_TO_DATE('";
               sql += this[i].replace(/'/g, '"');
               sql += "', '%Y-%m-%d %H:%i:%s')";
@@ -2703,109 +2987,158 @@ const withToolsArr = function (ContentsArr) {
           sql += ",";
         }
 
-        sql = sql.slice(0, -1);
-        sql += ");";
+        sql = sql.slice(0, -1); // 마지막 쉼표 제거
+        sql += ");"; // SQL 쿼리 종료
 
-        return sql;
+        return sql; // 최종 SQL 쿼리 반환
       }
     }
 
     let tong, tempArr;
     let sample, model;
 
-    tong = new SqlTong();
+    tong = new SqlTong(); // SQL 데이터 객체 초기화
 
-    for (let i of this) {
-      tempArr = i.dimensionSqueeze();
+    for (let i of this) { // 각 콘텐츠 객체에 대해
+      tempArr = i.dimensionSqueeze(); // 차원 축소된 객체 배열을 가져옴
       for (let j of tempArr) {
-        tong.push(new SqlTongFactor(j));
+        tong.push(new SqlTongFactor(j)); // 각 객체를 SQL 삽입 쿼리 객체로 변환 후 추가
       }
     }
 
     if (tong.length > 0) {
-      sample = tong[0];
-      model = new SqlModel(sample);
-      return { model, data: tong };
+      sample = tong[0]; // 첫 번째 객체를 샘플로 사용
+      model = new SqlModel(sample); // SQL 모델 생성
+      return { model, data: tong }; // 모델 및 데이터 반환
     } else {
-      return null;
+      return null; // 데이터가 없는 경우 null 반환
     }
   }
 
+  /**
+   * 콘텐츠 ID로 콘텐츠를 검색합니다.
+   * @param {string} conid 콘텐츠 ID
+   * @returns {Object|null} 검색된 콘텐츠 또는 null
+   */
   ContentsArr.prototype.search = function (conid) {
     let result = null;
     for (let i of this) {
-      if (i.conid === conid) {
+      if (i.conid === conid) { // 콘텐츠 ID가 일치하는지 확인
         result = i;
         break;
       }
     }
-    return result;
+    return result; // 검색된 콘텐츠 반환
   }
 
+  /**
+   * 콘텐츠 ID로 콘텐츠를 찾아 반환합니다.
+   * @param {string} conid 콘텐츠 ID
+   * @returns {Object|null} 검색된 콘텐츠 또는 null
+   */
   ContentsArr.prototype.find = function (conid) {
-    return this.search(conid);
+    return this.search(conid); // search 메서드를 호출하여 동일한 기능 수행
   }
 
+  /**
+   * 콘텐츠 배열의 이미지 경로를 관리하는 메서드
+   * @returns {ImageArray} 이미지 경로를 포함하는 객체 배열
+   */
   ContentsArr.prototype.imagePath = function () {
+    /**
+     * 이미지 배열을 관리하는 클래스
+     * @class ImageArray
+     */
     class ImageArray extends Array {
+      /**
+       * 콘텐츠 ID를 키로 변환하여 객체로 반환합니다.
+       * @returns {Object} 콘텐츠 ID를 키로 하는 객체
+       */
       convertConid() {
         let result = {};
         for (let i of this) {
-          result[i.conid] = i;
+          result[i.conid] = i; // 콘텐츠 ID를 키로 변환하여 저장
         }
         return result;
       }
+
+      /**
+       * 포트폴리오 ID를 키로 변환하여 객체로 반환합니다.
+       * @returns {Object} 포트폴리오 ID를 키로 하는 객체
+       */
       convertPid() {
         let result = {};
         for (let i of this) {
-          result[i.pid] = i;
+          result[i.pid] = i; // 포트폴리오 ID를 키로 변환하여 저장
         }
         return result;
       }
+
+      /**
+       * 리스트 이미지 경로를 평탄화하여 배열로 반환합니다.
+       * @returns {Array<string>} 리스트 이미지 경로 배열
+       */
       flatListImage() {
         let result = [];
         for (let i of this) {
           for (let j of i.listImage) {
-            result.push(j.path);
+            result.push(j.path); // 각 리스트 이미지 경로를 배열에 추가
           }
         }
         return result;
       }
+
+      /**
+       * 원본 이미지 경로를 평탄화하여 배열로 반환합니다.
+       * @returns {Array<string>} 원본 이미지 경로 배열
+       */
       flatOriginal() {
         let result = [];
         for (let i of this) {
           for (let j of i.original) {
-            result.push(j.path);
+            result.push(j.path); // 각 원본 이미지 경로를 배열에 추가
           }
         }
         return result;
       }
+
+      /**
+       * 키 리스트 이미지 경로를 평탄화하여 배열로 반환합니다.
+       * @returns {Array<Object>} 키 리스트 이미지 경로 배열
+       */
       keyListImage() {
         let result = [];
         let tempArr;
         for (let i of this) {
-          tempArr = i.keyListImage().toArray();
-          result = result.concat(tempArr);
+          tempArr = i.keyListImage().toArray(); // 키 리스트 이미지 배열을 가져옴
+          result = result.concat(tempArr); // 결과 배열에 병합
         }
         return result;
       }
+
+      /**
+       * 키 원본 이미지 경로를 평탄화하여 배열로 반환합니다.
+       * @returns {Array<Object>} 키 원본 이미지 경로 배열
+       */
       keyOriginal() {
         let result = [];
         let tempArr;
         for (let i of this) {
-          tempArr = i.keyOriginal().toArray();
-          result = result.concat(tempArr);
+          tempArr = i.keyOriginal().toArray(); // 키 원본 이미지 배열을 가져옴
+          result = result.concat(tempArr); // 결과 배열에 병합
         }
         return result;
       }
     }
-    let result = new ImageArray();
-    for (let i of this) {
-      result.push(i.imagePath());
+
+    let result = new ImageArray(); // 이미지 경로 배열 초기화
+    for (let i of this) { // 각 콘텐츠 객체에 대해
+      result.push(i.imagePath()); // 이미지 경로 객체를 생성하여 배열에 추가
     }
-    return result;
+    return result; // 최종 이미지 경로 배열 반환
   }
-  return ContentsArr;
+
+  return ContentsArr; // 확장된 ContentsArr 클래스 반환
 }
 
 module.exports = { ContentsMap, Contents, ContentsArr, Tools: { withTools, withToolsArr } };
