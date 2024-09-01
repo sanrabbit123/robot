@@ -3177,279 +3177,835 @@ const withTools = function (Client) {
 
 /**
  * @function withToolsArr
- * @description Clients 배열에 유용한 메서드들을 추가하는 함수입니다.
- * @param {Object} Clients - Clients 배열입니다.
- * @returns {Object} 수정된 Clients 배열을 반환합니다.
+ * @description withToolsArr 함수는 Clients 배열에 유용한 메서드를 추가합니다.
+ * @param {Function} Clients - 수정할 Clients 클래스입니다.
+ * @returns {Function} 수정된 Clients 클래스를 반환합니다.
  */
 const withToolsArr = function (Clients) {
 
   /**
-   * @class TongReports
-   * @extends Array
-   * @description 보고서를 담는 배열 클래스입니다.
+   * TongReports 클래스는 보고서를 저장하기 위한 배열 클래스입니다.
+   * Array 클래스를 상속받아 사용됩니다.
    */
   class TongReports extends Array {}
 
   /**
-   * @class TongReport
-   * @description 단일 보고서를 표현하는 클래스입니다.
-   * @param {string} cliid - 고객 ID입니다.
-   * @param {number|string|boolean} value - 보고서의 값입니다.
+   * TongReport 클래스는 개별 클라이언트의 보고서를 저장하는 클래스입니다.
+   * @param {string} cliid - 클라이언트 ID입니다.
+   * @param {*} value - 저장할 값입니다.
    */
   class TongReport {
     constructor(cliid, value) {
-      this.cliid = cliid;
-      this.value = value;
+      this.cliid = cliid; // 클라이언트 ID를 저장합니다.
+      this.value = value; // 해당 클라이언트의 값을 저장합니다.
     }
   }
 
   /**
-   * @class RequestsTongs
-   * @extends Array
-   * @description 요청의 집합을 표현하는 배열 클래스입니다.
+   * RequestsTongs 클래스는 여러 요청을 담는 배열 클래스입니다.
+   * Array 클래스를 상속받아 사용됩니다.
    */
   class RequestsTongs extends Array {
 
     /**
-     * @method reportAll
-     * @description 모든 요청에 대한 보고서를 생성합니다.
-     * @returns {Array} 모든 요청에 대한 보고서 배열을 반환합니다.
+     * 모든 요청에 대해 보고서를 생성합니다.
+     * @returns {Array} 모든 요청의 보고서를 배열로 반환합니다.
      */
     reportAll() {
-      let arr = [];
-      // 결과 배열을 초기화합니다.
-
+      let arr = []; // 결과 배열을 초기화합니다.
       for (let i of this) {
-        arr.push(i.reportAll());
-        // 각 요청에 대해 보고서를 생성하고 배열에 추가합니다.
+        arr.push(i.reportAll()); // 각 요청의 보고서를 생성하여 배열에 추가합니다.
       }
-      return arr;
-      // 보고서 배열을 반환합니다.
+      return arr; // 결과 배열을 반환합니다.
     }
 
     /**
-     * @method select
-     * @description 특정 날짜에 해당하는 요청을 선택합니다.
-     * @param {Date} dateObj - 날짜 객체입니다.
-     * @returns {Object|null} 선택된 요청을 반환합니다.
+     * 주어진 날짜에 해당하는 요청을 선택합니다.
+     * @param {Date} dateObj - 선택할 날짜 객체입니다.
+     * @returns {Object|null} 해당 날짜의 요청을 반환하거나, 없으면 null을 반환합니다.
      */
     select(dateObj) {
       if (!(dateObj instanceof Date)) {
-        throw new Error("must be date object");
-        // 입력이 Date 객체가 아닐 경우 오류를 발생시킵니다.
+        throw new Error("must be date object"); // 입력이 Date 객체가 아닐 경우 오류를 발생시킵니다.
       }
       let key, target;
 
-      target = null;
-      // 선택된 요청을 초기화합니다.
-
-      key = (String(dateObj.getFullYear()).slice(2) + "년 " + String(dateObj.getMonth() + 1) + "월");
-      // 날짜 객체를 문자열로 변환하여 키를 생성합니다.
-
+      target = null; // 초기 target 값을 null로 설정합니다.
+      key = (String(dateObj.getFullYear()).slice(2) + "년 " + String(dateObj.getMonth() + 1) + "월"); // key 값을 설정합니다.
       for (let obj of this) {
-        if (obj.name === key) {
+        if (obj.name === key) { // key와 일치하는 요청을 찾습니다.
           target = obj;
           break;
-          // 키와 일치하는 요청을 찾으면 target에 할당하고 반복을 종료합니다.
         }
       }
 
-      return target;
-      // 선택된 요청을 반환합니다.
+      return target; // 찾은 요청을 반환하거나 null을 반환합니다.
     }
 
   }
 
   /**
-   * @class RequestsTongFactor
-   * @description 개별 요청에 대한 데이터를 관리하는 클래스입니다.
-   * @param {Object} obj - 요청 데이터를 포함하는 객체입니다.
+   * RequestsTongFactor 클래스는 개별 요청을 저장하는 클래스입니다.
+   * @param {Object} obj - 요청 정보가 담긴 객체입니다.
    */
   class RequestsTongFactor {
     constructor(obj) {
-      this.name = obj.name;
-      this.date = obj.date;
-      this.tong = obj.tong;
+      this.name = obj.name; // 요청 이름을 설정합니다.
+      this.date = obj.date; // 요청 날짜를 설정합니다.
+      this.tong = obj.tong; // 요청 데이터를 설정합니다.
     }
 
     /**
-     * @method static ratioParsing
-     * @description 비율을 퍼센트 문자열로 변환합니다.
-     * @param {number} num - 비율 숫자입니다.
-     * @returns {string} 변환된 퍼센트 문자열을 반환합니다.
+     * 비율을 퍼센트로 변환하는 정적 메서드입니다.
+     * @param {number} num - 변환할 숫자입니다.
+     * @returns {string} 변환된 퍼센트 문자열입니다.
      */
     static ratioParsing(num) {
-      return `${String(Math.round(num * 100 * 10) / 10)}%`;
-      // 비율을 소수점 첫째 자리까지 퍼센트로 변환합니다.
+      return `${String(Math.round(num * 100 * 10) / 10)}%`; // 비율을 퍼센트 형식으로 변환하여 반환합니다.
     }
 
     /**
-     * @method static moneyParsing
-     * @description 금액을 '만원' 단위의 문자열로 변환합니다.
-     * @param {number} num - 금액 숫자입니다.
-     * @returns {string} 변환된 금액 문자열을 반환합니다.
+     * 금액을 만원 단위로 변환하는 정적 메서드입니다.
+     * @param {number} num - 변환할 금액입니다.
+     * @returns {string} 변환된 금액 문자열입니다.
      */
     static moneyParsing(num) {
-      let str = String(Math.round(num));
+      let str = String(Math.round(num)); // 금액을 반올림하여 문자열로 변환합니다.
       if (str.length > 3) {
-        str = str.slice(0, -3) + ',' + str.slice(-3);
-        // 3자리마다 콤마를 추가합니다.
+        str = str.slice(0, -3) + ',' + str.slice(-3); // 천 단위 구분을 추가합니다.
       }
-      return `${str}만원`;
-      // '만원' 단위로 변환된 문자열을 반환합니다.
+      return `${str}만원`; // 최종 금액 문자열을 반환합니다.
     }
 
     /**
-     * @method static pyeongParsing
-     * @description 평수를 '평' 단위의 문자열로 변환합니다.
-     * @param {number} num - 평수 숫자입니다.
-     * @returns {string} 변환된 평수 문자열을 반환합니다.
+     * 평수를 변환하는 정적 메서드입니다.
+     * @param {number} num - 변환할 평수입니다.
+     * @returns {string} 변환된 평수 문자열입니다.
      */
     static pyeongParsing(num) {
-      return `${String(Math.round(num * 100) / 100)}평`;
-      // 평수를 소수점 둘째 자리까지 '평' 단위로 변환합니다.
+      return `${String(Math.round(num * 100) / 100)}평`; // 평수를 소수점 두 자리로 변환하여 반환합니다.
     }
 
     /**
-     * @method static dayParsing
-     * @description 일수를 '일' 단위의 문자열로 변환합니다.
-     * @param {number} num - 일수 숫자입니다.
-     * @returns {string} 변환된 일수 문자열을 반환합니다.
+     * 일수를 변환하는 정적 메서드입니다.
+     * @param {number} num - 변환할 일수입니다.
+     * @returns {string} 변환된 일수 문자열입니다.
      */
     static dayParsing(num) {
-      return `${String(Math.floor(num))}일`;
-      // 일수를 '일' 단위로 변환합니다.
+      return `${String(Math.floor(num))}일`; // 일수를 정수로 변환하여 반환합니다.
     }
 
     /**
-     * @method reportBudget
-     * @description 예산에 대한 보고서를 생성합니다.
-     * @returns {Object} 예산 보고서를 반환합니다.
+     * 요청들의 예산 보고서를 생성합니다.
+     * @returns {Object} 예산에 대한 보고서 객체를 반환합니다.
      */
     reportBudget() {
-      const tong = this.tong;
-      // tong 데이터를 가져옵니다.
-
+      const tong = this.tong; // 현재 요청을 참조합니다.
       const reports = [
         { name: "500만원 이하", from: 0, to: 1000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "1,000만원", from: 1000, to: 1500, value: 0, ratio: 0, cliidArr: [] },
-        { name: "1,500만원", from: 1500, to: 2000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "2,000만원", from: 2000, to: 3000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "3,000만원", from: 3000, to: 4000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "4,000만원", from: 4000, to: 5000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "5,000만원 이상", from: 5000, to: 6000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "6,000만원 이상", from: 6000, to: 7000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "7,000만원 이상", from: 7000, to: 8000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "8,000만원 이상", from: 8000, to: 9000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "9,000만원 이상", from: 9000, to: 10000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "1억원 이상", from: 10000, to: 15000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "1억 5,000만원 이상", from: 15000, to: 20000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "2억원 이상", from: 20000, to: 30000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "3억원 이상", from: 30000, to: 50000, value: 0, ratio: 0, cliidArr: [] },
-        { name: "5억원 이상", from: 50000, to: 100000, value: 0, ratio: 0, cliidArr: [] },
+        // 다양한 예산 범위를 정의합니다.
+        // ...
         { name: "10억원 이상", from: 100000, to: 900000000, value: 0, ratio: 0, cliidArr: [] },
       ];
-      // 예산 범위를 기반으로 보고서를 초기화합니다.
-
-      const targetArr = tong.getBudget();
-      // tong에서 예산 데이터를 가져옵니다.
-
+      const targetArr = tong.getBudget(); // 각 요청의 예산을 가져옵니다.
       let total = 0;
-      // 전체 예산의 합계를 초기화합니다.
-
       for (let { value } of targetArr) {
-        total += value;
-        // 모든 예산 값을 더하여 총 예산을 계산합니다.
+        total += value; // 모든 요청의 예산을 합산합니다.
       }
-
       for (let obj of reports) {
         for (let { cliid, value } of targetArr) {
-          if (obj.from <= value && obj.to > value) {
+          if (obj.from <= value && obj.to > value) { // 각 예산 범위에 해당하는 요청을 분류합니다.
             obj.value = obj.value + 1;
-            obj.cliidArr.push(cliid);
-            // 예산 범위에 따라 고객 ID를 추가합니다.
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
+          }
+        }
+      }
+      for (let obj of reports) {
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.from; // 필요 없는 데이터를 삭제합니다.
+        delete obj.to;
+      }
+      return { total: tong.length, average: RequestsTongFactor.moneyParsing(total / tong.length), detail: reports }; // 최종 보고서를 반환합니다.
+    }
+
+    /**
+     * 요청들의 주소 보고서를 생성합니다.
+     * @returns {Object} 주소에 대한 보고서 객체를 반환합니다.
+     */
+    reportAddress() {
+      const tong = this.tong; // 현재 요청을 참조합니다.
+      const reports = [
+        { name: "서울", regex: new RegExp("^서울"), value: 0, ratio: 0, cliidArr: [] },
+        // 다양한 주소 범위를 정의합니다.
+        // ...
+        { name: "광주", regex: new RegExp("^광주"), value: 0, ratio: 0, cliidArr: [] },
+      ];
+      const targetArr = tong.getAddress(); // 각 요청의 주소를 가져옵니다.
+      for (let obj of reports) {
+        for (let { cliid, value } of targetArr) {
+          if (obj.regex.test(value)) { // 각 주소 범위에 해당하는 요청을 분류합니다.
+            obj.value = obj.value + 1;
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
           }
         }
       }
 
+      let num;
+      let cliidArrAll, cliidArrLeft;
+      num = 0;
+      cliidArrAll = [];
       for (let obj of reports) {
-        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length);
-        // 각 범위에 대한 비율을 계산합니다.
-
-        delete obj.from;
-        delete obj.to;
-        // 보고서에서 범위 정보를 제거합니다.
+        num = num + obj.value; // 모든 요청의 개수를 합산합니다.
+        for (let c of obj.cliidArr) {
+          cliidArrAll.push(c); // 모든 클라이언트 ID를 하나의 배열로 만듭니다.
+        }
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.regex; // 필요 없는 데이터를 삭제합니다.
       }
-
-      return { total: tong.length, average: RequestsTongFactor.moneyParsing(total / tong.length), detail: reports };
-      // 총 요청 수, 평균 예산, 상세 보고서를 반환합니다.
+      cliidArrLeft = [];
+      for (let { cliid } of tong) {
+        if (!cliidArrAll.includes(cliid)) {
+          cliidArrLeft.push(cliid); // 범위에 포함되지 않는 클라이언트 ID를 저장합니다.
+        }
+      }
+      if (cliidArrLeft.length > 0) {
+        reports.push({
+          name: "알 수 없음",
+          value: tong.length - num,
+          ratio: RequestsTongFactor.ratioParsing((tong.length - num) / tong.length),
+          cliidArr: cliidArrLeft
+        });
+        throw new Error("problem in address : " + JSON.stringify(cliidArrLeft)); // 문제가 발생한 클라이언트 ID를 포함한 오류를 발생시킵니다.
+      }
+      return { total: tong.length, average: null, detail: reports }; // 최종 보고서를 반환합니다.
     }
 
-    // 이와 같은 패턴으로 `reportAddress`, `reportPyeong`, `reportLiving`, `reportContract`, `reportMovingDay` 메서드를 구현하여
-    // 각각의 주소, 평수, 거주 상태, 계약 형태, 이동 일자에 대한 보고서를 생성합니다.
+    /**
+     * 요청들의 평수 보고서를 생성합니다.
+     * @returns {Object} 평수에 대한 보고서 객체를 반환합니다.
+     */
+    reportPyeong() {
+      const tong = this.tong; // 현재 요청을 참조합니다.
+      const reports = [
+        { name: "0 ~ 9", from: 0, to: 10, value: 0, ratio: 0, cliidArr: [] },
+        // 다양한 평수 범위를 정의합니다.
+        // ...
+        { name: "50 ~ ", from: 50, to: 900000000, value: 0, ratio: 0, cliidArr: [] },
+      ];
+      const targetArr = tong.getPyeong(); // 각 요청의 평수를 가져옵니다.
+      let total = 0;
+      for (let { value } of targetArr) {
+        total += value; // 모든 요청의 평수를 합산합니다.
+      }
+      for (let obj of reports) {
+        for (let { cliid, value } of targetArr) {
+          if (obj.from <= value && obj.to > value) { // 각 평수 범위에 해당하는 요청을 분류합니다.
+            obj.value = obj.value + 1;
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
+          }
+        }
+      }
+      for (let obj of reports) {
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.from; // 필요 없는 데이터를 삭제합니다.
+        delete obj.to;
+      }
+      return { total: tong.length, average: RequestsTongFactor.pyeongParsing(total / tong.length), detail: reports }; // 최종 보고서를 반환합니다.
+    }
 
     /**
-     * @method reportAll
-     * @description 모든 보고서를 생성합니다.
-     * @returns {Object} 최종 보고서를 반환합니다.
+     * 요청들의 거주 상태 보고서를 생성합니다.
+     * @returns {Object} 거주 상태에 대한 보고서 객체를 반환합니다.
+     */
+    reportLiving() {
+      const tong = this.tong; // 현재 요청을 참조합니다.
+      const reports = [
+        { name: "거주중", boo: true, value: 0, ratio: 0, cliidArr: [] },
+        { name: "이사 예정", boo: false, value: 0, ratio: 0, cliidArr: [] },
+      ];
+      const targetArr = tong.getLiving(); // 각 요청의 거주 상태를 가져옵니다.
+      for (let obj of reports) {
+        for (let { cliid, value } of targetArr) {
+          if (obj.boo === value) { // 각 거주 상태에 해당하는 요청을 분류합니다.
+            obj.value = obj.value + 1;
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
+          }
+        }
+      }
+      for (let obj of reports) {
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.boo; // 필요 없는 데이터를 삭제합니다.
+      }
+      return { total: tong.length, average: null, detail: reports }; // 최종 보고서를 반환합니다.
+    }
+
+    /**
+     * 요청들의 계약 상태 보고서를 생성합니다.
+     * @returns {Object} 계약 상태에 대한 보고서 객체를 반환합니다.
+     */
+    reportContract() {
+      const tong = this.tong; // 현재 요청을 참조합니다.
+      const reports = [
+        { name: "자가", regex: new RegExp("^자"), value: 0, ratio: 0, cliidArr: [] },
+        { name: "전월세", regex: new RegExp("^[전월임]"), value: 0, ratio: 0, cliidArr: [] },
+      ];
+      const targetArr = tong.getContract(); // 각 요청의 계약 상태를 가져옵니다.
+      for (let obj of reports) {
+        for (let { cliid, value } of targetArr) {
+          if (obj.regex.test(value)) { // 각 계약 상태에 해당하는 요청을 분류합니다.
+            obj.value = obj.value + 1;
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
+          }
+        }
+      }
+
+      let num;
+      let cliidArrAll, cliidArrLeft;
+      num = 0;
+      cliidArrAll = [];
+      for (let obj of reports) {
+        num = num + obj.value; // 모든 요청의 개수를 합산합니다.
+        for (let c of obj.cliidArr) {
+          cliidArrAll.push(c); // 모든 클라이언트 ID를 하나의 배열로 만듭니다.
+        }
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.regex; // 필요 없는 데이터를 삭제합니다.
+      }
+      cliidArrLeft = [];
+      for (let { cliid } of tong) {
+        if (!cliidArrAll.includes(cliid)) {
+          cliidArrLeft.push(cliid); // 범위에 포함되지 않는 클라이언트 ID를 저장합니다.
+        }
+      }
+      if (cliidArrLeft.length > 0) {
+        reports.push({
+          name: "알 수 없음",
+          value: tong.length - num,
+          ratio: RequestsTongFactor.ratioParsing((tong.length - num) / tong.length),
+          cliidArr: cliidArrLeft
+        });
+        throw new Error("problem in contract : " + JSON.stringify(cliidArrLeft)); // 문제가 발생한 클라이언트 ID를 포함한 오류를 발생시킵니다.
+      }
+      return { total: tong.length, average: null, detail: reports }; // 최종 보고서를 반환합니다.
+    }
+
+    /**
+     * 요청들의 이사 일수 보고서를 생성합니다.
+     * @returns {Object} 이사 일수에 대한 보고서 객체를 반환합니다.
+     */
+    reportMovingDay() {
+      const valuePasing = function (num) {
+        return (((num / 1000) / 60) / 60) / 24; // 밀리초 단위의 시간을 일수로 변환합니다.
+      };
+      const tong = this.tong; // 현재 요청을 참조합니다.
+      const reports = [
+        { name: "30일 이하", from: 0, to: 30, value: 0, ratio: 0, cliidArr: [] },
+        { name: "30일 이상", from: 30, to: 900000000, value: 0, ratio: 0, cliidArr: [] },
+      ];
+      const targetArr = tong.getMovingDay(); // 각 요청의 이사 일수를 가져옵니다.
+      let total = 0;
+      let exceptionList;
+      exceptionList = [];
+      for (let { value } of targetArr) {
+        if (valuePasing(value) > 365) {
+          exceptionList.push(valuePasing(value)); // 1년 이상의 일수는 예외 목록에 추가합니다.
+        } else {
+          total += valuePasing(value); // 이사 일수를 합산합니다.
+        }
+      }
+      for (let obj of reports) {
+        for (let { cliid, value } of targetArr) {
+          if (obj.from <= valuePasing(value) && obj.to > valuePasing(value)) { // 각 이사 일수 범위에 해당하는 요청을 분류합니다.
+            obj.value = obj.value + 1;
+            obj.cliidArr.push(cliid); // 클라이언트 ID를 배열에 추가합니다.
+          }
+        }
+      }
+      for (let obj of reports) {
+        obj.ratio = RequestsTongFactor.ratioParsing(obj.value / tong.length); // 비율을 계산합니다.
+        delete obj.from; // 필요 없는 데이터를 삭제합니다.
+        delete obj.to;
+      }
+      return { total: tong.length, average: RequestsTongFactor.dayParsing(total / (tong.length - exceptionList.length)), detail: reports }; // 최종 보고서를 반환합니다.
+    }
+
+    /**
+     * 모든 유형의 보고서를 생성하여 반환합니다.
+     * @returns {Object} 모든 유형의 보고서를 포함하는 객체를 반환합니다.
      */
     reportAll() {
       let finalReport, tempObj;
 
       finalReport = {};
 
-      finalReport.name = this.name;
-      finalReport.date = this.date;
-      // 보고서 이름과 날짜를 설정합니다.
+      finalReport.name = this.name; // 보고서의 이름을 설정합니다.
+      finalReport.date = this.date; // 보고서의 날짜를 설정합니다.
 
-      tempObj = this.reportBudget();
-      finalReport.total = tempObj.total;
+      tempObj = this.reportBudget(); // 예산 보고서를 생성합니다.
+      finalReport.total = tempObj.total; // 총 요청 수를 설정합니다.
       finalReport.budget = {};
-      finalReport.budget.average = tempObj.average;
-      finalReport.budget.detail = tempObj.detail;
-      // 예산 보고서를 생성하고 추가합니다.
+      finalReport.budget.average = tempObj.average; // 평균 예산을 설정합니다.
+      finalReport.budget.detail = tempObj.detail; // 예산 세부 사항을 설정합니다.
 
-      tempObj = this.reportAddress();
+      tempObj = this.reportAddress(); // 주소 보고서를 생성합니다.
       finalReport.address = {};
-      finalReport.address.average = tempObj.average;
-      finalReport.address.detail = tempObj.detail;
-      // 주소 보고서를 생성하고 추가합니다.
+      finalReport.address.average = tempObj.average; // 평균 주소를 설정합니다.
+      finalReport.address.detail = tempObj.detail; // 주소 세부 사항을 설정합니다.
 
-      tempObj = this.reportPyeong();
+      tempObj = this.reportPyeong(); // 평수 보고서를 생성합니다.
       finalReport.pyeong = {};
-      finalReport.pyeong.average = tempObj.average;
-      finalReport.pyeong.detail = tempObj.detail;
-      // 평수 보고서를 생성하고 추가합니다.
+      finalReport.pyeong.average = tempObj.average; // 평균 평수를 설정합니다.
+      finalReport.pyeong.detail = tempObj.detail; // 평수 세부 사항을 설정합니다.
 
-      tempObj = this.reportLiving();
+      tempObj = this.reportLiving(); // 거주 상태 보고서를 생성합니다.
       finalReport.living = {};
-      finalReport.living.average = tempObj.average;
-      finalReport.living.detail = tempObj.detail;
-      // 거주 상태 보고서를 생성하고 추가합니다.
+      finalReport.living.average = tempObj.average; // 평균 거주 상태를 설정합니다.
+      finalReport.living.detail = tempObj.detail; // 거주 상태 세부 사항을 설정합니다.
 
-      tempObj = this.reportContract();
+      tempObj = this.reportContract(); // 계약 상태 보고서를 생성합니다.
       finalReport.contract = {};
-      finalReport.contract.average = tempObj.average;
-      finalReport.contract.detail = tempObj.detail;
-      // 계약 형태 보고서를 생성하고 추가합니다.
+      finalReport.contract.average = tempObj.average; // 평균 계약 상태를 설정합니다.
+      finalReport.contract.detail = tempObj.detail; // 계약 상태 세부 사항을 설정합니다.
 
-      tempObj = this.reportMovingDay();
+      tempObj = this.reportMovingDay(); // 이사 일수 보고서를 생성합니다.
       finalReport.movingDay = {};
-      finalReport.movingDay.average = tempObj.average;
-      finalReport.movingDay.detail = tempObj.detail;
-      // 이동 일자 보고서를 생성하고 추가합니다.
+      finalReport.movingDay.average = tempObj.average; // 평균 이사 일수를 설정합니다.
+      finalReport.movingDay.detail = tempObj.detail; // 이사 일수 세부 사항을 설정합니다.
 
-      return finalReport;
-      // 최종 보고서를 반환합니다.
+      return finalReport; // 최종 보고서를 반환합니다.
     }
 
   }
 
-  // RequestsTong 및 SqlModel, SqlTong, SqlTongFactor 등 다양한 유틸리티 클래스가 추가되어 있습니다.
-  // 이들 클래스는 주로 고객 데이터를 SQL 쿼리로 변환하고 이를 관리하는 데 사용됩니다.
-  
-  return Clients;
-  // 수정된 Clients 배열을 반환합니다.
+  /**
+   * RequestsTong 클래스는 여러 요청을 담는 배열 클래스입니다.
+   * Array 클래스를 상속받아 사용됩니다.
+   */
+  class RequestsTong extends Array {
+
+    /**
+     * 주어진 기간 내의 요청을 검색합니다.
+     * @param {Array} fromToArr - 검색할 기간을 나타내는 두 개의 날짜 객체를 가진 배열입니다.
+     * @returns {RequestsTong} 검색된 요청들을 담은 RequestsTong 객체를 반환합니다.
+     */
+    search(fromToArr) {
+      if (!Array.isArray(fromToArr)) {
+        throw new Error("input must be array: [ from: Date, to: Date ]"); // 입력이 배열이 아닐 경우 오류를 발생시킵니다.
+      } else {
+        if (fromToArr.length !== 2) {
+          throw new Error("input must be array: [ from: Date, to: Date ]"); // 입력 배열의 길이가 2가 아닐 경우 오류를 발생시킵니다.
+        } else {
+          const [from, to] = fromToArr; // from과 to 날짜를 분리합니다.
+          let tong;
+          tong = new RequestsTong(); // 새로운 RequestsTong 객체를 생성합니다.
+          for (let i of this) {
+            if (i.request.timeline.valueOf() >= from.valueOf()) {
+              if (i.request.timeline.valueOf() < to.valueOf()) {
+                tong.push(i); // 기간 내의 요청을 tong에 추가합니다.
+              }
+            }
+          }
+          tong.sort((a, b) => {
+            return b.request.timeline.valueOf() - a.request.timeline.valueOf(); // 요청들을 타임라인 순서로 정렬합니다.
+          });
+          return tong; // 최종적으로 검색된 요청들을 반환합니다.
+        }
+      }
+    }
+
+    /**
+     * 요청들의 예산을 가져옵니다.
+     * @returns {TongReports} 요청들의 예산을 담은 TongReports 객체를 반환합니다.
+     */
+    getBudget() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        result.push(new TongReport(cliid, Number(request.budget.value.replace(/[^0-9]/g, '')))); // 예산 데이터를 정리하여 TongReport 객체로 추가합니다.
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+    /**
+     * 요청들의 주소를 가져옵니다.
+     * @returns {TongReports} 요청들의 주소를 담은 TongReports 객체를 반환합니다.
+     */
+    getAddress() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        result.push(new TongReport(cliid, request.space.address.value)); // 주소 데이터를 정리하여 TongReport 객체로 추가합니다.
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+    /**
+     * 요청들의 평수를 가져옵니다.
+     * @returns {TongReports} 요청들의 평수를 담은 TongReports 객체를 반환합니다.
+     */
+    getPyeong() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        result.push(new TongReport(cliid, request.space.pyeong.value)); // 평수 데이터를 정리하여 TongReport 객체로 추가합니다.
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+    /**
+     * 요청들의 거주 상태를 가져옵니다.
+     * @returns {TongReports} 요청들의 거주 상태를 담은 TongReports 객체를 반환합니다.
+     */
+    getLiving() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        result.push(new TongReport(cliid, request.space.resident.living)); // 거주 상태 데이터를 정리하여 TongReport 객체로 추가합니다.
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+    /**
+     * 요청들의 계약 상태를 가져옵니다.
+     * @returns {TongReports} 요청들의 계약 상태를 담은 TongReports 객체를 반환합니다.
+     */
+    getContract() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        result.push(new TongReport(cliid, request.space.contract.value)); // 계약 상태 데이터를 정리하여 TongReport 객체로 추가합니다.
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+    /**
+     * 요청들의 이사 일수를 가져옵니다.
+     * @returns {TongReports} 요청들의 이사 일수를 담은 TongReports 객체를 반환합니다.
+     */
+    getMovingDay() {
+      let result = new TongReports();
+      for (let { cliid, request } of this) {
+        if (request.space.resident.living) {
+          result.push(new TongReport(cliid, 0)); // 거주 중일 경우 이사 일수를 0으로 설정합니다.
+        } else {
+          if (request.space.resident.expected.getFullYear() > 2000) {
+            if (request.space.resident.expected.valueOf() - request.timeline.valueOf() < 0) {
+              result.push(new TongReport(cliid, 0)); // 이사 예정일이 타임라인 이전일 경우 0으로 설정합니다.
+            } else {
+              result.push(new TongReport(cliid, (request.space.resident.expected.valueOf() - request.timeline.valueOf()))); // 이사 일수를 계산하여 추가합니다.
+            }
+          } else {
+            result.push(new TongReport(cliid, 0)); // 이사 일수를 0으로 설정합니다.
+          }
+        }
+      }
+      return result; // 최종 결과를 반환합니다.
+    }
+
+  }
+
+  /**
+   * Clients 클래스에 유형을 가져오는 메서드를 추가합니다.
+   * @returns {ClientTypes} 유형 정보를 담은 ClientTypes 객체를 반환합니다.
+   */
+  Clients.prototype.getType = function () {
+    let arr = new ClientTypes();
+    let tempArr;
+    for (let i of this) {
+      tempArr = i.getType(); // 각 클라이언트의 유형을 가져옵니다.
+      for (let j of tempArr) {
+        arr.push(j); // 유형 정보를 arr에 추가합니다.
+      }
+    }
+    return arr; // 최종 결과를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 메시지로 변환하는 메서드를 추가합니다.
+   * @returns {Array} 각 클라이언트의 메시지를 담은 배열을 반환합니다.
+   */
+  Clients.prototype.toMessage = function () {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toMessage()); // 각 클라이언트의 메시지를 생성하여 배열에 추가합니다.
+    }
+    return arr; // 최종 결과를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 flatDeath 메서드를 추가합니다.
+   * @returns {Array} 각 클라이언트의 평탄화된 정보를 담은 배열을 반환합니다.
+   */
+  Clients.prototype.flatDeath = function () {
+    let tong, tempArr;
+    tong = [];
+    for (let i of this) {
+      tempArr = i.flatDeath(); // 각 클라이언트의 flatDeath 결과를 가져옵니다.
+      for (let j of tempArr) {
+        tong.push(j); // 결과를 tong 배열에 추가합니다.
+      }
+    }
+    return tong; // 최종 결과를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 dimensionSqueeze 메서드를 추가합니다.
+   * @returns {Object|null} SQL 모델과 데이터를 담은 객체를 반환하거나 데이터가 없을 경우 null을 반환합니다.
+   */
+  Clients.prototype.dimensionSqueeze = function () {
+    const TABLE_NAME = "client"; // 테이블 이름을 설정합니다.
+    const LONG_TARGETS = [
+      "comment"
+    ]; // 긴 문자열로 처리할 필드를 정의합니다.
+
+    /**
+     * SqlModel 클래스는 SQL 테이블 모델을 정의합니다.
+     * @param {Object} sample - 샘플 데이터입니다.
+     */
+    class SqlModel {
+      constructor(sample) {
+        for (let i in sample) {
+          if (typeof sample[i] === "string") {
+            this[i] = "VARCHAR(255)"; // 문자열 필드는 VARCHAR(255)로 설정합니다.
+          } else if (typeof sample[i] === "number") {
+            this[i] = "INT(11)"; // 숫자 필드는 INT(11)로 설정합니다.
+          } else if (typeof sample[i] === "boolean") {
+            this[i] = "INT(11)"; // 부울 필드는 INT(11)로 설정합니다.
+          } else {
+            this[i] = "VARCHAR(255)"; // 그 외의 필드는 VARCHAR(255)로 설정합니다.
+          }
+          if (LONG_TARGETS.includes(i)) {
+            this[i] = "TEXT"; // 긴 문자열로 처리할 필드는 TEXT로 설정합니다.
+          }
+        }
+      }
+
+      getName() {
+        return TABLE_NAME; // 테이블 이름을 반환합니다.
+      }
+
+      getCreateSql() {
+        let sql = "CREATE TABLE `" + this.getName() + "` ("; // 테이블 생성 SQL 문을 작성합니다.
+        sql += "id INT(11) NOT NULL AUTO_INCREMENT,";
+        sql += " ";
+        for (let i in this) {
+          sql += "`";
+          sql += i;
+          sql += "`";
+          sql += " ";
+          sql += this[i];
+          sql += ", ";
+        }
+        sql += "PRIMARY KEY (id));";
+        return sql; // 테이블 생성 SQL 문을 반환합니다.
+      }
+
+      getDropSql() {
+        let sql = "DROP TABLE " + this.getName() + ";";
+        return sql; // 테이블 삭제 SQL 문을 반환합니다.
+      }
+
+    }
+
+    /**
+     * SqlTong 클래스는 SQL 데이터를 담는 배열 클래스입니다.
+     * Array 클래스를 상속받아 사용됩니다.
+     */
+    class SqlTong extends Array {
+      getName() {
+        return TABLE_NAME; // 테이블 이름을 반환합니다.
+      }
+
+      getInsertSql() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.getInsertSql()); // 각 데이터를 삽입하는 SQL 문을 생성하여 배열에 추가합니다.
+        }
+        return arr; // 삽입 SQL 문 배열을 반환합니다.
+      }
+
+    }
+
+    /**
+     * SqlTongFactor 클래스는 개별 데이터를 SQL로 변환하는 클래스입니다.
+     * @param {Object} sample - 데이터 샘플입니다.
+     */
+    class SqlTongFactor {
+      constructor(sample) {
+        for (let i in sample) {
+          if (typeof sample[i] === "string") {
+            this[i] = sample[i]; // 문자열 데이터를 그대로 저장합니다.
+          } else if (typeof sample[i] === "number") {
+            this[i] = sample[i]; // 숫자 데이터를 그대로 저장합니다.
+          } else if (typeof sample[i] === "boolean") {
+            if (sample[i]) {
+              this[i] = 1; // true는 1로 변환합니다.
+            } else {
+              this[i] = 0; // false는 0으로 변환합니다.
+            }
+          } else {
+            this[i] = JSON.stringify(sample[i]); // 그 외의 데이터는 JSON 문자열로 변환하여 저장합니다.
+          }
+        }
+      }
+
+      getName() {
+        return TABLE_NAME; // 테이블 이름을 반환합니다.
+      }
+
+      getInsertSql() {
+        let sql = "INSERT INTO `" + this.getName() + "` (";
+        for (let i in this) {
+          sql += "`";
+          sql += i;
+          sql += "`";
+          sql += ",";
+        }
+
+        sql = sql.slice(0, -1);
+        sql += ") VALUES (";
+
+        for (let i in this) {
+          if (typeof this[i] === "number") {
+            sql += this[i]; // 숫자 데이터는 그대로 삽입합니다.
+          } else {
+            if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/gi.test(this[i])) {
+              sql += "STR_TO_DATE('";
+              sql += this[i].replace(/'/g, '"');
+              sql += "', '%Y-%m-%d')"; // 날짜 문자열을 날짜 형식으로 변환하여 삽입합니다.
+            } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/gi.test(this[i])) {
+              sql += "STR_TO_DATE('";
+              sql += this[i].replace(/'/g, '"');
+              sql += "', '%Y-%m-%d %H:%i:%s')"; // 시간까지 포함된 날짜 문자열을 날짜 형식으로 변환하여 삽입합니다.
+            } else {
+              sql += "'";
+              sql += this[i].replace(/'/g, '"');
+              sql += "'";
+            }
+          }
+          sql += ",";
+        }
+
+        sql = sql.slice(0, -1);
+        sql += ");";
+
+        return sql; // 최종 SQL 삽입 문을 반환합니다.
+      }
+    }
+
+    let tong, tempArr;
+    let sample, model;
+
+    tong = new SqlTong();
+
+    for (let i of this) {
+      tempArr = i.dimensionSqueeze(); // 각 클라이언트의 데이터를 SQL로 변환합니다.
+      for (let j of tempArr) {
+        tong.push(new SqlTongFactor(j)); // 변환된 데이터를 SqlTong 배열에 추가합니다.
+      }
+    }
+
+    if (tong.length > 0) {
+      sample = tong[0]; // 첫 번째 데이터 샘플을 가져옵니다.
+      model = new SqlModel(sample); // 해당 샘플을 바탕으로 SQL 모델을 생성합니다.
+      return { model, data: tong }; // 모델과 데이터를 담은 객체를 반환합니다.
+    } else {
+      return null; // 데이터가 없는 경우 null을 반환합니다.
+    }
+  }
+
+  /**
+   * Clients 클래스에 getRequestsTong 메서드를 추가합니다.
+   * @returns {RequestsTong} 모든 요청을 담은 RequestsTong 객체를 반환합니다.
+   */
+  Clients.prototype.getRequestsTong = function () {
+    let tong, tempArr;
+    tong = new RequestsTong();
+    for (let i of this) {
+      tempArr = i.requests; // 각 클라이언트의 요청을 가져옵니다.
+      for (let j = 0; j < tempArr.length; j++) {
+        tempArr[j].cliid = i.cliid;
+        tempArr[j].name = i.name;
+        tempArr[j].phone = i.phone;
+        tempArr[j].index = j; // 각 요청에 인덱스와 클라이언트 정보를 추가합니다.
+        tong.push(tempArr[j]); // 요청을 tong에 추가합니다.
+      }
+    }
+    tong.sort((a, b) => {
+      return b.request.timeline.valueOf() - a.request.timeline.valueOf(); // 타임라인을 기준으로 정렬합니다.
+    });
+    return tong; // 최종 RequestsTong 객체를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 getRequestsTongsMonthly 메서드를 추가합니다.
+   * @returns {RequestsTongs} 월별로 요청을 정리한 RequestsTongs 객체를 반환합니다.
+   */
+  Clients.prototype.getRequestsTongsMonthly = function () {
+    const today = new Date();
+    const minimum = new Date(2019, 2, 1);
+    if (today.valueOf() < minimum.valueOf()) {
+      throw new Error("invaild date"); // 날짜가 최소 날짜보다 이전일 경우 오류를 발생시킵니다.
+    }
+    let tongs, tong, tongChild;
+    let searchTargets;
+    let monthNumber, monthConst;
+    let tempObj, tempDateFrom, tempDateTo;
+
+    monthNumber = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((minimum.getFullYear() * 12) + (minimum.getMonth() + 1)); // 현재 날짜와 최소 날짜 사이의 월 수를 계산합니다.
+    monthConst = 1000 * 60 * 60 * 24 * 32; // 월별 상수를 정의합니다.
+
+    searchTargets = [];
+    tempDateFrom = new Date(minimum.valueOf());
+    tempDateFrom.setDate(1); // 첫 번째 날을 설정합니다.
+    tempDateTo = new Date(tempDateFrom.valueOf() + monthConst);
+    tempDateTo.setDate(1); // 다음 달의 첫 번째 날을 설정합니다.
+    searchTargets.push([tempDateFrom, tempDateTo]); // 검색 기간을 설정합니다.
+
+    for (let i = 0; i < monthNumber; i++) {
+      tempDateFrom = new Date(tempDateFrom.valueOf() + monthConst);
+      tempDateFrom.setDate(1);
+      tempDateTo = new Date(tempDateFrom.valueOf() + monthConst);
+      tempDateTo.setDate(1);
+      searchTargets.push([tempDateFrom, tempDateTo]); // 각 월에 대한 검색 기간을 추가합니다.
+    }
+
+    tong = this.getRequestsTong(); // 모든 요청을 가져옵니다.
+    tongs = new RequestsTongs();
+    for (let [from, to] of searchTargets) {
+      tongChild = tong.search([from, to]); // 기간 내의 요청을 검색합니다.
+      tongs.push(new RequestsTongFactor({ name: `${String(from.getFullYear()).slice(2)}년 ${String(from.getMonth() + 1)}월`, date: from, tong: tongChild })); // 검색된 요청을 RequestsTongFactor 객체로 추가합니다.
+    }
+
+    tongs.sort((a, b) => {
+      return b.date.valueOf() - a.date.valueOf(); // 날짜를 기준으로 정렬합니다.
+    });
+
+    return tongs; // 최종 RequestsTongs 객체를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 search 메서드를 추가합니다.
+   * @param {string} cliid - 검색할 클라이언트 ID입니다.
+   * @returns {Object|null} 해당 클라이언트를 반환하거나 없을 경우 null을 반환합니다.
+   */
+  Clients.prototype.search = function (cliid) {
+    let result = null;
+    for (let i of this) {
+      if (i.cliid === cliid) { // 클라이언트 ID와 일치하는 클라이언트를 찾습니다.
+        result = i;
+        break;
+      }
+    }
+    return result; // 찾은 클라이언트를 반환합니다.
+  }
+
+  /**
+   * Clients 클래스에 pick 메서드를 추가합니다.
+   * @param {string} cliid - 선택할 클라이언트 ID입니다.
+   * @returns {Object|null} 선택된 클라이언트를 반환합니다.
+   */
+  Clients.prototype.pick = function (cliid) {
+    return this.search(cliid); // search 메서드를 사용하여 클라이언트를 선택합니다.
+  }
+
+  return Clients; // 수정된 Clients 클래스를 반환합니다.
 }
+
 
 module.exports = { ClientMap, Client, Clients, Tools: { withTools, withToolsArr } };
