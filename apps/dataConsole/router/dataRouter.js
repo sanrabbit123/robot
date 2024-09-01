@@ -450,63 +450,52 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (false) {
-
-          res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
-            alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
-            window.location.href = "https://home-liaison.com";</script></body></html>`);
-
+        if (/^cl/i.test(req.params.id)) {
+          target = "client";
+        } else if (/^bu/i.test(req.params.id)) {
+          target = "builder";
+        } else if (/^de/i.test(req.params.id)) {
+          target = "designer";
+        } else if (/^dash/i.test(req.params.id)) {
+          target = "dashboard";
+        } else if (/^proj/i.test(req.params.id)) {
+          target = "project";
+        } else if (/^prop/i.test(req.params.id)) {
+          target = "proposal";
+        } else if (/^proc/i.test(req.params.id)) {
+          target = "process";
+        } else if (/^con/i.test(req.params.id)) {
+          target = "contents";
+        } else if (/^fil/i.test(req.params.id)) {
+          target = "file";
+        } else if (/^mes/i.test(req.params.id)) {
+          target = "message";
+        } else if (/^use/i.test(req.params.id)) {
+          target = "user";
+        } else if (/^mpr/i.test(req.params.id)) {
+          target = "mpr";
+        } else if (/^ana/i.test(req.params.id)) {
+          target = "analytics";
+        } else if (/^ca/i.test(req.params.id)) {
+          target = "calculation";
+        } else if (/^sa/i.test(req.params.id)) {
+          target = "sales";
+        } else if (/^flo/i.test(req.params.id)) {
+          target = "flow";
+        } else if (/^numb/i.test(req.params.id)) {
+          target = "numbers";
+        } else if (/^raw/i.test(req.params.id)) {
+          target = "raw";
         } else {
-
-          if (/^cl/i.test(req.params.id)) {
-            target = "client";
-          } else if (/^bu/i.test(req.params.id)) {
-            target = "builder";
-          } else if (/^de/i.test(req.params.id)) {
-            target = "designer";
-          } else if (/^dash/i.test(req.params.id)) {
-            target = "dashboard";
-          } else if (/^proj/i.test(req.params.id)) {
-            target = "project";
-          } else if (/^prop/i.test(req.params.id)) {
-            target = "proposal";
-          } else if (/^proc/i.test(req.params.id)) {
-            target = "process";
-          } else if (/^con/i.test(req.params.id)) {
-            target = "contents";
-          } else if (/^fil/i.test(req.params.id)) {
-            target = "file";
-          } else if (/^mes/i.test(req.params.id)) {
-            target = "message";
-          } else if (/^use/i.test(req.params.id)) {
-            target = "user";
-          } else if (/^mpr/i.test(req.params.id)) {
-            target = "mpr";
-          } else if (/^ana/i.test(req.params.id)) {
-            target = "analytics";
-          } else if (/^ca/i.test(req.params.id)) {
-            target = "calculation";
-          } else if (/^sa/i.test(req.params.id)) {
-            target = "sales";
-          } else if (/^flo/i.test(req.params.id)) {
-            target = "flow";
-          } else if (/^numb/i.test(req.params.id)) {
-            target = "numbers";
-          } else if (/^raw/i.test(req.params.id)) {
-            target = "raw";
-          } else {
-            target = "client";
-          }
-
-          instance.baseMaker(target, "first", null).then(function (html) {
-            res.set("Content-Type", "text/html");
-            res.send(html);
-          }).catch(function (err) {
-            throw new Error(err);
-          });
-
+          target = "client";
         }
+
+        instance.baseMaker(target, "first", null).then(function (html) {
+          res.set("Content-Type", "text/html");
+          res.send(html);
+        }).catch(function (err) {
+          throw new Error(err);
+        });
 
       }
 
