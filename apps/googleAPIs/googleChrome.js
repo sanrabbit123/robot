@@ -148,7 +148,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
 
     await page.goto(link, { waitUntil: "networkidle" });
 
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]);
     if (typeof func === "function") {
       funcScript = mediaQuery(generalString).code + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     } else if (typeof func === "string") {
@@ -193,7 +193,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
     const page = await context.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
 
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
+    generalString = "";
     generalString += (await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]));
     generalString = mediaQuery(generalString).code;
 

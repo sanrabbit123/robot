@@ -603,7 +603,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const address = this.address;
   const image = this.image;
   const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongoinfo } = this.mother;
-  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
+  const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
   const notePath = process.env.HOME + "/note/portfolio";
   const photoFolderConst = "사진_등록_포트폴리오";
   const foreCastContant = `/corePortfolio/forecast`;
@@ -613,7 +613,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const collection = "foreContents";
   const selfCoreMongo = new mongo(mongoinfo);
   const selfMongo = new mongo(mongoofficeinfo);
-  const garoseroParser = new GaroseroParser();
+  const garoseroParser = new ImageReader();
   let nextPid;
 
   nextPid = null;
@@ -1214,8 +1214,8 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   const selfCoreMongo = new mongo(mongoinfo);
   const selfSecondMongo = new mongo(mongosecondinfo);
   const photoFolderConst = "사진_등록_포트폴리오";
-  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
-  const garoseroParser = new GaroseroParser();
+  const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
+  const garoseroParser = new ImageReader();
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
   const resource = new ResourceMaker();

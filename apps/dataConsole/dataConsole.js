@@ -116,7 +116,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result;
@@ -137,7 +137,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
     parserString = "";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/svgTong.js` ]);
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
 
     //write local js
@@ -177,7 +176,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
       //merge
       code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
-      code2 = generalString + "\n\n" + consoleGeneralString;
+      code2 = consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
 
       //set media query
@@ -297,7 +296,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
     let staticDirList;
     let staticTempDir, staticTempDirList_raw, staticTempDirList;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
+    let svgTongString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result, moduleString;
@@ -384,7 +383,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
       moduleBoo = meta.module;
 
       //set browser js
-      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//g, (name.slice(0, 1).toUpperCase() + name.slice(1)));
 
@@ -424,12 +422,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
       code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
-        code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
+        code2 = consoleGeneralString + "\n\n" + frontClassString + "\n\n";
       } else {
         if (/CLIENT/gi.test(kinds)) {
-          code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + ghostClientGeneralString + "\n\n" + frontClassString + "\n\n";
+          code2 = consoleGeneralString + "\n\n" + ghostClientGeneralString + "\n\n" + frontClassString + "\n\n";
         } else {
-          code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + ghostDesignerGeneralString + "\n\n" + frontClassString + "\n\n";
+          code2 = consoleGeneralString + "\n\n" + ghostDesignerGeneralString + "\n\n" + frontClassString + "\n\n";
         }
       }
       code3 = fileString + "\n\n" + execString;

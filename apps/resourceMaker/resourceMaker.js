@@ -519,8 +519,8 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
     return date;
   }
-  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
-  const garoseroParser = new GaroseroParser();
+  const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
+  const garoseroParser = new ImageReader();
   const budgetArr = [
     "500만원 이하",
     "1,000만원",

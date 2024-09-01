@@ -31,9 +31,6 @@ const KakaoTalk = function () {
   this.authObj = {};
   this.message = {};
   this.dir = process.cwd() + "/apps/kakaoTalk";
-  this.tokenDir = this.dir + "/token";
-  this.accessTokenPath = this.tokenDir + "/access_token.txt";
-  this.refreshTokenPath = this.tokenDir + "/refresh_token.txt";
   this.moment = {
     adsId: "608725",
     apiKey: "7c646aef29f8c1a06c13e1af68c9a54c",

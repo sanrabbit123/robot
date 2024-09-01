@@ -9441,7 +9441,6 @@ BuilderJs.prototype.navigatorLaunching = function () {
                 dom.children[1].style.color = colorChip.black;
               }
             }
-            instance.listDetailLaunching(buiid);
           }
         },
         style: {
@@ -9517,111 +9516,6 @@ BuilderJs.prototype.baseMaker = function () {
   this.navigatorLaunching();
 
   this.searchInput.focus();
-}
-
-BuilderJs.prototype.listDetailLaunching = function (buiid) {
-  const instance = this;
-  const { ea, totalMother } = this;
-  const { scrollTo, sleep, cleanChildren, ajaxJson } = GeneralJs;
-  class SearchArray extends Array {
-    constructor(arr) {
-      super();
-      for (let i of arr) {
-        this.push(i);
-      }
-    }
-    search(target, value) {
-      let obj = null;
-      for (let i of this) {
-        if (i[target] === value) {
-          obj = i;
-        }
-      }
-      return obj;
-    }
-  }
-  let loading, pastScrollTop;
-  let proidArr;
-  let desidArr;
-  let cliidArr;
-
-  cleanChildren(totalMother);
-
-  pastScrollTop = totalMother.scrollTop;
-  this.buiid = buiid;
-  this.builder = this.builders.search("buiid", buiid);
-  this.invid = null;
-
-  this.mother.loadingRun().then((dom) => {
-    loading = dom;
-
-    return ajaxJson({
-      mode: "read",
-      collection: "constructInvoice",
-      db: "python",
-      whereQuery: { "links.buiid": buiid }
-    }, PYTHONHOST + "/generalMongo", { equal: true });
-
-  }).then((invoiceList) => {
-
-    instance.invoiceList = new SearchArray(invoiceList);
-
-    proidArr = [];
-    desidArr = [];
-    cliidArr = [];
-    for (let invoice of invoiceList) {
-      proidArr.push({ proid: invoice.links.proid });
-      desidArr.push({ desid: invoice.links.desid });
-      cliidArr.push({ cliid: invoice.links.cliid });
-    }
-
-    if (proidArr.length > 0) {
-      return ajaxJson({ noFlat: true, whereQuery: { $or: proidArr } }, "/getProjects", { equal: true });
-    } else {
-      return [];
-    }
-
-  }).then((projects) => {
-
-    for (let invoice of instance.invoiceList) {
-      invoice.links.project = (new SearchArray(projects)).search("proid", invoice.links.proid);
-    }
-
-  }).then(() => {
-
-    if (proidArr.length > 0) {
-      return ajaxJson({ noFlat: true, whereQuery: { $or: desidArr } }, "/getDesigners", { equal: true });
-    } else {
-      return [];
-    }
-
-  }).then((designers) => {
-
-    for (let invoice of instance.invoiceList) {
-      invoice.links.designer = (new SearchArray(designers)).search("desid", invoice.links.desid);
-    }
-
-  }).then(() => {
-
-    if (proidArr.length > 0) {
-      return ajaxJson({ noFlat: true, whereQuery: { $or: cliidArr } }, "/getClients", { equal: true });
-    } else {
-      return [];
-    }
-
-  }).then((clients) => {
-
-    for (let invoice of instance.invoiceList) {
-      invoice.links.client = (new SearchArray(clients)).search("cliid", invoice.links.cliid);
-    }
-
-  }).then(() => {
-    loading.parentNode.removeChild(loading);
-    instance.estimationList(buiid);
-    scrollTo(totalMother, pastScrollTop);
-  }).catch((err) => {
-    console.log(err);
-  });
 }
 
 BuilderJs.prototype.estimationList = function (buiid = '') {
@@ -10303,21 +10197,7 @@ BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber =
       async function (e) {
         try {
           if (window.confirm("견적서를 전송하시겠습니까?")) {
-            await instance.saveState(true);
-            const [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid: invoice.links.cliid } }, "/getClients", { equal: true });
-            await ajaxJson({
-              method: "constructEstimation",
-              name: thisClient.name,
-              phone: thisClient.phone,
-              option: {
-                client: thisClient.name,
-                host: BACKHOST.slice(8, -5),
-                path: "cestimation",
-                proid: invoice.links.proid,
-                buiid: invoice.links.buiid
-              }
-            }, "/alimTalk");
-            window.alert("견적서를 전송하였습니다!");
+
           }
         } catch (e) {
           window.location.reload();
@@ -11663,12 +11543,8 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
         updateQuery["requests"] = thisInvoice.requests;
       }
 
-      await ajaxJson({
-        mode: "update",
-        collection: "constructInvoice",
-        db: "python",
-        whereQuery, updateQuery
-      }, PYTHONHOST + "/generalMongo");
+
+      
     }
   } catch (e) {
     window.location.reload();
@@ -11949,71 +11825,6 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
 
   } catch (e) {
     window.location.reload();
-  }
-}
-
-BuilderJs.prototype.estimationView = async function () {
-  const instance = this;
-  try {
-    class SearchArray extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(i);
-        }
-      }
-      search(target, value) {
-        let obj = null;
-        for (let i of this) {
-          if (i[target] === value) {
-            obj = i;
-          }
-        }
-        return obj;
-      }
-    }
-    const { ajaxJson, returnGet } = GeneralJs;
-    const getObj = returnGet();
-    const buiid = getObj.buiid || "u2111_aa01s";
-    const host = FILEHOST;
-    let builder;
-    let itemDummy, detailDummy;
-    let invoiceList;
-
-    this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
-    this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
-    this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
-    this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
-    this.motherHeight = <%% 154, 148, 148, 148, 148 %%>;
-
-    this.host = host;
-    this.downloadUrl = "https://" + host + "/publicSector";
-    this.sampleFile = this.downloadUrl + "/estimationSample.xlsx";
-    this.autoSaveConst = "autoSaveInterval";
-    GeneralJs.stacks[this.autoSaveConst] = null;
-
-    this.buiid = buiid;
-    this.builders = new SearchArray(await ajaxJson({
-      mode: "read",
-      collection: "builder",
-      db: "core",
-      whereQuery: {}
-    }, "/generalMongo", { equal: true }));
-
-    this.baseMaker();
-    this.listDetailLaunching(buiid);
-
-    itemDummy = await ajaxJson({ collection: "constructInvoice", subject: "items" }, PYTHONHOST + "/returnDummy", { equal: true });
-    detailDummy = await ajaxJson({ collection: "constructInvoice", subject: "detail" }, PYTHONHOST + "/returnDummy", { equal: true });
-    this.dummy = {
-      item: itemDummy,
-      detail: detailDummy
-    };
-
-  } catch (e) {
-    console.log(e);
-    window.alert("잘못된 접근입니다!");
-    window.location.href = "https://home-liaison.com";
   }
 }
 

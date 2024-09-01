@@ -1,3 +1,17 @@
+class GaroseroArray extends Array {
+  toSimple() {
+    let arr = [];
+    for (let { gs } of this) {
+      arr.push(gs);
+    }
+    return arr;
+  }
+
+  get simple() {
+    return this.toSimple();
+  }
+}
+
 const ImageReader = function (mother = null, back = null, address = null) {
   if (mother !== null && back !== null && address !== null) {
     this.mother = mother;
@@ -14,7 +28,6 @@ const ImageReader = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/imageReader";
   this.tempDir = process.cwd() + "/temp";
   this.sourceDir = this.dir + "/source";
-  this.waterDir = this.sourceDir + "/water";
   this.officialSize = {
     s749: [ 749, 1060 ],
     s780: [ 780, 1103 ],
@@ -418,7 +431,7 @@ ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
   }
 }
 
-ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508, water = false, skip = false) {
+ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508) {
   const instance = this;
   const { tempDir: tempFolder, officialSize: size } = this;
   const middleConst = "tempResult_";
@@ -570,13 +583,13 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
   }
 }
 
-ImageReader.prototype.overOfficialImage = async function (targetImage, type = 3508, water = false) {
+ImageReader.prototype.overOfficialImage = async function (targetImage, type = 3508) {
   const instance = this;
   const { tempDir: tempFolder, officialSize: size } = this;
   const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
   try {
     let tempObj;
-    tempObj = await this.toOfficialImage(targetImage, type, water);
+    tempObj = await this.toOfficialImage(targetImage, type);
     await shellExec(`rm`, [ `-rf`, targetImage ]);
     await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(targetImage.split(".").slice(0, -1).join(".") + ".jpg")}`);
     return { message: "done" };
@@ -677,6 +690,88 @@ ImageReader.prototype.twoVerticalImages = async function (arr) {
   } catch (e) {
     console.log(e);
     return null;
+  }
+}
+
+ImageReader.prototype.queryImage = async function (image) {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  try {
+    const res = await shellExec(`identify -ping -format '%w %h' ${shellLink(image)}`);
+    const [ width, height ] = res.trim().split(" ").map((str) => { return Number(str.trim()) });
+    if (width > height) {
+      return 'g';
+    } else if (width < height) {
+      return 's';
+    } else {
+      return 'c';
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ImageReader.prototype.queryImages = async function (imageArr) {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  try {
+    let target, width, height, resultObj;
+    let totalTong = new GaroseroArray();
+    let number = 0;
+    let res, tempArr;
+    for (let i of imageArr) {
+      res = await shellExec(`identify -ping -format '%w %h' ${shellLink(i)}`);
+      [ width, height ] = res.trim().split(" ").map((str) => { return Number(str.trim()) });
+      if (width > height) {
+        totalTong.push({ index: number, file: i, gs: 'g' });
+      } else if (width < height) {
+        totalTong.push({ index: number, file: i, gs: 's' });
+      } else {
+        totalTong.push({ index: number, file: i, gs: 'c' });
+      }
+      number++;
+    }
+    return totalTong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ImageReader.prototype.queryDirectory = async function (dir) {
+  const instance = this;
+  const { shell, shellLink, fileSystem, appleScript } = this.mother;
+  try {
+    let tongRaw, tong, result;
+    let numberBoo;
+    let sortFunc;
+
+    tongRaw = await fileSystem(`readDir`, [ dir ]);
+    tong = [];
+    numberBoo = [];
+    for (let i of tongRaw) {
+      if (i !== `.DS_Store`) {
+        tong.push(dir + "/" + i);
+        if (/[0-9]/g.test(i)) {
+          numberBoo.push("number");
+        } else {
+          numberBoo.push("string");
+        }
+      }
+    }
+
+    if (numberBoo.includes("string")) {
+      tong.sort();
+    } else {
+      sortFunc = (str) => {
+        return Number(str.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '').replace(/[^0-9]/g, ''));
+      }
+      tong.sort((a, b) => { return sortFunc(a) - sortFunc(b); });
+    }
+
+    result = await this.queryImages(tong);
+    return result;
+  } catch (e) {
+    console.log(e);
   }
 }
 

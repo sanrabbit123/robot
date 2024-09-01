@@ -32,7 +32,7 @@ class DevContext {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongotestinfo, mongoofficeinfo } = this.mother;
-  const { consoleQ, fileSystem, setQueue, shellExec, shellLink, http2InNode, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
+  const { consoleQ, fileSystem, copyToClipboard, setQueue, shellExec, shellLink, http2InNode, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
     const address = this.address;
@@ -70,8 +70,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
     
+    
+    
+
     
     
     // const selfMongo = this.MONGOC;
@@ -7680,30 +7684,6 @@ DevContext.prototype.pageRender = async function (targetAi) {
     await ghostFileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(resultFolder)}`);
 
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.spellCheck = async function (porlid) {
-  const instance = this;
-  try {
-    const app = new NaverAPIs();
-    const hangul = new ParsingHangul();
-    let note, targetArr, temp;
-    let fixString;
-    let updateArr = [];
-    note = new AppleNotes({ folder: "portfolio", subject: porlid });
-    targetArr = await note.readNote();
-    for (let i of targetArr) {
-      temp = await app.paragraphChecker(i);
-      fixString = hangul.fixString(temp);
-      console.log(fixString);
-      updateArr.push(fixString);
-    }
-    console.log(updateArr);
-    updateArr.shift();
-    await note.updateNote(updateArr.join('<br><br>').replace(/\"/gi, "'"));
   } catch (e) {
     console.log(e);
   }
