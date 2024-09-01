@@ -58,12 +58,9 @@ from google.googleAnalytics import GoogleAnalytics
 from google.googleSearchConsole import GoogleSearchConsole
 from google.googleSheet import GoogleSheet
 from google.googleDrive import GoogleDrive
-from google.googleDocs import GoogleDocs
 from google.googleYoutube import GoogleYoutube
 from google.googleAds import GoogleAds
 from google.googleCalendar import GoogleCalendar
-from google.googleSlides import GoogleSlides
-from google.googleForms import GoogleForms
 
 try:
 
@@ -244,36 +241,6 @@ try:
         result = driveApp.downloadFile(data["targetId"], data["targetFolder"])
         print(result)
 
-    elif argv[1] == 'docs' and argv[2] == 'readDocs':
-        docsApp = GoogleDocs()
-        result = docsApp.readDocs(data["id"])
-        print(dumps(result))
-
-    elif argv[1] == 'docs' and argv[2] == 'createDocs':
-        docsApp = GoogleDocs()
-        id = docsApp.createDocs(data["title"])
-        print(dumps({ "id": id }))
-
-    elif argv[1] == 'docs' and argv[2] == 'insertText':
-        docsApp = GoogleDocs()
-        docsApp.insertText(data["id"], data["longText"])
-        print(dumps({ "id": data["id"] }))
-
-    elif argv[1] == 'docs' and argv[2] == 'insertImage':
-        docsApp = GoogleDocs()
-        docsApp.insertImage(data["id"], data["index"], data["url"])
-        print(dumps({ "id": data["id"] }))
-
-    elif argv[1] == 'docs' and argv[2] == 'insertContents':
-        docsApp = GoogleDocs()
-        docsApp.insertContents(data["id"], data["contents"])
-        print(dumps({ "id": data["id"] }))
-
-    elif argv[1] == 'test' and argv[2] == 'test':
-        sheetsApp = GoogleSheet()
-        result = sheetsApp.test("15WGLx0-FDlhNy_5kZJmPXSN4kBKcvaJpqJKJ7Gy9Evk")
-        print(result)
-
     elif argv[1] == 'youtube' and argv[2] == 'channelNumbers':
         youtubeApp = GoogleYoutube()
         result = youtubeApp.channelNumbers(data["startDate"], data["endDate"])
@@ -308,16 +275,6 @@ try:
         calendarApp = GoogleCalendar()
         result = calendarApp.deleteSchedules(data["targetId"], data["eventId"])
         print(result)
-
-    elif argv[1] == 'slides' and argv[2] == 'createSlides':
-        slidsApp = GoogleSlides()
-        id = slidsApp.createSlides(data["title"])
-        print(dumps({ "id": id }))
-
-    elif argv[1] == 'forms' and argv[2] == 'createForms':
-        formsApp = GoogleForms()
-        id = formsApp.createForms(data["title"])
-        print(dumps({ "id": id }))
 
 
 except Exception as e:

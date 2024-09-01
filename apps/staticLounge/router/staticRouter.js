@@ -5,11 +5,8 @@ const StaticRouter = function (MONGOC, kakao, human) {
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-  const GoogleSlides = require(process.cwd() + "/apps/googleAPIs/googleSlides.js");
-  const GoogleForms = require(process.cwd() + "/apps/googleAPIs/googleForms.js");
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
@@ -32,13 +29,10 @@ const StaticRouter = function (MONGOC, kakao, human) {
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
-  this.docs = new GoogleDocs();
   this.chrome = new GoogleChrome();
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
   this.analytics = new GoogleAnalytics();
-  this.slides = new GoogleSlides();
-  this.forms = new GoogleForms();
   this.report = new LogReport(MONGOC);
   this.naver = new NaverAPIs();
   this.facebook = new FacebookAPIs();
@@ -1106,108 +1100,6 @@ StaticRouter.prototype.rou_post_createNewSheets = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_createNewDocs = function () {
-  const instance = this;
-  const docs = this.docs;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewDocs" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let docsId;
-      docsId = await docs.create_newDocs_inPython(name, parent);
-      res.send(JSON.stringify({ message: "success", docsId }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewDocs): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewSlides = function () {
-  const instance = this;
-  const slides = this.slides;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewSlides" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let slidesId;
-      slidesId = await slides.create_newSlides_inPython(name, parent);
-      res.send(JSON.stringify({ message: "success", slidesId }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewSlides): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_createNewForms = function () {
-  const instance = this;
-  const forms = this.forms;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst } = this;
-  let obj;
-  obj = {};
-  obj.link = [ "/createNewForms" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      if (req.body.name === undefined || req.body.parent === undefined) {
-        throw new Error("invalid post");
-      }
-      const { name, parent } = equalJson(req.body);
-      let formsId;
-      formsId = await forms.create_newForms_inPython(name, parent);
-      res.send(JSON.stringify({ message: "success", formsId }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewForms): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
 StaticRouter.prototype.rou_post_createNewLinkFile = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson, stringToLink } = this.mother;
@@ -1567,7 +1459,6 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
   const { fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst, designerFolderConst2 } = this;
   const drive = this.drive;
-  const docs = this.docs;
   let obj;
   obj = {};
   obj.link = [ "/designerFolder" ];
@@ -1593,9 +1484,8 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
         "계약서",
         "기타",
       ];
-      let id, subid;
       let folderName;
-      let folderId, docsId;
+      let folderId;
       let num;
       let folderList;
       let thisFolderList;
@@ -1687,12 +1577,10 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
           }
         }
 
-        docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
-
         res.send(JSON.stringify({
           folderName: folderName,
           drive: `https://drive.google.com/drive/folders/${folderId}`,
-          docs: `https://docs.google.com/document/d/${docsId}`,
+          docs: "",
         }));
       }
     } catch (e) {
@@ -7494,13 +7382,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      proposal(instance.mongo, instance.mongoconsole, logger).then((boo) => {
-        if (boo) {
-          return messageSend({ text: dateToString(new Date()) + " 디자이너 추천 현황 시트를 업데이트했어요!\nlink : " + "https://docs.google.com/spreadsheets/d/" + sheetsId + "/edit?usp=sharing", channel: "#101_cx_team", voice: false, fairy: true });
-        } else {
-          throw new Error("proposal update fail");
-        }
-      }).catch((err) => {
+      proposal(instance.mongo, instance.mongoconsole, logger).catch((err) => {
         console.log(err);
         logger.error("Static lounge 서버 문제 생김 (rou_post_updateDesignerProposalRealtime): " + err.message).catch((e) => { console.log(e) });
       })
