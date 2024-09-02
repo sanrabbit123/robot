@@ -1,94 +1,152 @@
+/**
+ * @class KakaoTalk
+ * @description 홈리에종에서 KakaoTalk 알림톡을 전송하기 위한 클래스입니다. API 키, 사용자 ID, 발신자 정보 등을 설정하고 관리합니다.
+ */
 const KakaoTalk = function () {
+  // Mother, BackMaker, HumanPacket 클래스와 address 정보를 가져옵니다.
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const address = require(`${process.cwd()}/apps/infoObj.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+
+  // Mother 클래스의 인스턴스를 생성하여 kakaoTalk 클래스에 할당합니다.
   this.mother = new Mother();
+  // BackMaker 클래스의 인스턴스를 생성하여 kakaoTalk 클래스에 할당합니다.
   this.back = new BackMaker();
+  // HumanPacket 클래스의 인스턴스를 생성하여 kakaoTalk 클래스에 할당합니다.
   this.human = new HumanPacket();
+  // address 정보를 kakaoTalk 클래스에 할당합니다.
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.userid = "hliaison";
-  this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
-  this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
-  this.senderPhone = "0220392252";
-  this.plusId = "@홈리에종";
-  this.channelId = "_vxixkjxl";
+
+  // KakaoTalk API에 필요한 정보들을 설정합니다.
+  this.userid = "hliaison";  // 사용자 ID
+  this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";  // API 키
+  this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";  // 발신자 키
+  this.senderPhone = "0220392252";  // 발신자 전화번호
+  this.plusId = "@홈리에종";  // 플러스친구 ID
+  this.channelId = "_vxixkjxl";  // 채널 ID
+
+  // IP 정보를 설정합니다.
   this.ip = {
-    office: address.officeinfo.ip.outer,
-    console: address.officeinfo.ip.outer,
-    second: address.officeinfo.ip.outer,
+    office: address.officeinfo.ip.outer,  // 사무실 IP
+    console: address.officeinfo.ip.outer,  // 콘솔 IP
+    second: address.officeinfo.ip.outer,  // 두 번째 IP
   };
+
+  // 정규 표현식을 통해 IP 패턴을 설정합니다.
   this.ipRegExp = {
-    office: new RegExp(this.ip.office, 'gi'),
-    console: new RegExp(this.ip.office, 'gi'),
-    second: new RegExp(this.ip.office, 'gi'),
+    office: new RegExp(this.ip.office, 'gi'),  // 사무실 IP 정규 표현식
+    console: new RegExp(this.ip.office, 'gi'),  // 콘솔 IP 정규 표현식
+    second: new RegExp(this.ip.office, 'gi'),  // 두 번째 IP 정규 표현식
   };
+
+  // 각 환경별로 사용할 토큰을 설정합니다.
   this.token = {
     office: "e2bf509af044a9a497c51fd8b98ba8f0b6b264837323e719822e38e5df9ed5459dee6c359f1398d495ea3e6b14f75fef9b9cf5cb5a9cdcd92fa79021ab219f47ndaS1dl2XH4atmy1CO2der3Xg0AcGidZyQJ5PVsvPNGU0n2+oBDiKCgqWZVHmisOk+JJkmjfJs0gzUjTgTfMdQ==",
     console: "e2bf509af044a9a497c51fd8b98ba8f0b6b264837323e719822e38e5df9ed5459dee6c359f1398d495ea3e6b14f75fef9b9cf5cb5a9cdcd92fa79021ab219f47ndaS1dl2XH4atmy1CO2der3Xg0AcGidZyQJ5PVsvPNGU0n2+oBDiKCgqWZVHmisOk+JJkmjfJs0gzUjTgTfMdQ==",
     second: "e2bf509af044a9a497c51fd8b98ba8f0b6b264837323e719822e38e5df9ed5459dee6c359f1398d495ea3e6b14f75fef9b9cf5cb5a9cdcd92fa79021ab219f47ndaS1dl2XH4atmy1CO2der3Xg0AcGidZyQJ5PVsvPNGU0n2+oBDiKCgqWZVHmisOk+JJkmjfJs0gzUjTgTfMdQ==",
   };
+
+  // 인증 정보와 메시지를 저장할 객체를 초기화합니다.
   this.authObj = {};
   this.message = {};
+
+  // 작업 디렉토리를 설정합니다.
   this.dir = process.cwd() + "/apps/kakaoTalk";
+
+  // Kakao Moment API에 필요한 정보를 설정합니다.
   this.moment = {
-    adsId: "608725",
-    apiKey: "7c646aef29f8c1a06c13e1af68c9a54c",
-    baseUrl: "https://apis.moment.kakao.com/openapi",
-    version: "v4",
-    redirectUri: "https://home-liaison.net/kakaoRedirect",
-    codeTarget: "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=7c646aef29f8c1a06c13e1af68c9a54c&redirect_uri=https%3A%2F%2Fhome-liaison.net%2FkakaoRedirect",
+    adsId: "608725",  // 광고 ID
+    apiKey: "7c646aef29f8c1a06c13e1af68c9a54c",  // API 키
+    baseUrl: "https://apis.moment.kakao.com/openapi",  // 기본 URL
+    version: "v4",  // API 버전
+    redirectUri: "https://home-liaison.net/kakaoRedirect",  // 리디렉션 URI
+    codeTarget: "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=7c646aef29f8c1a06c13e1af68c9a54c&redirect_uri=https%3A%2F%2Fhome-liaison.net%2FkakaoRedirect",  // 인증 코드 요청 URL
   }
 }
 
+/**
+ * @method generateToken
+ * @description KakaoTalk API에 사용할 토큰을 생성하는 메서드입니다.
+ * @returns {Promise<void>} 토큰 생성 후 콘솔에 결과를 출력합니다.
+ */
 KakaoTalk.prototype.generateToken = async function () {
   try {
+    // Mother 클래스의 requestSystem 메서드를 사용하여 토큰을 생성합니다.
     const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/token/create/1/y/", {
-      apikey: this.apikey,
-      userid: this.userid
+      apikey: this.apikey,  // API 키를 전달합니다.
+      userid: this.userid  // 사용자 ID를 전달합니다.
     });
-    console.log(data);
+    console.log(data);  // 생성된 토큰 데이터를 콘솔에 출력합니다.
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
     console.log(e);
   }
 }
 
+/**
+ * @method setAuth
+ * @description KakaoTalk API를 사용하기 위해 인증 정보를 설정하는 메서드입니다.
+ * @returns {Promise<boolean>} 인증 성공 시 true를 반환하며, 실패 시 false를 반환합니다.
+ */
 KakaoTalk.prototype.setAuth = async function () {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // address 객체를 가져옵니다.
   const address = this.address;
+
+  // Mother 클래스의 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
   const { requestSystem } = this.mother;
+
   try {
+    // 인증 정보를 설정합니다.
     this.authObj.apikey = this.apikey;
     this.authObj.userid = this.userid;
     this.authObj.senderkey = this.senderkey;
 
+    // 서버에 요청을 보내 IP 주소를 확인합니다.
     const { data } = await requestSystem("https://" + address.officeinfo.host + ":3002");
 
+    // 응답된 IP 주소에 따라 적절한 토큰을 설정합니다.
     if (this.ipRegExp.office.test(data.trim())) {
-      this.authObj.token = this.token.office;
+      this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
     } else if (this.ipRegExp.console.test(data.trim())) {
-      this.authObj.token = this.token.console;
+      this.authObj.token = this.token.console;  // 콘솔 IP일 경우 콘솔 토큰을 설정합니다.
     } else if (this.ipRegExp.second.test(data.trim())) {
-      this.authObj.token = this.token.second;
+      this.authObj.token = this.token.second;  // 두 번째 IP일 경우 두 번째 토큰을 설정합니다.
     }
 
-    return true;
+    return true;  // 인증이 성공적으로 설정되면 true를 반환합니다.
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 내용을 출력하고 false를 반환합니다.
     console.log(e);
     return false;
   }
 }
 
+/**
+ * @method getTemplate
+ * @description KakaoTalk 메시지 전송에 사용할 템플릿 리스트를 가져오는 메서드입니다.
+ * @returns {Promise<Object|null>} 템플릿 리스트 객체를 반환하며, 실패 시 null을 반환합니다.
+ */
 KakaoTalk.prototype.getTemplate = async function () {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
-  const { requestSystem } = this.mother;
-  try {
 
+  // Mother 클래스의 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
+  const { requestSystem } = this.mother;
+
+  try {
+    // 인증 정보를 설정합니다.
     await this.setAuth();
 
+    // 템플릿 리스트를 요청합니다.
     const response = await requestSystem("https://kakaoapi.aligo.in/akv10/template/list/", this.authObj);
     const { data } = response;
     const { list } = data;
+
+    // 템플릿 데이터를 정리하여 객체로 반환합니다.
     let tong;
     tong = {};
     for (let i of list) {
@@ -97,14 +155,114 @@ KakaoTalk.prototype.getTemplate = async function () {
         tong[i.templtCode][j] = i[j];
       }
     }
-    return tong;
+    return tong;  // 정리된 템플릿 리스트를 반환합니다.
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
     console.log(e);
     return null;
   }
 }
 
+/**
+ * @method templateTong
+ * @description KakaoTalk 알림톡에 사용할 템플릿 정보를 관리하는 메서드입니다. 특정 템플릿 또는 모든 템플릿 정보를 반환합니다.
+ * @param {string} target - 반환할 템플릿의 키 또는 "$all"을 입력하면 모든 템플릿을 반환합니다.
+ * @returns {Object} 요청된 템플릿 정보 또는 모든 템플릿 정보를 반환합니다.
+ * @throws {Error} 잘못된 target 값이 입력된 경우 오류를 발생시킵니다.
+ */
 KakaoTalk.prototype.templateTong = function (target) {
+  /*
+  // 각 템플릿 정보를 담고 있는 객체를 선언합니다.
+  const tong = {
+    "photo": {
+      "name": "사진 전송 완료 안내",  // 템플릿의 이름
+      "id": "TC_1179",  // 템플릿 ID
+      "needs": [],  // 필요한 필드들
+      "convert": "function (obj) {\n        return []\n      }",  // 변환 함수
+      "raw": {
+        "templtContent": "안녕하세요 #{고객명}님!\n보내주신 사진은 #{고객명}님 이름으로 등록 완료되었습니다 :)\n\n해당 사진 확인 후, 영업일 기준 2일 안에 전화드리겠습니다. 감사합니다!",  // 템플릿 내용
+        "templtName": "사진 전송 완료 안내",  // 템플릿 이름
+        "templateType": "BA",  // 템플릿 유형
+        "templateEmType": "NONE",  // 긴급 템플릿 유형
+        "templateExtra": "",  // 추가 정보
+        "templateAdvert": "",  // 광고 여부
+        "templtTitle": "",  // 템플릿 제목
+        "templtSubtitle": "",  // 템플릿 부제목
+        "templtImageName": "",  // 이미지 이름
+        "templtImageUrl": "",  // 이미지 URL
+        "block": "N",  // 차단 여부
+        "dormant": "N",  // 휴면 여부
+        "securityFlag": "N",  // 보안 플래그
+        "status": "A",  // 상태
+        "inspStatus": "APR",  // 검수 상태
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",  // 발신자 키
+        "buttons": [],  // 버튼 정보
+        "cdate": "2020-09-03 12:06:21",  // 생성 날짜
+        "templtCode": "TC_1179",  // 템플릿 코드
+        "comments": [
+          {
+            "cdate": "2020-09-03 14:13:41",  // 댓글 생성 날짜
+            "name": "검수자",  // 댓글 작성자 이름
+            "id": "1009053",  // 댓글 작성자 ID
+            "userName": "검수자",  // 댓글 작성자 사용자 이름
+            "commentContent": "",  // 댓글 내용
+            "createdAt": "2020-09-03 14:13:41",  // 댓글 생성 시간
+            "status": "APR"  // 댓글 상태
+          }
+        ]
+      }
+    },
+    "complete": {
+      "name": "신청 완료 안내",  // 템플릿의 이름
+      "id": "TC_1244",  // 템플릿 ID
+      "needs": [],  // 필요한 필드들
+      "convert": "function (obj) {\n        return []\n      }"  // 변환 함수
+    },
+    "designerSettingPortfolioSend": {
+      "name": "디자이너 세트 포트폴리오 전송",  // 템플릿의 이름
+      "id": "TQ_5918",  // 템플릿 ID
+      "needs": [  // 필요한 필드들
+        "designer",
+        "host",
+        "path",
+        "desid",
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",  // 변환 함수
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n홈리에종에서 디자이너님을 추천드리고, 연결해 드리기 위해 세트 포트폴리오 업로드를 요청드립니다! \n\n세트 포트폴리오는 주거 인테리어에 홈스타일링까지 완료된 포트폴리오로 부탁드리며, 한 집의 모든 공간을 보여주고 있어야 합니다. 기타 자세한 조건과 설명은 아래 페이지를 통해 확인해 주시고, 페이지를 통해서 세트 포트폴리오를 전송해주세요!\n\n*세트 포트폴리오 전송\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",  // 템플릿 내용
+        "templtName": "디자이너 세트 포트폴리오 전송",  // 템플릿 이름
+        "templateType": "BA",  // 템플릿 유형
+        "templateEmType": "NONE",  // 긴급 템플릿 유형
+        "templateExtra": "",  // 추가 정보
+        "templateAdvert": "",  // 광고 여부
+        "templtTitle": "",  // 템플릿 제목
+        "templtSubtitle": "",  // 템플릿 부제목
+        "templtImageName": "",  // 이미지 이름
+        "templtImageUrl": "",  // 이미지 URL
+        "block": "N",  // 차단 여부
+        "dormant": "N",  // 휴면 여부
+        "securityFlag": "N",  // 보안 플래그
+        "status": "R",  // 상태
+        "inspStatus": "APR",  // 검수 상태
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",  // 발신자 키
+        "buttons": [],  // 버튼 정보
+        "cdate": "2023-12-26 12:04:21",  // 생성 날짜
+        "templtCode": "TQ_5918",  // 템플릿 코드
+        "comments": [
+          {
+            "cdate": "2023-12-27 10:34:50",  // 댓글 생성 날짜
+            "name": "검수자",  // 댓글 작성자 이름
+            "id": "3029294",  // 댓글 작성자 ID
+            "userName": "검수자",  // 댓글 작성자 사용자 이름
+            "commentContent": "",  // 댓글 내용
+            "createdAt": "2023-12-27 10:34:50",  // 댓글 생성 시간
+            "status": "APR"  // 댓글 상태
+          }
+        ]
+      },
+    },
+  };
+  */
   const tong = {
     "photo": {
       "name": "사진 전송 완료 안내",
@@ -4369,153 +4527,242 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
   };
+  // target이 "$all"인 경우 모든 템플릿 정보를 반환합니다.
   if (target === "$all") {
     return tong;
   } else {
+    // target에 해당하는 템플릿 정보가 존재하는 경우 해당 템플릿 정보를 반환합니다.
     if (tong[target] !== undefined) {
       return tong[target];
     } else {
+      // target에 해당하는 템플릿 정보가 존재하지 않는 경우 오류를 발생시킵니다.
       throw new Error("invaild target");
     }
   }
 }
 
+/**
+ * @method setTalk
+ * @description KakaoTalk 알림톡 메시지를 설정하는 메서드입니다. 주어진 템플릿 코드와 클라이언트 정보를 사용하여 전송할 메시지를 생성합니다.
+ * @param {string} method - 사용할 템플릿 코드의 키
+ * @param {string} name - 수신자의 이름
+ * @param {string} phone - 수신자의 전화번호
+ * @param {Object} [option={}] - 추가 옵션 (필요한 경우 템플릿에 필요한 추가 데이터를 전달)
+ * @returns {Promise<Object|null>} 생성된 메시지 객체를 반환하며, 실패 시 null을 반환합니다.
+ * @throws {Error} 잘못된 옵션이 전달된 경우 오류를 발생시킵니다.
+ */
 KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+  
   try {
+    // 클라이언트 정보를 합쳐서 생성합니다. 기본적으로 name, phone을 포함하며, 추가 옵션도 병합합니다.
     const client = { name: name, phone: phone, ...option };
+    
+    // templateTong 메서드를 사용하여 템플릿 정보를 가져옵니다.
     const { id: targetId, needs, convert, raw } = this.templateTong(method);
+    
     let tong, contents;
     let convertArr;
     let tempRegexp;
     let convertFunc;
 
+    // 메시지 전송에 필요한 기본 정보를 설정합니다.
     tong = {
-      apikey: this.authObj.apikey,
-      userid: this.authObj.userid,
-      token: this.authObj.token,
-      senderkey: this.authObj.senderkey,
-      tpl_code: targetId,
-      sender: this.senderPhone,
-      receiver_1: client.phone.replace(/-/g, ''),
-      recvname_1: client.name,
-      subject_1: raw.templtName,
-      message_1: "",
-      button_1: { button: raw.buttons },
-      failover: "Y",
-      fsubject_1: raw.templtName,
-      fmessage_1: ""
+      apikey: this.authObj.apikey,  // API 키
+      userid: this.authObj.userid,  // 사용자 ID
+      token: this.authObj.token,  // 인증 토큰
+      senderkey: this.authObj.senderkey,  // 발신자 키
+      tpl_code: targetId,  // 템플릿 코드
+      sender: this.senderPhone,  // 발신자 전화번호
+      receiver_1: client.phone.replace(/-/g, ''),  // 수신자 전화번호 (하이픈 제거)
+      recvname_1: client.name,  // 수신자 이름
+      subject_1: raw.templtName,  // 메시지 제목
+      message_1: "",  // 메시지 내용 (아직 설정되지 않음)
+      button_1: { button: raw.buttons },  // 메시지에 포함될 버튼 정보
+      failover: "Y",  // Failover 설정
+      fsubject_1: raw.templtName,  // Failover 메시지 제목
+      fmessage_1: ""  // Failover 메시지 내용 (아직 설정되지 않음)
     };
 
+    // 템플릿의 기본 내용을 가져옵니다.
     contents = raw.templtContent;
+
+    // 템플릿에서 요구하는 필드들이 모두 존재하는지 확인합니다.
     for (let i of needs) {
       if (client[i] === undefined) {
-        throw new Error("invaild option");
+        throw new Error("invaild option");  // 필수 필드가 없으면 오류를 발생시킵니다.
       }
     }
+
+    // convert 함수 문자열을 실제 함수로 변환합니다.
     convertFunc = new Function("obj", convert.replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''));
+    
+    // 변환 함수에 클라이언트 데이터를 전달하여 변환된 배열을 얻습니다.
     convertArr = convertFunc(client);
+
+    // 변환된 데이터를 사용하여 템플릿 내용을 업데이트합니다.
     for (let { from, to } of convertArr) {
       tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
       contents = contents.replace(tempRegexp, String(to));
     }
+
+    // 변환된 데이터가 없을 경우 기본적으로 이름을 삽입합니다.
     if (convertArr.length === 0) {
       contents = contents.replace(/#\{[^\{\}]+\}/g, client.name);
     }
 
+    // 템플릿 제목이 존재하고, 공백이 아닌 경우에 제목을 설정합니다.
     if (typeof raw.templtTitle === "string") {
       if (raw.templtTitle.trim() !== "") {
         tong.emtitle_1 = raw.templtTitle;
       }
     }
 
+    // 최종적으로 메시지 내용을 설정합니다.
     tong.message_1 = contents;
     tong.fmessage_1 = contents;
+
+    // 버튼 정보가 있을 경우 Failover 메시지에 버튼 링크를 추가합니다.
     for (let i = 0; i < raw.buttons.length; i++) {
       tong.fmessage_1 += "\n\n";
       tong.fmessage_1 += raw.buttons[0].name + " : " + raw.buttons[0].linkPc;
     }
 
+    // 최종 생성된 메시지 객체를 저장하고 반환합니다.
     this.message = tong;
     return tong;
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
     console.log(e);
     return null;
   }
 }
 
+/**
+ * @method templateToBody
+ * @description 주어진 템플릿 코드와 클라이언트 정보를 사용하여 KakaoTalk 메시지의 본문을 생성하는 메서드입니다.
+ * @param {string} method - 사용할 템플릿 코드의 키
+ * @param {string} name - 수신자의 이름
+ * @param {string} phone - 수신자의 전화번호
+ * @param {Object} [option={}] - 추가 옵션 (필요한 경우 템플릿에 필요한 추가 데이터를 전달)
+ * @returns {Promise<string>} 생성된 메시지 본문을 반환합니다.
+ * @throws {Error} 잘못된 옵션이 전달된 경우 오류를 발생시킵니다.
+ */
 KakaoTalk.prototype.templateToBody = async function (method, name, phone, option = {}) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
   try {
+    // 클라이언트 정보를 합쳐서 생성합니다. 기본적으로 name, phone을 포함하며, 추가 옵션도 병합합니다.
     const client = { name: name, phone: phone, ...option };
+
+    // templateTong 메서드를 사용하여 템플릿 정보를 가져옵니다.
     const { id: targetId, needs, convert, raw } = this.templateTong(method);
+
     let contents;
     let convertArr;
     let convertFunc;
     let tempRegexp;
 
+    // 템플릿의 기본 내용을 가져옵니다.
     contents = raw.templtContent;
+
+    // 템플릿에서 요구하는 필드들이 모두 존재하는지 확인합니다.
     for (let i of needs) {
       if (client[i] === undefined) {
-        throw new Error("invaild option");
+        throw new Error("invaild option");  // 필수 필드가 없으면 오류를 발생시킵니다.
       }
     }
+
+    // convert 함수 문자열을 실제 함수로 변환합니다.
     convertFunc = new Function("obj", convert.replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''));
+
+    // 변환 함수에 클라이언트 데이터를 전달하여 변환된 배열을 얻습니다.
     convertArr = convertFunc(client);
+
+    // 변환된 데이터를 사용하여 템플릿 내용을 업데이트합니다.
     for (let { from, to } of convertArr) {
       tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
       contents = contents.replace(tempRegexp, String(to));
     }
+
+    // 변환된 데이터가 없을 경우 기본적으로 이름을 삽입합니다.
     if (convertArr.length === 0) {
       contents = contents.replace(/#\{[^\{\}]+\}/g, client.name);
     }
 
+    // 최종적으로 생성된 메시지 본문을 반환합니다.
     return contents;
+
   } catch (e) {
+    // 오류가 발생하면 콘솔에 오류 내용을 출력하고 빈 문자열을 반환합니다.
     console.log(e);
     return "";
   }
 }
 
+/**
+ * @method sendTalk
+ * @description 주어진 템플릿 코드와 클라이언트 정보를 사용하여 KakaoTalk 알림톡을 전송하는 메서드입니다. 전송 실패 시 SMS로 대체 전송합니다.
+ * @param {string} method - 사용할 템플릿 코드의 키
+ * @param {string} name - 수신자의 이름
+ * @param {string} phone - 수신자의 전화번호
+ * @param {Object} [convertObj={}] - 템플릿에 필요한 추가 데이터를 포함한 객체
+ * @returns {Promise<Object|null>} 전송 결과 데이터를 반환하며, 실패 시 null을 반환합니다.
+ * @throws {Error} 인증 또는 전송 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj = {}) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // HumanPacket 클래스의 인스턴스를 가져옵니다.
   const human = this.human;
+
+  // Mother 클래스에서 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
   const { requestSystem } = this.mother;
+
   try {
     let options, boo, data;
     let result;
 
-    boo = false;
-    data = null;
+    boo = false;  // 성공 여부를 나타내는 변수입니다.
+    data = null;  // 전송 결과 데이터를 저장할 변수입니다.
 
     try {
+      // 인증을 설정합니다.
       result = await this.setAuth();
       if (!result) {
-        throw new Error("auth error");
+        throw new Error("auth error");  // 인증 실패 시 오류를 발생시킵니다.
       }
+
+      // 알림톡 전송을 위한 옵션을 설정합니다.
       options = await this.setTalk(method, name, phone, convertObj);
       if (options === null) {
-        throw new Error("set error");
+        throw new Error("set error");  // 옵션 설정 실패 시 오류를 발생시킵니다.
       }
 
       try {
+        // 알림톡을 전송합니다.
         ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
       } catch (e) {
-        console.log(e);
-        data = null;
+        console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
+        data = null;  // 데이터는 null로 설정합니다.
       }
-      boo = true;
+      boo = true;  // 전송 성공 시 boo를 true로 설정합니다.
     } catch (e) {
-      console.log(e);
-      boo = false;
+      console.log(e);  // 인증 또는 옵션 설정 중 오류 발생 시 로그를 출력합니다.
+      boo = false;  // boo를 false로 설정합니다.
     }
 
+    // 전송 결과를 확인하여 성공 여부를 판단합니다.
     if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
-      boo = true;
+      boo = true;  // 성공 메시지가 포함된 경우 boo를 true로 설정합니다.
     } else {
-      boo = false;
+      boo = false;  // 그렇지 않은 경우 boo를 false로 설정합니다.
     }
 
+    // 알림톡 전송에 실패한 경우 SMS로 대체 전송합니다.
     if (!boo) {
       await human.sendSms({
         to: phone,
@@ -4523,316 +4770,474 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
       });
     }
 
+    // 최종 전송 결과 데이터를 반환합니다.
     return data;
   } catch (e) {
-    console.log(e);
+    console.log(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
+
+    // 알림톡 전송 실패 시 SMS로 대체 전송합니다.
     await human.sendSms({
       to: phone,
       body: (await this.templateToBody(method, name, phone, convertObj)),
     });
+
+    // null을 반환합니다.
     return null;
   }
 }
 
+/**
+ * @method friendTalk
+ * @description KakaoTalk 친구톡 메시지를 전송하는 메서드입니다. 사용자가 지정한 텍스트와 이미지, 버튼 등을 포함하여 메시지를 전송합니다.
+ * @param {string} name - 수신자의 이름
+ * @param {string} phone - 수신자의 전화번호
+ * @param {Object} bodyObject - 메시지 본문 및 추가 옵션을 포함한 객체
+ * @returns {Promise<boolean>} 전송 성공 여부를 반환합니다.
+ * @throws {Error} 잘못된 입력이 전달된 경우 오류를 발생시킵니다.
+ */
 KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // Mother 클래스에서 requestSystem 및 fileSystem 메서드를 구조 분해 할당으로 가져옵니다.
   const { requestSystem, fileSystem } = this.mother;
+
   try {
+    // 광고 여부에 따라 제목(subject)을 설정합니다.
     const subject = bodyObject.ads === true ? "(광고) 홈리에종 HomeLiaison" : "홈리에종 HomeLiaison";
+
     let options, boo, data;
     let result;
     let body;
     let res;
 
+    // 입력된 name, phone, bodyObject가 올바른지 확인합니다.
     if (typeof name !== "string" || typeof phone !== "string" || bodyObject === null || typeof bodyObject !== "object") {
-      throw new Error("invalid input");
+      throw new Error("invalid input");  // 유효하지 않은 입력 시 오류를 발생시킵니다.
     }
     if (typeof bodyObject.body !== "string") {
-      throw new Error("must be body");
+      throw new Error("must be body");  // body 필드가 없는 경우 오류를 발생시킵니다.
     }
     if (typeof bodyObject.convert !== "object" || bodyObject.convert === null) {
-      throw new Error("must be convert object");
+      throw new Error("must be convert object");  // convert 필드가 없는 경우 오류를 발생시킵니다.
     }
 
-    boo = false;
-    data = null;
+    boo = false;  // 전송 성공 여부를 나타내는 변수입니다.
+    data = null;  // 전송 결과 데이터를 저장할 변수입니다.
 
+    // 인증을 설정합니다.
     result = await this.setAuth();
 
-    // body
-
+    // 메시지 본문(body)을 생성합니다.
     body = bodyObject.body;
 
+    // convert 객체를 사용하여 메시지 본문 내의 변수를 실제 값으로 대체합니다.
     for (let key in bodyObject.convert) {
       body = body.replace(new RegExp("#\\{" + key + "\\}", "g"), bodyObject.convert[key](name, phone));
     }
 
+    // 친구톡 전송을 위한 옵션을 설정합니다.
     options = {
-      apikey: this.authObj.apikey,
-      userid: this.authObj.userid,
-      token: this.authObj.token,
-      senderkey: this.authObj.senderkey,
-      sender: this.senderPhone,
-      advert: "Y",
-      receiver_1: phone.replace(/-/g, ''),
-      recvname_1: name,
-      subject_1: subject,
-      message_1: body,
-      failover: "N",
+      apikey: this.authObj.apikey,  // API 키
+      userid: this.authObj.userid,  // 사용자 ID
+      token: this.authObj.token,  // 인증 토큰
+      senderkey: this.authObj.senderkey,  // 발신자 키
+      sender: this.senderPhone,  // 발신자 전화번호
+      advert: "Y",  // 광고 메시지 여부
+      receiver_1: phone.replace(/-/g, ''),  // 수신자 전화번호 (하이픈 제거)
+      recvname_1: name,  // 수신자 이름
+      subject_1: subject,  // 메시지 제목
+      message_1: body,  // 메시지 본문
+      failover: "N",  // Failover 설정 (사용하지 않음)
     };
 
+    // 이미지가 설정된 경우 파일 시스템에서 이미지를 읽어옵니다.
     if (typeof bodyObject.image === "string") {
       options.image = await fileSystem(`readStream`, [ bodyObject.image ]);
     }
+
+    // 버튼이 설정된 경우 버튼 정보를 추가합니다.
     if (typeof bodyObject.button === "object" && bodyObject.button !== null) {
       options.button_1 = {
         button: [
           {
-            name: bodyObject.button.title,
-            linkType: "WL",
-            linkTypeName: "웹링크",
-            linkMo: bodyObject.button.link,
-            linkPc: bodyObject.button.link,
+            name: bodyObject.button.title,  // 버튼 제목
+            linkType: "WL",  // 링크 타입 (웹 링크)
+            linkTypeName: "웹링크",  // 링크 타입 이름
+            linkMo: bodyObject.button.link,  // 모바일 링크
+            linkPc: bodyObject.button.link,  // PC 링크
           },
         ]
       };
     }
 
-    // send
-
+    // 친구톡 메시지를 전송합니다.
     try {
       ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/friend/send", options));
     } catch (e) {
-      console.log(e);
-      data = null;
-    }
-    if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
-      boo = true;
-    } else {
-      boo = false;
+      console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
+      data = null;  // 데이터는 null로 설정합니다.
     }
 
+    // 전송 결과를 확인하여 성공 여부를 판단합니다.
+    if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
+      boo = true;  // 성공 메시지가 포함된 경우 boo를 true로 설정합니다.
+    } else {
+      boo = false;  // 그렇지 않은 경우 boo를 false로 설정합니다.
+    }
+
+    // 최종 전송 성공 여부를 반환합니다.
     return boo;
 
   } catch (e) {
-    console.log(e);
-    return false;
+    console.log(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
+    return false;  // 실패 시 false를 반환합니다.
   }
 }
 
+/**
+ * @method friendsTalk
+ * @description 여러 명의 친구에게 KakaoTalk 친구톡 메시지를 전송하는 메서드입니다. 각 전송 결과를 채널에 보고합니다.
+ * @param {Array<Object>} friends - 이름과 전화번호를 가진 객체들의 배열
+ * @param {Object} bodyObject - 메시지 본문 및 추가 옵션을 포함한 객체
+ * @returns {Promise<Object|null>} 성공한 전송과 실패한 전송 목록을 포함한 객체를 반환하며, 실패 시 null을 반환합니다.
+ * @throws {Error} 잘못된 입력이 전달된 경우 오류를 발생시킵니다.
+ */
 KakaoTalk.prototype.friendsTalk = async function (friends, bodyObject) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // Mother 클래스에서 필요한 메서드들을 구조 분해 할당으로 가져옵니다.
   const { sleep, messageSend, requestSystem } = this.mother;
+
   try {
-    const channel = "#500_marketing";
-    const channel2 = "#marketing";
-    const delta = 2000;
-    let boo;
-    let successList;
-    let failList;
-    let text;
+    // 메시지를 전송할 채널과 대기 시간을 설정합니다.
+    const channel = "#500_marketing";  // 메시지 전송 성공 시 보고할 채널
+    const channel2 = "#marketing";  // 메시지 전송 실패 시 보고할 채널
+    const delta = 2000;  // 각 메시지 전송 사이의 대기 시간 (밀리초)
 
+    let boo;  // 메시지 전송 성공 여부를 나타내는 변수입니다.
+    let successList;  // 전송 성공한 친구들의 목록을 저장할 배열입니다.
+    let failList;  // 전송 실패한 친구들의 목록을 저장할 배열입니다.
+    let text;  // 전송 결과를 보고할 텍스트 메시지입니다.
+
+    // friends가 배열인지 확인합니다.
     if (!Array.isArray(friends)) {
-      throw new Error("invalid input 0");
-    }
-    if (!friends.every((obj) => { return typeof obj === "object" && obj !== null })) {
-      throw new Error("invalid input 1");
-    }
-    if (!friends.every((obj) => { return typeof obj.name === "string" && typeof obj.phone === "string" })) {
-      throw new Error("invalid input 2");
-    }
-    if (typeof bodyObject.convert !== "object" || bodyObject.convert === null) {
-      throw new Error("must be convert object");
+      throw new Error("invalid input 0");  // 배열이 아닌 경우 오류를 발생시킵니다.
     }
 
+    // friends 배열의 모든 요소가 객체인지 확인합니다.
+    if (!friends.every((obj) => { return typeof obj === "object" && obj !== null })) {
+      throw new Error("invalid input 1");  // 객체가 아닌 요소가 있는 경우 오류를 발생시킵니다.
+    }
+
+    // friends 배열의 모든 요소가 name과 phone 속성을 가지고 있는지 확인합니다.
+    if (!friends.every((obj) => { return typeof obj.name === "string" && typeof obj.phone === "string" })) {
+      throw new Error("invalid input 2");  // name과 phone이 없는 요소가 있는 경우 오류를 발생시킵니다.
+    }
+
+    // bodyObject의 convert가 객체인지 확인합니다.
+    if (typeof bodyObject.convert !== "object" || bodyObject.convert === null) {
+      throw new Error("must be convert object");  // convert 객체가 없으면 오류를 발생시킵니다.
+    }
+
+    // 성공 및 실패한 친구들의 목록을 초기화합니다.
     successList = [];
     failList = [];
 
+    // 각 친구에게 메시지를 전송합니다.
     for (let { name, phone } of friends) {
-      boo = await this.friendTalk(name, phone, bodyObject);
+      boo = await this.friendTalk(name, phone, bodyObject);  // friendTalk 메서드를 사용하여 메시지를 전송합니다.
+
       if (boo) {
+        // 전송에 성공한 경우
         console.log(`${name} / ${phone} success`);
         text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡을 전송하였습니다!`;
-        await messageSend({ text, channel, voice: false });
-        successList.push({ name, phone });
+        await messageSend({ text, channel, voice: false });  // 성공 메시지를 채널에 전송합니다.
+        successList.push({ name, phone });  // 성공 목록에 추가합니다.
       } else {
+        // 전송에 실패한 경우
         console.log(`${name} / ${phone} fail`);
         text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡 전송에 실패하였습니다!`;
-        await messageSend({ text, channel, voice: false });
-        failList.push({ name, phone });
+        await messageSend({ text, channel, voice: false });  // 실패 메시지를 채널에 전송합니다.
+        failList.push({ name, phone });  // 실패 목록에 추가합니다.
       }
+
+      // 다음 메시지를 전송하기 전에 일정 시간 대기합니다.
       await sleep(delta);
     }
 
+    // 성공 및 실패 목록을 포함한 결과를 반환합니다.
     return {
       success: successList,
       fail: failList,
     };
+
   } catch (e) {
-    console.log(e);
-    return null;
+    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    return null;  // null을 반환합니다.
   }
 }
 
+/**
+ * @method ObserveRemain
+ * @description 알리고의 잔여 메시지 수를 모니터링하고, 특정 기준 이하로 떨어지면 Slack 채널에 경고 메시지를 전송합니다.
+ * @returns {Promise<void>} 이 메서드는 반환값이 없습니다.
+ * @throws {Error} 알리고 API 요청 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.ObserveRemain = async function () {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // Mother 클래스에서 필요한 메서드들을 구조 분해 할당으로 가져옵니다.
   const { requestSystem, messageSend, sleep } = this.mother;
+
   try {
-    const convertConst = 8.400605449041372;
-    const timeConst = 30 * 1000;
-    const standard = 200;
-    const ea = '원';
+    // 알리고 잔여 SMS 수량을 계산하기 위한 상수와 시간 간격을 설정합니다.
+    const convertConst = 8.400605449041372;  // MMS에서 원화로 변환하기 위한 상수
+    const timeConst = 30 * 1000;  // 다음 확인까지 대기할 시간 (밀리초)
+    const standard = 200;  // 경고를 보내기 위한 MMS 잔여 수 기준
+    const ea = '원';  // 통화 단위를 나타내는 문자열
+
     let res;
+
     do {
+      // 알리고 API를 통해 잔여 메시지 수를 요청합니다.
       res = await requestSystem("https://apis.aligo.in/remain/", {
-        key: this.authObj.apikey,
-        user_id: this.authObj.userid,
+        key: this.authObj.apikey,  // API 키
+        user_id: this.authObj.userid,  // 사용자 ID
       });
+
+      // 남은 MMS 수가 기준 이하일 경우 Slack 채널에 경고 메시지를 전송합니다.
       if (res.data.MMS_CNT < standard) {
-        await messageSend({ text: "알리고 충전이 필요해요! 지금 " + String(Math.round(res.data.SMS_CNT * convertConst)) + ea + " 남아 있답니다.", channel: "#700_operation", voice: true });
+        await messageSend({
+          text: "알리고 충전이 필요해요! 지금 " + String(Math.round(res.data.SMS_CNT * convertConst)) + ea + " 남아 있답니다.",
+          channel: "#700_operation",  // 경고 메시지를 보낼 채널
+          voice: true,  // 음성 알림 여부
+        });
       }
+
+      // 다음 확인까지 대기합니다.
       await sleep(timeConst);
-    } while (res.data.MMS_CNT < standard);
+
+    } while (res.data.MMS_CNT < standard);  // 남은 MMS 수가 기준 이상이 될 때까지 반복합니다.
+
   } catch (e) {
-    console.log(e);
+    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
   }
 }
 
-KakaoTalk.prototype.ready = async function () {
-  const instance = this;
-  try {
-
-    // not used
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
+/**
+ * @method getAccessToken
+ * @description Kakao API에 접근하기 위한 액세스 토큰을 가져옵니다.
+ * @returns {Promise<string|null>} 액세스 토큰을 반환하며, 실패 시 null을 반환합니다.
+ * @throws {Error} 액세스 토큰 요청 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.getAccessToken = async function () {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // Kakao API 서버 주소를 가져옵니다.
   const address = this.address;
+
+  // Mother 클래스에서 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
   const { requestSystem } = this.mother;
+
   try {
+    // Kakao API 서버로부터 액세스 토큰을 요청합니다.
     const { accessToken } = (await requestSystem("https://" + address.secondinfo.host + ":3003/kakaoAccessToken")).data;
+
+    // 액세스 토큰을 반환합니다.
     return accessToken;
+
   } catch (e) {
-    console.log(e);
-    return null;
+    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    return null;  // 실패 시 null을 반환합니다.
   }
 }
 
+/**
+ * @method campaignsIdMap
+ * @description 광고 캠페인의 ID 맵을 생성하고, 필요 시 JSON 파일로 저장하는 메서드입니다.
+ * @param {boolean} store - 캠페인 데이터를 JSON 파일로 저장할지 여부를 결정하는 플래그
+ * @returns {Promise<Object|null>} 저장 여부, 저장된 파일 경로 및 캠페인 데이터를 포함한 객체를 반환합니다. 실패 시 null을 반환합니다.
+ * @throws {Error} API 요청 또는 파일 시스템 작업 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
+
+  // Mother 클래스에서 필요한 메서드들을 구조 분해 할당으로 가져옵니다.
   const { requestSystem, fileSystem, equalJson, uniqueValue, sleep } = this.mother;
+
   try {
+    // 광고 계정 정보와 API 기본 설정을 가져옵니다.
     const { moment: { adsId, baseUrl, version } } = this;
+
+    // 액세스 토큰을 가져옵니다.
     const token = await this.getAccessToken();
+
+    // API 요청에 사용할 기본 헤더를 설정합니다.
     const defaultHeaders = {
-      "Authorization": "Bearer " + token,
-    }
+      "Authorization": "Bearer " + token,  // Bearer 토큰 인증
+    };
+
+    // 저장할 파일 이름을 고유한 값으로 생성합니다.
     const storeName = `${process.cwd()}/temp/campaigns_${uniqueValue("hex")}.json`;
+
     let url, url2, res;
     let campaigns;
 
+    // 일정 시간 대기하여 API 호출 빈도를 조절합니다.
     await sleep(500);
 
+    // 캠페인 목록을 가져오는 URL을 설정합니다.
     url = baseUrl + "/" + version + "/campaigns";
-    res = await requestSystem(url, {}, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-    campaigns = res.data.content;
 
+    // 캠페인 목록을 API에서 가져옵니다.
+    res = await requestSystem(url, {}, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+    campaigns = res.data.content;  // 캠페인 목록을 저장합니다.
+
+    // 각 캠페인에 대한 광고 그룹을 가져오는 작업을 수행합니다.
     url = baseUrl + "/" + version + "/adGroups";
     for (let campaign of campaigns) {
-      await sleep(1000);
+      await sleep(1000);  // API 호출 사이의 대기 시간을 설정합니다.
       res = await requestSystem(url, { campaignId: String(campaign.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-      campaign.adGroups = equalJson(JSON.stringify(res.data.content));
+      campaign.adGroups = equalJson(JSON.stringify(res.data.content));  // 광고 그룹 데이터를 JSON 형식으로 저장합니다.
+
+      // 각 광고 그룹에 대한 광고 소재를 가져오는 작업을 수행합니다.
       for (let adGroup of campaign.adGroups) {
-        await sleep(500);
+        await sleep(500);  // API 호출 사이의 대기 시간을 설정합니다.
         url2 = baseUrl + "/" + version + "/creatives";
         res = await requestSystem(url2, { adGroupId: String(adGroup.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-        adGroup.ads = equalJson(JSON.stringify(res.data.content));
+        adGroup.ads = equalJson(JSON.stringify(res.data.content));  // 광고 소재 데이터를 JSON 형식으로 저장합니다.
       }
     }
 
+    // 캠페인 데이터를 파일로 저장할지 여부를 확인합니다.
     if (store) {
-      await fileSystem("writeJson", [ storeName, campaigns ]);
+      await fileSystem("writeJson", [ storeName, campaigns ]);  // 데이터를 JSON 파일로 저장합니다.
     }
 
+    // 저장 여부, 파일 경로, 캠페인 데이터를 포함한 객체를 반환합니다.
     return { store, file: !store ? null : storeName, campaigns };
+
   } catch (e) {
-    console.log(e);
-    return null;
+    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    return null;  // 실패 시 null을 반환합니다.
   }
 }
 
+/**
+ * @method kakaoComplex
+ * @description Kakao 광고 데이터를 수집하여 MongoDB에 저장하는 복잡한 작업을 수행하는 메서드입니다.
+ * @param {Object} selfMongo - MongoDB 연결 객체
+ * @param {number} dayNumber - 조회할 일수 (기본값: 3일)
+ * @param {Object|null} logger - 로깅을 위한 로거 객체 (기본값: null)
+ * @returns {Promise<boolean>} 작업이 성공적으로 완료되면 true를 반환하고, 실패하면 false를 반환합니다.
+ * @throws {Error} 광고 데이터 수집 또는 MongoDB 작업 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, logger = null) {
+  // 인스턴스를 참조하기 위한 상수입니다.
   const instance = this;
-  const back = this.back;
-  const { moment: { adsId, baseUrl, version } } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  try {
-    const collection = "kakaoComplex";
-    const idKeyword = 'f';
-    const kakaoKeyword = 'k';
-    const kakaoKeyKeyword = "kakao";
-    let now;
-    let startDate;
-    let from;
-    let to;
-    let json;
-    let key;
-    let advertisement;
-    let url;
-    let targets;
-    let response;
-    let complexCampaignArr;
-    let campaignObj;
-    let adGroupObj;
-    let adObj;
-    let reportResult;
-    let thisAdObj;
-    let token;
-    let campaigns;
-    let tempRows;
-    let defaultHeaders;
-    let thisResult;
 
+  // 백엔드 작업을 위한 back 객체를 가져옵니다.
+  const back = this.back;
+
+  // Kakao 광고 API와 관련된 설정 값을 가져옵니다.
+  const { moment: { adsId, baseUrl, version } } = this;
+
+  // Mother 클래스에서 필요한 메서드들을 구조 분해 할당으로 가져옵니다.
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+
+  try {
+    // MongoDB 컬렉션 이름과 키워드를 정의합니다.
+    const collection = "kakaoComplex";  // MongoDB 컬렉션 이름
+    const idKeyword = 'f';  // ID 키워드
+    const kakaoKeyword = 'k';  // Kakao 키워드
+    const kakaoKeyKeyword = "kakao";  // Kakao 키워드
+
+    let now;  // 현재 날짜를 저장할 변수
+    let startDate;  // 조회 시작 날짜를 저장할 변수
+    let from;  // 조회 시작 날짜
+    let to;  // 조회 종료 날짜
+    let json;  // MongoDB에 저장할 JSON 객체
+    let key;  // MongoDB에 저장할 키 값
+    let advertisement;  // 광고 데이터
+    let url;  // API 요청 URL
+    let targets;  // 조회할 대상 광고 목록
+    let response;  // API 응답 데이터
+    let complexCampaignArr;  // 복잡한 캠페인 배열
+    let campaignObj;  // 캠페인 객체
+    let adGroupObj;  // 광고 그룹 객체
+    let adObj;  // 광고 객체
+    let reportResult;  // 보고서 결과
+    let thisAdObj;  // 현재 광고 객체
+    let token;  // API 액세스 토큰
+    let campaigns;  // 캠페인 데이터
+    let tempRows;  // 임시 데이터 행
+    let defaultHeaders;  // 기본 API 헤더
+    let thisResult;  // 현재 결과
+
+    // 현재 날짜를 설정합니다.
     now = new Date();
+
+    // 조회 시작 날짜를 설정합니다.
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    // 지정된 일수만큼 과거로 시작 날짜를 설정합니다.
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }
 
+    // API 액세스 토큰을 가져옵니다.
     token = await this.getAccessToken();
-    defaultHeaders = {
-      "Authorization": "Bearer " + token,
-    }
-    thisResult = await this.campaignsIdMap();
-    campaigns = thisResult.campaigns;
 
+    // API 요청에 사용할 기본 헤더를 설정합니다.
+    defaultHeaders = {
+      "Authorization": "Bearer " + token,  // Bearer 토큰 인증
+    }
+
+    // 캠페인 ID 맵을 가져옵니다.
+    thisResult = await this.campaignsIdMap();
+    campaigns = thisResult.campaigns;  // 캠페인 데이터를 저장합니다.
+
+    // 지정된 일수만큼 데이터를 처리합니다.
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(60 * 1000);
+      await sleep(60 * 1000);  // 1분 대기 후 다음 작업을 수행합니다.
+
       if (i === 0) {
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + 1);
+        from = new Date(JSON.stringify(startDate).slice(1, -1));  // 조회 시작 날짜 설정
+        to = new Date(JSON.stringify(startDate).slice(1, -1));  // 조회 종료 날짜 설정
+        to.setDate(to.getDate() + 1);  // 조회 종료 날짜를 다음 날로 설정
       } else {
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 1);
+        from.setDate(from.getDate() + 1);  // 조회 시작 날짜를 다음 날로 설정
+        to.setDate(to.getDate() + 1);  // 조회 종료 날짜를 다음 날로 설정
       }
 
+      // MongoDB에 저장할 키 값을 설정합니다.
       key = dateToString(from).replace(/\-/gi, '') + "_" + kakaoKeyKeyword;
+
+      // MongoDB에 저장할 JSON 객체를 생성합니다.
       json = {
         camid: idKeyword + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + kakaoKeyword + 'a' + zeroAddition(from.getDate()) + 's',
         key,
         date: { from, to },
       };
 
-      await sleep(1000);
+      await sleep(1000);  // 1초 대기 후 다음 작업을 수행합니다.
+
+      // 광고 소재 보고서를 가져오는 URL을 설정합니다.
       url = baseUrl + "/" + version + "/creatives/report";
+
+      // 캠페인 배열을 초기화합니다.
       complexCampaignArr = [];
+
+      // 각 캠페인에 대해 데이터를 처리합니다.
       for (let campaign of campaigns) {
+
+        // 캠페인 객체를 생성합니다.
         campaignObj = {
           value: {
             charge: 0,
@@ -4849,20 +5254,27 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
           },
           children: []
         };
-        await sleep(500);
+
+        await sleep(500);  // 0.5초 대기 후 다음 작업을 수행합니다.
+
+        // 광고 그룹 내 광고 소재의 ID를 수집합니다.
         targets = campaign.adGroups.map((o) => { return o.ads.map((o) => { return o.id }); }).flat();
+
         if (targets.slice(0, 100).length > 0) {
-          await sleep(15 * 1000);
+          await sleep(15 * 1000);  // 15초 대기 후 다음 작업을 수행합니다.
           try {
+            // 첫 번째 광고 그룹의 보고서를 요청합니다.
             response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
             reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
           } catch (e) {
             console.log(e.response.data);
             reportResult = [];
           }
+
+          // 남은 광고 그룹들에 대해 보고서를 요청합니다.
           for (let i = 0; i < Math.floor(targets.length / 100); i++) {
             if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
-              await sleep(15 * 1000);
+              await sleep(15 * 1000);  // 15초 대기 후 다음 작업을 수행합니다.
               try {
                 response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
                 reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
@@ -4871,12 +5283,16 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
                 reportResult = reportResult.concat([]);
               }
             }
-            await sleep(60 * 1000);
+            await sleep(60 * 1000);  // 1분 대기 후 다음 작업을 수행합니다.
           }
         } else {
           reportResult = [];
         }
+
+        // 각 광고 그룹에 대한 데이터를 처리합니다.
         for (let adGroup of campaign.adGroups) {
+
+          // 광고 그룹 객체를 생성합니다.
           adGroupObj = {
             value: {
               charge: 0,
@@ -4893,11 +5309,18 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
             },
             children: []
           }
+
+          // 각 광고 소재에 대해 데이터를 처리합니다.
           for (let ad of adGroup.ads) {
+
+            // 현재 광고 소재에 대한 보고서 데이터를 찾습니다.
             thisAdObj = reportResult.find((o) => { return o.dimensions.creative_id === String(ad.id) });
+
             if (thisAdObj === undefined) {
               thisAdObj = null;
             }
+
+            // 광고 소재가 보고서에 존재할 경우 데이터를 저장합니다.
             if (thisAdObj !== null) {
               adObj = {
                 value: {
@@ -4917,6 +5340,8 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
               adGroupObj.children.push(equalJson(JSON.stringify(adObj)));
             }
           }
+
+          // 광고 그룹에 대한 요약 데이터를 계산합니다.
           if (adGroupObj.children.length > 0) {
             adGroupObj.value.charge = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
             adGroupObj.value.performance.play = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.performance.play }, 0);
@@ -4925,6 +5350,8 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
             campaignObj.children.push(equalJson(JSON.stringify(adGroupObj)));
           }
         }
+
+        // 캠페인에 대한 요약 데이터를 계산합니다.
         if (campaignObj.children.length > 0) {
           campaignObj.value.charge = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
           campaignObj.value.performance.play = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.performance.play }, 0);
@@ -4934,6 +5361,7 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         }
       }
 
+      // 최종 광고 데이터를 생성합니다.
       advertisement = {
         value: {
           charge: complexCampaignArr.reduce((acc, curr) => { return acc + curr.value.charge }, 0),
@@ -4951,105 +5379,153 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         campaign: equalJson(JSON.stringify(complexCampaignArr)),
       };
 
+      // MongoDB에 저장할 최종 JSON 데이터를 생성합니다.
       json.advertisement = equalJson(JSON.stringify(advertisement));
 
-      // store
+      // 데이터를 MongoDB에 저장합니다.
       tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+
+      // 동일한 키의 데이터가 이미 존재하는 경우 삭제합니다.
       if (tempRows.length !== 0) {
         await back.mongoDelete(collection, { key }, { selfMongo });
       }
+
+      // 데이터를 MongoDB에 생성합니다.
       await back.mongoCreate(collection, json, { selfMongo });
       console.log(json);
     }
 
+    // 로그 기록이 필요한 경우 처리합니다.
     if (logger !== null) {
       logger.cron("kakao complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
-    return true;
+    return true;  // 작업이 성공적으로 완료되면 true를 반환합니다.
 
   } catch (e) {
     console.log(e);
     console.log(e.response);
     emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
-    return false;
+    return false;  // 오류 발생 시 false를 반환합니다.
   }
 }
 
+/**
+ * @method dailyCampaign
+ * @description Kakao 캠페인 데이터를 매일 수집하여 MongoDB에 저장하는 메서드입니다.
+ * @param {Object} selfMongo - MongoDB 연결 객체
+ * @param {number} dayNumber - 조회할 일수 (기본값: 3일)
+ * @param {Object|null} logger - 로깅을 위한 로거 객체 (기본값: null)
+ * @returns {Promise<void>} 이 메서드는 반환값 없이 실행됩니다.
+ * @throws {Error} 광고 데이터 수집 또는 MongoDB 작업 중 오류가 발생한 경우 예외를 발생시킵니다.
+ */
 KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
+  // 인스턴스 참조를 위한 변수 선언
   const instance = this;
-  const back = this.back;
-  const { moment: { adsId, baseUrl, version } } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  try {
-    const campaignCollection = "dailyCampaign";
-    let tempRows;
-    let res;
-    let json;
-    let from, to;
-    let startDate;
-    let num;
-    let key;
-    let now;
-    let token;
-    let defaultHeaders;
-    let thisResult;
-    let campaigns;
-    let response;
-    let url;
-    let targets;
-    let reportResult;
-    let thisCampaign;
 
+  // 백엔드 작업을 위한 back 객체를 가져옵니다.
+  const back = this.back;
+
+  // Kakao Moment API와 관련된 설정 값을 가져옵니다.
+  const { moment: { adsId, baseUrl, version } } = this;
+
+  // Mother 클래스에서 제공하는 유틸리티 메서드를 구조 분해 할당으로 가져옵니다.
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+
+  try {
+    // MongoDB 컬렉션 이름을 설정합니다.
+    const campaignCollection = "dailyCampaign";
+    let tempRows; // 임시 데이터를 저장할 변수
+    let res; // API 응답 데이터를 저장할 변수
+    let json; // MongoDB에 저장할 JSON 객체
+    let from, to; // 데이터 조회 기간을 나타내는 변수
+    let startDate; // 조회 시작 날짜를 저장할 변수
+    let num; // 캠페인 인덱스 번호를 저장할 변수
+    let key; // MongoDB에 저장할 키 값
+    let now; // 현재 날짜를 저장할 변수
+    let token; // API 액세스 토큰을 저장할 변수
+    let defaultHeaders; // API 요청 시 사용할 기본 헤더
+    let thisResult; // 캠페인 데이터 결과를 저장할 변수
+    let campaigns; // 캠페인 데이터를 저장할 변수
+    let response; // API 응답을 저장할 변수
+    let url; // API 요청 URL을 저장할 변수
+    let targets; // 조회할 캠페인 ID 목록을 저장할 변수
+    let reportResult; // 캠페인 보고서 결과를 저장할 변수
+    let thisCampaign; // 현재 캠페인 데이터를 저장할 변수
+
+    // 현재 날짜를 가져옵니다.
     now = new Date();
+
+    // 조회 시작 날짜를 현재 날짜로 설정합니다.
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // 지정된 일수만큼 과거로 시작 날짜를 설정합니다.
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }
+
+    // API 액세스 토큰을 가져옵니다.
     token = await this.getAccessToken();
+
+    // API 요청에 사용할 기본 헤더를 설정합니다.
     defaultHeaders = {
-      "Authorization": "Bearer " + token,
+      "Authorization": "Bearer " + token,  // Bearer 토큰 인증 헤더
     }
 
+    // 캠페인 ID 맵을 가져옵니다.
     thisResult = await this.campaignsIdMap();
-    campaigns = thisResult.campaigns;
+    campaigns = thisResult.campaigns;  // 캠페인 데이터를 저장합니다.
 
+    // 캠페인 보고서를 가져올 API URL을 설정합니다.
     url = baseUrl + "/" + version + "/campaigns/report";
+
+    // 캠페인 ID 목록을 수집합니다.
     targets = campaigns.map((o) => { return o.id });
 
+    // 지정된 일수 동안 데이터를 처리합니다.
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(60 * 1000);
+      await sleep(60 * 1000);  // 1분 대기 후 다음 작업을 수행합니다.
+
       if (i === 0) {
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + 1);
+        from = new Date(JSON.stringify(startDate).slice(1, -1));  // 조회 시작 날짜 설정
+        to = new Date(JSON.stringify(startDate).slice(1, -1));  // 조회 종료 날짜 설정
+        to.setDate(to.getDate() + 1);  // 조회 종료 날짜를 다음 날로 설정
       } else {
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 1);
+        from.setDate(from.getDate() + 1);  // 조회 시작 날짜를 다음 날로 설정
+        to.setDate(to.getDate() + 1);  // 조회 종료 날짜를 다음 날로 설정
       }
 
       try {
+        // 첫 번째 5개의 캠페인에 대한 보고서를 요청합니다.
         response = await requestSystem(url, { campaignId: targets.slice(0, 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
         reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+
+        // 나머지 캠페인에 대해 보고서를 요청합니다.
         for (let i = 0; i < Math.floor(targets.length / 5); i++) {
           if (targets.slice((i + 1) * 5, (i + 2) * 5).length > 0) {
             response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
             reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
           }
-          await sleep(60 * 1000);
+          await sleep(60 * 1000);  // 1분 대기 후 다음 작업을 수행합니다.
         }
       } catch {
-        reportResult = [];
+        reportResult = [];  // 오류 발생 시 빈 배열로 설정합니다.
       }
 
-      num = 0;
+      num = 0;  // 캠페인 인덱스 번호를 초기화합니다.
       for (let obj of campaigns) {
 
+        // 현재 캠페인에 해당하는 보고서 데이터를 찾습니다.
         thisCampaign = reportResult.find((o) => { return String(o.dimensions.campaign_id) === String(obj.id) });
+
+        // 현재 캠페인 데이터가 존재하는 경우
         if (thisCampaign !== undefined) {
 
-          key = dateToString(from).replace(/\-/gi, '') + "_" + String(obj.id)
+          // MongoDB에 저장할 키 값을 설정합니다.
+          key = dateToString(from).replace(/\-/gi, '') + "_" + String(obj.id);
+
+          // MongoDB에 저장할 JSON 데이터를 생성합니다.
           json = {
             camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + String.fromCharCode(97 + num) + zeroAddition(from.getDate()) + 's',
             key,
@@ -5073,24 +5549,29 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
             }
           };
 
+          // 기존 데이터가 존재하면 삭제합니다.
           tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
           if (tempRows.length !== 0) {
             await back.mongoDelete(campaignCollection, { key }, { selfMongo });
           }
+
+          // 새 데이터를 MongoDB에 저장합니다.
           await back.mongoCreate(campaignCollection, json, { selfMongo });
           console.log(json);
-          num++;
+          num++;  // 캠페인 인덱스 번호를 증가시킵니다.
 
         }
       }
 
     }
 
+    // 로그 기록이 필요한 경우 처리합니다.
     if (logger !== null) {
       logger.cron("kakao daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
   } catch (e) {
+    // 오류 발생 시 긴급 알림을 전송하고 콘솔에 오류를 출력합니다.
     emergencyAlarm("KakaoTalk.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
