@@ -10,7 +10,6 @@ const StaticRouter = function (MONGOC, kakao, human) {
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
-  const LogReport = require(`${process.cwd()}/apps/staticLounge/router/logReport.js`);
   const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
   const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
   const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
@@ -33,7 +32,6 @@ const StaticRouter = function (MONGOC, kakao, human) {
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
   this.analytics = new GoogleAnalytics();
-  this.report = new LogReport(MONGOC);
   this.naver = new NaverAPIs();
   this.facebook = new FacebookAPIs();
   this.google = new GoogleAds();
@@ -2517,7 +2515,6 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
     });
     try {
       const selfMongo = instance.mongolocal;
-      const reportMode = (req.body.report === 1 || req.body.report === "1")
       let collection;
       let anaid, ancid, key, rows;
       let result;
@@ -2655,10 +2652,6 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
             logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
           }
           await sleep(1000);
-
-          if (reportMode) {
-            await requestSystem("https://" + address.officeinfo.ghost.host + "/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
-          }
 
           return true;
         } catch (e) {
@@ -3616,39 +3609,6 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_logBasicReport = function () {
-  const instance = this;
-  const report = this.report;
-  const { equalJson } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/logBasicReport" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      report.dailyReports().then((boo) => {
-        if (boo) {
-          logger.cron("marketing reporting done").catch((err) => { console.log(err) });
-        } else {
-          logger.error("logBasicReport fail").catch((err) => { console.log(err) });
-        }
-      }).catch((err) => {
-        logger.error("logBasicReport error : " + err.message).catch((err) => { console.log(err) });
-      });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      await logger.error("Static lounge 서버 문제 생김 (rou_post_logBasicReport): " + e.message);
-      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
