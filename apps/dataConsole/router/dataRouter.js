@@ -3889,7 +3889,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
         cliid = await back.createClient(requestObject, { selfMongo });
         await back.createHistory("client", { cliid, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
-        message += "새로운 상담 문의가 왔습니다!\n";
+        message += "새로운 상담 문의가 왔습니다!\n"
 
       }
 
@@ -3921,8 +3921,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         logger.error("Console 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
       });
 
-      thisClient = await back.getClientById(cliid, { selfMongo });
-      message += "새로운 상담 문의가 왔습니다!" + " " + "성함 : " + thisClient.name + "(" + thisClient.cliid + ") " + "연락처 : " + thisClient.phone + "\n";
+      thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
+      message += "\n" + thisClient.toMessage();
 
       messageSend({ text: message, channel: "#401_consulting" }).then(() => {
         return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
