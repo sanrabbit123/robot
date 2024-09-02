@@ -1624,7 +1624,7 @@ class Project {
         if (typeof method !== "string" || typeof amount !== "number") {
           throw new Error("invalid input"); // 잘못된 입력값이 있는 경우 에러를 발생시킵니다.
         }
-        const tempInstance = new Fee({
+        const tempInstance = new this.#Fee({
           method: (/off/gi.test(method) ? "offline" : "online"), // method가 offline인지 online인지 체크하여 저장합니다.
           partial: false, // 기본적으로 partial 값은 false로 설정합니다.
           amount: amount, // 입력받은 amount 값을 설정합니다.
