@@ -1609,6 +1609,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let pastMiddle = 0;
     let pastAmount = 0;
     let from = 0;
+    let inclination;
 
     // 구간별로 평수와 가격을 순회하며 함수 스크립트를 생성합니다.
     for (let { to, amount } of tong) {
@@ -1626,7 +1627,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       // 경사 값을 계산합니다. 이는 현재 구간에서 가격이 얼마나 증가하는지를 나타냅니다.
-      const inclination = (amount - pastAmount) / (middle - pastMiddle);
+      inclination = (amount - pastAmount) / (middle - pastMiddle);
 
       // 시작 지점을 현재 'to' 값으로 설정하고, 이전 중간값과 금액을 업데이트합니다.
       from = to;
