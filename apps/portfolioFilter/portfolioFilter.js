@@ -1,155 +1,1119 @@
-const PortfolioFilter = function (clientName = "", apartName = "", designer = "", pid = "g0") {
-  const Mother = require(`${process.cwd()}/apps/mother.js`);
-  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-  const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
-  const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
-  const apart = function (str) {
-    let arr = str.split(' ');
-    let new_string = '';
-    for (let i of arr) {
-      new_string += i + '_';
+/**
+ * ResourceMaker 클래스는 포트폴리오 ID를 기반으로 다양한 리소스 정보를 생성하고 관리하는 역할을 합니다.
+ * 이 클래스는 포트폴리오 정보를 처리하여 관련된 메타데이터를 생성하고,
+ * 파일 경로 및 기타 정보를 설정하는 기능을 포함합니다.
+ */
+class ResourceMaker {
+  /**
+   * ResourceMaker의 생성자 함수는 클래스의 인스턴스를 초기화합니다.
+   * 포트폴리오 ID를 받아서 이를 처리하고, 관련된 여러 속성들을 초기화합니다.
+   *
+   * @param {string} [p_id] - 포트폴리오 ID를 나타내는 문자열입니다. 기본값은 빈 문자열입니다.
+   */
+  constructor (p_id) {
+    // p_id가 undefined일 경우 빈 문자열로 초기화합니다.
+    if (p_id === undefined) {
+      p_id = '';
     }
-    new_string += "홈스타일링_";
-    return new_string;
+
+    // 필요한 모듈들을 가져옵니다.
+    const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 불러옵니다.
+    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js"); // BackMaker 클래스를 불러옵니다.
+    const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`); // ADDRESS 객체를 불러옵니다.
+    
+    // Mother 클래스의 인스턴스를 생성하여 클래스의 속성으로 설정합니다.
+    this.mother = new Mother();
+    
+    // BackMaker 클래스의 인스턴스를 생성하여 클래스의 속성으로 설정합니다.
+    this.back = new BackMaker();
+    
+    // ADDRESS 객체를 클래스의 속성으로 설정합니다.
+    this.address = ADDRESS;
+    
+    // S3 호스트 주소를 설정합니다.
+    this.s3Host = `https://${ADDRESS.officeinfo.ghost.host}`;
+    
+    // p_id 문자열에서 불필요한 공백을 제거하고 소문자로 변환합니다.
+    for (let i = 0; i < 5; i++) {
+      p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
+    }
+    
+    // frontHost 주소를 설정합니다.
+    this.frontHost = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
+  
+    // 인스턴스의 속성들을 초기화합니다.
+    this.p_id = p_id; // 포트폴리오 ID
+    this.arr = []; // 처리할 정보가 저장될 배열
+    this.result = {}; // 최종 결과를 저장할 객체
+    this.final = {}; // 추가적인 결과를 저장할 객체
+    this.targetFolder = ""; // 타겟 폴더를 저장할 문자열
   }
-  this.mother = new Mother();
-  this.back = new BackMaker();
-  this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.dir = `${process.cwd()}/apps/portfolioFilter`;
-  this.image = new ImageReader(this.mother, this.back, this.address);
-  this.hangul = new ParsingHangul();
-  this.generator = {
-    factory: require(this.dir + "/factory/generator.js"),
-  };
-  this.clientName = clientName;
-  this.designer = designer;
-  this.apartName = apart(apartName);
-  this.pid = pid;
-  this.resourceFolderName = "resource";
-  this.resultFolderName = "result";
-  this.options = {
-    home_dir: `${process.env.HOME}/portfolioFilter`,
-    photo_dir: `${process.env.HOME}/portfolioFilter/${this.resourceFolderName}`,
-    result_dir: `${process.env.HOME}/portfolioFilter/${this.resultFolderName}`,
-  };
-  this.clientNullATarget = [
-    "null",
-    "NULL",
-    "Null",
-    "no",
-    "",
-    "X",
-    "x",
-    "nothing",
-    "anyone",
-    "없음",
-    "a",
-    "A",
-    "designer",
-    "Designer",
-    "DESIGNER",
-    "undefined"
-  ];
-}
 
-PortfolioFilter.prototype.static_setting = async function () {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
-  try {
-    let staticFolderBoo, staticFolderBootr;
-    let order;
-    let staticFolderscriptBoo, staticFolderscriptBootr;
-    let staticFolderresultBootr, staticFolderresourceBootr;
-    let folderList;
+  /**
+   * 문자열을 소문자로 변환하고, 불필요한 문자들을 제거하는 함수입니다.
+   * 주로 파일명이나 경로를 처리할 때 사용됩니다.
+   *
+   * @param {string} str - 처리할 문자열입니다.
+   * @returns {string} - 처리된 문자열을 반환합니다.
+   */
+  lowerCase = (str) => {
+    // 문자열 양끝의 공백을 제거합니다.
+    str = str.trim();
 
-    staticFolderBoo = await this.mother.fileSystem(`readDir`, [ process.env.HOME ]);
-    staticFolderBootr = false;
-    for (let i of staticFolderBoo) {
-      if (/^portfolioFilter/.test(i)) {
-        staticFolderBootr = true;
+    // 문자열에서 다양한 불필요한 문자들을 제거합니다.
+    str = str.replace(/“/g, '').replace(/”/g, '').replace(/"/g, '').replace(/‘/g, '').replace(/’/g, '').replace(/'/g, '').replace(/\n/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/=/g, '').replace(/ /g, '').replace(/  /g, '').replace(/ /g, '').replace(/\t/g, '')
+
+    // 문자열을 소문자로 변환합니다.
+    str = str.toLowerCase();
+
+    // 처리된 문자열을 반환합니다.
+    return str;
+  }
+  
+  /**
+   * infoMaker 메서드는 ResourceMaker 클래스 내에서 배열 데이터를 기반으로 포트폴리오와 리뷰 정보를 생성하는 메서드입니다.
+   * 이 메서드는 다양한 포트폴리오 및 리뷰 정보를 파싱하여 객체 형태로 저장합니다.
+   * @memberof ResourceMaker
+   */
+  infoMaker = () => {
+    let temp_arr, temp_string, temp_obj; // 임시 배열, 문자열, 객체를 선언
+    let key = 0; // "_info" 문자열이 있는 위치를 저장할 변수 초기화
+    let totalInfo = []; // "_info" 이후의 데이터를 저장할 배열 초기화
+    let result = {}; // 최종 결과를 저장할 객체 초기화
+    let count = this.arr.length; // this.arr의 길이를 count 변수에 저장
+
+    // "_info"가 있는 위치를 찾는 반복문
+    for (let i = 0; i < count; i++) {
+      if (this.arr[i] === "_info") {
+        key = i; // "_info" 위치를 key에 저장
       }
     }
-    if (!staticFolderBootr) {
-      order = ``;
-      order += `mkdir ${shellLink(this.options.home_dir)};`;
-      order += `mkdir ${shellLink(this.options.home_dir)}/script;`;
-      order += `mkdir ${shellLink(this.options.home_dir)}/result;`;
-      order += `mkdir ${shellLink(this.options.home_dir)}/resource;`;
-      await shellExec(order);
+
+    // "_info" 이후의 데이터를 totalInfo 배열에 저장
+    for (let i = key + 1; i < count; i++) {
+      totalInfo.push(this.arr[i]);
+    }
+
+    // 디자이너 정보와 평수 정보를 result 객체에 저장
+    result.designer = totalInfo[0].trim(); // 디자이너 이름을 저장
+    result.pyeong = totalInfo[1]; // 평수를 저장
+
+    let portfolioKey = 0; // "_portfolio" 위치를 저장할 변수 초기화
+    for (let i = 0; i < totalInfo.length; i++) {
+      if (totalInfo[i] === "_portfolio") {
+        portfolioKey = i; // "_portfolio" 위치를 portfolioKey에 저장
+      }
+    }
+
+    let reviewKey = 0; // "_review" 위치를 저장할 변수 초기화
+    for (let i = 0; i < totalInfo.length; i++) {
+      if (totalInfo[i] === "_review") {
+        reviewKey = i; // "_review" 위치를 reviewKey에 저장
+      }
+    }
+
+    // 포트폴리오 정보를 파싱하여 저장
+    let portfolio_lastNum;
+    if (reviewKey !== 0) {
+      portfolio_lastNum = reviewKey; // 리뷰 정보가 있는 경우, 포트폴리오 정보의 끝을 리뷰 위치로 설정
     } else {
-      staticFolderscriptBoo = await fileSystem(`readDir`, [ this.options.home_dir ]);
-      staticFolderscriptBootr = false;
-      for (let i of staticFolderscriptBoo) {
-        if (/^script$/.test(i)) {
-          staticFolderscriptBootr = true;
-        }
-      }
-      if (!staticFolderscriptBootr) {
-        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/script`);
-      }
-      staticFolderresultBootr = false;
-      for (let i of staticFolderscriptBoo) {
-        if (/^result$/.test(i)) {
-          staticFolderresultBootr = true;
-        }
-      }
-      if (!staticFolderresultBootr) {
-        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/result`);
-      }
-      staticFolderresourceBootr = false;
-      for (let i of staticFolderscriptBoo) {
-        if (/^resource$/.test(i)) {
-          staticFolderresourceBootr = true;
-        }
-      }
-      if (!staticFolderresourceBootr) {
-        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/resource`);
+      portfolio_lastNum = totalInfo.length; // 리뷰 정보가 없는 경우, 포트폴리오 정보의 끝을 totalInfo의 끝으로 설정
+    }
+    
+    let portfolioInfo = []; // 포트폴리오 정보를 저장할 배열 초기화
+    for (let i = portfolioKey + 1; i < portfolio_lastNum; i++) {
+      portfolioInfo.push(totalInfo[i]);
+    }
+
+    let twoKey = 0; // "_2" 위치를 저장할 변수 초기화
+    for (let i = 0; i < portfolioInfo.length; i++) {
+      if (portfolioInfo[i] === "_2") {
+        twoKey = i; // "_2" 위치를 twoKey에 저장
       }
     }
 
-    folderList = [ "factory" ];
-    for (let f of folderList) {
-      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/portfolioFilter/${f} ${shellLink(this.options.home_dir)}`);
+    // 포트폴리오 관련 정보를 result 객체에 저장
+    result.portfolio = {};
+    result.portfolio.portivec = {};
+    result.portfolio.portivec.sub = portfolioInfo[1]; // 포트폴리오의 하위 정보를 저장
+    result.portfolio.portivec.region = portfolioInfo[2]; // 포트폴리오의 지역 정보를 저장
+    result.portfolio.portivec.method = portfolioInfo[3]; // 포트폴리오의 방법 정보를 저장
+    result.portfolio.name_card = {};
+    result.portfolio.name_card.sub = result.portfolio.portivec.sub.replace(/, /, "\n"); // 명함에 사용할 서브 정보를 저장
+    result.portfolio.p_info = {};
+
+    // 포트폴리오 정보에서 추가 세부 정보를 저장
+    temp_arr = ["photodae", "slide", "tag", "service", "key8", "key9"];
+    for (let i = 0; i < temp_arr.length; i++) {
+      if (temp_arr[i] === "photodae") {
+        // "photodae"의 경우, 특정 형식으로 변환하여 저장
+        result.portfolio.p_info[temp_arr[i]] = [
+          Number(portfolioInfo[twoKey + ((2 * i) + 2)].split(' ')[0]),
+          Number(portfolioInfo[twoKey + ((2 * i) + 2)].split(' ')[1]),
+        ];
+      } else {
+        result.portfolio.p_info[temp_arr[i]] = portfolioInfo[twoKey + ((2 * i) + 2)]; // 다른 정보는 그대로 저장
+      }
     }
 
-  } catch (e) {
-    console.log(e.message);
+    // 리뷰 정보가 있는 경우
+    if (reviewKey !== 0) {
+      result.review = {};
+      result.review.revivec = {};
+      result.review.rev_name_card = {};
+      let reviewInfo = []; // 리뷰 정보를 저장할 배열 초기화
+      for (let i = reviewKey + 1; i < totalInfo.length; i++) {
+        reviewInfo.push(totalInfo[i]);
+      }
+
+      for (let i = 0; i < reviewInfo.length; i++) {
+        if (reviewInfo[i] === "_2") {
+          twoKey = i; // "_2" 위치를 twoKey에 저장
+        }
+      }
+
+      // 리뷰 관련 정보를 result 객체에 저장
+      result.review.revivec.main = reviewInfo[twoKey - 1].replace(/,/, '');
+      result.review.revivec.hover = result.review.revivec.main; // hover 상태의 리뷰 텍스트를 설정
+      result.review.revivec.mobile = reviewInfo[twoKey - 1].replace(/, /, '\n'); // 모바일용 리뷰 텍스트를 설정
+      result.review.rev_name_card.main = result.review.revivec.mobile;
+
+      // 리뷰 명함의 서브 텍스트를 설정
+      let middleIndex = 0;
+      temp_arr = ["홈스타일링", "토탈 스타일링", "홈퍼니싱", "설계 변경"];
+      temp_string = (result.portfolio.portivec.sub.split(", ")[1] + " 후기");
+
+      for (let i of temp_arr) {
+        temp_obj = new RegExp(i, "g").exec(temp_string);
+        if (temp_obj !== null) {
+          middleIndex = temp_obj.index;
+        }
+      }
+
+      let pyeong = "error";
+      if (/[0-9]+py/g.exec(this.arr[2]) !== null) {
+        pyeong = /[0-9]+py/g.exec(this.arr[2])[0];
+      } else {
+        throw new Error("pyeong(py) error"); // 평수 정보가 없을 경우, 오류 발생
+      }
+
+      result.review.rev_name_card.sub = temp_string.slice(0, middleIndex - 1) + "\n" + pyeong + " " + temp_string.slice(middleIndex);
+      result.review.rev_name_card.subsub = temp_string.slice(0, middleIndex - 1) + "\n" + temp_string.slice(middleIndex);
+
+      // 리뷰 정보에 대한 세부 정보를 result 객체에 저장
+      result.review.r_info = {};
+      result.review.r_info.photodae = [
+        Number(reviewInfo[twoKey + 2].split(' ')[0]),
+        Number(reviewInfo[twoKey + 2].split(' ')[1]),
+      ];
+      result.review.r_info.order = Number(reviewInfo[twoKey + 4]);
+    }
+
+    this.result = result; // 최종적으로 파싱한 결과를 this.result에 저장
+  };
+
+  portfolio_maker = () => {
+    let result = new Map();
+    let reviewBoo = false;
+    let r_key = 0;
+    for (let i = 0; i < this.arr.length; i++) {
+      if (/^re/.exec(this.arr[i]) !== null) {
+        reviewBoo = true;
+        r_key = i;
+      }
+    }
+    let info_key = 0;
+    for (let i = 0; i < this.arr.length; i++) {
+      if (/^_info/.exec(this.arr[i]) !== null) {
+        info_key = i;
+      }
+    }
+    let portfolioContent_end;
+    if (reviewBoo) {
+      portfolioContent_end = r_key;
+    } else {
+      for (let i = 0; i < this.arr.length; i++) {
+        if (/^_info/.exec(this.arr[i]) !== null) {
+          portfolioContent_end = i;
+        }
+      }
+    }
+    let portfolio_keys = [];
+    let review_keys = [];
+    for (let i = 0; i < info_key; i++) {
+      if (/^[0-9]/.exec(this.arr[i]) !== null && /[0-9]$/.exec(this.arr[i]) !== null && /-/g.exec(this.arr[i]) !== null) { portfolio_keys.push(i); }
+      else if (/^[0-9]/.exec(this.arr[i]) !== null && /[0-9]$/.exec(this.arr[i]) !== null && /-/g.exec(this.arr[i]) === null) {review_keys.push(i);}
+    }
+  
+    let temp_obj, temp_obj2, temp_obj3, temp_arr, temp_arr2, temp_arr3, temp_num, temp_string, temp_boo;
+  
+    //portfolio
+    result.set("p_id", this.p_id);
+    result.set("designer", this.result.designer);
+    this.arr[2] = this.arr[2].replace(/“/g, '').replace(/”/g, '').replace(/"/g, '').replace(/‘/g, '').replace(/’/g, '').replace(/'/g, '');
+    result.set("title", this.arr[2]);
+    result.set("main_title", this.arr[2].replace(/, /g, "\n"));
+    temp_obj = {
+      photo_key: 0,
+      title: "init",
+      main_contents: this.arr[3],
+      smalltalk_yn: "",
+      smalltalk_contents: "",
+    }
+    temp_boo = false;
+    for (let i = 0; i < portfolio_keys[0] - 4; i++) {
+      if (/^\+/.test(this.arr[4 + i])) {
+        temp_obj.smalltalk_yn = "+ HomeLiaison's small talk";
+        temp_boo = true;
+      } else {
+        if (!temp_boo) {
+          temp_obj.main_contents += "\n\n";
+          temp_obj.main_contents += this.arr[4 + i];
+        } else {
+          if (temp_obj.smalltalk_contents !== "") {
+            temp_obj.smalltalk_contents += "\n\n";
+          }
+          temp_obj.smalltalk_contents += this.arr[4 + i];
+        }
+      }
+    }
+  
+    for (let i = 0; i < 4; i++) {
+      temp_obj.main_contents = temp_obj.main_contents.replace(/^\n/, '');
+      temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/^\n/, '');
+    }
+  
+    for (let i = 0; i < 4; i++) {
+      temp_obj.main_contents = temp_obj.main_contents.replace(/\n$/, '');
+      temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/\n$/, '');
+    }
+  
+    result.set("portfolio_init", temp_obj);
+    result.set("portfolio_contents", new Map());
+  
+    for (let i = 0; i < portfolio_keys.length; i++) {
+      temp_obj = {}
+      temp_arr = this.arr[portfolio_keys[i]].split(" - ");
+      temp_obj.photo_key = Number(temp_arr[1]);
+      temp_obj.title = this.lowerCase(this.arr[portfolio_keys[i] + 1]);
+  
+      temp_num = null;
+      temp_obj.smalltalk_contents = "";
+      temp_obj.smalltalk_yn = "";
+      temp_obj.main_contents = "";
+      for (let j = portfolio_keys[i]; j < ((i === portfolio_keys.length - 1) ? portfolioContent_end : portfolio_keys[i + 1]); j++) {
+        if (/^\+/g.exec(this.arr[j]) !== null) { temp_num = Number(j); }
+      }
+      if (temp_num !== null) {
+        temp_obj.smalltalk_yn = "+ HomeLiaison's small talk";
+        for (let j = portfolio_keys[i] + 2; j < temp_num; j++) {
+          temp_obj.main_contents += this.arr[j];
+          temp_obj.main_contents += "\n\n";
+        }
+        temp_obj.main_contents = temp_obj.main_contents.slice(0, -2);
+        for (let j = temp_num + 1; j < ((i === portfolio_keys.length - 1) ? portfolioContent_end : portfolio_keys[i + 1]); j++) {
+          temp_obj.smalltalk_contents += this.arr[j];
+          temp_obj.smalltalk_contents += "\n\n";
+        }
+        temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.slice(0, -2);
+      } else {
+        for (let j = portfolio_keys[i] + 2; j < ((i === portfolio_keys.length - 1) ? portfolioContent_end : portfolio_keys[i + 1]); j++) {
+          temp_obj.main_contents += this.arr[j];
+          temp_obj.main_contents += "\n\n";
+        }
+        temp_obj.main_contents = temp_obj.main_contents.slice(0, -2);
+      }
+  
+      for (let i = 0; i < 4; i++) {
+        temp_obj.main_contents = temp_obj.main_contents.replace(/^\n/, '');
+        temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/^\n/, '');
+      }
+  
+      for (let i = 0; i < 4; i++) {
+        temp_obj.main_contents = temp_obj.main_contents.replace(/\n$/, '');
+        temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/\n$/, '');
+      }
+  
+      result.get("portfolio_contents").set("portfolio_content" + String(i), temp_obj);
+    }
+    temp_arr = [ result.get("portfolio_init") ];
+    for (let i = 0; i < result.get("portfolio_contents").size; i++) {
+      temp_arr.push(result.get("portfolio_contents").get("portfolio_content" + String(i)));
+    }
+    result.set("contents", temp_arr);
+  
+    //review
+    if (reviewBoo) {
+      result.set("r_id", this.lowerCase(this.arr[r_key]));
+      this.arr[r_key + 1] = this.arr[r_key + 1].replace(/“/g, '').replace(/”/g, '').replace(/"/g, '').replace(/‘/g, '').replace(/’/g, '').replace(/'/g, '').replace(/, /g, "\n");
+      result.set("rev_main_title", this.arr[r_key + 1]);
+      temp_obj = {
+        type: "init",
+        contents: [
+            {
+              quest: "",
+              answer: this.arr[r_key + 2].replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
+            },
+        ],
+        photos: [],
+      };
+      for (let i = 0; i < review_keys[0] - (3 + r_key); i++) {
+        temp_obj.contents.push({
+          quest: "",
+          answer: this.arr[r_key + 3 + i].replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
+        });
+      }
+      result.set("reviews_init", temp_obj);
+      result.set("reviews_contents", new Map());
+      for (let i = 0; i < review_keys.length; i++) {
+        temp_obj = {}
+        temp_obj.type = "contents";
+        temp_arr = this.arr[review_keys[i]].split(' ');
+        temp_arr2 = [];
+        for (let j of temp_arr) {
+          temp_arr2.push(Number(j));
+        }
+        temp_obj.photos = temp_arr2;
+        temp_obj.contents = [];
+        temp_arr3 = [];
+        for (let j = review_keys[i]; j < ((i === review_keys.length - 1) ? info_key : review_keys[i + 1]); j++) {
+          if (/^Q/g.exec(this.arr[j]) !== null) { temp_arr3.push(j); }
+        }
+        for (let j = 0; j < temp_arr3.length; j++) {
+          temp_obj3 = {}
+          for (let z = 0; z < 10; z++) {
+            this.arr[temp_arr3[j]] = this.arr[temp_arr3[j]].replace(/^Q/gi, '').replace(/^\./gi, '').replace(/^ /gi, '');
+          }
+          temp_obj3.quest = this.arr[temp_arr3[j]];
+          temp_obj3.answer = this.arr[temp_arr3[j] + 1];
+          temp_num = (j === temp_arr3.length - 1) ? ((i === review_keys.length - 1) ? info_key : review_keys[i + 1]) : temp_arr3[j + 1];
+          for (let k = 0; k < temp_num - (temp_arr3[j] + 2); k++) {
+            temp_obj3.answer += "\n\n";
+            temp_obj3.answer += this.arr[temp_arr3[j] + 2 + k];
+          }
+          temp_obj3.answer = temp_obj3.answer.replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
+          temp_obj.contents.push(temp_obj3);
+        }
+        result.get("reviews_contents").set("reviews_content" + String(i), temp_obj);
+      }
+  
+      temp_arr = [ result.get("reviews_init") ];
+      for (let i = 0; i < result.get("reviews_contents").size; i++) {
+        temp_arr.push(result.get("reviews_contents").get("reviews_content" + String(i)));
+      }
+      result.set("reviews", temp_arr);
+    }
+  
+    //result
+    let result_obj = {}
+    result_obj.title = result.get("title");
+    temp_arr = result.get("title").split(", ");
+    temp_arr = temp_arr[1].split("py");
+    temp_arr = temp_arr[0].split(" ");
+    temp_string = "";
+    for (let i = 0; i < temp_arr.length - 1; i++) {
+      temp_string += temp_arr[i] + " ";
+    }
+    temp_string = temp_string.slice(0, -1);
+    result_obj.space = temp_string;
+    result_obj.pyeong = temp_arr[temp_arr.length - 1];
+    result_obj.sub_titles = {};
+    result_obj.sub_titles.main_title = result.get("main_title");
+    temp_arr = result.get("main_title").split("\n");
+    temp_string = temp_arr[1].slice(0, temp_arr[1].search(/[0-9]+py/g) - 1) + '\n' + temp_arr[1].slice(temp_arr[1].search(/[0-9]+py/g));
+    result_obj.sub_titles.main_color_title = temp_string;
+    result_obj.sub_titles.main_color_object = { main: "#ececec", sub: "#d3d2d0", title: "#606060", };
+    result_obj.sub_titles.portivec = {}
+    result_obj.sub_titles.portivec.main = temp_arr[1];
+    result_obj.sub_titles.portivec.sub = this.result.portfolio.portivec.sub;
+    result_obj.sub_titles.portivec.region = this.result.portfolio.portivec.region;
+    result_obj.sub_titles.portivec.method = this.result.portfolio.portivec.method;
+    result_obj.sub_titles.name_card = {}
+    result_obj.sub_titles.name_card.main = temp_string;
+    result_obj.sub_titles.name_card.sub = this.result.portfolio.name_card.sub;
+  
+    result_obj.designer = result.get("designer");
+    temp_arr = this.arr[portfolio_keys[portfolio_keys.length - 1]].split(" - ");
+    temp_num = Number(temp_arr[1]);
+    result_obj.p_id = result.get("p_id");
+    result_obj.p_info = {
+      photodae: this.result.portfolio.p_info.photodae,
+      photosg: { first: 1, last: temp_num },
+      slide: this.result.portfolio.p_info.slide,
+      tag: this.result.portfolio.p_info.tag,
+      service: this.result.portfolio.p_info.service,
+      key8: this.result.portfolio.p_info.key8,
+      key9: this.result.portfolio.p_info.key9,
+    }
+    result_obj.suggestion = "Designer's\nSuggestion";
+    result_obj.contents = result.get("contents");
+  
+    if (!reviewBoo) {
+      result_obj.sub_titles.rev_main_title = "";
+      result_obj.sub_titles.revivec = {};
+      result_obj.sub_titles.revivec.main = "";
+      result_obj.sub_titles.revivec.sub = "";
+      result_obj.sub_titles.revivec.hover = "";
+      result_obj.sub_titles.revivec.mobile = "";
+      result_obj.sub_titles.rev_name_card = {};
+      result_obj.sub_titles.rev_name_card.main = "";
+      result_obj.sub_titles.rev_name_card.sub = "";
+      result_obj.sub_titles.rev_name_card.subsub = "";
+      result_obj.r_id = "re999";
+      result_obj.r_info = {};
+      result_obj.r_info.photodae = [];
+      result_obj.r_info.order = 0;
+      result_obj.reviews = [
+        {
+          type: "init",
+          contents: [
+              {
+                quest: "",
+                answer: "",
+              },
+          ],
+          photos: [],
+        },
+        {
+          type: "contents",
+          contents: [
+              {
+                quest: "",
+                answer: "",
+              },
+          ],
+          photos: [],
+        },
+      ];
+    } else {
+      result_obj.sub_titles.rev_main_title = result.get("rev_main_title");
+      result_obj.sub_titles.revivec = {};
+      result_obj.sub_titles.revivec.main = this.result.review.revivec.main;
+      result_obj.sub_titles.revivec.sub = result_obj.sub_titles.portivec.main + " 후기";
+      result_obj.sub_titles.revivec.hover = this.result.review.revivec.hover;
+      result_obj.sub_titles.revivec.mobile = this.result.review.revivec.mobile;
+      result_obj.sub_titles.rev_name_card = {};
+      result_obj.sub_titles.rev_name_card.main = this.result.review.rev_name_card.main;
+      result_obj.sub_titles.rev_name_card.sub = this.result.review.rev_name_card.sub;
+      result_obj.sub_titles.rev_name_card.subsub = this.result.review.rev_name_card.subsub;
+      result_obj.r_id = result.get("r_id");
+      result_obj.r_info = {};
+      result_obj.r_info.photodae = this.result.review.r_info.photodae;
+      result_obj.r_info.order = this.result.review.r_info.order;
+      result_obj.reviews = result.get("reviews");
+    }
+  
+    this.final = result_obj;
+  }
+  
+  portfolio_verification = () => {
+    let title;
+    let apartArr, apartText, pyIndex;
+    let resultObj = {};
+    let reviewTitleIndex, reviewTitleArr;
+    let noReview = true;
+    let booResults = [];
+  
+    title = this.arr[2];
+  
+    let [ subject, apart ] = title.split(", ");
+  
+    //portfolio
+    apartArr = apart.split(' ');
+    for (let i = 0; i < apartArr.length; i++) {
+      if (/py/gi.test(apartArr[i])) {
+        pyIndex = i;
+      }
+    }
+  
+    apartText = '';
+    for (let i = 0; i < pyIndex; i++) {
+      apartText += apartArr[i] + ' ';
+    }
+    apartText = apartText.slice(0, -1);
+  
+    resultObj.porlid = this.p_id;
+  
+    resultObj.raw = {};
+    resultObj.raw.apart = { text: apartText, length: apartText.length };
+    resultObj.raw.subject = { text: subject, length: subject.length };
+    resultObj.raw.apartTitle = { text: apart, length: apart.length };
+  
+    resultObj.boo = {};
+    resultObj.boo.apart = (apartText.length < 12);
+    resultObj.boo.subject = (subject.length < 19);
+    resultObj.boo.apartTitle = (apart.length < 23);
+    resultObj.boo.subjectTitle = (subject.length + apartText.length < 27);
+  
+    //review
+    for (let i = 0; i < this.arr.length; i++) {
+      if (/^_review/.test(this.arr[i])) {
+        reviewTitleIndex = i + 2;
+        noReview = false;
+      }
+    }
+  
+    if (!noReview) {
+      reviewTitleArr = this.arr[reviewTitleIndex].split(", ");
+      booResults.push(reviewTitleArr[0].length <= 10);
+      booResults.push(reviewTitleArr[1].length <= 10);
+    }
+  }
+  
+  modelingMap = () => {
+    const map = require(`${process.cwd()}/apps/backMaker/map/contents.js`);
+    let model = map.main();
+    return JSON.parse(JSON.stringify(model));
+  }
+  
+  portfolio_modeling = async (conidArr, proid, cliid, service) => {
+    const instance = this;
+    const back = this.back;
+    const { fileSystem, orderSystem, autoComma } = this.mother;
+    const past = this.final;
+    const dateMaker = function (dateRaw) {
+      let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
+      return date;
+    }
+    const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
+    const garoseroParser = new ImageReader();
+    const budgetArr = [
+      "500만원 이하",
+      "1,000만원",
+      "1,500만원",
+      "2,000만원",
+      "3,000만원",
+      "4,000만원",
+      "5,000만원 이상",
+      "6,000만원 이상",
+      "7,000만원 이상",
+      "8,000만원 이상",
+      "9,000만원 이상",
+      "1억원 이상",
+    ];
+    try {
+      let tempObj, tempObjDetail, portfolio, review;
+      let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir, targetPhotoDirFinal;
+      let tempReg, conidTargetArr;
+      let garoseroObj;
+      let todayString;
+      let thisDeisnger;
+      let tempString, thisIndex;
+      let thisRequestNumber;
+      let thisClient;
+      let thisProject;
+      let pastPhotoKey;
+  
+      tempObj = this.modelingMap().structure;
+  
+      tempObj.conid = "";
+      tempObj.desid = past.designer;
+      tempObj.cliid = cliid;
+      tempObj.proid = proid;
+      tempObj.service = service;
+  
+      thisDeisnger = await back.getDesignerById(tempObj.desid);
+  
+      portfolio = tempObj.contents.portfolio;
+  
+      portfolio.pid = past.p_id;
+  
+      portfolio.spaceInfo.space = past.space;
+      portfolio.spaceInfo.pyeong = Number(past.pyeong);
+      portfolio.spaceInfo.region = past.sub_titles.portivec.region;
+      portfolio.spaceInfo.method = past.sub_titles.portivec.method;
+      portfolio.spaceInfo.budget = "3,000만원";
+      if (typeof cliid === "string" && /^c/gi.test(cliid) && cliid.trim() !== "") {
+        thisClient = await back.getClientById(cliid);
+        thisClient = thisClient.toNormal();
+        thisProject = await back.getProjectById(proid);
+        thisProject = thisProject.toNormal();
+        thisRequestNumber = 0;
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+            thisRequestNumber = i;
+            break;
+          }
+        }
+        if (thisClient.requests[thisRequestNumber].request.budget !== "알 수 없음") {
+          portfolio.spaceInfo.budget = thisClient.requests[thisRequestNumber].request.budget;
+        } else {
+          if (!Number.isNaN(Number(past.pyeong))) {
+            tempString = autoComma(Math.floor((Number(past.pyeong) + 20) / 10) * 1000, false);
+            thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+            if (thisIndex !== -1) {
+              portfolio.spaceInfo.budget = budgetArr[thisIndex];
+            }
+          }
+        }
+      } else {
+        if (!Number.isNaN(Number(past.pyeong))) {
+          tempString = autoComma(Math.floor((Number(past.pyeong) + 20) / 10) * 1000, false);
+          thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+          if (thisIndex !== -1) {
+            portfolio.spaceInfo.budget = budgetArr[thisIndex];
+          }
+        }
+      }
+  
+      portfolio.title.main = past.title;
+      portfolio.title.sub = past.sub_titles.portivec.sub;
+  
+      portfolio.color.main = past.sub_titles.main_color_object.main;
+      portfolio.color.sub = past.sub_titles.main_color_object.sub;
+      portfolio.color.title = past.sub_titles.main_color_object.title;
+  
+      portfolio.detailInfo.photodae = past.p_info.photodae;
+      portfolio.detailInfo.photosg = past.p_info.photosg;
+  
+      portfolio.detailInfo.slide = [];
+      for (let i of past.p_info.slide.split(" ")) {
+        portfolio.detailInfo.slide.push(Number(i));
+      }
+  
+      portfolio.detailInfo.tag = past.p_info.tag.split(",");
+      portfolio.detailInfo.service = past.p_info.service;
+      portfolio.detailInfo.sort.key8 = past.p_info.key8;
+      portfolio.detailInfo.sort.key9 = past.p_info.key9;
+      portfolio.detailInfo.tendency = thisDeisnger.analytics.styling.tendency.toNormal();
+  
+      portfolio.contents.suggestion = past.suggestion;
+      portfolio.contents.detail = [];
+  
+      pastPhotoKey = 0;
+      for (let { title, main_contents, smalltalk_yn, smalltalk_contents, photo_key } of past.contents) {
+        tempObjDetail = {
+          title: "",
+          contents: "",
+          photo: [],
+        };
+        for (let i = pastPhotoKey + 1; i < photo_key + 1; i++) {
+          tempObjDetail.photo.push(i);
+        }
+        tempObjDetail.title = title;
+        tempObjDetail.contents = main_contents;
+        portfolio.contents.detail.push(tempObjDetail);
+        pastPhotoKey = photo_key;
+      }
+  
+      review = tempObj.contents.review;
+  
+      if (past.r_id !== "re999") {
+  
+        review.rid = past.r_id;
+  
+        review.title.main = past.sub_titles.rev_main_title.replace(/\n/, ", ");
+        review.title.sub = past.sub_titles.rev_name_card.main.replace(/\n/, ", ");
+  
+        review.detailInfo.photodae = past.r_info.photodae;
+        review.detailInfo.order = past.r_info.order;
+  
+        review.contents.detail = [];
+        for (let { type, photos, contents } of past.reviews) {
+          tempObjDetail = {
+            type: "",
+            photos: [],
+            contents: [
+              {
+                quest: "",
+                answer: "",
+              }
+            ]
+          };
+          tempObjDetail.type = type;
+          tempObjDetail.photos = photos;
+          tempObjDetail.contents = [];
+          for (let obj of contents) {
+            tempObjDetail.contents.push({ question: obj.quest, answer: obj.answer });
+          }
+          review.contents.detail.push(tempObjDetail);
+        }
+  
+      } else {
+        review.rid = "re999";
+        review.contents.detail = [];
+      }
+  
+      todayString = dateMaker(this.mother.todayMaker("year"));
+      portfolio.date = new Date();
+      review.date = new Date();
+  
+      targetPhotoDirArr = [];
+      targetPhotoDirRaw = await fileSystem(`readDir`, [ this.targetFolder ]);
+      targetPhotoDir = await garoseroParser.queryDirectory(this.targetFolder);
+      for (let z of targetPhotoDirRaw) {
+        if (z !== `.DS_Store`) {
+          targetPhotoDirArr.push(z);
+        }
+      }
+  
+      targetPhotoDirFinal = [];
+      for (let { index, gs } of targetPhotoDir) {
+        garoseroObj = {};
+        garoseroObj.index = index + 1;
+        garoseroObj.gs = gs;
+        targetPhotoDirFinal.push(garoseroObj);
+      }
+  
+      tempObj.photos.first = 1;
+      tempObj.photos.last = targetPhotoDirArr.length;
+      tempObj.photos.detail = targetPhotoDirFinal;
+  
+      conidTargetArr = [];
+      tempReg = new RegExp('^t' + todayString.slice(2, 4) + todayString.slice(5, 7));
+      for (let { conid } of conidArr) {
+        if (tempReg.test(conid)) {
+          conidTargetArr.push(conid);
+        }
+      }
+  
+      if (conidTargetArr.length === 0) {
+        tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", 1));
+      } else {
+        tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)));
+      }
+  
+      this.final = tempObj;
+  
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  
+  launching = async (thisContents = []) => {
+    const instance = this;
+    const back = this.back;
+    const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem, chromeOpen, sleep } = this.mother;
+    const MONGOC = new mongo(mongoinfo);
+    const MONGOCONTENTSC = new mongo(mongocontentsinfo);
+    const sizeMatrix = [
+      [ 1200, 848 ],
+      [ 800, 566 ],
+      [ 2400, 1697 ]
+    ];
+    const qualityConst = 96;
+    const bQualityConst = 98;
+    const originalInitial = 'i';
+    const desktopInitial = 't';
+    const mobileInitial = 'mot';
+    const reviewInitial = 'b';
+    const serverFolderPath = "corePortfolio/listImage";
+    try {
+      let targetFolder;
+      let tempFolderName, homeFolderList, tempHome;
+      let temp, tempReg;
+      let note;
+      let input;
+      let tempResponse, index;
+      let tempObject;
+      let tempRows;
+      let namesArr;
+      let clients;
+      let thisProject;
+      let searchQuery;
+      let projects;
+      let proid, cliid;
+      let whereQuery, updateQuery;
+      let targetContents, targetRawContentsArr, targetRawContents;
+      let outputFolder, outputFolderList;
+      let outputMobildFolder, outputMobildFolderList;
+      let fromArr, toArr;
+      let thisService;
+      let contentsArr;
+  
+      await MONGOC.connect();
+      await MONGOCONTENTSC.connect();
+  
+      //mkdir temp directory
+      tempFolderName = "tempResourcMakerFolder";
+      tempHome = process.env.HOME + "/" + tempFolderName;
+      homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
+      if (homeFolderList.includes(tempFolderName)) {
+        await shellExec(`rm -rf ${shellLink(tempHome)}`);
+      }
+      await shellExec(`mkdir ${shellLink(tempHome)}`);
+  
+      this.arr = thisContents;
+      tempRows = await back.getContentsArrByQuery({ "contents.portfolio.pid": this.p_id });
+      if (tempRows.length !== 0) {
+        throw new Error("invaild pid");
+      }
+  
+      //parsing portfolio number
+      tempResponse = 200;
+      index = 0;
+      while (tempResponse === 200) {
+        index++;
+        tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(index) + this.p_id + ".jpg");
+        tempResponse = tempResponse.statusCode;
+      }
+      console.log(index);
+  
+      //download images
+      for (let i = 1; i < index; i++) {
+        tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(i) + this.p_id + ".jpg");
+        await fileSystem(`writeBinary`, [ tempHome + "/" + originalInitial + String(i) + this.p_id + ".jpg", tempObject ]);
+        console.log(tempHome + "/" + originalInitial + String(i) + this.p_id + ".jpg", `download success`);
+      }
+      this.targetFolder = tempHome;
+  
+      //make info and write raw file
+      this.infoMaker();
+      this.portfolio_maker();
+      await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}_raw.js`, JSON.stringify(this.final, null, 2) ]);
+  
+      //parsing cliid, proid
+      namesArr = this.arr[1].split(" ");
+  
+      if (namesArr.length > 2) {
+        clients = await this.back.getClientsByQuery({ name: namesArr[2].trim() });
+        thisProject = null;
+        proid = null;
+        cliid = null;
+  
+        searchQuery = { $and: [ { desid: this.result.designer }, { $or: clients.toNormal().map((c) => { return { cliid: c.cliid } }) } ] };
+        projects = await this.back.getProjectsByQuery(searchQuery);
+        console.log(projects);
+        if (projects.length > 0) {
+          contentsArr = (await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) })).toNormal().map((c) => {
+            return c.proid;
+          });
+          projects = projects.toNormal().filter((p) => { return !contentsArr.includes(p.proid) });
+          thisProject = projects[0];
+          proid = thisProject.proid;
+          cliid = thisProject.cliid;
+          thisService = thisProject.service;
+        }
+  
+        if (cliid === null) {
+          console.log(namesArr);
+        }
+        if (proid === null) {
+          console.log(namesArr);
+        }
+      } else {
+        proid = "";
+        cliid = "";
+        thisService = {
+          serid: "s2011_aa02s",
+          xValue: "B",
+          online: false,
+        }
+      }
+  
+      //rendering resource and write file
+      temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).limit(1).toArray();
+      await this.portfolio_modeling(temp, proid, cliid, thisService);
+      await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
+  
+      //confirm
+      outputFolder = tempHome + "/portp" + this.p_id;
+      outputMobildFolder = outputFolder + "/mobile";
+  
+      await shellExec(`mkdir`, [ outputFolder ]);
+      await shellExec(`mkdir`, [ outputMobildFolder ]);
+  
+      for (let { index, gs } of this.final.photos.detail) {
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(outputFolder)}/${desktopInitial}${String(index)}${this.p_id}.jpg`);
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(outputMobildFolder)}/${mobileInitial}${String(index)}${this.p_id}.jpg`);
+      }
+  
+      if (this.final.contents.review.detailInfo.photodae.length > 1) {
+        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
+      }
+      await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
+      await shellExec(`cp -r ${shellLink(outputFolder)} /home/ubuntu/samba/list_image/`);
+  
+      outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
+      outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
+  
+      fromArr = [];
+      toArr = [];
+      try {
+        await shellExec("mkdir", [ "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id ]);
+      } catch {}
+      try {
+        await shellExec("mkdir", [ "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/mobile" ]);
+      } catch {}
+      for (let i of outputFolderList) {
+        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+          fromArr.push(outputFolder + "/" + i);
+          await shellExec("cp", [ outputFolder + "/" + i, "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/" ]);
+          toArr.push(`${serverFolderPath}/${this.p_id}/${i}`);
+        }
+      }
+      for (let i of outputMobildFolderList) {
+        if (i !== `.DS_Store`) {
+          fromArr.push(outputMobildFolder + "/" + i);
+          await shellExec("cp", [ outputMobildFolder + "/" + i, "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/mobile/" ]);
+          toArr.push(`${serverFolderPath}/${this.p_id}/mobile/${i}`);
+        }
+      }
+  
+      await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+      await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
+      await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+  
+      console.log("contents upload done");
+  
+      await shellExec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
+  
+    } catch (e) {
+      console.log(e);
+    } finally {
+      await MONGOC.close();
+      await MONGOCONTENTSC.close();
+    }
   }
 }
 
-PortfolioFilter.prototype.image_filter = function (str, size) {
-  const instance = this;
-  let date = new Date();
-  let datestring = String(date.getFullYear()).slice(2);
-  if (date.getMonth() + 1 < 10) {
-    datestring += '0' + String(date.getMonth() + 1);
-  } else {
-    datestring += String(date.getMonth() + 1);
+class PortfolioFilter {
+  constructor (clientName = "", apartName = "", designer = "", pid = "g0") {
+    const Mother = require(`${process.cwd()}/apps/mother.js`);
+    const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+    const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
+    const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+    const apart = function (str) {
+      let arr = str.split(' ');
+      let new_string = '';
+      for (let i of arr) {
+        new_string += i + '_';
+      }
+      new_string += "홈스타일링_";
+      return new_string;
+    }
+    this.mother = new Mother();
+    this.back = new BackMaker();
+    this.address = require(`${process.cwd()}/apps/infoObj.js`);
+    this.dir = `${process.cwd()}/apps/portfolioFilter`;
+    this.image = new ImageReader(this.mother, this.back, this.address);
+    this.hangul = new ParsingHangul();
+    this.clientName = clientName;
+    this.designer = designer;
+    this.apartName = apart(apartName);
+    this.pid = pid;
+    this.resourceFolderName = "resource";
+    this.resultFolderName = "result";
+    this.options = {
+      home_dir: `${process.env.HOME}/portfolioFilter`,
+      photo_dir: `${process.env.HOME}/portfolioFilter/${this.resourceFolderName}`,
+      result_dir: `${process.env.HOME}/portfolioFilter/${this.resultFolderName}`,
+    };
+    this.clientNullATarget = [
+      "null",
+      "NULL",
+      "Null",
+      "no",
+      "",
+      "X",
+      "x",
+      "nothing",
+      "anyone",
+      "없음",
+      "a",
+      "A",
+      "designer",
+      "Designer",
+      "DESIGNER",
+      "undefined"
+    ];
   }
-  if (date.getDate() < 10) {
-    datestring += '0' + String(date.getDate());
-  } else {
-    datestring += String(date.getDate());
-  }
-  str = str.replace(/\_([0-9][0-9][0-9][0-9][0-9][0-9])/gi, '');
-  str = str.replace(/[^0-9]/g, '');
-  str = str.replace(/^0/g, '');
-  if (str.length === 1) {
-    str = '0' + str;
-  }
-  if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
-    str = this.clientName + '_' + size + '_' + str + '_' + datestring + '.jpg';
-  } else {
-    str = this.designer + '_' + size + '_' + str + '_' + datestring + '.jpg';
-  }
-  return str;
-}
 
-PortfolioFilter.prototype.just_filter = function (str) {
-  str = str.replace(/\_([0-9][0-9][0-9][0-9][0-9][0-9])/gi, '');
-  str = str.replace(/[^0-9]/g, '');
-  str = str.replace(/^0/g, '');
-  return str;
+  async static_setting () {
+    const instance = this;
+    const { fileSystem, shellExec, shellLink } = this.mother;
+    try {
+      let staticFolderBoo, staticFolderBootr;
+      let order;
+      let staticFolderscriptBoo, staticFolderscriptBootr;
+      let staticFolderresultBootr, staticFolderresourceBootr;
+      let folderList;
+  
+      staticFolderBoo = await this.mother.fileSystem(`readDir`, [ process.env.HOME ]);
+      staticFolderBootr = false;
+      for (let i of staticFolderBoo) {
+        if (/^portfolioFilter/.test(i)) {
+          staticFolderBootr = true;
+        }
+      }
+      if (!staticFolderBootr) {
+        order = ``;
+        order += `mkdir ${shellLink(this.options.home_dir)};`;
+        order += `mkdir ${shellLink(this.options.home_dir)}/script;`;
+        order += `mkdir ${shellLink(this.options.home_dir)}/result;`;
+        order += `mkdir ${shellLink(this.options.home_dir)}/resource;`;
+        await shellExec(order);
+      } else {
+        staticFolderscriptBoo = await fileSystem(`readDir`, [ this.options.home_dir ]);
+        staticFolderscriptBootr = false;
+        for (let i of staticFolderscriptBoo) {
+          if (/^script$/.test(i)) {
+            staticFolderscriptBootr = true;
+          }
+        }
+        if (!staticFolderscriptBootr) {
+          await shellExec(`mkdir ${shellLink(this.options.home_dir)}/script`);
+        }
+        staticFolderresultBootr = false;
+        for (let i of staticFolderscriptBoo) {
+          if (/^result$/.test(i)) {
+            staticFolderresultBootr = true;
+          }
+        }
+        if (!staticFolderresultBootr) {
+          await shellExec(`mkdir ${shellLink(this.options.home_dir)}/result`);
+        }
+        staticFolderresourceBootr = false;
+        for (let i of staticFolderscriptBoo) {
+          if (/^resource$/.test(i)) {
+            staticFolderresourceBootr = true;
+          }
+        }
+        if (!staticFolderresourceBootr) {
+          await shellExec(`mkdir ${shellLink(this.options.home_dir)}/resource`);
+        }
+      }
+  
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  
+  image_filter (str, size) {
+    const instance = this;
+    let date = new Date();
+    let datestring = String(date.getFullYear()).slice(2);
+    if (date.getMonth() + 1 < 10) {
+      datestring += '0' + String(date.getMonth() + 1);
+    } else {
+      datestring += String(date.getMonth() + 1);
+    }
+    if (date.getDate() < 10) {
+      datestring += '0' + String(date.getDate());
+    } else {
+      datestring += String(date.getDate());
+    }
+    str = str.replace(/\_([0-9][0-9][0-9][0-9][0-9][0-9])/gi, '');
+    str = str.replace(/[^0-9]/g, '');
+    str = str.replace(/^0/g, '');
+    if (str.length === 1) {
+      str = '0' + str;
+    }
+    if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
+      str = this.clientName + '_' + size + '_' + str + '_' + datestring + '.jpg';
+    } else {
+      str = this.designer + '_' + size + '_' + str + '_' + datestring + '.jpg';
+    }
+    return str;
+  }
+  
+  just_filter (str) {
+    str = str.replace(/\_([0-9][0-9][0-9][0-9][0-9][0-9])/gi, '');
+    str = str.replace(/[^0-9]/g, '');
+    str = str.replace(/^0/g, '');
+    return str;
+  }
+
 }
 
 PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
@@ -271,51 +1235,6 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
   }
 }
 
-PortfolioFilter.prototype.ghost_filter = async function (start_num) {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
-  let options = {
-    home_dir: this.options.home_dir,
-    photo_dir: this.options.photo_dir,
-    result_dir: this.options.result_dir,
-    photo_list: [],
-    start_num: start_num,
-  };
-
-  try {
-    let past_list, file_list;
-
-    past_list = await fileSystem(`readDir`, [ this.options.result_dir ]);
-    for (let i of past_list) {
-      await shellExec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`)
-    }
-
-    file_list = await fileSystem(`readDir`, [ this.options.photo_dir ]);
-    for (let i = 0; i < file_list.length; i++) {
-      if (file_list[i] === '.DS_Store') {
-        file_list.splice(i, 1);
-      }
-    }
-
-    if (file_list.length === 0) {
-      throw new Error(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
-      process.exit();
-    }
-
-    file_list.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')); });
-    console.log(file_list);
-
-    options.photo_list = file_list;
-    await fileSystem(`write`, [ `${shellLink(this.options.home_dir)}/script/ghostFilter.js`, this.generator.factory.ghostFilter({}, options) ]);
-    await shellExec(`osascript ${shellLink(this.options.home_dir)}/factory/applescript/ghostFilter.scpt`);
-
-    return { result_folder: `${this.options.home_dir}/result`, script_folder: `${this.options.home_dir}/factory/applescript` };
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, ghostFileUpload, sleep, messageSend, requestSystem } = this.mother;
@@ -410,187 +1329,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
 
     return { folderName: this.folderName };
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-PortfolioFilter.prototype.image_ready = async function () {
-  const instance = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
-  try {
-    await this.static_setting();
-
-    let fileList, fullFileList;
-    let resourceFolder, resultFolder;
-    let resultFolderList;
-    let targetPhotoDir;
-
-    resourceFolder = this.options.photo_dir;
-    resultFolder = this.options.result_dir;
-
-    fileList = await fileSystem(`readDir`, [ resourceFolder ]);
-    for (let i = 0; i < fileList.length; i++) {
-      if (fileList[i] === '.DS_Store') {
-        fileList.splice(i, 1);
-      }
-    }
-
-    if (fileList.length === 0) {
-      throw new Error(`There is no photo.\nPlease give me photos. in : ${resourceFolder}`);
-    }
-
-    fileList.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
-    for (let i = 0; i < fileList.length; i++) {
-      await shellExec(`mv ${shellLink(resourceFolder + "/" + fileList[i])} ${shellLink(resourceFolder)}/photo${String(i + 1)}.jpg`);
-      fileList[i] = "photo" + String(i + 1) + ".jpg";
-    }
-
-    fullFileList = [];
-    for (let photo of fileList) {
-      fullFileList.push(`${resourceFolder}/${photo}`);
-    }
-
-    console.log(fileList);
-
-    resultFolderList = await fileSystem(`readDir`, [ resultFolder ]);
-    for (let i of resultFolderList) {
-      await shellExec(`rm -rf ${shellLink(resultFolder)}/${i};`);
-    }
-    await shellExec(`mkdir ${shellLink(resultFolder)}/A`);
-
-    await fileSystem(`write`, [ `${this.options.home_dir}/script/white.js`, this.generator.factory.whiteFilter(fullFileList, this.options) ]);
-    await shellExec(`osascript ${this.options.home_dir}/factory/applescript/white.scpt`);
-
-    await shellExec(`open ${shellLink(resultFolder)}`);
-    console.log(`done`);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-PortfolioFilter.prototype.ghost_make = async function () {
-  const instance = this;
-  const back = this.back;
-  const { fileSystem, shellExec, shellLink, consoleQ, ghostFileUpload } = this.mother;
-  const getNumber = function (obj) {
-    let link = obj.link;
-    let tempArr;
-    tempArr = link.split('/');
-    return Number(tempArr[tempArr.length - 1].replace(/[^0-9]/gi, ''));
-  };
-  try {
-    const ghostStatic = "/rawDesigner/ghost";
-    let targetDesigner, ghostArray, designers;
-    let consoleInput;
-    let startNumber;
-    let result_files, dimensions;
-    let fromArr, toArr;
-
-    await this.static_setting();
-
-    //find designer and set designer object
-    designers = await back.getDesignersByQuery({ designer: this.designer });
-    if (designers.length > 1) {
-      console.log(`Exception occur : `);
-      for (let i = 0; i < designers.length; i++) {
-        console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
-      }
-      consoleInput = await consoleQ(`Exception number : `);
-      targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
-    } else {
-      targetDesigner = designers[0].toNormal();
-    }
-
-    //set ghost array
-    ghostArray = targetDesigner.setting.ghost;
-
-    //find start number of ghost-picture
-    if (ghostArray.length === 0) {
-      startNumber = 0;
-    } else {
-      ghostArray.sort((a, b) => { return getNumber(b) - getNumber(a); });
-      startNumber = getNumber(ghostArray[0]);
-    }
-
-    //run ghost filter
-    const { result_folder, script_folder } = await this.ghost_filter(startNumber);
-    result_files = await fileSystem(`readDir`, [ result_folder ]);
-
-    fromArr = [];
-    toArr = [];
-
-    for (let file of result_files) {
-      if (file !== ".DS_Store") {
-        fromArr.push(result_folder + "/" + file);
-        toArr.push(`${ghostStatic.slice(1)}/${targetDesigner.desid}/${file}`);
-        dimensions = await shellExec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ${shellLink(result_folder)}/${file}`);
-        ghostArray.unshift({
-          link: `${ghostStatic}/${targetDesigner.desid}/${file}`,
-          sgTrue: dimensions.replace(/[^gs]/g, ''),
-        });
-      }
-    }
-
-    console.log(ghostArray);
-    console.log(fromArr);
-    console.log(toArr);
-
-    await back.updateDesigner([ { desid: targetDesigner.desid }, { "setting.ghost": ghostArray } ]);
-    await ghostFileUpload(fromArr, toArr);
-
-  } catch (e) {
-    console.log(e.message);
-  }
-}
-
-PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
-  const instance = this;
-  const { fileSystem, shell, shellLink, ghostFileUpload, todayMaker } = this.mother;
-  const home = process.env.HOME;
-  const tempFolderName = "__PortfolioFilteraddtionalRepairTemp__" + todayMaker("year");
-  try {
-    let homeDir;
-    let currentDir, currentDirArr;
-    let binaryTarget, binaryTargetDir;
-    let targetFolder, targetFile;
-    let fromArr, toArr;
-
-    fromArr = [];
-    toArr = [];
-
-    currentDir = process.cwd();
-    currentDirArr = currentDir.split("/");
-    currentDirArr.pop();
-    currentDirArr.push("binary");
-    currentDirArr.push("corePortfolio");
-    currentDirArr.push("original");
-    binaryTarget = currentDirArr.join("/");
-
-    binaryTargetDir = await fileSystem("readDir", [ binaryTarget ]);
-
-    for (let i of binaryTargetDir) {
-      if ((new RegExp('^' + pid)).test(i)) {
-        targetFolder = i;
-      }
-    }
-
-    targetFile = 'i' + String(tNumber) + pid + ".jpg";
-
-    homeDir = await fileSystem("readDir", [ home ]);
-    if (!homeDir.includes(tempFolderName)) {
-      shell.exec(`mkdir ${shellLink(home)}/${tempFolderName}`);
-    }
-    shell.exec(`cp ${shellLink(binaryTarget + '/' + targetFolder + '/' + pid + '/' + targetFile)} ${shellLink(home)}/${tempFolderName}/`);
-
-    fromArr.push(shellLink(home + '/' + tempFolderName + '/' + targetFile));
-    toArr.push(`corePortfolio/original/${pid}/${targetFile}`);
-
-    await ghostFileUpload(fromArr, toArr);
-
-    shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
 
   } catch (e) {
     console.log(e);
@@ -1216,7 +1954,6 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   const photoFolderConst = "사진_등록_포트폴리오";
   const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
   const garoseroParser = new ImageReader();
-  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
   const resource = new ResourceMaker();
   try {

@@ -266,8 +266,6 @@ Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   let app = new PortfolioFilter(clientName, apartName, designerName, pid);
   if (boo === "portfolio") {
     app.total_make();
-  } else if (boo === "ghost") {
-    app.ghost_make();
   }
 }
 
@@ -364,16 +362,6 @@ Robot.prototype.proposalToClient = async function () {
     const BackWorker = require(process.cwd() + "/apps/backMaker/backWorker.js");
     const work = new BackWorker();
     await work.setProposalToClient("cron");
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.imageReady = async function () {
-  try {
-    const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
-    let app = new PortfolioFilter();
-    await app.image_ready();
   } catch (e) {
     console.log(e);
   }
@@ -737,13 +725,6 @@ const MENU = {
   proposalToClient: async function () {
     try {
       await robot.proposalToClient();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  imageReady: async function () {
-    try {
-      await robot.imageReady();
     } catch (e) {
       console.log(e);
     }
