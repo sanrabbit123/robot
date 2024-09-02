@@ -2070,78 +2070,184 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   }
 }
 
+/**
+ * PortfolioFilter 클래스의 rawVideo 메서드는 주어진 배열을 기반으로
+ * 클라이언트와 디자이너의 정보를 사용하여 raw 비디오 파일을 처리하고
+ * 파일명을 변경하며, 이를 서버에 업로드하는 작업을 수행합니다.
+ * 이 메서드는 MongoDB와 파일 시스템, 쉘 명령어 등을 활용하여 작업을 진행합니다.
+ * 
+ * @param {Array<Object>} arr - 클라이언트와 디자이너의 이름을 포함한 객체 배열입니다.
+ * @returns {Promise<void>} 비동기 작업이므로 Promise를 반환합니다.
+ */
 PortfolioFilter.prototype.rawVideo = async function (arr) {
+  
+  // 현재 PortfolioFilter 클래스의 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
+
+  // PortfolioFilter 클래스의 back 속성을 back 변수에 저장합니다.
+  // back 속성은 BackMaker 클래스의 인스턴스를 가리킵니다.
   const back = this.back;
+
+  // PortfolioFilter 클래스의 address 속성을 address 변수에 저장합니다.
+  // address 속성은 홈리에종의 주소 정보 객체를 가리킵니다.
   const address = this.address;
+
+  // PortfolioFilter 클래스의 hangul 속성을 hangul 변수에 저장합니다.
+  // hangul 속성은 한글 문자열을 처리하는 ParsingHangul 클래스의 인스턴스를 가리킵니다.
   const hangul = this.hangul;
+
+  // PortfolioFilter 클래스의 options 속성을 options 변수에 저장합니다.
+  // options 속성은 설정된 여러 디렉토리 경로 정보를 포함하는 객체를 가리킵니다.
   const options = this.options;
+
+  // Mother 클래스에서 필요한 메서드들을 비구조화 할당으로 불러옵니다.
+  // mongo, mongoinfo, mongoofficeinfo: MongoDB 관련 클래스와 정보 객체입니다.
+  // fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload: Mother 클래스에서 제공하는 다양한 유틸리티 메서드들입니다.
   const { mongo, mongoinfo, mongoofficeinfo, fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
+
+  // 에러 메시지를 errorMessage 변수에 저장합니다.
   const errorMessage = `argument must be => [ { client: "", designer: "" } ... ]`;
+
+  // selfMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 MongoDB와의 연결을 관리합니다.
   const selfMongo = new mongo(mongoinfo);
+
+  // selfContentsMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 오피스 관련 MongoDB와의 연결을 관리합니다.
   const selfContentsMongo = new mongo(mongoofficeinfo);
+
+  // MongoDB 컬렉션 이름을 collection 변수에 저장합니다.
   const collection = "foreContents";
+
+  // 파일 이름을 구분하기 위한 토큰을 splitToken 변수에 저장합니다.
   const splitToken = "__split__";
+
+  // 핵심 포트폴리오 경로를 corePortfolio 변수에 저장합니다.
   const corePortfolio = "corePortfolio";
+
+  // 서버 폴더 이름을 serverFolderName 변수에 저장합니다.
   const serverFolderName = "rawVideo";
+
+  // 비디오 파일의 키워드를 videoFileKeyword 변수에 저장합니다.
   const videoFileKeyword = "v";
+
   try {
+    // arr이 배열이 아닌 경우 에러를 발생시킵니다.
     if (!Array.isArray(arr)) {
       throw new Error(errorMessage);
     }
+
+    // 임시 배열들을 선언합니다.
     let tempArr, tempArr2;
+
+    // 클라이언트 이름과 디자이너 이름을 저장할 변수를 선언합니다.
     let clientName, designerName;
+
+    // 프로젝트 정보를 저장할 변수를 선언합니다.
     let projects;
+
+    // 타겟 프로젝트를 저장할 변수를 선언합니다.
     let targetProject;
+
+    // MongoDB에서 조회한 결과를 저장할 변수를 선언합니다.
     let rows;
+
+    // 프로젝트 ID와 포트폴리오 ID를 저장할 변수를 선언합니다.
     let thisProid, thisPid;
+
+    // 콘텐츠 배열을 저장할 변수를 선언합니다.
     let contentsArr;
+
+    // 현재 작업 중인 폴더 이름을 저장할 변수를 선언합니다.
     let thisFolderName;
+
+    // 요청에 대한 응답을 저장할 변수를 선언합니다.
     let response;
+
+    // 파일 이름을 저장할 변수를 선언합니다.
     let thisFileName;
+
+    // 실행 파일 경로를 저장할 변수를 선언합니다.
     let exe;
+
+    // 타겟 폴더와 그 목록을 저장할 변수를 선언합니다.
     let targetFolder, targetFolderList;
+
+    // 번호를 저장할 변수를 선언합니다.
     let num;
 
+    // selfMongo와 selfContentsMongo를 MongoDB와 연결합니다.
     await selfMongo.connect();
     await selfContentsMongo.connect();
+
+    // static_setting 메서드를 호출하여 포트폴리오 필터를 위한 정적 디렉토리 구조를 설정합니다.
     await this.static_setting();
 
+    // arr 배열의 각 요소를 순회합니다.
     for (let { client, designer } of arr) {
 
+      // targetFolder 변수에 photo_dir 경로를 저장합니다.
       targetFolder = options.photo_dir;
+
+      // targetFolder의 파일 목록을 읽어와 targetFolderList에 저장합니다.
       targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
 
+      // num 변수를 0으로 초기화합니다.
       num = 0;
+
+      // targetFolderList의 각 파일 이름에 대해 반복합니다.
       for (let name of targetFolderList) {
+        // shellExec 메서드를 사용하여 파일 이름을 클라이언트와 디자이너 이름을 포함한 형식으로 변경합니다.
         await shellExec(`mv ${shellLink(targetFolder + "/" + name)} ${shellLink(targetFolder + "/" + client + "_" + designer + "_" + String(num) + "." + name.split(".")[name.split(".").length - 1])}`);
         num++;
       }
 
+      // targetFolder 변수에 photo_dir 경로를 다시 저장합니다.
       targetFolder = options.photo_dir;
+
+      // targetFolder의 파일 목록을 다시 읽어와 targetFolderList에 저장합니다.
       targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
 
+      // targetFolderList의 각 파일 이름에 대해 반복합니다.
       for (let fileName of targetFolderList) {
+        // 파일 이름을 '_'를 기준으로 분리하여 tempArr에 저장합니다.
         tempArr = fileName.split("_");
+
+        // tempArr의 마지막 요소를 '.' 기준으로 분리하여 tempArr2에 저장합니다.
         tempArr2 = tempArr[tempArr.length - 1].split(".");
+
+        // tempArr의 마지막 요소를 tempArr2의 첫 번째 요소로 변경합니다.
         tempArr[tempArr.length - 1] = tempArr2[0];
+
+        // tempArr2의 두 번째 요소부터 tempArr에 추가합니다.
         for (let i = 1; i < tempArr2.length; i++) {
           tempArr.push(tempArr2[i]);
         }
+
+        // tempArr에서 클라이언트 이름과 디자이너 이름을 추출하여 각각 clientName과 designerName에 저장합니다.
         [ clientName, designerName ] = tempArr;
+
+        // 파일 확장자를 exe 변수에 저장합니다.
         exe = tempArr[tempArr.length - 1];
 
+        // 프로젝트를 검색하기 위해 BackMaker 클래스의 getProjectsByNames 메서드를 호출합니다.
+        // 검색 조건으로 클라이언트 이름과 디자이너 이름을 한글로 수정한 값을 사용합니다.
         projects = await back.getProjectsByNames([ hangul.fixString(clientName.trim()), hangul.fixString(designerName.trim()) ], { selfMongo });
 
+        // 검색된 프로젝트가 없을 경우 콘솔에 클라이언트 이름과 디자이너 이름을 출력하고, targetProject를 null로 설정합니다.
         if (projects.length === 0) {
           console.log(clientName, designerName);
           targetProject = null;
         } else {
+          // 검색된 프로젝트 중에서 desid가 비어 있지 않은 프로젝트만 필터링합니다.
           projects = projects.toNormal().filter((p) => { return p.desid !== "" });
+
+          // 필터링 결과가 없을 경우 콘솔에 클라이언트 이름과 디자이너 이름을 출력하고, targetProject를 null로 설정합니다.
           if (projects.length === 0) {
             console.log(clientName, designerName);
             targetProject = null;
           } else if (projects.length !== 1) {
+            // 필터링된 프로젝트가 여러 개인 경우 추가 필터링을 수행합니다.
             projects = projects.filter((p) => {
               return p.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
             }).filter((p) => {
@@ -2151,69 +2257,101 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
             }).filter((p) => {
               return p.contents.photo.date.valueOf() <= (new Date()).valueOf() && p.contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
             });
+
+            // 프로젝트를 사진 날짜를 기준으로 정렬합니다.
             projects.sort((a, b) => {
               return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf();
             });
+
+            // 추가 필터링 결과가 없을 경우 콘솔에 클라이언트 이름과 디자이너 이름을 출력하고, targetProject를 null로 설정합니다.
             if (projects.length === 0) {
               console.log(clientName, designerName);
               targetProject = null;
             } else {
+              // 가장 최근의 프로젝트를 targetProject로 설정합니다.
               [ targetProject ] = projects;
             }
           } else {
+            // 프로젝트가 하나만 존재하는 경우 해당 프로젝트를 targetProject로 설정합니다.
             [ targetProject ] = projects;
           }
         }
 
+        // targetProject가 null인 경우, 에러를 발생시킵니다.
         if (targetProject === null) {
           throw new Error(clientName + " " + designerName + " " + "project not found");
         }
 
+        // targetProject에서 프로젝트 ID를 thisProid에 저장합니다.
         thisProid = targetProject.proid;
+
+        // foreContents 컬렉션에서 현재 프로젝트 ID와 일치하는 데이터를 조회하여 rows에 저장합니다.
         rows = await back.mongoRead(collection, { proid: thisProid }, { selfMongo: selfContentsMongo });
 
+        // 조회된 데이터가 있는 경우, 첫 번째 데이터의 포트폴리오 ID를 thisPid에 저장합니다.
         if (rows.length > 0) {
           thisPid = rows[0].pid;
         } else {
+          // 조회된 데이터가 없는 경우, 프로젝트 ID로 콘텐츠 배열을 조회합니다.
           contentsArr = await back.getContentsArrByQuery({ proid: thisProid }, { selfMongo });
+
+          // 콘텐츠 배열이 비어 있는 경우 추가 검색을 수행합니다.
           if (contentsArr.length === 0) {
             if (projects.length > 1) {
               thisPid = null;
+
+              // 나머지 프로젝트들에 대해 반복하면서 foreContents 컬렉션을 조회합니다.
               for (let i = 1; i < projects.length; i++) {
                 rows = await back.mongoRead(collection, { proid: projects[i].proid }, { selfMongo: selfContentsMongo });
+
+                // foreContents에 데이터가 있는 경우 포트폴리오 ID를 thisPid에 저장합니다.
                 if (rows.length > 0) {
                   thisPid = rows[0].pid;
                 } else {
+                  // foreContents에 데이터가 없는 경우, 프로젝트 ID로 콘텐츠 배열을 다시 조회합니다.
                   contentsArr = await back.getContentsArrByQuery({ proid: projects[i].proid }, { selfMongo });
+
+                  // 콘텐츠 배열이 있는 경우, 포트폴리오 ID를 thisPid에 저장합니다.
                   if (contentsArr.length > 0) {
                     thisPid = contentsArr[0].contents.portfolio.pid;
                   }
                 }
+
+                // 포트폴리오 ID가 설정된 경우, 현재 프로젝트 ID를 thisProid로 설정하고 반복을 종료합니다.
                 if (thisPid !== null) {
                   thisProid = projects[i].proid;
                   break;
                 }
               }
+
+              // 포트폴리오 ID가 여전히 null인 경우, 에러를 발생시킵니다.
               if (thisPid === null) {
                 throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
               }
             } else {
+              // 프로젝트가 하나인 경우에도 포트폴리오 ID가 null이면 에러를 발생시킵니다.
               throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
             }
           } else {
+            // 콘텐츠 배열이 비어 있지 않은 경우, 첫 번째 콘텐츠의 포트폴리오 ID를 thisPid에 저장합니다.
             thisPid = contentsArr[0].contents.portfolio.pid;
           }
         }
 
+        // 프로젝트 ID와 포트폴리오 ID를 조합하여 thisFolderName을 설정합니다.
         thisFolderName = thisProid + splitToken + thisPid;
 
+        // requestSystem 메서드를 사용하여 서버에 폴더 생성 요청을 보냅니다.
         response = await requestSystem("https://" + address.officeinfo.ghost.host + "/makeFolder", {
           path: "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName,
         }, {
           headers: { "Content-Type": "application/json" }
         });
 
+        // 비디오 파일의 새로운 이름을 생성합니다.
         thisFileName = videoFileKeyword + String(response.data.list.length) + thisPid + "." + exe;
+
+        // ghostFileUpload 메서드를 사용하여 비디오 파일을 서버에 업로드합니다.
         await ghostFileUpload([ `${targetFolder}/${fileName}` ], [ "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName + "/" + thisFileName ]);
 
       }
@@ -2221,66 +2359,98 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
     }
 
   } catch (e) {
+    // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
     console.log(e);
   } finally {
+    // 작업이 완료되면 MongoDB 연결을 종료합니다.
     await selfMongo.close();
     await selfContentsMongo.close();
   }
 }
 
+/**
+ * PortfolioFilter 클래스의 updateSubject 메서드는 주어진 포트폴리오 ID(pid) 또는 개별 키(individualKey)를 사용하여 
+ * 포트폴리오와 관련된 데이터를 업데이트하고, 이를 서버에 반영하는 작업을 수행합니다.
+ * 이 메서드는 MongoDB와 파일 시스템, 다양한 유틸리티 메서드를 활용하여 작업을 진행합니다.
+ * 
+ * @param {string} pid - 포트폴리오 ID입니다.
+ * @param {string|null} [individualKey=null] - 개별 작업을 위한 키로, 필요시 사용됩니다.
+ * @returns {Promise<boolean>} 작업 성공 여부를 나타내는 불리언 값을 반환합니다.
+ */
 PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = null) {
+  
+  // 현재 PortfolioFilter 클래스의 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
+
+  // PortfolioFilter 클래스의 address 속성을 address 변수에 저장합니다.
+  // address 속성은 홈리에종의 주소 정보 객체를 가리킵니다.
   const address = this.address;
+
+  // PortfolioFilter 클래스의 back 속성을 back 변수에 저장합니다.
+  // back 속성은 BackMaker 클래스의 인스턴스를 가리킵니다.
   const back = this.back;
+
+  // Mother 클래스에서 필요한 메서드들을 비구조화 할당으로 불러옵니다.
+  // mongo, mongoinfo, mongoofficeinfo, fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload 등 다양한 유틸리티 메서드를 포함합니다.
   const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongosecondinfo } = this.mother;
+
+  // selfMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 오피스 관련 MongoDB와의 연결을 관리합니다.
   const selfMongo = new mongo(mongoofficeinfo);
+
+  // selfCoreMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 핵심 데이터베이스와의 연결을 관리합니다.
   const selfCoreMongo = new mongo(mongoinfo);
+
+  // selfSecondMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 추가 데이터베이스와의 연결을 관리합니다.
   const selfSecondMongo = new mongo(mongosecondinfo);
+
   try {
+    // selfMongo와 selfCoreMongo, selfSecondMongo를 MongoDB와 연결합니다.
     await selfMongo.connect();
     await selfCoreMongo.connect();
     await selfSecondMongo.connect();
-    const collection = "foreContents";
-    const rawCollection = "designerRawContents";
-    const toNormal = true;
-    const photoFolderConst = "사진_등록_포트폴리오";
-    let targetFores;
-    let targetContents;
-    let proid;
-    let targetRaw;
-    let targetBody;
-    let tong;
-    let thisBlank;
-    let targetText;
-    let frontText;
-    let backText;
-    let frontEnd;
-    let backEnd;
-    let project, client;
-    let subjectInput;
-    let apartInput;
-    let regionInput;
-    let targetPid;
-    let addressArr;
-    let contents;
-    let ghostPhotos;
-    let thisFolderName;
-    let thisDesignerName;
-    let thisDesid;
-    let thisDesigner;
-    let pyeongInput;
-    let infoIndex;
-    let backArr;
 
+    // foreContents 컬렉션의 이름을 collection 변수에 저장합니다.
+    const collection = "foreContents";
+
+    // designerRawContents 컬렉션의 이름을 rawCollection 변수에 저장합니다.
+    const rawCollection = "designerRawContents";
+
+    // toNormal 변수를 true로 설정하여 데이터 변환 시 사용할 수 있도록 합니다.
+    const toNormal = true;
+
+    // 사진 관련 상수를 photoFolderConst 변수에 저장합니다.
+    const photoFolderConst = "사진_등록_포트폴리오";
+
+    // 필요한 변수를 선언합니다.
+    let targetFores, targetContents, proid, targetRaw, targetBody, tong;
+    let thisBlank, targetText, frontText, backText, frontEnd, backEnd;
+    let project, client, subjectInput, apartInput, regionInput, targetPid;
+    let addressArr, contents, ghostPhotos, thisFolderName, thisDesignerName, thisDesid;
+    let thisDesigner, pyeongInput, infoIndex, backArr;
+
+    // pid가 'p'로 시작하는지 확인합니다.
     if (/^p/.test(pid.trim())) {
+
+      // pid가 'p'로 시작하면 targetPid로 설정합니다.
       targetPid = pid;
+
+      // foreContents 컬렉션에서 pid와 일치하는 데이터를 조회하여 targetFores에 저장합니다.
       [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
+
+      // 조회된 데이터에서 proid를 가져와 변수에 저장합니다.
       proid = targetFores.proid;
+
+      // designerRawContents 컬렉션에서 proid와 일치하는 데이터를 조회하여 targetRaw에 저장합니다.
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+
+      // 프로젝트와 클라이언트 정보를 조회하여 각각 project와 client 변수에 저장합니다.
       project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
       client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
-  
-      tong = [];
+
+      // 대상 본문을 줄 단위로 분리하여 필터링합니다.
       targetBody = targetRaw.contents.body.split("\n").filter((s) => {
         return !/고객 상황에 대한 이야기/gi.test(s);
       }).filter((s) => {
@@ -2290,15 +2460,14 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       }).filter((s) => {
         return !/^[0-9][ ]*\./gi.test(s.trim());
       }).join("\n").trim().split("\n");
-  
+
+      // 본문을 처리하면서 빈 줄을 관리합니다.
       thisBlank = false;
       tong = [];
       for (let i = 0; i < targetBody.length; i++) {
         targetText = targetBody[i].trim();
         if (targetText === '') {
-          if (thisBlank) {
-            // pass
-          } else {
+          if (!thisBlank) {
             tong.push(targetText);
           }
           thisBlank = true;
@@ -2307,6 +2476,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
           thisBlank = false;
         }
       }
+
+      // 본문에서 전반부와 후반부 텍스트를 나눕니다.
       frontText = '';
       backText = '';
       frontEnd = false;
@@ -2319,7 +2490,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
           frontEnd = true;
         }
         if (frontEnd) {
-          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
+          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
         } else {
           frontText += tong[i].trim() + " ";
           if (frontText.length > 500) {
@@ -2331,6 +2502,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       if (frontText === "") {
         frontText = "고객의 이야기를 적어주세요!";
       }
+
+      // 후반부 텍스트를 배열로 분리하고, 길이 제한과 공간 정보를 처리합니다.
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
       infoIndex = backArr.findIndex((s) => { return /^[0-9]?\.?[ ]?공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
@@ -2342,11 +2515,15 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
         backArr = backArr.slice(0, -1);
       }
 
+      // 클라이언트의 요청에서 주소 정보를 가져옵니다.
       addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
+
+      // 입력될 제목, 아파트 이름, 지역 이름을 변수에 설정합니다.
       subjectInput = "제목을 입력해주세요";
       apartInput = "아파트 아파트명";
       regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
 
+      // designerRawContents 컬렉션을 업데이트하여 입력한 내용을 추가합니다.
       await back.mongoUpdate(rawCollection, [ { proid }, {
         addition: {
           pid,
@@ -2363,19 +2540,31 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       } ], { selfMongo: selfSecondMongo });
 
     } else {
-
+      // pid가 'p'로 시작하지 않는 경우, 개별 키(individualKey)를 사용하여 작업을 수행합니다.
       proid = individualKey;
 
+      // 서버에서 사진 목록을 조회하여 ghostPhotos에 저장합니다.
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
-      thisFolderName = ghostPhotos.find((a) => { return (new RegExp("^" + pid)).test(a) })
+
+      // pid와 일치하는 파일 이름을 찾아 thisFolderName에 저장합니다.
+      thisFolderName = ghostPhotos.find((a) => { return (new RegExp("^" + pid)).test(a) });
+
+      // 파일 이름에서 디자이너 이름을 추출하여 thisDesignerName에 저장합니다.
       thisDesignerName = thisFolderName.split("_")[1].trim();
+
+      // designer 컬렉션에서 디자이너 이름과 일치하는 데이터를 조회하여 thisDesigner에 저장합니다.
       [ thisDesigner ] = await back.mongoRead("designer", { designer: thisDesignerName }, { selfMongo: selfCoreMongo });
+
+      // 조회된 디자이너의 ID를 thisDesid에 저장합니다.
       thisDesid = thisDesigner.desid;
+
+      // designerRawContents 컬렉션에서 proid와 일치하는 데이터를 조회하여 targetRaw에 저장합니다.
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
 
+      // targetRaw의 내용을 body에서 가져와 contents에 저장합니다.
       contents = targetRaw.contents.body.trim();
 
-      tong = [];
+      // 대상 본문을 줄 단위로 분리하여 필터링합니다.
       targetBody = contents.split("\n").filter((s) => {
         return !/고객 상황에 대한 이야기/gi.test(s);
       }).filter((s) => {
@@ -2385,15 +2574,14 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       }).filter((s) => {
         return !/^[0-9][ ]*\./gi.test(s.trim());
       }).join("\n").trim().split("\n");
-  
+
+      // 본문을 처리하면서 빈 줄을 관리합니다.
       thisBlank = false;
       tong = [];
       for (let i = 0; i < targetBody.length; i++) {
         targetText = targetBody[i].trim();
         if (targetText === '') {
-          if (thisBlank) {
-            // pass
-          } else {
+          if (!thisBlank) {
             tong.push(targetText);
           }
           thisBlank = true;
@@ -2402,6 +2590,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
           thisBlank = false;
         }
       }
+
+      // 본문에서 전반부와 후반부 텍스트를 나눕니다.
       frontText = '';
       backText = '';
       frontEnd = false;
@@ -2414,7 +2604,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
           frontEnd = true;
         }
         if (frontEnd) {
-          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
+          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
         } else {
           frontText += tong[i].trim() + " ";
           if (frontText.length > 500) {
@@ -2426,7 +2616,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       if (frontText === "") {
         frontText = "고객의 이야기를 적어주세요!";
       }
-      
+
+      // 후반부 텍스트를 배열로 분리하고, 길이 제한과 공간 정보를 처리합니다.
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
       infoIndex = backArr.findIndex((s) => { return /^[0-9]?\.?[ ]?공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
@@ -2438,11 +2629,13 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
         backArr = backArr.slice(0, -1);
       }
 
+      // 입력될 제목, 아파트 이름, 지역 이름을 변수에 설정합니다.
       subjectInput = "제목을 입력해주세요";
       apartInput = "아파트 아파트명";
       regionInput = "서울시 관악구";
       pyeongInput = String(34);
 
+      // designerRawContents 컬렉션을 업데이트하여 입력한 내용을 추가합니다.
       await back.mongoUpdate(rawCollection, [ { proid }, {
         addition: {
           pid,
@@ -2459,6 +2652,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
       } ], { selfMongo: selfSecondMongo });
     }
 
+    // 일정 시간 대기한 후, requestSystem 메서드를 사용하여 서버에 rawToContents 요청을 보냅니다.
     await sleep(500);
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/rawToContents", {
       pid,
@@ -2466,66 +2660,118 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
     }, { headers: { "Content-Type": "application/json" } });
     await sleep(500);
 
+    // 작업이 완료되면 MongoDB 연결을 종료합니다.
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
 
+    // 작업이 성공적으로 완료되었음을 나타내는 true를 반환합니다.
     return true;
 
   } catch (e) {
+    // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
     console.log(e);
+
+    // 예외가 발생해도 MongoDB 연결을 종료합니다.
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
 
+    // 작업이 실패했음을 나타내는 false를 반환합니다.
     return false;
   }
 }
 
+/**
+ * PortfolioFilter 클래스의 rawToContents 메서드는 주어진 포트폴리오 ID(pid)를 기반으로 포트폴리오의 내용을
+ * 처리하고, 이미지 파일을 다운로드하여 포트폴리오에 맞게 구성하며, 최종적으로 이를 시스템에 업로드하는 작업을 수행합니다.
+ * 이 메서드는 MongoDB, 파일 시스템, 이미지 처리 도구 등 다양한 유틸리티를 사용하여 포트폴리오 콘텐츠를 자동화합니다.
+ * 
+ * @param {string} pid - 포트폴리오 ID입니다.
+ * @param {boolean} [justOrderMode=false] - 만약 true로 설정하면 콘텐츠를 생성하지 않고 삭제 작업만 수행합니다.
+ * @param {string|null} [forceProid=null] - 특정 프로젝트 ID를 강제로 사용하기 위한 옵션입니다.
+ * @returns {Promise<string|boolean>} 성공적으로 작업을 수행한 경우 디자이너 ID를 반환하고, 실패한 경우 false를 반환합니다.
+ */
 PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = false, forceProid = null) {
+  
+  // 현재 PortfolioFilter 클래스의 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
+
+  // PortfolioFilter 클래스의 back 속성을 back 변수에 저장합니다.
+  // back 속성은 BackMaker 클래스의 인스턴스를 가리킵니다.
   const back = this.back;
+
+  // PortfolioFilter 클래스의 address 속성을 address 변수에 저장합니다.
+  // address 속성은 홈리에종의 주소 정보 객체를 가리킵니다.
   const address = this.address;
+
+  // PortfolioFilter 클래스의 image 속성을 image 변수에 저장합니다.
+  // image 속성은 이미지 처리와 관련된 기능을 제공합니다.
   const image = this.image;
+
+  // Mother 클래스에서 필요한 메서드들을 비구조화 할당으로 불러옵니다.
+  // mongo, mongoinfo, mongoofficeinfo, fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload 등 다양한 유틸리티 메서드를 포함합니다.
   const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongoofficeinfo, mongosecondinfo } = this.mother;
+
+  // 노트 경로를 notePath 변수에 저장합니다.
   const notePath = process.env.HOME + "/note/portfolio";
+
+  // selfMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 오피스 관련 MongoDB와의 연결을 관리합니다.
   const selfMongo = new mongo(mongoofficeinfo);
+
+  // selfCoreMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 핵심 데이터베이스와의 연결을 관리합니다.
   const selfCoreMongo = new mongo(mongoinfo);
+
+  // selfSecondMongo 변수에 새로운 mongo 인스턴스를 생성하여 저장합니다.
+  // 이 인스턴스는 추가 데이터베이스와의 연결을 관리합니다.
   const selfSecondMongo = new mongo(mongosecondinfo);
+
+  // 사진 관련 상수를 photoFolderConst 변수에 저장합니다.
   const photoFolderConst = "사진_등록_포트폴리오";
+
+  // ImageReader 모듈을 가져와 ImageReader 클래스를 생성하고 garoseroParser 변수에 저장합니다.
   const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
   const garoseroParser = new ImageReader();
+
+  // 포트폴리오 링크를 portfolioLink 변수에 저장합니다.
   const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
+
+  // ResourceMaker 클래스를 생성하여 resource 변수에 저장합니다.
   const resource = new ResourceMaker();
+
   try {
+    // selfMongo와 selfCoreMongo, selfSecondMongo를 MongoDB와 연결합니다.
     await selfMongo.connect();
     await selfCoreMongo.connect();
     await selfSecondMongo.connect();
-    const collection = "foreContents";
-    const rawCollection = "designerRawContents";
-    const channel = "#502_sns_contents";
-    const toNormal = true;
-    let targetFores;
-    let targetRaw;
-    let proid;
-    let thisProject, thisClient, thisDesigner;
-    let ghostPhotos;
-    let ghostPhotosFiles;
-    let tempObject;
-    let num;
-    let targetPhotoDir;
-    let finalGsTong;
-    let seroIn;
-    let noteContents;
-    let noteArr;
-    let thisDesignerName;
-    let thisDesid;
-    let thisFolderName;
-    let targetContents;
 
+    // foreContents 컬렉션의 이름을 collection 변수에 저장합니다.
+    const collection = "foreContents";
+
+    // designerRawContents 컬렉션의 이름을 rawCollection 변수에 저장합니다.
+    const rawCollection = "designerRawContents";
+
+    // 메시지를 보낼 채널을 channel 변수에 저장합니다.
+    const channel = "#502_sns_contents";
+
+    // toNormal 변수를 true로 설정하여 데이터 변환 시 사용할 수 있도록 합니다.
+    const toNormal = true;
+
+    // 필요한 변수를 선언합니다.
+    let targetFores, targetRaw, proid, thisProject, thisClient, thisDesigner;
+    let ghostPhotos, ghostPhotosFiles, tempObject, num, targetPhotoDir;
+    let finalGsTong, seroIn, noteContents, noteArr;
+    let thisDesignerName, thisDesid, thisFolderName, targetContents;
+
+    // pid가 'p'로 시작하는지 확인합니다.
     if (/^p/gi.test(pid.trim())) {
 
+      // foreContents 컬렉션에서 pid와 일치하는 데이터를 조회하여 targetFores에 저장합니다.
       [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
+
+      // 만약 targetFores가 undefined이면, contents 컬렉션에서 pid와 일치하는 데이터를 조회합니다.
       if (targetFores === undefined) {
         [ targetContents ] = await back.mongoPick("contents", [ { "contents.portfolio.pid": pid }, { proid: 1 } ], { selfMongo: selfCoreMongo });
         if (targetContents === undefined) {
@@ -2536,26 +2782,33 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       } else {
         proid = targetFores.proid;
       }
+
+      // designerRawContents 컬렉션에서 proid와 일치하는 데이터를 조회하여 targetRaw에 저장합니다.
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
   
       console.log(proid);
 
+      // 프로젝트, 클라이언트, 디자이너 정보를 조회하여 각각 thisProject, thisClient, thisDesigner 변수에 저장합니다.
       thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
       thisClient = await back.getClientById(thisProject.cliid, { selfMongo: selfCoreMongo, toNormal });
       thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: selfCoreMongo, toNormal });
   
+      // 클라이언트와 디자이너 이름, 아파트 이름 등을 설정합니다.
       this.clientName = thisClient.name;
       this.designer = thisDesigner.designer;
       this.apartName = "아파트";
       this.pid = pid;
   
+      // 서버에서 pid와 관련된 사진 파일 목록을 조회하여 ghostPhotos에 저장합니다.
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
       ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
       ghostPhotos = ghostPhotos[0].fileName;
   
+      // 서버에서 사진 파일 목록을 재조회하여 ghostPhotosFiles에 저장합니다.
       ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
       ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
   
+      // 임시 파일을 삭제하고 새 디렉토리를 생성합니다.
       await tempDelete();
       if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
         await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
@@ -2563,6 +2816,8 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
   
       num = 1;
+
+      // 각 사진 파일을 다운로드하여 임시 디렉토리에 저장합니다.
       for (let fileName of ghostPhotosFiles) {
         tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + global.encodeURI(fileName.split(".").slice(0, -1).join(".")) + "." + fileName.split(".").slice(-1).join("."));
         await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
@@ -2570,9 +2825,14 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
         num++;
       }
   
+      // garoseroParser를 사용하여 다운로드한 이미지 디렉토리를 쿼리합니다.
       targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+
+      // 최종 처리된 이미지 목록을 저장하기 위한 배열을 선언합니다.
       finalGsTong = [];
       seroIn = false;
+
+      // 각 이미지를 순회하면서 필요한 이미지만 추출하여 finalGsTong에 추가합니다.
       for (let i = 0; i < targetPhotoDir.length; i++) {
         if (targetPhotoDir[i].gs === "g") {
           finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
@@ -2590,6 +2850,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
         }
       }
 
+      // justOrderMode가 false인 경우, 최종 처리된 이미지를 photo_dir로 이동하고, 전체 작업을 수행합니다.
       if (!justOrderMode) {    
         await shellExec("rm", [ "-rf", this.options.photo_dir ]);
         await shellExec("mkdir", [ this.options.photo_dir ]);
@@ -2601,108 +2862,178 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
     
         console.log(finalGsTong);
       } else {
+        // justOrderMode가 true인 경우, 기존 콘텐츠를 삭제합니다.
         await back.mongoDelete("contents", { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
       }
   
+      // 노트 내용을 구성하여 noteContents 변수에 저장합니다.
+      // 우선 포트폴리오 ID(pid)를 추가합니다.
       noteContents = pid + "\n";
+
+      // 디자이너의 이름과 클라이언트의 이름을 추가하여 "실장님"과 "고객님"을 붙여줍니다.
       noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + " 고객님";
-      noteContents += "\n\n\n";
+      noteContents += "\n\n\n"; // 가독성을 위해 세 줄의 공백을 추가합니다.
+
+      // 포트폴리오 주제(subject), 아파트 이름(apart), 평수(pyeong) 정보를 추가합니다.
+      // 이 정보는 targetRaw 객체의 addition 속성에서 가져옵니다.
       noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
-      noteContents += "\n\n\n";
+      noteContents += "\n\n\n"; // 또 다른 구분을 위한 공백 추가
+
+      // 포트폴리오의 앞부분 설명 텍스트(front)를 추가합니다.
       noteContents += targetRaw.addition.text.front.trim();
-      noteContents += "\n\n\n";
+      noteContents += "\n\n\n"; // 가독성을 위한 공백 추가
+
+      // 포트폴리오 뒷부분 텍스트(backArr)가 배열로 존재하는지 확인합니다.
       if (Array.isArray(targetRaw.addition.text.backArr)) {
+        // 배열의 각 요소에 대해 순회하며 내용을 추가합니다.
         for (let textStr of targetRaw.addition.text.backArr) {
+          // 텍스트가 빈 문자열이 아니고, 특정 키워드로 시작하지 않는 경우에만 내용을 추가합니다.
           if (textStr !== '' && !/^(현관|거실|복도|주방|침실|안방|Entrance|entrance|living|Living|kitchen|Kitchen)$/gi.test(textStr)) {
-            noteContents += "\n\n\n";
+            noteContents += "\n\n\n"; // 각 항목 사이에 공백 추가
+            // 포트폴리오 이미지의 순서를 나타내는 정보 추가
             noteContents += "1 - " + String(finalGsTong.length);
-            noteContents += "\n\n\n";
-            noteContents += "Space\n\n" + textStr.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
-            noteContents += "\n\n\n";
+            noteContents += "\n\n\n"; // 공백 추가
+            // "Space"와 함께 텍스트 내용을 추가합니다. 불필요한 공백을 제거하여 포맷을 정리합니다.
+            noteContents += "Space\n\n" + textStr.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+            noteContents += "\n\n\n"; // 항목 끝에 공백 추가
           }
         }
       } else {
+        // backArr 배열이 없는 경우, 단일 back 텍스트를 사용하여 내용을 구성합니다.
         noteContents += "1 - " + String(finalGsTong.length);
-        noteContents += "\n\n\n";
-        noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
-        noteContents += "\n\n\n";
+        noteContents += "\n\n\n"; // 공백 추가
+        noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+        noteContents += "\n\n\n"; // 항목 끝에 공백 추가
       }
-      noteContents += "_info\n\n"
-      noteContents += thisDesigner.desid + "\n\n"
-      noteContents += "_portfolio\n\n"
-      noteContents += "_1\n\n"
-      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n"
-      noteContents += targetRaw.addition.region.trim() + "\n\n"
-      noteContents += "아파트 홈스타일링\n\n"
-      noteContents += "_2\n\n"
-      noteContents += "세로 / 가로\n\n"
+
+      // 추가 정보 섹션을 구성합니다. 디자이너 ID(desid) 및 포트폴리오 정보를 추가합니다.
+      noteContents += "_info\n\n" // 정보 섹션 시작
+      noteContents += thisDesigner.desid + "\n\n" // 디자이너 ID 추가
+      noteContents += "_portfolio\n\n" // 포트폴리오 섹션 시작
+      noteContents += "_1\n\n" // 첫 번째 포트폴리오 항목 시작
+      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n" // 포트폴리오 주제와 아파트 이름 추가
+      noteContents += targetRaw.addition.region.trim() + "\n\n" // 지역 정보 추가
+      noteContents += "아파트 홈스타일링\n\n" // 홈스타일링 주제 추가
+      noteContents += "_2\n\n" // 두 번째 포트폴리오 항목 시작
+      noteContents += "세로 / 가로\n\n" // 세로 / 가로 정보 추가
+
+      // 이미지 배열에서 세로(s) 및 가로(g) 이미지의 위치를 찾아 인덱스를 추가합니다.
       noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
-      noteContents += "슬라이드\n\n"
-      noteContents += "1 2 3 4 5 6 7 8 9\n\n"
-      noteContents += "태그\n\n"
-      noteContents += "all,아파트,수루배,블루,모던,화이트,세종,세종시,서재,거실\n\n"
-      noteContents += "서비스\n\n"
-      noteContents += "홈스타일링\n\n"
-      noteContents += "Key8\n\n"
-      noteContents += "820\n\n"
-      noteContents += "Key9\n\n"
+      noteContents += "슬라이드\n\n" // 슬라이드 정보를 추가
+      noteContents += "1 2 3 4 5 6 7 8 9\n\n" // 슬라이드 이미지 순서 추가
+      noteContents += "태그\n\n" // 태그 섹션 시작
+      noteContents += "all,아파트,수루배,블루,모던,화이트,세종,세종시,서재,거실\n\n" // 포트폴리오 태그 추가
+      noteContents += "서비스\n\n" // 서비스 섹션 시작
+      noteContents += "홈스타일링\n\n" // 서비스 정보 추가
+      noteContents += "Key8\n\n" // 키 8 추가
+      noteContents += "820\n\n" // 키 8의 값 추가
+      noteContents += "Key9\n\n" // 키 9 추가
+      // 현재 날짜를 'YYMMDD' 형식으로 추가합니다.
       noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
-      noteContents += "\n\n\n";
+      noteContents += "\n\n\n"; // 마지막 공백 추가
   
+      // 노트 내용을 파일로 저장합니다.
       await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
       noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
       resource.p_id = pid;
       console.log("write sucess");
   
+      // 리소스를 실행합니다.
       await resource.launching(noteArr);
   
+      // 메시지를 채널로 전송합니다.
       await messageSend({ text: `${thisDesigner.designer} 디자이너 ${thisClient.name} 고객님 포트폴리오 컨텐츠를 자동으로 웹에 업로드하였습니다. 편집을 시작해주세요! 편집이 완료되어야 발행이 정상적으로 완료됩니다.\nlink : ${portfolioLink + pid}&edit=true`, channel });
+
+      // 시스템에 동기화 요청을 보냅니다.
       await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
   
     } else {
 
+      // 만약 pid가 'p'로 시작하지 않는 경우, targetRaw를 조회하고, 필요한 정보를 설정합니다.
+      // 이 경우 'addition.pid' 필드와 일치하는 데이터를 찾습니다.
       [ targetRaw ] = await back.mongoRead(rawCollection, { "addition.pid": pid }, { selfMongo: selfSecondMongo });
-      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
+
+      // requestSystem 메서드를 통해 Ghost 서버에서 특정 경로에 있는 파일 목록을 가져옵니다.
+      // path로 지정된 경로의 파일들을 조회합니다.
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", 
+      { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, 
+      { headers: { "Content-Type": "application/json" } }));
+
+      // pid로 시작하는 파일만 필터링하여 가져옵니다.
       ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
       
+      // 필터링된 파일 목록에서 첫 번째 파일명을 가져와 thisFolderName 변수에 저장합니다.
       thisFolderName = ghostPhotos[0].fileName;
+
+      // 파일명에서 디자이너 이름을 추출하여 thisDesignerName 변수에 저장합니다.
+      // 파일명은 특정 형식을 따르고 있으며, '_'를 기준으로 구분됩니다.
       thisDesignerName = thisFolderName.split("_")[1].trim()
 
+      // 다시 첫 번째 파일명을 ghostPhotos 변수에 저장합니다.
       ghostPhotos = ghostPhotos[0].fileName;
-      ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
+
+      // pid에 해당하는 세부 경로의 파일 목록을 다시 서버로부터 가져옵니다.
+      ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", 
+      { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, 
+      { headers: { "Content-Type": "application/json" } }));
+
+      // 가져온 파일 목록에서 파일명만 추출하여 ghostPhotosFiles 배열에 저장합니다.
       ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
 
+      // 디자이너 이름을 기반으로 디자이너 정보를 MongoDB에서 조회하여 thisDesigner 변수에 저장합니다.
       [ thisDesigner ] = await back.mongoRead("designer", { designer: thisDesignerName }, { selfMongo: selfCoreMongo });
+
+      // 조회한 디자이너의 ID를 thisDesid 변수에 저장합니다.
       thisDesid = thisDesigner.desid;
 
+      // 클라이언트의 이름, 디자이너 이름, 아파트 이름, 포트폴리오 ID를 설정합니다.
+      // 여기서 클라이언트의 이름은 "없음"으로 기본 설정됩니다.
       this.clientName = "없음"
       this.designer = thisDesigner.designer;
       this.apartName = "아파트";
       this.pid = pid;
-  
+
+      // 임시 디렉토리를 삭제합니다.
       await tempDelete();
+
+      // 기존에 동일한 pid를 가진 임시 디렉토리가 존재하는 경우, 삭제합니다.
       if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
         await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
       }
+
+      // 새로운 임시 디렉토리를 생성합니다.
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
-  
+
+      // ghostPhotosFiles 배열에 저장된 각 파일을 순회하며 다운로드하여 임시 디렉토리에 저장합니다.
       num = 1;
       for (let fileName of ghostPhotosFiles) {
-        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + global.encodeURI(fileName.split(".").slice(0, -1).join(".")) + "." + fileName.split(".").slice(-1).join("."));
+        // binaryRequest를 통해 원격 서버로부터 파일을 다운로드하여 이진 데이터로 받아옵니다.
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + 
+        instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + 
+        global.encodeURI(ghostPhotos) + "/" + pid + "/" + global.encodeURI(fileName.split(".").slice(0, -1).join(".")) + 
+        "." + fileName.split(".").slice(-1).join("."));
+        
+        // 받은 파일을 임시 디렉토리에 저장합니다.
         await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
         console.log(`download success`);
         num++;
       }
-  
+
+      // garoseroParser를 통해 다운로드한 이미지 디렉토리에서 파일 정보를 쿼리합니다.
       targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+
+      // 최종 처리된 이미지를 저장할 배열을 선언하고, 각 이미지를 처리합니다.
       finalGsTong = [];
       seroIn = false;
+
+      // targetPhotoDir 배열을 순회하며 이미지를 검토하고, 조건에 따라 finalGsTong에 추가합니다.
       for (let i = 0; i < targetPhotoDir.length; i++) {
         if (targetPhotoDir[i].gs === "g") {
           finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
           seroIn = false;
         } else {
           if (!seroIn) {
+            // 다음 이미지가 존재하고, 그것이 's'라면 현재 이미지와 함께 추가합니다.
             if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
               finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
               finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
@@ -2714,18 +3045,26 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
         }
       }
 
+      // justOrderMode가 false라면, 사진 디렉토리를 정리하고 전체 작업을 수행합니다.
       if (!justOrderMode) {
   
+        // 기존 사진 디렉토리를 삭제하고, 새로운 디렉토리를 생성합니다.
         await shellExec("rm", [ "-rf", this.options.photo_dir ]);
         await shellExec("mkdir", [ this.options.photo_dir ]);
+
+        // 최종 처리된 이미지 파일들을 지정된 디렉토리로 이동합니다.
         for (let obj of finalGsTong) {
           await shellExec("mv", [ obj.file, this.options.photo_dir ])
         }
+
+        // 전체 작업을 수행하는 메서드를 호출합니다.
         await this.total_make(false);
       } else {
+        // justOrderMode가 true라면, 기존 콘텐츠를 삭제합니다.
         await back.mongoDelete("contents", { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
       }
-    
+
+      // 포트폴리오 노트 내용을 구성하여 noteContents 변수에 저장합니다.
       noteContents = pid + "\n";
       noteContents += thisDesigner.designer + " 실장님";
       noteContents += "\n\n\n";
@@ -2774,15 +3113,22 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       noteContents += "Key9\n\n"
       noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
       noteContents += "\n\n\n";
-  
+
+      // 작성한 노트 내용을 지정된 경로에 파일로 저장합니다.
       await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
+
+      // 노트 내용을 배열로 분리하여 noteArr에 저장하고, resource의 p_id에 pid를 설정합니다.
       noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
       resource.p_id = pid;
-      console.log("write sucess");
-  
+      console.log("write success");
+
+      // resource를 실행합니다.
       await resource.launching(noteArr);
-  
+
+      // 편집 완료를 요청하는 메시지를 채널에 전송합니다.
       await messageSend({ text: `${thisDesigner.designer} 디자이너 포트폴리오 컨텐츠를 자동으로 웹에 업로드하였습니다. 편집을 시작해주세요! 편집이 완료되어야 발행이 정상적으로 완료됩니다.\nlink : ${portfolioLink + pid}&edit=true`, channel });
+
+      // 만약 forceProid가 존재한다면, 추가적인 삭제 작업을 수행합니다.
       if (forceProid !== null) {
         await requestSystem("https://" + instance.address.secondinfo.host + ":3003/projectDesignerRaw", {
           mode: "delete",
@@ -2793,15 +3139,22 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
           headers: { "Content-Type": "application/json" },
         });
       }
+
     }
 
+    // 작업이 완료되면 MongoDB 연결을 종료합니다.
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
 
+    // 디자이너 ID를 반환합니다.
     return thisDesigner.desid;
+
   } catch (e) {
+    // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
     console.log(e);
+
+    // 예외가 발생해도 MongoDB 연결을 종료합니다.
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
@@ -2809,24 +3162,52 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   }
 }
 
+/**
+ * PortfolioFilter 클래스의 setDesignerSetting 메서드는 주어진 디자이너 ID(desid)와 포트폴리오 ID(pid)를 사용하여 
+ * 디자이너의 포트폴리오 설정을 업데이트하고, 이를 시스템에 반영하는 작업을 수행합니다.
+ * 
+ * @param {string} desid - 디자이너 ID입니다.
+ * @param {string} pid - 포트폴리오 ID입니다.
+ * @returns {Promise<boolean>} 작업 성공 여부를 나타내는 불리언 값을 반환합니다.
+ */
 PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
+  // 현재 PortfolioFilter 클래스의 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const { objectDeepCopy, requestSystem, sleep } = this.mother;
-  try {
-    let thisDesigner;
-    let proposalArr, dummy, filesArr;
-    let description;
-    let files, index;
-    let thisContents;
-    let garoPhoto;
 
+  // PortfolioFilter 클래스의 back 속성을 back 변수에 저장합니다.
+  // back 속성은 BackMaker 클래스의 인스턴스를 가리킵니다.
+  const back = this.back;
+
+  // PortfolioFilter 클래스의 address 속성을 address 변수에 저장합니다.
+  // address 속성은 홈리에종의 주소 정보 객체를 가리킵니다.
+  const address = this.address;
+
+  // Mother 클래스에서 필요한 메서드들을 비구조화 할당으로 불러옵니다.
+  // objectDeepCopy, requestSystem, sleep 메서드를 포함합니다.
+  const { objectDeepCopy, requestSystem, sleep } = this.mother;
+
+  try {
+    // 필요한 변수들을 선언합니다.
+    let thisDesigner; // 현재 디자이너의 정보
+    let proposalArr, dummy, filesArr; // 제안 배열, 더미 함수, 파일 배열
+    let description; // 디자이너 설명
+    let files, index; // 파일 정보와 인덱스
+    let thisContents; // 현재 포트폴리오의 내용
+    let garoPhoto; // 가로 사진 배열
+
+    // 주어진 pid를 사용하여 포트폴리오 콘텐츠를 가져옵니다.
     [ thisContents ] = (await back.getContentsArrByQuery({ "contents.portfolio.pid": pid })).toNormal();
+
+    // 주어진 desid를 사용하여 디자이너 정보를 가져옵니다.
     thisDesigner = await back.getDesignerById(desid);
+
+    // 디자이너의 설정에서 description을 깊은 복사하여 저장합니다.
     description = objectDeepCopy(thisDesigner.setting.description);
 
+    // 포트폴리오의 사진 중 가로 사진만 필터링하여 garoPhoto 배열에 저장합니다.
     garoPhoto = thisContents.photos.detail.filter((o) => { return o.gs === "g" });
+
+    // files 배열을 생성하여, 각각의 사진 파일 정보를 설정합니다.
     files = [
       { porlid: pid, index: garoPhoto[0].index },
       { porlid: pid, index: thisContents.contents.portfolio.detailInfo.photodae[0] },
@@ -2834,82 +3215,118 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
       { porlid: pid, index: garoPhoto[2].index },
       { porlid: pid, index: garoPhoto[3].index }
     ];
+
+    // 파일 경로를 저장할 배열을 초기화합니다.
     filesArr = [];
+
+    // files 배열을 순회하면서 각 파일의 경로를 filesArr에 추가합니다.
     for (let { porlid, index } of files) {
       if (porlid !== "ghost") {
+        // 포트폴리오 이미지 경로를 구성하여 filesArr에 추가합니다.
         filesArr.push(`/corePortfolio/listImage/${porlid}/t${String(index)}${porlid}.jpg`);
       } else {
+        // 유령 이미지의 경우 다른 경로를 사용합니다.
         filesArr.push(`/rawDesigner/ghost/${desid}/g${String(index)}.jpg`);
       }
     }
 
+    // dummy 함수는 기본 설정을 생성합니다.
     dummy = () => {
-      return { name: "기본 세팅", photo: [
-        {
-            "position" : "0",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
-            "imgSrc" : filesArr[0]
-        },
-        {
-            "position" : "1",
-            "sgTrue" : "s",
-            "unionPo" : "right",
-            "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
-            "imgSrc" : filesArr[1]
-        },
-        {
-            "position" : "2",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "imgSrc" : filesArr[2],
-            "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
-        },
-        {
-            "position" : "3",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "imgSrc" : filesArr[3],
-            "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
-        },
-        {
-            "position" : "4",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "imgSrc" : filesArr[4],
-            "styleText" : "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
-        }
-      ], description };
+      return {
+        name: "기본 세팅", 
+        photo: [
+          {
+            "position": "0",
+            "sgTrue": "g",
+            "unionPo": "union",
+            "styleText": `width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url("${filesArr[0]}");`,
+            "imgSrc": filesArr[0]
+          },
+          {
+            "position": "1",
+            "sgTrue": "s",
+            "unionPo": "right",
+            "styleText": `width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url("${filesArr[1]}");`,
+            "imgSrc": filesArr[1]
+          },
+          {
+            "position": "2",
+            "sgTrue": "g",
+            "unionPo": "union",
+            "imgSrc": filesArr[2],
+            "styleText": `top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url("${filesArr[2]}");`
+          },
+          {
+            "position": "3",
+            "sgTrue": "g",
+            "unionPo": "union",
+            "imgSrc": filesArr[3],
+            "styleText": `top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url("${filesArr[3]}");`
+          },
+          {
+            "position": "4",
+            "sgTrue": "g",
+            "unionPo": "union",
+            "imgSrc": filesArr[4],
+            "styleText": `top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url("${filesArr[4]}");`
+          }
+        ],
+        description
+      };
     }
 
+    // proposalArr 배열을 초기화하고, 더미 설정을 복사하여 배열에 추가합니다.
     proposalArr = [];
     for (let i = 0; i < 5; i++) {
       proposalArr.push(objectDeepCopy(dummy()));
     }
 
-    await back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
-    await back.updateDesigner([ { desid }, { "setting.front.methods": [ "mth0", "mth7" ] } ]);
-    await back.updateDesigner([ { desid }, { "setting.front.photo": { porlid: pid, index: "t" + String(garoPhoto[0].index) } } ]);
+    // 디자이너의 proposal 설정을 업데이트합니다.
+    await back.updateDesigner([{ desid }, { "setting.proposal": proposalArr }]);
 
+    // 디자이너의 front.methods 설정을 업데이트합니다.
+    await back.updateDesigner([{ desid }, { "setting.front.methods": ["mth0", "mth7"] }]);
+
+    // 디자이너의 front.photo 설정을 업데이트합니다.
+    await back.updateDesigner([{ desid }, { "setting.front.photo": { porlid: pid, index: "t" + String(garoPhoto[0].index) } }]);
+
+    // 설정을 적용하기 전에 500ms 대기합니다.
     await sleep(500);
 
+    // 프론트 웹에 설정이 반영되도록 합니다.
     await requestSystem("https://" + address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    // 작업이 성공적으로 완료되었음을 나타내는 true를 반환합니다.
     return true;
   } catch (e) {
+    // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력하고 false를 반환합니다.
     console.log(e);
     return false;
   }
 }
 
+/**
+ * PortfolioFilter 클래스의 chmodReload 메서드는 파일 시스템의 권한을 재설정합니다.
+ * 이 메서드는 특히 Samba로 공유되는 폴더의 권한을 설정하는 데 사용됩니다.
+ * 
+ * @returns {Promise<void>}
+ */
 PortfolioFilter.prototype.chmodReload = async function () {
+  // 현재 PortfolioFilter 클래스의 인스턴스를 instance 변수에 저장합니다.
   const instance = this;
+
+  // Mother 클래스에서 필요한 메서드들을 비구조화 할당으로 불러옵니다.
+  // fileSystem, shellExec 등 다양한 유틸리티 메서드를 포함합니다.
   const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo } = this.mother;
+
   try {
-    await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/corePortfolio" ]);
-    await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/list_image" ]);
+    // Samba로 공유된 corePortfolio 폴더의 권한을 재설정합니다.
+    await shellExec("chmod", ["-R", "777", process.env.HOME + "/samba/corePortfolio"]);
+
+    // Samba로 공유된 list_image 폴더의 권한을 재설정합니다.
+    await shellExec("chmod", ["-R", "777", process.env.HOME + "/samba/list_image"]);
   } catch (e) {
+    // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
     console.log(e);
   }
 }
