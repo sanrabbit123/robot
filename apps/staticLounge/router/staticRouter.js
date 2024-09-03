@@ -1,250 +1,418 @@
 /**
  * @file staticRouter.js
- * @description 이 파일은 Static Lounge 서버의 라우터를 정의합니다. 
+ * @description 이 파일은 Static Lounge 서버의 라우터를 정의합니다.
  */
 
-const Mother = require(`${process.cwd()}/apps/mother.js`);
-const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
-const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
-const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
-const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
-const LogReport = require(`${process.cwd()}/apps/staticLounge/router/logReport.js`);
-const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
-const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
-const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
-const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-const PortfolioFilter = require(`${process.cwd()}/apps/portfolioFilter/portfolioFilter.js`);
+const Mother = require(`${process.cwd()}/apps/mother.js`); // Mother 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`); // BackMaker 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`); // BackWorker 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js"); // ImageReader 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js"); // ParsingHangul 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`); // GoogleDrive 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js"); // GoogleChrome 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`); // GoogleSheet 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`); // GoogleCalendar 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`); // GoogleAnalytics 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`); // NaverAPIs 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const LogReport = require(`${process.cwd()}/apps/staticLounge/router/logReport.js`); // LogReport 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`); // FacebookAPIs 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`); // GoogleAds 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`); // GoogleYoutube 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`); // BillMaker 클래스를 현재 작업 디렉토리에서 불러옵니다.
+const PortfolioFilter = require(`${process.cwd()}/apps/portfolioFilter/portfolioFilter.js`); // PortfolioFilter 클래스를 현재 작업 디렉토리에서 불러옵니다.
 
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const address = require(process.cwd() + "/apps/infoObj.js");
-const host = address.secondinfo.host;
-const { spawn } = require("child_process");
-const querystring = require("querystring");
-const parser = require("ua-parser-js");
-const mother = new Mother();
-const back = new BackMaker();
-const work = new BackWorker();
-const formidable = require("formidable");
-const imageReader = new ImageReader(mother, back, address);
-const hangul = new ParsingHangul();
-const drive = new GoogleDrive();
-const chrome = new GoogleChrome();
-const sheets = new GoogleSheet();
-const calendar = new GoogleCalendar();
-const analytics = new GoogleAnalytics();
-const naver = new NaverAPIs();
-const facebook = new FacebookAPIs();
-const meta = new FacebookAPIs();
-const google = new GoogleAds();
-const youtube = new GoogleYoutube();
-const bill = new BillMaker();
-const filter = new PortfolioFilter();
+const jsdom = require("jsdom"); // JSDOM을 불러오기 위해 jsdom 모듈을 가져옵니다.
+const { JSDOM } = jsdom; // JSDOM 객체를 사용하기 위해 디스트럭처링 할당을 합니다.
+const address = require(process.cwd() + "/apps/infoObj.js"); // 서버 설정 정보를 포함하는 address 객체를 불러옵니다.
+const host = address.secondinfo.host; // address 객체에서 서버 호스트 정보를 가져옵니다.
+const { spawn } = require("child_process"); // 자식 프로세스를 생성하기 위해 spawn 메서드를 불러옵니다.
+const querystring = require("querystring"); // 쿼리 문자열을 파싱하고 형성하기 위해 querystring 모듈을 불러옵니다.
+const parser = require("ua-parser-js"); // 사용자 에이전트를 파싱하기 위해 ua-parser-js 모듈을 불러옵니다.
+const mother = new Mother(); // Mother 클래스의 인스턴스를 생성하여 mother 변수에 할당합니다.
+const back = new BackMaker(); // BackMaker 클래스의 인스턴스를 생성하여 back 변수에 할당합니다.
+const work = new BackWorker(); // BackWorker 클래스의 인스턴스를 생성하여 work 변수에 할당합니다.
+const formidable = require("formidable"); // Formidable 모듈을 불러옵니다. 이는 파일 업로드를 처리하는 데 사용됩니다.
+const imageReader = new ImageReader(mother, back, address); // ImageReader 클래스의 인스턴스를 생성하고 mother, back, address를 전달합니다.
+const hangul = new ParsingHangul(); // ParsingHangul 클래스의 인스턴스를 생성하여 hangul 변수에 할당합니다.
+const drive = new GoogleDrive(); // GoogleDrive 클래스의 인스턴스를 생성하여 drive 변수에 할당합니다.
+const chrome = new GoogleChrome(); // GoogleChrome 클래스의 인스턴스를 생성하여 chrome 변수에 할당합니다.
+const sheets = new GoogleSheet(); // GoogleSheet 클래스의 인스턴스를 생성하여 sheets 변수에 할당합니다.
+const calendar = new GoogleCalendar(); // GoogleCalendar 클래스의 인스턴스를 생성하여 calendar 변수에 할당합니다.
+const analytics = new GoogleAnalytics(); // GoogleAnalytics 클래스의 인스턴스를 생성하여 analytics 변수에 할당합니다.
+const naver = new NaverAPIs(); // NaverAPIs 클래스의 인스턴스를 생성하여 naver 변수에 할당합니다.
+const facebook = new FacebookAPIs(); // FacebookAPIs 클래스의 인스턴스를 생성하여 facebook 변수에 할당합니다.
+const meta = new FacebookAPIs(); // FacebookAPIs 클래스의 또 다른 인스턴스를 생성하여 meta 변수에 할당합니다.
+const google = new GoogleAds(); // GoogleAds 클래스의 인스턴스를 생성하여 google 변수에 할당합니다.
+const youtube = new GoogleYoutube(); // GoogleYoutube 클래스의 인스턴스를 생성하여 youtube 변수에 할당합니다.
+const bill = new BillMaker(); // BillMaker 클래스의 인스턴스를 생성하여 bill 변수에 할당합니다.
+const filter = new PortfolioFilter(); // PortfolioFilter 클래스의 인스턴스를 생성하여 filter 변수에 할당합니다.
 
-const bar = "============================================================"
-const { errorLog, alertLog, cronLog, aliveLog, expressLog, requestSystem, equalJson, dateToString, stringToDate, sleep, mysqlQuery, diskReading, aliveMongo, fileSystem, shellExec, shellLink, leafParsing, uniqueValue, stringToLink, binaryRequest, zeroAddition, autoHypenPhone, processSystem, messageSend, cryptoString, objectDeepCopy, linkToString, ghostFileUpload, jsonToString, tempReplaceImage, serviceParsing, ipParsing, messageLog, autoComma } = mother;
+const bar = "============================================================"; // 로그 출력 시 사용될 구분선 문자열을 정의합니다.
+const { 
+  errorLog, alertLog, cronLog, aliveLog, expressLog, requestSystem, equalJson, dateToString, stringToDate, sleep, 
+  mysqlQuery, diskReading, aliveMongo, fileSystem, shellExec, shellLink, leafParsing, uniqueValue, stringToLink, 
+  binaryRequest, zeroAddition, autoHypenPhone, processSystem, messageSend, cryptoString, objectDeepCopy, 
+  linkToString, ghostFileUpload, jsonToString, tempReplaceImage, serviceParsing, ipParsing, messageLog, autoComma 
+} = mother; // Mother 클래스에서 제공하는 다양한 유틸리티 메서드 및 정보를 디스트럭처링 할당합니다.
+
 const logger = {
+  /**
+   * @function alert
+   * @description 긴급 알람을 보내는 함수입니다.
+   * @param {string} text - 알람 메시지 텍스트입니다.
+   */
   alert: async (text) => {
     try {
-      await emergencyAlarm(text);
+      await emergencyAlarm(text); // 긴급 알람을 보내는 Mother 클래스의 메서드를 호출합니다.
     } catch (e) {
-      console.error(e);
+      console.error(e); // 오류가 발생하면 콘솔에 출력합니다.
     }
   },
+  /**
+   * @function log
+   * @description 일반 로그를 기록하는 함수입니다.
+   * @param {Object} obj - 로그로 기록할 객체입니다.
+   * @param {Object} req - HTTP 요청 객체입니다.
+   */
   log: async (obj, req = { url: "unknown" }) => {
     try {
-      console.log(bar);
-      console.log(new Date(), "log");
-      console.log("in " + String(req.url));
-      console.log(obj);
-      console.log(bar);
+      console.log(bar); // 구분선을 출력합니다.
+      console.log(new Date(), "log"); // 현재 시간과 "log"라는 텍스트를 출력합니다.
+      console.log("in " + String(req.url)); // 요청된 URL을 출력합니다.
+      console.log(obj); // 로그 객체를 출력합니다.
+      console.log(bar); // 다시 구분선을 출력합니다.
     } catch (e) {
-      console.error(e);
+      console.error(e); // 오류가 발생하면 콘솔에 출력합니다.
     }
   },
+  /**
+   * @function error
+   * @description 오류 로그를 기록하는 함수입니다.
+   * @param {Object} obj - 오류로 기록할 객체입니다.
+   * @param {Object} req - HTTP 요청 객체입니다.
+   */
   error: async (obj, req = { url: "unknown" }) => {
     try {
-      console.log(bar);
-      console.log(new Date(), "error");
-      console.log("in " + String(req.url));
-      console.log(obj);
-      console.log(bar);
+      console.log(bar); // 구분선을 출력합니다.
+      console.log(new Date(), "error"); // 현재 시간과 "error"라는 텍스트를 출력합니다.
+      console.log("in " + String(req.url)); // 요청된 URL을 출력합니다.
+      console.log(obj); // 오류 객체를 출력합니다.
+      console.log(bar); // 다시 구분선을 출력합니다.
     } catch (e) {
-      console.error(e);
+      console.error(e); // 오류가 발생하면 콘솔에 출력합니다.
     }
   },
+  /**
+   * @function cron
+   * @description 정기 작업 로그를 기록하는 함수입니다.
+   * @param {string} text - 정기 작업 로그 텍스트입니다.
+   */
   cron: async (text) => {
     try {
-      await cronLog(text);
+      await cronLog(text); // 정기 작업 로그를 기록하는 Mother 클래스의 메서드를 호출합니다.
     } catch (e) {
-      console.error(e);
+      console.error(e); // 오류가 발생하면 콘솔에 출력합니다.
     }
   },
+  /**
+   * @function alive
+   * @description 서버 활성화 상태를 기록하는 함수입니다.
+   * @param {string} text - 활성화 상태 로그 텍스트입니다.
+   */
   alive: async (text) => {
     try {
-      await aliveLog(text);
+      await aliveLog(text); // 활성화 상태 로그를 기록하는 Mother 클래스의 메서드를 호출합니다.
     } catch (e) {
-      console.error(e);
+      console.error(e); // 오류가 발생하면 콘솔에 출력합니다.
     }
   },
 };
 
-const staticConst = process.env.HOME + "/samba";
-const portfolioConst = process.env.HOME + "/portfolioFilter/resource";
-const sambaToken = "__samba__";
-const homeliaisonOfficeConst = address.officeinfo.ghost.file.office;
-const designerPhotoConst = "사진_등록_포트폴리오";
-const designerFolderConst = "디자이너";
-const designerFolderConst2 = "partnership";
+const staticConst = process.env.HOME + "/samba"; // 정적 파일이 위치한 기본 경로를 환경 변수 HOME과 'samba' 디렉토리를 결합하여 설정합니다.
+const portfolioConst = process.env.HOME + "/portfolioFilter/resource"; // 포트폴리오 관련 파일이 위치한 기본 경로를 설정합니다.
+const sambaToken = "__samba__"; // Samba 관련 경로에서 사용하는 토큰을 정의합니다.
+const homeliaisonOfficeConst = address.officeinfo.ghost.file.office; // Homeliaison 관련 파일이 저장된 기본 경로를 설정합니다.
+const designerPhotoConst = "사진_등록_포트폴리오"; // 디자이너 사진 폴더의 이름을 정의합니다.
+const designerFolderConst = "디자이너"; // 디자이너 관련 폴더의 이름을 정의합니다.
+const designerFolderConst2 = "partnership"; // 파트너십 관련 폴더의 이름을 정의합니다.
 const centrex = {
-  host: "centrex.uplus.co.kr",
-  sessionConst: "PHPSESSID",
-  sessionValue: "18c31ed858c6824a885da1cc06daf388",
+  host: "centrex.uplus.co.kr", // Centrex 호스트 URL을 설정합니다.
+  sessionConst: "PHPSESSID", // PHP 세션의 이름을 설정합니다.
+  sessionValue: "18c31ed858c6824a885da1cc06daf388", // PHP 세션의 값을 설정합니다.
 };
-const sambaKeyword = "drive";
+const sambaKeyword = "drive"; // Samba에서 사용하는 기본 키워드를 정의합니다.
 const rootFolders = [
   {
-    name: "HomeLiaisonServer",
-    id: "1KOGtX31o16N6cfkdfyeAFrD9-2EFTO0d",
+    name: "HomeLiaisonServer", // 홈리에종 서버의 이름을 설정합니다.
+    id: "1KOGtX31o16N6cfkdfyeAFrD9-2EFTO0d", // 홈리에종 서버의 ID를 설정합니다.
   },
   {
-    name: "# 홈리에종",
-    id: "0B7youNEnMPEfQjBNZldFZXVlVTg",
+    name: "# 홈리에종", // 홈리에종의 다른 서버 이름을 설정합니다.
+    id: "0B7youNEnMPEfQjBNZldFZXVlVTg", // 홈리에종의 다른 서버 ID를 설정합니다.
   },
 ];
-const osTempFolder = "/tmp";
+const osTempFolder = "/tmp"; // 운영 체제의 임시 폴더 경로를 설정합니다.
 
+/**
+ * @class StaticRouter
+ * @description StaticLounge 서버의 라우터를 설정하는 클래스입니다.
+ */
 class StaticRouter {
+  /**
+   * @constructor
+   * @param {Object} MONGOC - MongoDB 연결 객체입니다.
+   * @param {Object} kakao - KakaoTalk 인스턴스입니다.
+   * @param {Object} human - HumanPacket 인스턴스입니다.
+   * @description StaticRouter 클래스의 인스턴스를 초기화합니다. 
+   * 라우터와 관련된 모든 클래스를 초기화하고 인스턴스 변수로 할당합니다.
+   */
   constructor (MONGOC, kakao, human) {
-    this.mother = mother;
-    this.back = back;
-    this.work = work
-    this.address = address;
-    this.JSDOM = JSDOM;
-    this.host = host;
-    this.mongo = MONGOC;
-    this.mongolocal = MONGOC;
-    this.report = new LogReport(MONGOC);
-    this.kakao = kakao;
-    this.human = human;
-    this.formidable = formidable;
-    this.imageReader = imageReader;
-    this.hangul = hangul;
-    this.drive = drive;
-    this.chrome = chrome;
-    this.sheets = sheets;
-    this.calendar = calendar;
-    this.analytics = analytics;
-    this.naver = naver;
-    this.facebook = facebook;
-    this.meta = meta;
-    this.google = google;
-    this.youtube = youtube;
-    this.bill = bill;
-    this.filter = filter;
-    this.staticConst = staticConst;
-    this.portfolioConst = portfolioConst;
-    this.sambaToken = sambaToken;
-    this.homeliaisonOfficeConst = homeliaisonOfficeConst;
-    this.designerPhotoConst = designerPhotoConst;
-    this.designerFolderConst = designerFolderConst;
-    this.designerFolderConst2 = designerFolderConst2;
-    this.centrex = centrex;
-    this.sambaKeyword = sambaKeyword;
-    this.rootFolders = rootFolders;
-    this.osTempFolder = osTempFolder;
+    this.mother = mother; // Mother 클래스의 인스턴스를 현재 객체의 mother 속성에 할당합니다.
+    this.back = back; // BackMaker 클래스의 인스턴스를 현재 객체의 back 속성에 할당합니다.
+    this.work = work; // BackWorker 클래스의 인스턴스를 현재 객체의 work 속성에 할당합니다.
+    this.address = address; // 서버 설정 정보를 포함하는 address 객체를 현재 객체의 address 속성에 할당합니다.
+    this.JSDOM = JSDOM; // JSDOM 객체를 현재 객체의 JSDOM 속성에 할당합니다.
+    this.host = host; // 서버 호스트 정보를 현재 객체의 host 속성에 할당합니다.
+    this.mongo = MONGOC; // 전달된 MongoDB 연결 객체를 현재 객체의 mongo 속성에 할당합니다.
+    this.mongolocal = MONGOC; // 로컬 MongoDB 연결 객체를 현재 객체의 mongolocal 속성에 할당합니다.
+    this.report = new LogReport(MONGOC); // LogReport 클래스의 인스턴스를 생성하여 현재 객체의 report 속성에 할당합니다.
+    this.kakao = kakao; // 전달된 KakaoTalk 인스턴스를 현재 객체의 kakao 속성에 할당합니다.
+    this.human = human; // 전달된 HumanPacket 인스턴스를 현재 객체의 human 속성에 할당합니다.
+    this.formidable = formidable; // Formidable 인스턴스를 현재 객체의 formidable 속성에 할당합니다.
+    this.imageReader = imageReader; // ImageReader 인스턴스를 현재 객체의 imageReader 속성에 할당합니다.
+    this.hangul = hangul; // ParsingHangul 인스턴스를 현재 객체의 hangul 속성에 할당합니다.
+    this.drive = drive; // GoogleDrive 인스턴스를 현재 객체의 drive 속성에 할당합니다.
+    this.chrome = chrome; // GoogleChrome 인스턴스를 현재 객체의 chrome 속성에 할당합니다.
+    this.sheets = sheets; // GoogleSheet 인스턴스를 현재 객체의 sheets 속성에 할당합니다.
+    this.calendar = calendar; // GoogleCalendar 인스턴스를 현재 객체의 calendar 속성에 할당합니다.
+    this.analytics = analytics; // GoogleAnalytics 인스턴스를 현재 객체의 analytics 속성에 할당합니다.
+    this.naver = naver; // NaverAPIs 인스턴스를 현재 객체의 naver 속성에 할당합니다.
+    this.facebook = facebook; // FacebookAPIs 인스턴스를 현재 객체의 facebook 속성에 할당합니다.
+    this.meta = meta; // 또 다른 FacebookAPIs 인스턴스를 현재 객체의 meta 속성에 할당합니다.
+    this.google = google; // GoogleAds 인스턴스를 현재 객체의 google 속성에 할당합니다.
+    this.youtube = youtube; // GoogleYoutube 인스턴스를 현재 객체의 youtube 속성에 할당합니다.
+    this.bill = bill; // BillMaker 인스턴스를 현재 객체의 bill 속성에 할당합니다.
+    this.filter = filter; // PortfolioFilter 인스턴스를 현재 객체의 filter 속성에 할당합니다.
+    this.staticConst = staticConst; // 정적 파일의 기본 경로를 현재 객체의 staticConst 속성에 할당합니다.
+    this.portfolioConst = portfolioConst; // 포트폴리오 관련 파일의 기본 경로를 현재 객체의 portfolioConst 속성에 할당합니다.
+    this.sambaToken = sambaToken; // Samba 관련 경로의 토큰을 현재 객체의 sambaToken 속성에 할당합니다.
+    this.homeliaisonOfficeConst = homeliaisonOfficeConst; // Homeliaison 관련 파일의 기본 경로를 현재 객체의 homeliaisonOfficeConst 속성에 할당합니다.
+    this.designerPhotoConst = designerPhotoConst; // 디자이너 사진 폴더의 이름을 현재 객체의 designerPhotoConst 속성에 할당합니다.
+    this.designerFolderConst = designerFolderConst; // 디자이너 관련 폴더의 이름을 현재 객체의 designerFolderConst 속성에 할당합니다.
+    this.designerFolderConst2 = designerFolderConst2; // 파트너십 관련 폴더의 이름을 현재 객체의 designerFolderConst2 속성에 할당합니다.
+    this.centrex = centrex; // Centrex 호스트와 세션 정보를 현재 객체의 centrex 속성에 할당합니다.
+    this.sambaKeyword = sambaKeyword; // Samba 관련 기본 키워드를 현재 객체의 sambaKeyword 속성에 할당합니다.
+    this.rootFolders = rootFolders; // 루트 폴더 정보를 현재 객체의 rootFolders 속성에 할당합니다.
+    this.osTempFolder = osTempFolder; // 운영 체제의 임시 폴더 경로를 현재 객체의 osTempFolder 속성에 할당합니다.
   }
 
+  /**
+   * @function setRouter
+   * @description StaticRouter 클래스에서 Express 라우터를 설정하는 함수입니다.
+   * 이 함수는 다양한 종속성을 로드하고, 라우터의 엔드포인트를 정의합니다.
+   * @returns {Object} Express 라우터 객체를 반환합니다.
+   */
   setRouter () {
+    // 현재 StaticRouter 인스턴스를 instance 변수에 할당합니다.
     const instance = this;
+
+    // Express 모듈을 불러옵니다. Express는 Node.js의 웹 프레임워크입니다.
     const express = require("express");
+
+    // Express 라우터 인스턴스를 생성합니다. 이 라우터는 새로운 요청 경로를 정의하는 데 사용됩니다.
     const router = express.Router();
+
+    // StaticRouter 인스턴스의 mother 속성을 mother 변수에 할당합니다.
     const mother = this.mother;
+
+    // StaticRouter 인스턴스의 back 속성을 back 변수에 할당합니다.
     const back = this.back;
+
+    // StaticRouter 인스턴스의 work 속성을 work 변수에 할당합니다.
     const work = this.work;
+
+    // StaticRouter 인스턴스의 address 속성을 address 변수에 할당합니다. 서버의 다양한 설정 정보가 포함되어 있습니다.
     const address = this.address;
+
+    // StaticRouter 인스턴스의 JSDOM 속성을 JSDOM 변수에 할당합니다. 이는 서버에서 DOM을 생성하고 조작할 수 있게 합니다.
     const JSDOM = this.JSDOM;
+
+    // StaticRouter 인스턴스의 host 속성을 host 변수에 할당합니다. 서버 호스트 정보가 포함되어 있습니다.
     const host = this.host;
+
+    // StaticRouter 인스턴스의 mongo 속성을 mongo 변수에 할당합니다. MongoDB 연결 객체가 포함되어 있습니다.
     const mongo = this.mongo;
+
+    // StaticRouter 인스턴스의 mongolocal 속성을 mongolocal 변수에 할당합니다. 로컬 MongoDB 연결 객체가 포함되어 있습니다.
     const mongolocal = this.mongolocal;
+
+    // StaticRouter 인스턴스의 report 속성을 report 변수에 할당합니다. 로그 보고서를 관리하는 객체가 포함되어 있습니다.
     const report = this.report;
+
+    // StaticRouter 인스턴스의 kakao 속성을 kakao 변수에 할당합니다. KakaoTalk 관련 기능을 처리하는 인스턴스입니다.
     const kakao = this.kakao;
+
+    // StaticRouter 인스턴스의 human 속성을 human 변수에 할당합니다. HumanPacket 관련 기능을 처리하는 인스턴스입니다.
     const human = this.human;
+
+    // StaticRouter 인스턴스의 formidable 속성을 formidable 변수에 할당합니다. 파일 업로드를 처리하는 인스턴스입니다.
     const formidable = this.formidable;
+
+    // StaticRouter 인스턴스의 imageReader 속성을 imageReader 변수에 할당합니다. 이미지 읽기 및 처리 기능을 담당합니다.
     const imageReader = this.imageReader;
+
+    // StaticRouter 인스턴스의 hangul 속성을 hangul 변수에 할당합니다. 한글 파싱을 처리하는 인스턴스입니다.
     const hangul = this.hangul;
+
+    // StaticRouter 인스턴스의 drive 속성을 drive 변수에 할당합니다. Google Drive API와 상호작용을 처리합니다.
     const drive = this.drive;
+
+    // StaticRouter 인스턴스의 chrome 속성을 chrome 변수에 할당합니다. Google Chrome API와 상호작용을 처리합니다.
     const chrome = this.chrome;
+
+    // StaticRouter 인스턴스의 sheets 속성을 sheets 변수에 할당합니다. Google Sheets API와 상호작용을 처리합니다.
     const sheets = this.sheets;
+
+    // StaticRouter 인스턴스의 calendar 속성을 calendar 변수에 할당합니다. Google Calendar API와 상호작용을 처리합니다.
     const calendar = this.calendar;
+
+    // StaticRouter 인스턴스의 analytics 속성을 analytics 변수에 할당합니다. Google Analytics API와 상호작용을 처리합니다.
     const analytics = this.analytics;
+
+    // StaticRouter 인스턴스의 naver 속성을 naver 변수에 할당합니다. Naver API와 상호작용을 처리합니다.
     const naver = this.naver;
+
+    // StaticRouter 인스턴스의 facebook 속성을 facebook 변수에 할당합니다. Facebook API와 상호작용을 처리합니다.
     const facebook = this.facebook;
+
+    // StaticRouter 인스턴스의 meta 속성을 meta 변수에 할당합니다. 메타 데이터를 처리하는 Facebook API 인스턴스입니다.
     const meta = this.meta;
+
+    // StaticRouter 인스턴스의 google 속성을 google 변수에 할당합니다. Google Ads API와 상호작용을 처리합니다.
     const google = this.google;
+
+    // StaticRouter 인스턴스의 youtube 속성을 youtube 변수에 할당합니다. Google Youtube API와 상호작용을 처리합니다.
     const youtube = this.youtube;
+
+    // StaticRouter 인스턴스의 bill 속성을 bill 변수에 할당합니다. 청구서 생성을 관리하는 인스턴스입니다.
     const bill = this.bill;
+
+    // StaticRouter 인스턴스의 filter 속성을 filter 변수에 할당합니다. 포트폴리오 필터링 기능을 관리합니다.
     const filter = this.filter;
+
+    // StaticRouter 인스턴스의 staticConst 속성을 staticConst 변수에 할당합니다. 정적 파일의 기본 경로를 관리합니다.
     const staticConst = this.staticConst;
+
+    // StaticRouter 인스턴스의 portfolioConst 속성을 portfolioConst 변수에 할당합니다. 포트폴리오 파일의 기본 경로를 관리합니다.
     const portfolioConst = this.portfolioConst;
+
+    // StaticRouter 인스턴스의 sambaToken 속성을 sambaToken 변수에 할당합니다. Samba 관련 경로에서 사용하는 토큰을 관리합니다.
     const sambaToken = this.sambaToken;
+
+    // StaticRouter 인스턴스의 homeliaisonOfficeConst 속성을 homeliaisonOfficeConst 변수에 할당합니다. Homeliaison 관련 파일의 기본 경로를 관리합니다.
     const homeliaisonOfficeConst = this.homeliaisonOfficeConst;
+
+    // StaticRouter 인스턴스의 designerPhotoConst 속성을 designerPhotoConst 변수에 할당합니다. 디자이너 사진 폴더의 이름을 관리합니다.
     const designerPhotoConst = this.designerPhotoConst;
+
+    // StaticRouter 인스턴스의 designerFolderConst 속성을 designerFolderConst 변수에 할당합니다. 디자이너 관련 폴더의 이름을 관리합니다.
     const designerFolderConst = this.designerFolderConst;
+
+    // StaticRouter 인스턴스의 designerFolderConst2 속성을 designerFolderConst2 변수에 할당합니다. 파트너십 관련 폴더의 이름을 관리합니다.
     const designerFolderConst2 = this.designerFolderConst2;
+
+    // StaticRouter 인스턴스의 centrex 속성을 centrex 변수에 할당합니다. Centrex 호스트와 세션 정보를 관리합니다.
     const centrex = this.centrex;
+
+    // StaticRouter 인스턴스의 sambaKeyword 속성을 sambaKeyword 변수에 할당합니다. Samba 관련 기본 키워드를 관리합니다.
     const sambaKeyword = this.sambaKeyword;
+
+    // StaticRouter 인스턴스의 rootFolders 속성을 rootFolders 변수에 할당합니다. 루트 폴더 정보를 관리합니다.
     const rootFolders = this.rootFolders;
+
+    // StaticRouter 인스턴스의 osTempFolder 속성을 osTempFolder 변수에 할당합니다. 운영 체제의 임시 폴더 경로를 관리합니다.
     const osTempFolder = this.osTempFolder;
 
+    /**
+     * @route GET /
+     * @description 루트 경로 ("/")에 대한 GET 요청을 처리하는 라우터입니다.
+     * 이 엔드포인트는 클라이언트를 지정된 URL로 리다이렉트합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.get([ "/" ], async (req, res) => {
       try {
+        // 응답 헤더를 설정합니다. 클라이언트와 서버 간의 CORS(Cross-Origin Resource Sharing) 문제를 해결하는 데 사용됩니다.
         res.set({
-          "Content-Type": "text/html",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "text/html", // 응답의 콘텐츠 타입을 HTML로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
         });
+
+        // 클라이언트를 지정된 URL로 리다이렉트하는 HTML 스크립트를 응답 본문으로 전송합니다.
         res.send((`<html><script>window.location.href = "https://${address.officeinfo.host}:3002/client";</script></html>`));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set({
-          "Content-Type": "text/html",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        // 오류가 발생하면 logger.error 메서드를 통해 오류를 로깅합니다. 
+        // Mother 클래스의 메서드를 활용하여 오류를 기록하고 알림을 보낼 수 있습니다.
+        logger.error(e, req).catch((e) => { 
+          console.log(e); // 만약 로깅 중 추가 오류가 발생하면 콘솔에 출력합니다.
         });
+
+        // 오류가 발생한 경우에도 동일한 응답 헤더를 설정합니다.
+        res.set({
+          "Content-Type": "text/html", // 응답의 콘텐츠 타입을 HTML로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
+        });
+
+        // 오류가 발생한 경우에도 클라이언트를 지정된 URL로 리다이렉트하는 HTML 스크립트를 응답 본문으로 전송합니다.
         res.send((`<html><script>window.location.href = "https://${address.officeinfo.host}:3002/client";</script></html>`));
       }
     });
 
+    /**
+     * @route GET /:id
+     * @description 동적 경로 ("/:id")에 대한 GET 요청을 처리하는 라우터입니다.
+     * 클라이언트가 전달한 경로 매개변수(id)에 따라 다양한 작업을 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.get([ "/:id" ], async (req, res) => {
+
+      // 응답 헤더를 설정합니다. JSON 데이터를 전송할 준비를 합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청된 id가 "ssl"인 경우
         if (req.params.id === "ssl") {
+
+          // 디스크 사용량을 읽어오는 diskReading 메서드를 호출합니다.
           const disk = await diskReading();
+
+          // MongoDB의 활성 상태를 확인하는 aliveMongo 메서드를 호출합니다.
           const aliveMongoResult = await aliveMongo();
+
+          // dailyAnalytics 함수는 매일 수행되는 분석 작업을 관리합니다.
           const dailyAnalytics = async function () {
             try {
               let date;
               let requestString;
-          
+
+              // 날짜 객체를 생성하고, 날짜를 세 번 줄입니다.
               date = new Date();
               date.setDate(date.getDate() - 1);
               date.setDate(date.getDate() - 1);
               date.setDate(date.getDate() - 1);
-          
+
+              // 요청 문자열을 생성합니다. 날짜를 여러 형식으로 결합합니다.
               requestString = '';
               requestString += dateToString(date);
               requestString += ',';
@@ -253,570 +421,892 @@ class StaticRouter {
               requestString += ',';
               date.setDate(date.getDate() + 1);
               requestString += dateToString(date);
-          
-              await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
-          
+
+              // requestSystem 메서드를 사용하여 외부 API에 요청을 보냅니다.
+              await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", 
+                                  { date: requestString }, 
+                                  { headers: { "Content-Type": "application/json" } });
+
             } catch (e) {
-              console.log(e);
+              console.log(e); // 오류가 발생하면 콘솔에 출력합니다.
             }
           }
-  
+
+          // dailyAnalytics 함수를 실행하고, 완료되면 로그를 기록합니다.
           dailyAnalytics().then(() => {
-            return logger.cron("front reflection, daily campaign, daily channel request done");
+            return logger.cron("front reflection, daily campaign, daily channel request done"); // 정기 작업 완료 로그를 기록합니다.
           }).catch((err) => {
-            logger.error(err, req).catch((e) => { console.log(e); });
+            logger.error(err, req).catch((e) => { console.log(e); }); // 오류가 발생하면 오류를 로깅합니다.
           });
+
+          // 디스크 사용량과 MongoDB 상태를 JSON 형태로 응답합니다.
           res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
+
         } else if (req.params.id === "disk") {
+          // 요청된 id가 "disk"인 경우 디스크 사용량을 JSON 형태로 응답합니다.
           const disk = await diskReading();
           res.send(JSON.stringify({ disk: disk.toArray() }));
+
         } else if (req.params.id === "ip") {
+          // 요청된 id가 "ip"인 경우 클라이언트의 IP 주소를 응답합니다.
           const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
           res.set({
-            "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+            "Content-Type": "text/plain", // 응답의 콘텐츠 타입을 텍스트로 설정합니다.
+            "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
           });
-          res.send(String(ip).replace(/[^0-9\.]/gi, ''));
+          res.send(String(ip).replace(/[^0-9\.]/gi, '')); // IP 주소에서 숫자와 점(.)만 추출하여 응답합니다.
+
         } else if (req.params.id === "code") {
+          // 요청된 id가 "code"인 경우 특정 URL로 리다이렉트하는 HTML을 응답합니다.
           res.set({
-            "Content-Type": "text/html",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+            "Content-Type": "text/html", // 응답의 콘텐츠 타입을 HTML로 설정합니다.
+            "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
           });
           res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:38080?folder=/home/ubuntu/robot";</script></html>`));
+
         } else {
+          // 그 외의 id 값에 대해서는 기본 리다이렉트 처리를 수행합니다.
           res.set({
-            "Content-Type": "text/html",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+            "Content-Type": "text/html", // 응답의 콘텐츠 타입을 HTML로 설정합니다.
+            "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
           });
           res.send((`<html><script>window.location.href = "https://${instance.address.officeinfo.host}:3002/${req.params.id}";</script></html>`));
         }
-  
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형태로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ error: e.message }));
       }
     });
 
+    /**
+     * @route GET /tools/address
+     * @description 주소 입력 도구 페이지를 제공하는 라우터입니다.
+     * 이 페이지는 다음 우편번호 API를 사용하여 사용자가 주소를 입력할 수 있도록 합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.get([ "/tools/address" ], async (req, res) => {
       try {
+        // HTML 콘텐츠를 정의합니다. 이 콘텐츠는 다음 우편번호 API를 사용하여 주소 입력 창을 제공합니다.
         const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
-          <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
+          <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style>
+          <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
           let div_clone, img_clone;div_clone = document.createElement("DIV");img_clone = document.createElement("IMG");img_clone.setAttribute("src", "https://t1.daumcdn.net/postcode/resource/images/close.png");img_clone.setAttribute("id", "btnFoldWrap");div_clone.appendChild(img_clone);document.body.appendChild(div_clone);
           new daum.Postcode({
               oncomplete: function (data) {
                 let addr = '', extraAddr = '';
-                if (data.userSelectedType === 'R') {
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택한 경우
                   addr = data.roadAddress;
-                  if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) { extraAddr += data.bname; }
-                  if (data.buildingName !== '' && data.apartment === 'Y') { extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName); }
-                  if (extraAddr !== '') { extraAddr = ' (' + extraAddr + ')'; }
-                } else { addr = data.jibunAddress; }
+                  if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) { // 법정동명에 '동', '로', '가'가 포함된 경우
+                    extraAddr += data.bname; 
+                  }
+                  if (data.buildingName !== '' && data.apartment === 'Y') { // 건물 이름이 있고, 아파트인 경우
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                  }
+                  if (extraAddr !== '') { // 추가 주소가 있는 경우 괄호로 묶어 표시합니다.
+                    extraAddr = ' (' + extraAddr + ')';
+                  }
+                } else { // 사용자가 지번 주소를 선택한 경우
+                  addr = data.jibunAddress;
+                }
+                // 상세 주소를 입력받고, 전체 주소를 부모 창으로 전송합니다.
                 const detail = prompt("상세주소를 입력해주세요! : " + addr + extraAddr);
                 window.parent.postMessage(addr + extraAddr + " " + detail, '*');
-              }, width : '100%', height : '100%' }).embed(div_clone);</script></body></html>`;
+              }, 
+              width : '100%', height : '100%' 
+          }).embed(div_clone);</script></body></html>`;
+
+        // 응답 헤더에 콘텐츠 타입을 HTML로 설정합니다.
         res.set("Content-Type", "text/html");
+
+        // HTML 콘텐츠를 클라이언트에 응답으로 전송합니다.
         res.send(html);
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
+        // 오류가 발생하면 오류를 로깅합니다.
+        logger.error(e, req).catch((e) => { 
+          console.log(e); // 로깅 중 오류가 발생하면 콘솔에 출력합니다.
+        });
       }
     });
 
+    /**
+     * @route POST /listFiles
+     * @description 지정된 경로의 파일 목록을 반환하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로를 기준으로 파일 목록을 생성하여 응답합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/listFiles" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에서 path가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invaild post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        let target;
-        let list;
-    
+
+        let target; // 검색할 대상 경로를 저장할 변수입니다.
+        let list; // 파일 목록을 저장할 변수입니다.
+
+        // 요청된 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
-    
+
+        // 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+        // leafParsing 메서드를 사용하여 대상 경로의 파일 목록을 가져옵니다.
         list = await leafParsing(target);
+
+        // 파일 목록이 배열이 아닌 경우 빈 배열로 초기화합니다.
         if (!Array.isArray(list)) {
           list = [];
         }
-    
+
+        // 파일 목록에서 각 파일의 절대 경로를 다시 sambaToken으로 변환하고, 필터링 작업을 수행합니다.
         list = list.map((i) => {
           i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), sambaToken);
           return i;
         }).filter((i) => {
+          // 파일명에 '._'로 시작하는 항목을 제거합니다.
           return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
         }).filter((i) => {
+          // 파일명이 '.DS_Store'인 항목을 제거합니다.
           return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
         });
-    
+
+        // 필터링된 파일 목록을 JSON 형식으로 응답합니다.
         res.send(JSON.stringify(list));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /searchFiles
+     * @description 지정된 경로와 키워드를 기준으로 파일을 검색하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로와 검색 키워드에 따라 파일 목록을 검색하여 응답합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/searchFiles" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 path, keyword, mode가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined || req.body.keyword === undefined || req.body.mode === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        let target;
-        let result;
-        let list;
-    
+
+        let target; // 검색할 대상 경로를 저장할 변수입니다.
+        let result; // 검색 결과를 저장할 변수입니다.
+        let list; // 파일 목록을 저장할 변수입니다.
+
+        // 요청된 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
-    
+
+        // 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+        // 검색 모드가 "entire"인 경우 전체 경로를 검색합니다.
         if (req.body.mode === "entire") {
-          list = await leafParsing(target, true, req.body.keyword);
+          list = await leafParsing(target, true, req.body.keyword); // leafParsing 메서드를 사용하여 전체 파일 경로에서 검색합니다.
           if (!Array.isArray(list)) {
-            throw new Error(list.error);
+            throw new Error(list.error); // 검색 결과가 배열이 아닌 경우 오류를 발생시킵니다.
           }
         } else {
-          list = await leafParsing(target, true, req.body.keyword);
+          // 검색 모드가 "entire"가 아닌 경우 지정된 경로에서만 검색합니다.
+          list = await leafParsing(target, true, req.body.keyword); // leafParsing 메서드를 사용하여 지정된 경로에서 검색합니다.
           if (!Array.isArray(list)) {
-            throw new Error(list.error);
+            throw new Error(list.error); // 검색 결과가 배열이 아닌 경우 오류를 발생시킵니다.
           }
+          // 검색된 파일 목록에서 절대 경로가 target과 일치하는 항목만 필터링합니다.
           list = list.filter((obj) => {
             return (new RegExp(target)).test(obj.absolute);
           }).filter((obj) => {
+            // 대상 경로의 깊이와 검색된 파일 경로의 깊이가 동일한 항목만 필터링합니다.
             return obj.absolute.split("/").length === target.split("/").length + 1
           });
         }
-    
+
+        // 파일 목록에서 각 파일의 절대 경로를 다시 sambaToken으로 변환하고, 필터링 작업을 수행합니다.
         list = list.map((i) => {
           i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), sambaToken);
           return i;
         }).filter((i) => {
+          // 파일명에 '._'로 시작하는 항목을 제거합니다.
           return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
         }).filter((i) => {
+          // 파일명이 '.DS_Store'인 항목을 제거합니다.
           return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
         });
-    
+
+        // 필터링된 파일 목록을 JSON 형식으로 응답합니다.
         res.send(JSON.stringify(list));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /readDir, /readFolder
+     * @description 지정된 경로의 디렉토리 또는 폴더 내용을 읽어오는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로에 따라 해당 디렉토리의 파일 및 폴더 목록을 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/readDir", "/readFolder" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 path가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        let target;
-        let list;
-    
+
+        let target; // 읽어올 대상 경로를 저장할 변수입니다.
+        let list; // 디렉토리 내용을 저장할 변수입니다.
+
+        // 요청된 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
-    
+
+        // 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         target = target.replace(new RegExp("^" + sambaToken, "i"), staticConst);
-    
+
+        // fileSystem 메서드를 사용하여 지정된 경로의 폴더 내용을 읽어옵니다.
         list = await fileSystem(`readFolder`, [ target ]);
-    
+
+        // 읽어온 폴더 내용을 JSON 형식으로 응답합니다.
         res.send(JSON.stringify(list));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /readFile
+     * @description 지정된 경로의 파일 내용을 읽어오는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로에 있는 파일의 내용을 문자열로 읽어와 JSON 형식으로 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/readFile" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 path가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        let target;
-        let contents;
-    
+
+        let target; // 읽어올 파일 경로를 저장할 변수입니다.
+        let contents; // 파일 내용을 저장할 변수입니다.
+
+        // 요청된 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
-    
+
+        // 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+        // fileSystem 메서드를 사용하여 지정된 경로의 파일 내용을 읽어옵니다.
         contents = await fileSystem(`readString`, [ target ]);
-    
+
+        // 읽어온 파일 내용을 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ contents }));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /findFolderId
+     * @description 지정된 경로의 폴더 ID를 찾는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로를 분석하여 해당 폴더의 Google Drive ID를 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/findFolderId" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 path가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        const { path } = req.body;
-        const thisFolderArr = path.replace(/\/$/i, '').replace(/\/$/i, '').split("/");
-        let sambaIndex;
-        let thisRootId;
-        let thisRootIndex;
-        let chainTarget;
-        let parentId;
-        let thisId;
-        let finalId;
-    
+
+        const { path } = req.body; // 요청 본문에서 경로를 추출합니다.
+        const thisFolderArr = path.replace(/\/$/i, '').replace(/\/$/i, '').split("/"); // 경로의 마지막 슬래시를 제거하고, 경로를 배열로 변환합니다.
+        let sambaIndex; // Samba 경로의 인덱스를 저장할 변수입니다.
+        let thisRootId; // 최상위 폴더의 ID를 저장할 변수입니다.
+        let thisRootIndex; // 최상위 폴더의 인덱스를 저장할 변수입니다.
+        let chainTarget; // 폴더 체인을 저장할 변수입니다.
+        let parentId; // 부모 폴더 ID를 저장할 변수입니다.
+        let thisId; // 현재 폴더 ID를 저장할 변수입니다.
+        let finalId; // 최종 폴더 ID를 저장할 변수입니다.
+
+        // 경로에서 Samba 키워드의 위치를 찾습니다.
         sambaIndex = thisFolderArr.findIndex((str) => { return str === sambaKeyword });
-    
+
+        // Samba 키워드 뒤에 루트 폴더가 정의되지 않았거나, 유효하지 않은 경우 예외를 발생시킵니다.
         if (thisFolderArr[sambaIndex + 1] === undefined || !rootFolders.map(({ name }) => { return name; }).includes(thisFolderArr[sambaIndex + 1])) {
           throw new Error("invalid path 1");
         }
-    
+
+        // 최상위 폴더의 인덱스를 설정하고, 해당 폴더의 ID를 찾습니다.
         thisRootIndex = sambaIndex + 1;
         thisRootId = rootFolders.find(({ name }) => { return name === thisFolderArr[thisRootIndex] }).id;
-    
+
+        // 체인 타겟을 최상위 폴더 다음의 경로로 설정합니다.
         chainTarget = thisFolderArr.slice(thisRootIndex + 1);
-    
-        finalId = null;
+
+        finalId = null; // 최종 ID를 초기화합니다.
         if (chainTarget.length > 0) {
-    
+          // 폴더 체인에 따라 폴더 ID를 찾습니다.
           parentId = thisRootId;
           for (let folderName of chainTarget) {
-            thisId = await drive.searchFolderId_inPython(folderName, parentId);
+            thisId = await drive.searchFolderId_inPython(folderName, parentId); // 폴더 ID를 찾기 위해 searchFolderId_inPython 메서드를 사용합니다.
             if (thisId === null) {
-              throw new Error("invalid path 2");
+              throw new Error("invalid path 2"); // 유효하지 않은 경로인 경우 예외를 발생시킵니다.
             }
-            parentId = thisId;
+            parentId = thisId; // 현재 폴더의 ID를 부모 ID로 설정합니다.
           }
-    
-          finalId = thisId;
-    
+
+          finalId = thisId; // 최종 폴더 ID를 설정합니다.
+
         } else {
-          finalId = thisRootId;
+          finalId = thisRootId; // 체인 타겟이 없으면 최상위 폴더의 ID를 최종 ID로 설정합니다.
         }
-    
+
+        // 최종 폴더 ID가 null인 경우 예외를 발생시킵니다.
         if (finalId === null) {
           throw new Error("invalid path 3");
         }
-    
+
+        // 최종 폴더 ID를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ id: finalId }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /findFileId
+     * @description 지정된 부모 폴더 내에서 파일의 ID를 찾는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 파일 이름과 부모 폴더 ID를 사용하여 해당 파일의 Google Drive ID를 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/findFileId" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 parent(부모 폴더 ID)와 name(파일 이름)이 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.parent === undefined || req.body.name === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        const { name, parent } = req.body;
+
+        const { name, parent } = req.body; // 요청 본문에서 파일 이름(name)과 부모 폴더 ID(parent)를 추출합니다.
+        
+        // Google Drive에서 파일 ID를 검색하기 위해 searchFileId_inPython 메서드를 호출합니다.
         const finalId = await drive.searchFileId_inPython(name, parent);
+
+        // 파일 ID가 null인 경우, 파일을 찾을 수 없음을 알리는 예외를 발생시킵니다.
         if (finalId === null) {
           throw new Error("cannot found");
         }
+
+        // 찾은 파일 ID를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ id: finalId }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /getPathFromId
+     * @description Google Drive 파일 또는 폴더 ID를 경로로 변환하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 ID를 사용하여 해당 파일 또는 폴더의 경로를 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/getPathFromId" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 id가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.id === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        const { id } = req.body;
-        let resultObj;
-    
+
+        const { id } = req.body; // 요청 본문에서 ID를 추출합니다.
+        let resultObj; // ID에 해당하는 파일 또는 폴더 정보를 저장할 객체입니다.
+
+        // Google Drive에서 파일 또는 폴더 정보를 가져오기 위해 get_targetInfo_inPython 메서드를 호출합니다.
         resultObj = await drive.get_targetInfo_inPython(id);
+        
+        // 반환된 객체가 null인 경우, 유효하지 않은 ID임을 알리는 예외를 발생시킵니다.
         if (resultObj === null) {
           throw new Error("invalid id");
         }
-    
+
+        // 가져온 정보를 바탕으로 경로를 생성하여 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ path: sambaToken + "/" + sambaKeyword + resultObj.absolute }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /moveFiles
+     * @description 파일을 지정된 폴더로 이동하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 파일 경로 목록을 지정된 폴더로 이동시킵니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/moveFiles" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 fromItems(이동할 파일 목록)과 toFolder(이동할 폴더)가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.fromItems === undefined || req.body.toFolder === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
+
+        // equalJson 메서드를 사용하여 요청 본문을 깊은 복사한 후, fromItems와 toFolder를 추출합니다.
         const { fromItems, toFolder } = equalJson(req.body);
+
+        // fromItems가 배열이 아니거나 toFolder가 문자열이 아닌 경우 예외를 발생시킵니다.
         if (!Array.isArray(fromItems) || typeof toFolder !== "string") {
-          throw new Error("invalid post 2");
+          throw new Error("invalid post 2"); // 유효하지 않은 데이터 형식에 대한 오류 메시지.
         }
+
+        // fromItems의 모든 항목이 문자열인지 확인합니다. 그렇지 않은 경우 예외를 발생시킵니다.
         if (!fromItems.every((str) => { return typeof str === "string" })) {
-          throw new Error("invalid post 3");
+          throw new Error("invalid post 3"); // 유효하지 않은 항목에 대한 오류 메시지.
         }
-        let target;
-        let toTarget;
-    
+
+        let target; // 각 파일의 실제 경로를 저장할 변수입니다.
+        let toTarget; // 이동할 대상 폴더의 실제 경로를 저장할 변수입니다.
+
+        // 이동할 폴더의 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         toTarget = toFolder.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (toTarget.trim() === '') {
           toTarget = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(toTarget)) {
           toTarget = sambaToken + "/" + toTarget;
         }
+
+        // 이동할 대상 폴더 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         toTarget = toTarget.replace(/__samba__/gi, staticConst);
-    
+
+        // 이동할 각 파일 경로에 대해 반복문을 실행합니다.
         for (let str of fromItems) {
+          // 파일 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
           target = str.replace(/^\//i, '').replace(/\/$/i, '');
+
+          // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
           if (target.trim() === '') {
             target = sambaToken;
           }
+
+          // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
           if (!/^__/.test(target)) {
             target = sambaToken + "/" + target;
           }
+
+          // 파일 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
           target = target.replace(/__samba__/gi, staticConst);
+
+          // shellExec 메서드를 사용하여 파일을 지정된 폴더로 이동합니다.
           await shellExec("mv", [ target, toTarget + "/" ]);
         }
-    
+
+        // 파일 이동 작업이 완료되면 성공 메시지를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ message: "success" }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /createNewSheets
+     * @description 새로운 Google Sheets 문서를 생성하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 문서 이름과 부모 폴더 ID를 사용하여 Google Sheets 문서를 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/createNewSheets" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 name(새로 만들 문서 이름)과 parent(부모 폴더 ID)가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.name === undefined || req.body.parent === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
+
+        // equalJson 메서드를 사용하여 요청 본문을 깊은 복사한 후, name과 parent를 추출합니다.
         const { name, parent } = equalJson(req.body);
-        let sheetsId;
+
+        let sheetsId; // 생성된 Google Sheets의 ID를 저장할 변수입니다.
+
+        // Google Sheets 문서를 생성하기 위해 create_newSheets_inPython 메서드를 호출합니다.
         sheetsId = await sheets.create_newSheets_inPython(name, parent);
+
+        // 성공 메시지와 함께 생성된 문서의 ID를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ message: "success", sheetsId }));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /createNewLinkFile
+     * @description 새로운 링크 파일을 생성하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 링크와 파일 이름, 부모 폴더를 사용하여 링크 파일을 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/createNewLinkFile" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 name(파일 이름), parent(부모 폴더), link(링크)가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.name === undefined || req.body.parent === undefined || req.body.link === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
+
+        // equalJson 메서드를 사용하여 요청 본문을 깊은 복사한 후, name, parent, link를 추출합니다.
         const { name, parent, link } = equalJson(req.body);
-        let json;
-        let target;
-    
+        let json; // 링크 정보를 저장할 JSON 객체입니다.
+        let target; // 부모 폴더의 실제 경로를 저장할 변수입니다.
+
+        // 부모 폴더 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = parent.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
+
+        // 부모 폴더 경로에서 sambaToken을 실제 파일 경로로 변환합니다.
         target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
-    
+
+        // 링크 정보를 JSON 형식으로 변환합니다.
         json = {
-          url: stringToLink(link),
-          hex: Buffer.from(link, "utf8").toString("hex"),
+          url: stringToLink(link), // 링크를 URL 형식으로 변환합니다.
+          hex: Buffer.from(link, "utf8").toString("hex"), // 링크를 헥사(16진수) 형식으로 변환하여 저장합니다.
         };
+
+        // 파일 시스템에 JSON 데이터를 기록하여 링크 파일을 생성합니다.
         await fileSystem(`writeJson`, [ target + "/" + name + ".link", json ]);
-    
+
+        // 성공 메시지를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ message: "success" }));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /renameTargets
+     * @description 여러 파일 또는 폴더의 이름을 변경하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 원본 경로와 변경할 경로를 사용하여 파일 또는 폴더의 이름을 변경합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/renameTargets" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 from(원본 경로 목록)과 to(변경할 경로 목록)가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.from === undefined || req.body.to === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
+
+        // equalJson 메서드를 사용하여 요청 본문을 깊은 복사한 후, from과 to를 추출합니다.
         const { from, to } = equalJson(req.body);
+
+        // from과 to가 배열인지 확인하고, 그렇지 않은 경우 예외를 발생시킵니다.
         if (!Array.isArray(from) || !Array.isArray(to)) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 유효하지 않은 데이터 형식에 대한 오류 메시지.
         }
-        let finalFrom, finalTo;
-    
-        finalFrom = [];
+
+        let finalFrom = []; // 최종 원본 경로 목록을 저장할 배열입니다.
+        let finalTo = []; // 최종 변경 경로 목록을 저장할 배열입니다.
+
+        // 원본 경로 목록을 처리하여 최종 경로로 변환합니다.
         for (let target of from) {
           if (typeof target !== "string") {
-            throw new Error("invalid post");
+            throw new Error("invalid post"); // 유효하지 않은 경로 형식에 대한 오류 메시지.
           }
+          // 경로의 시작과 끝에 있는 슬래시를 제거합니다.
           target = target.replace(/^\//i, '').replace(/\/$/i, '');
+          // 경로가 빈 문자열일 경우 기본 경로인 "__samba__"로 설정합니다.
           if (target.trim() === '') {
             target = "__samba__";
           }
+          // 경로가 "__"로 시작하지 않으면 "__samba__"를 경로 앞에 추가합니다.
           if (!/^__/.test(target)) {
             target = "__samba__" + "/" + target;
           }
+          // "__samba__" 토큰을 실제 파일 경로로 변환합니다.
           target = target.replace(/__samba__/gi, staticConst);
-          finalFrom.push(target);
+          finalFrom.push(target); // 최종 경로를 배열에 추가합니다.
         }
-    
-        finalTo = [];
+
+        // 변경할 경로 목록을 처리하여 최종 경로로 변환합니다.
         for (let target of to) {
           if (typeof target !== "string") {
-            throw new Error("invalid post");
+            throw new Error("invalid post"); // 유효하지 않은 경로 형식에 대한 오류 메시지.
           }
+          // 경로의 시작과 끝에 있는 슬래시를 제거합니다.
           target = target.replace(/^\//i, '').replace(/\/$/i, '');
+          // 경로가 빈 문자열일 경우 기본 경로인 "__samba__"로 설정합니다.
           if (target.trim() === '') {
             target = "__samba__";
           }
+          // 경로가 "__"로 시작하지 않으면 "__samba__"를 경로 앞에 추가합니다.
           if (!/^__/.test(target)) {
             target = "__samba__" + "/" + target;
           }
+          // "__samba__" 토큰을 실제 파일 경로로 변환합니다.
           target = target.replace(/__samba__/gi, staticConst);
-          finalTo.push(target);
+          finalTo.push(target); // 최종 경로를 배열에 추가합니다.
         }
-    
+
+        // 원본 경로와 변경 경로의 길이가 동일하지 않으면 예외를 발생시킵니다.
         if (finalFrom.length !== finalTo.length) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 경로 길이가 일치하지 않는 경우의 오류 메시지.
         }
-    
+
+        // 각 파일 또는 폴더를 이동하여 이름을 변경합니다.
         for (let i = 0; i < finalFrom.length; i++) {
-          await shellExec("mv", [ finalFrom[i], finalTo[i] ]);
+          await shellExec("mv", [ finalFrom[i], finalTo[i] ]); // shellExec 메서드를 사용하여 이름을 변경합니다.
         }
-    
+
+        // 이름 변경 작업이 완료되면 성공 메시지를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ message: "succcess" }));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /generalFileUpload
+     * @description 일반 파일을 업로드하는 라우터입니다.
+     * 클라이언트가 업로드한 파일을 지정된 경로에 저장합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/generalFileUpload" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // formidable 객체를 생성하여 파일 업로드를 처리합니다. 여러 파일을 허용하고, 최대 파일 크기를 설정합니다.
         const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+
+        // form.parse 메서드를 사용하여 요청(req)에서 파일과 필드를 파싱합니다.
         form.parse(req, async function (err, fields, files) {
           try {
             if (err) {
-              throw new Error(err);
+              throw new Error(err); // 파싱 중 오류가 발생하면 예외를 발생시킵니다.
             } else {
+              // toArr는 업로드된 파일이 저장될 경로 배열입니다.
               const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
+
               let filesKey, fromArr, num;
               let tempArr, tempString, tempDir;
               let thisFileName;
               let thisFileExe;
-    
+
+              // 업로드된 파일의 키를 가져와 정렬합니다.
               filesKey = Object.keys(files);
               filesKey.sort((a, b) => {
                 return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
               });
-    
+
+              // fromArr 배열에 업로드된 파일 경로를 저장합니다.
               fromArr = [];
               for (let key of filesKey) {
                 fromArr.push(files[key]);
               }
-    
-              num = 0;
+
+              num = 0; // 업로드된 파일의 인덱스를 나타냅니다.
               for (let { filepath: path } of fromArr) {
+                // toArr 배열에서 현재 파일의 경로를 추출합니다.
                 tempArr = toArr[num].split("/");
-                thisFileName = tempArr[tempArr.length - 1];
-                thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
-                tempString = staticConst;
+                thisFileName = tempArr[tempArr.length - 1]; // 파일 이름을 추출합니다.
+                thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1]; // 파일 확장자를 추출합니다.
+                tempString = staticConst; // 파일을 저장할 기본 경로입니다.
+
                 if (tempArr.length === 0) {
-                  throw new Error("invaild to array");
+                  throw new Error("invalid to array"); // 경로 배열이 유효하지 않으면 예외를 발생시킵니다.
                 }
+
+                // 경로에 있는 각 디렉토리를 생성합니다.
                 for (let i = 0; i < tempArr.length - 1; i++) {
                   tempDir = await fileSystem(`readDir`, [ tempString ]);
                   if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
@@ -825,55 +1315,81 @@ class StaticRouter {
                   tempString += '/';
                   tempString += tempArr[i];
                 }
-    
+
+                // 파일을 임시 폴더에 이동한 후, 지정된 경로로 복사합니다.
                 await shellExec("mv", [ path, osTempFolder + "/" + thisFileName ]);
                 await shellExec("cp", [ osTempFolder + "/" + thisFileName, tempString + "/" ]);
-                await shellExec(`rm`, [ `-rf`, osTempFolder + "/" + thisFileName ]);
-                
-                num++;
+                await shellExec(`rm`, [ `-rf`, osTempFolder + "/" + thisFileName ]); // 임시 폴더에서 파일을 삭제합니다.
+
+                num++; // 다음 파일로 넘어갑니다.
               }
-    
+
+              // 모든 파일이 업로드되었으면 성공 메시지를 반환합니다.
               res.send(JSON.stringify({ "message": "done" }));
             }
           } catch (e) {
+            // 업로드 중 오류가 발생하면 오류를 로깅하고, 오류 메시지를 반환합니다.
             logger.error(e, req).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         });
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /makeFolder
+     * @description 지정된 경로에 새로운 폴더를 생성하는 라우터입니다.
+     * 클라이언트가 POST 요청으로 전달한 경로를 기준으로 폴더를 생성하고, 생성된 폴더 목록을 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/makeFolder" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 path가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.path === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        let target;
-        let targetList;
-        let tempString;
-        let tempDir;
-        let target2;
-        let folderList;
-    
+
+        let target; // 폴더 생성 대상 경로를 저장할 변수입니다.
+        let targetList; // 경로를 분할하여 폴더 이름 목록을 저장할 배열입니다.
+        let tempString; // 현재 작업 중인 경로를 저장할 변수입니다.
+        let tempDir; // 현재 경로에 존재하는 디렉토리 목록을 저장할 변수입니다.
+        let target2; // 폴더 목록을 조회할 경로를 저장할 변수입니다.
+        let folderList; // 생성된 폴더 목록을 저장할 변수입니다.
+
+        // 전달된 경로에서 시작과 끝에 있는 슬래시를 제거합니다.
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target.trim() === '') {
           target = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target)) {
           target = sambaToken + "/" + target;
         }
+
+        // sambaToken을 제거하여 실제 경로를 설정합니다.
         target = target.replace(new RegExp(sambaToken, "gi"), '');
+
+        // 경로를 '/'로 분할하여 폴더 이름 목록을 생성합니다.
         targetList = target.split("/");
-        tempString = staticConst;
+        tempString = staticConst; // 기본 경로를 설정합니다.
+
+        // 각 폴더 이름을 확인하고, 존재하지 않으면 폴더를 생성합니다.
         for (let i = 0; i < targetList.length; i++) {
           tempDir = await fileSystem(`readDir`, [ tempString ]);
           if (!tempDir.includes(targetList[i]) && targetList[i] !== "") {
@@ -882,60 +1398,87 @@ class StaticRouter {
           tempString += '/';
           tempString += targetList[i];
         }
-    
+
+        // 생성된 폴더 목록을 조회하기 위한 경로를 설정합니다.
         target2 = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+
+        // 경로가 빈 문자열일 경우 기본 경로인 sambaToken을 설정합니다.
         if (target2.trim() === '') {
           target2 = sambaToken;
         }
+
+        // 경로가 '__'로 시작하지 않으면 sambaToken을 경로 앞에 추가합니다.
         if (!/^__/.test(target2)) {
           target2 = sambaToken + "/" + target2;
         }
+
+        // sambaToken을 제거하여 실제 경로를 설정합니다.
         target2 = target2.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+        // 생성된 폴더의 목록을 조회합니다.
         folderList = await fileSystem(`readFolder`, [ target2 ]);
-    
+
+        // 생성된 폴더 목록과 함께 성공 메시지를 반환합니다.
         res.send(JSON.stringify({ message: "done", list: folderList }));
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /zipPhoto
+     * @description 특정 프로젝트에 대한 사진을 ZIP 파일로 압축하는 라우터입니다.
+     * 클라이언트가 제공한 프로젝트 ID와 사진 ID를 사용하여 사진을 ZIP 파일로 압축하고, 해당 파일의 정보를 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/zipPhoto" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 pid(사진 ID)와 proid(프로젝트 ID)가 정의되지 않았을 경우 예외를 발생시킵니다.
         if (req.body.pid === undefined || req.body.proid === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 POST 요청에 대한 오류 메시지.
         }
-        const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
-        const { pid, proid } = req.body;
-        const c780 = "780";
-        const c1500 = "1500";
-        const c3508 = pid;
-        const splitToken = "__split__";
-        const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst;
-        const list = await fileSystem(`readDir`, [ targetDir ]);
-        const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
-        const tempFolderName = "temp";
-        let folderName;
-        let shareClientName, shareDesignerName;
-        let tempArr;
-        let command;
-        let zipIdClient, zipIdDesigner;
-        let zipLinkClient, zipLinkDesigner;
-        let commands;
-        let safeNum0, safeNum1;
-    
+
+        const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl"; // 대상 폴더 ID를 정의합니다.
+        const { pid, proid } = req.body; // 요청 본문에서 pid와 proid를 추출합니다.
+        const c780 = "780"; // 사진 크기를 나타내는 상수입니다.
+        const c1500 = "1500"; // 사진 크기를 나타내는 상수입니다.
+        const c3508 = pid; // pid를 기반으로 한 상수입니다.
+        const splitToken = "__split__"; // 파일 이름을 구분하기 위한 토큰입니다.
+        const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst; // 사진이 저장된 디렉토리 경로를 정의합니다.
+        const list = await fileSystem(`readDir`, [ targetDir ]); // 대상 디렉토리의 파일 목록을 읽습니다.
+        const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]); // 홈 디렉토리의 파일 목록을 읽습니다.
+        const tempFolderName = "temp"; // 임시 폴더 이름을 정의합니다.
+        let folderName; // 대상 폴더 이름을 저장할 변수입니다.
+        let shareClientName, shareDesignerName; // 공유할 ZIP 파일 이름을 저장할 변수입니다.
+        let tempArr; // 폴더 이름을 분할하여 저장할 배열입니다.
+        let command; // 쉘 명령어를 저장할 변수입니다.
+        let zipIdClient, zipIdDesigner; // 클라이언트와 디자이너를 위한 ZIP 파일 ID를 저장할 변수입니다.
+        let zipLinkClient, zipLinkDesigner; // 클라이언트와 디자이너를 위한 ZIP 파일 링크를 저장할 변수입니다.
+        let commands; // 실행할 명령어를 저장할 변수입니다.
+        let safeNum0, safeNum1; // 안전성을 위한 숫자 변수입니다.
+
+        // 홈 디렉토리에 임시 폴더가 없으면 생성합니다.
         if (!homeFolder.includes(tempFolderName)) {
           await shellExec(`mkdir`, [ `${process.env.HOME}/${tempFolderName}` ]);
         }
-    
+
+        // pid로 시작하는 폴더 이름을 찾습니다.
         folderName = list.find((i) => { return (new RegExp('^' + pid)).test(i); });
-        tempArr = folderName.split('_');
+        tempArr = folderName.split('_'); // 폴더 이름을 '_'로 분할합니다.
+        
+        // 클라이언트와 디자이너를 위한 ZIP 파일 이름을 생성합니다.
         shareClientName = "HL_";
         shareDesignerName = "HL_";
         if (tempArr.length === 4) {
@@ -946,36 +1489,49 @@ class StaticRouter {
         } else if (tempArr.length === 3) {
           shareDesignerName += tempArr[1] + "_디자이너님";
         } else {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 유효하지 않은 폴더 이름 형식에 대한 오류 메시지.
         }
+        
+        // ZIP 파일 이름에 날짜를 추가합니다.
         shareClientName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
         shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
-    
-        commands = "";
+
+        commands = ""; // 명령어 문자열을 초기화합니다.
         if (proid.trim() !== "") {
-          commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
-          commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`;
-          await shellExec(commands);
+          commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`; // 대상 디렉토리로 이동합니다.
+          commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`; // ZIP 파일을 생성합니다.
+          await shellExec(commands); // 명령어를 실행합니다.
         }
-    
+
+        // 성공 메시지를 JSON 형식으로 응답합니다.
         res.send(JSON.stringify({ message: "done" }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /designerFolder
+     * @description 디자이너 폴더를 생성하고 관리하는 라우터입니다.
+     * 클라이언트가 디자이너의 폴더를 생성하거나 기존 폴더의 정리 작업을 수행할 수 있습니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/designerFolder" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
-        const designerFolderId = "18PiKz57MQd8VgETd3hqp_cA-MNAXPquN";
-        const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst + "/" + designerFolderConst2;
+        const designerFolderId = "18PiKz57MQd8VgETd3hqp_cA-MNAXPquN"; // Google Drive 상의 디자이너 폴더 ID입니다.
+        const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst + "/" + designerFolderConst2; // Samba 서버 상의 디자이너 폴더 경로입니다.
         const basicList = [
           "포트폴리오",
           "등록서류",
@@ -984,33 +1540,37 @@ class StaticRouter {
           "경력관련",
           "계약서",
           "기타",
-        ];
-        let folderName;
-        let folderId;
-        let num;
-        let folderList;
-        let thisFolderList;
-        let mvTarget;
-        let mkdirTarget;
-        let rmTarget;
-    
+        ]; // 기본적으로 생성될 서브 폴더 목록입니다.
+        let folderName; // 새로 생성할 폴더의 이름을 저장할 변수입니다.
+        let folderId; // Google Drive 상의 폴더 ID를 저장할 변수입니다.
+        let num; // 재시도 횟수를 저장할 변수입니다.
+        let folderList; // Samba 서버 상의 폴더 목록을 저장할 변수입니다.
+        let thisFolderList; // 현재 폴더의 서브 폴더 목록을 저장할 변수입니다.
+        let mvTarget; // 이동 대상 파일 또는 폴더 목록을 저장할 변수입니다.
+        let mkdirTarget; // 생성할 서브 폴더 목록을 저장할 변수입니다.
+        let rmTarget; // 삭제할 대상 파일 또는 폴더 목록을 저장할 변수입니다.
+
+        // 요청 본문에 name과 subid가 정의되지 않은 경우, 기존 폴더를 정리하는 작업을 수행합니다.
         if (req.body.name === undefined || req.body.subid === undefined) {
+          // Samba 서버에서 디자이너 폴더 목록을 가져옵니다.
           folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return !/DS_Store/g.test(str) });
-    
+
+          // 각 폴더에 대해 서브 폴더를 정리합니다.
           for (let thisFolderName of folderList) {
             thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
               return !/DS_Store/g.test(str);
             }).filter((str) => {
               return !/gddoc$/i.test(str);
             });
-    
-            mvTarget = [];
+
+            mvTarget = []; // 이동 대상 목록을 초기화합니다.
             for (let s of thisFolderList) {
               if (!basicList.includes(s)) {
-                mvTarget.push(s);
+                mvTarget.push(s); // 기본 목록에 포함되지 않은 항목을 이동 대상에 추가합니다.
               }
             }
-    
+
+            // 이동 대상 폴더를 정해진 서브 폴더로 이동합니다.
             for (let s of mvTarget) {
               if (/제안문서/gi.test(s)) {
                 await shellExec(`mv ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)} ${shellLink(sambaDir + "/" + thisFolderName + "/" + "제안문서")}`);
@@ -1018,57 +1578,66 @@ class StaticRouter {
                 await shellExec(`mv ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)} ${shellLink(sambaDir + "/" + thisFolderName + "/" + "첫등록")}`);
               }
             }
-    
+
+            // 현재 폴더의 서브 폴더 목록을 다시 가져옵니다.
             thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
               return !/DS_Store/g.test(str);
             }).filter((str) => {
               return !/gddoc$/i.test(str);
             });
-    
-            mkdirTarget = [];
+
+            mkdirTarget = []; // 생성할 서브 폴더 목록을 초기화합니다.
             for (let s of basicList) {
               if (!thisFolderList.includes(s)) {
-                mkdirTarget.push(s);
+                mkdirTarget.push(s); // 기본 목록에 포함된 항목이 없는 경우 생성할 대상으로 추가합니다.
               }
             }
-    
+
+            // 필요한 서브 폴더를 생성합니다.
             for (let s of mkdirTarget) {
               await shellExec(`mkdir ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)}`);
             }
-    
+
+            // 마지막으로 삭제할 파일 또는 폴더를 확인하여 제거할 준비를 합니다.
             thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
               return !/DS_Store/g.test(str);
             }).filter((str) => {
               return !/gddoc$/i.test(str);
             });
-    
+
             rmTarget = [];
             for (let s of thisFolderList) {
               if (!basicList.includes(s)) {
                 rmTarget.push(s);
               }
             }
-    
+
+            // 삭제할 대상이 있을 경우, 안전하게 제거합니다.
             for (let s of rmTarget) {
-              await sleep(1000);
+              await sleep(1000); // 삭제 작업 전 1초 대기하여 시스템 부하를 방지합니다.
             }
           }
-    
+
+          // 모든 작업이 완료되면 성공 메시지를 반환합니다.
           res.send(JSON.stringify({ message: "done" }));
-    
+
         } else {
+          // 새로운 폴더를 생성하고 관리하는 작업을 수행합니다.
           folderName = req.body.subid + "_" + req.body.name;
-    
+
+          // Google Drive에서 새로운 폴더를 생성하고, 해당 폴더를 지정된 위치로 이동합니다.
           folderId = await drive.makeFolder_inPython(folderName);
           await drive.moveFolder_inPython(folderId, designerFolderId);
-    
-          await sleep(2000);
+
+          await sleep(2000); // 폴더 이동이 완료될 때까지 대기합니다.
           num = 0;
+          // 폴더가 Samba 서버에 나타날 때까지 최대 10회 확인합니다.
           while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
             await sleep(2000);
             num++;
           }
-    
+
+          // 폴더가 존재하는 경우, 기본 서브 폴더를 생성합니다.
           if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
             for (let b of basicList) {
               if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
@@ -1076,7 +1645,8 @@ class StaticRouter {
               }
             }
           }
-    
+
+          // 폴더 이름과 Google Drive 링크를 포함한 성공 메시지를 반환합니다.
           res.send(JSON.stringify({
             folderName: folderName,
             drive: `https://drive.google.com/drive/folders/${folderId}`,
@@ -1084,197 +1654,233 @@ class StaticRouter {
           }));
         }
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /recordBackup
+     * @description Centrex 시스템에서 통화 녹취 파일을 백업하고, 백업 후 해당 파일을 삭제하는 라우터입니다.
+     * 클라이언트가 이 엔드포인트를 호출하면 Centrex 시스템에 접근하여 통화 녹취 파일을 다운로드하고, 로컬 시스템에 저장한 후 Centrex 시스템에서 파일을 삭제합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/recordBackup" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // Centrex 시스템 접근에 필요한 설정 값을 정의합니다.
         const { host, sessionConst, sessionValue } = centrex;
-        const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일";
+        const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일"; // 통화 녹취 파일을 저장할 로컬 디렉토리 경로입니다.
+
+        // 통화 녹취 파일을 백업하고 삭제하는 주요 함수입니다.
         const recordBackupExecute = async function () {
+          // Centrex 시스템의 URL을 정의합니다.
           const urls = {
-            init: "https://" + host + "/premium",
-            login: "https://" + host + "/premium/PHP/web_login.php",
-            list: "https://" + host + "/premium/backoffice/record_list.html",
-            delete: "https://" + host + "/premium/PHP/deleteRecordFile.php"
+            init: "https://" + host + "/premium", // 초기 페이지 URL입니다.
+            login: "https://" + host + "/premium/PHP/web_login.php", // 로그인 페이지 URL입니다.
+            list: "https://" + host + "/premium/backoffice/record_list.html", // 녹취 파일 목록 페이지 URL입니다.
+            delete: "https://" + host + "/premium/PHP/deleteRecordFile.php" // 녹취 파일 삭제 API URL입니다.
           };
-          const splitToken = "__split__";
-          const tempFolder = process.cwd() + "/temp";
+          const splitToken = "__split__"; // URL을 분할하기 위한 토큰입니다.
+          const tempFolder = process.cwd() + "/temp"; // 임시 폴더 경로를 정의합니다.
+          
           try {
+            // 로컬에 저장된 기존 녹취 파일 목록을 읽어옵니다.
             const storeMotherContents = (await fileSystem(`readDir`, [ storeMother ])).filter((str) => { return !/^\./.test(str); });
-            const folderName = "records_" + dateToString(new Date()).replace(/\-/gi, '') + "_" + uniqueValue("string");
+            const folderName = "records_" + dateToString(new Date()).replace(/\-/gi, '') + "_" + uniqueValue("string"); // 현재 날짜와 고유값으로 폴더 이름을 생성합니다.
             let url, res, dom, token, idsave, id, pass;
-            let session;
-            let inputs;
-            let postData;
-            let trArr;
-            let aNode, aArr;
-            let pageNum;
-            let totalLinks;
-            let log;
-            let tempbinary;
-            let storeTargets;
-            let downloadedFiles;
-            let errorBoo;
-            let safeNum;
-      
-            session = sessionConst + "=" + sessionValue;
-      
-            url = urls.list;
-            res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
-      
-            dom = new JSDOM(res.data);
-            inputs = dom.window.document.querySelector("form").children;
-            postData = {};
+            let session; // 현재 세션 값을 저장할 변수입니다.
+            let inputs; // HTML 폼의 입력 요소를 저장할 변수입니다.
+            let postData; // POST 데이터 객체를 저장할 변수입니다.
+            let trArr; // 테이블 행 요소를 저장할 배열입니다.
+            let aNode, aArr; // 앵커 요소를 저장할 변수와 배열입니다.
+            let pageNum; // 페이지 번호를 저장할 변수입니다.
+            let totalLinks; // 모든 파일의 다운로드 링크를 저장할 배열입니다.
+            let log; // 백업 로그를 저장할 객체입니다.
+            let tempbinary; // 바이너리 데이터를 저장할 변수입니다.
+            let storeTargets; // 로컬 저장소의 파일 타겟을 저장할 객체입니다.
+            let downloadedFiles; // 다운로드된 파일 목록을 저장할 배열입니다.
+            let errorBoo; // 오류 발생 여부를 저장할 불린 변수입니다.
+            let safeNum; // 안전 실행 횟수를 저장할 변수입니다.
+
+            session = sessionConst + "=" + sessionValue; // 세션 쿠키를 생성합니다.
+
+            url = urls.list; // 녹취 파일 목록 페이지의 URL을 설정합니다.
+            res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } }); // GET 요청으로 녹취 파일 목록을 가져옵니다.
+
+            dom = new JSDOM(res.data); // 서버 응답 데이터를 DOM으로 변환합니다.
+            inputs = dom.window.document.querySelector("form").children; // 폼 요소의 자식 입력 요소를 가져옵니다.
+            postData = {}; // POST 데이터 객체를 초기화합니다.
             for (let input of inputs) {
               if (/INPUT/gi.test(input.nodeName)) {
-                postData[input.getAttribute("name")] = input.getAttribute("value");
+                postData[input.getAttribute("name")] = input.getAttribute("value"); // 입력 요소의 이름과 값을 POST 데이터 객체에 저장합니다.
               }
             }
-      
-            pageNum = 0;
-            totalLinks = [];
+
+            pageNum = 0; // 페이지 번호를 초기화합니다.
+            totalLinks = []; // 모든 파일의 다운로드 링크를 저장할 배열을 초기화합니다.
             do {
               pageNum++;
-              postData.page = String(pageNum);
-              res = await requestSystem(url, postData, { headers: { Cookie: session } });
-              dom = new JSDOM(res.data);
-              trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ];
+              postData.page = String(pageNum); // 페이지 번호를 POST 데이터에 설정합니다.
+              res = await requestSystem(url, postData, { headers: { Cookie: session } }); // POST 요청으로 녹취 파일 목록의 특정 페이지를 가져옵니다.
+              dom = new JSDOM(res.data); // 서버 응답 데이터를 DOM으로 변환합니다.
+              trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ]; // 테이블 행 요소를 배열로 변환합니다.
               aArr = [];
               for (let tr of trArr) {
-                aNode = tr.querySelector('a');
+                aNode = tr.querySelector('a'); // 각 행에서 앵커 요소를 찾습니다.
                 if (aNode !== null) {
-                  aArr.push(aNode.getAttribute("href"));
+                  aArr.push(aNode.getAttribute("href")); // 앵커 요소의 href 속성 값을 배열에 저장합니다.
                 }
               }
-      
+
               aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
-                return str + splitToken + String(pageNum);
+                return str + splitToken + String(pageNum); // 링크와 페이지 번호를 결합하여 저장합니다.
               });
-              totalLinks = totalLinks.concat(aArr);
-            } while (aArr.length !== 0);
-      
+              totalLinks = totalLinks.concat(aArr); // 현재 페이지의 링크를 전체 링크 배열에 추가합니다.
+            } while (aArr.length !== 0); // 페이지에 더 이상 링크가 없을 때까지 반복합니다.
+
             totalLinks = [ ...new Set(totalLinks) ].map((str) => {
-              return urls.init + str.slice(2);
+              return urls.init + str.slice(2); // 링크에서 필요없는 부분을 제거하고 최종 링크를 생성합니다.
             }).map((link) => {
               let tempArr, tempArr1, obj, page;
-              page = Number(link.split(splitToken)[1]);
+              page = Number(link.split(splitToken)[1]); // 페이지 번호를 분리하여 저장합니다.
               link = link.split(splitToken)[0];
               tempArr = link.split('?');
               tempArr1 = tempArr[1].split('&').map((s) => { return s.split('='); });
               obj = {};
               for (let [ key, value ] of tempArr1) {
-                obj[key] = value;
+                obj[key] = value; // 링크의 쿼리스트링을 객체로 변환하여 저장합니다.
               }
-              return { link, page, host: tempArr[0], data: obj };
+              return { link, page, host: tempArr[0], data: obj }; // 링크와 페이지, 쿼리 데이터를 객체로 반환합니다.
             });
-      
+
             log = {
               date: new Date(),
               length: totalLinks.length,
-              records: totalLinks
+              records: totalLinks // 로그 객체에 다운로드할 링크 수와 링크 목록을 저장합니다.
             };
-      
-            await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName}`);
-            await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`);
-      
+
+            await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName}`); // 임시 폴더에 동일한 이름의 폴더가 존재할 경우 삭제합니다.
+            await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`); // 새 폴더를 생성합니다.
+
             for (let i = 0; i < totalLinks.length; i++) {
-              safeNum = 0;
+              safeNum = 0; // 안전 실행 횟수를 초기화합니다.
               do {
                 errorBoo = true;
                 try {
+                  // 바이너리 데이터를 요청하여 다운로드하고 파일로 저장합니다.
                   tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
                   await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
-      
+
+                  // 다운로드 후 서버에서 파일을 삭제합니다.
                   postData.page = String(totalLinks[i].page);
                   postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
                   res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
-      
-                  errorBoo = false;
+
+                  errorBoo = false; // 오류 없이 성공한 경우 플래그를 설정합니다.
                 } catch (e) {
-                  errorBoo = true;
+                  errorBoo = true; // 오류가 발생하면 다시 시도하도록 플래그를 설정합니다.
                 }
                 safeNum++;
-              } while (errorBoo || safeNum > 10);
+              } while (errorBoo && safeNum <= 10); // 최대 10회 시도합니다.
             }
-      
+
+            // 로컬 저장소의 파일 타겟을 객체로 변환하여 저장합니다.
             storeTargets = {};
             for (let str of storeMotherContents) {
               storeTargets['p' + str.split('_')[0]] = str;
             }
-      
+
+            // 다운로드된 파일을 읽어와 로컬 저장소로 이동합니다.
             downloadedFiles = (await fileSystem(`readDir`, [ `${tempFolder}/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
             downloadedFiles = downloadedFiles.map((str) => {
               return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${tempFolder}/${folderName}/${str}` };
             });
-      
+
             for (let { target, file } of downloadedFiles) {
               if (typeof storeTargets[target] === "string") {
-                await shellExec(`mv ${shellLink(file)} ${shellLink(storeMother + "/" + storeTargets[target])};`);
+                await shellExec(`mv ${shellLink(file)} ${shellLink(storeMother + "/" + storeTargets[target])};`); // 대상 경로로 파일을 이동합니다.
               }
             }
-      
-            await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`);
-      
-            return log;
-      
+
+            await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`); // 임시 폴더를 삭제합니다.
+
+            return log; // 백업 로그를 반환합니다.
+
           } catch (e) {
             console.log(e);
-            return false;
+            return false; // 오류 발생 시 false를 반환합니다.
           }
         }
+
+        // 백업 작업을 반복적으로 수행하는 함수입니다.
         const backupFunc = async function () {
           try {
             let safeNum, log;
             safeNum = 0;
             do {
-              log = await recordBackupExecute();
+              log = await recordBackupExecute(); // 백업 작업을 실행합니다.
               safeNum++;
-              if (safeNum > 20) {
+              if (safeNum > 20) { // 최대 20회 시도합니다.
                 break;
               }
             } while (log === false);
-    
+
             if (!log) {
-              throw new Error("session expired");
+              throw new Error("session expired"); // 세션이 만료된 경우 예외를 발생시킵니다.
             }
-    
-            await logger.cron("record backup and delete success");
+
+            await logger.cron("record backup and delete success"); // 백업 성공 로그를 기록합니다.
           } catch (e) {
-            logger.error(e, req).catch((e) => { console.log(e); });
+            logger.error(e, req).catch((e) => { console.log(e); }); // 오류 발생 시 로그를 기록합니다.
           }
         }
-    
+
+        // 백업 작업을 비동기적으로 시작합니다.
         backupFunc().catch((err) => {
           logger.error(err, req).catch((e) => { console.log(e); });
         });
-    
-        res.send(JSON.stringify({ message: "will do" }));
-    
+
+        res.send(JSON.stringify({ message: "will do" })); // 클라이언트에 백업 작업 시작을 알리는 메시지를 반환합니다.
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.send(JSON.stringify({ message: "error : " + e.message }));
+        logger.error(e, req).catch((e) => { console.log(e); }); // 오류 발생 시 로그를 기록합니다.
+        res.send(JSON.stringify({ message: "error : " + e.message })); // 오류 메시지를 클라이언트에 반환합니다.
       }
     });
     
+    /**
+     * @route POST /centrexSession
+     * @description Centrex 시스템의 세션 유효성을 확인하는 라우터입니다. 
+     * 클라이언트가 이 엔드포인트를 호출하면, Centrex 시스템에 접근하여 현재 세션이 유효한지 확인합니다. 
+     * 만약 세션이 만료되었다면, 경고 알림을 발생시킵니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/centrexSession" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // Centrex 시스템 접근에 필요한 설정 값을 정의합니다.
         const { host, sessionConst, sessionValue } = centrex;
-        const url = "https://" + host + "/premium/backoffice/main.su.html";
+        const url = "https://" + host + "/premium/backoffice/main.su.html"; // Centrex 시스템의 메인 페이지 URL입니다.
+
+        // 세션 유효성을 확인하기 위한 특정 키워드를 정의합니다.
         const successKeyPoint = [
           ".onButton",
           "libgoff3",
@@ -1291,128 +1897,186 @@ class StaticRouter {
           "popup_call.html",
           "popup_conference.html",
         ];
+
         let response, resultBoo;
-    
+
+        // Centrex 시스템에 GET 요청을 보내어 세션 유효성을 확인합니다.
         response = await requestSystem(url, {}, {
           method: "get",
           headers: {
-            Cookie: sessionConst + "=" + sessionValue
+            Cookie: sessionConst + "=" + sessionValue // 세션 쿠키를 요청 헤더에 포함합니다.
           }
         });
-    
+
+        // 응답 데이터에 유효성 검사를 위한 키워드들이 모두 포함되어 있는지 확인합니다.
         resultBoo = successKeyPoint.map((str) => { return new RegExp(str, "g"); }).every((re) => { return re.test(response.data) });
         if (!resultBoo) {
+          // 세션이 만료되었을 경우 경고 알림을 발생시킵니다.
           logger.alert("centrex token expired").catch((err) => { console.log(err); });
         }
-    
+
+        // 유효성 검사가 완료되었음을 클라이언트에 알리는 메시지를 반환합니다.
         res.send(JSON.stringify({ message: "reload done" }));
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /mongoToJson
+     * @description MongoDB 데이터베이스를 JSON 형식으로 백업하는 라우터입니다.
+     * 클라이언트가 이 엔드포인트를 호출하면, 지정된 MongoDB 데이터베이스를 백업하고 해당 백업 파일을 압축한 후 원본 폴더를 삭제합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/mongoToJson" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
-    
+        // MongoDB 데이터를 JSON 형식으로 백업하는 함수입니다.
         const mongoToJsonFunction = async function () {
           try {
-            const today = new Date();
-            const backFolderName = "backup";
+            const today = new Date(); // 현재 날짜와 시간을 가져옵니다.
+            const backFolderName = "backup"; // 백업 파일을 저장할 폴더 이름입니다.
             const mongoTargets = [
-              [ "mongoinfo", "mongo" ],
+              [ "mongoinfo", "mongo" ], // 백업 대상이 되는 MongoDB 정보입니다.
             ];
+
+            // 현재 프로세스의 작업 디렉토리에서 부모 디렉토리를 추출합니다.
             const robotDirArr = process.cwd().split("/");
             robotDirArr.pop();
             const robotDirMother = robotDirArr.join("/");
+
+            // 부모 디렉토리에 백업 폴더가 있는지 확인하고 없으면 생성합니다.
             const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
             if (!robotDirMotherDetail.includes(backFolderName)) {
               await shellExec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
             }
-            const backDir = robotDirMother + "/" + backFolderName;
+
+            const backDir = robotDirMother + "/" + backFolderName; // 백업 디렉토리의 전체 경로를 설정합니다.
             let tempInfo, timeString;
-      
+
+            // 현재 시간을 기반으로 백업 파일의 이름에 사용할 문자열을 생성합니다.
             timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
-      
+
+            // 각 MongoDB 대상에 대해 백업을 수행합니다.
             for (let [ infoName, dbName ] of mongoTargets) {
-              tempInfo = address[infoName];
+              tempInfo = address[infoName]; // MongoDB 연결 정보를 가져옵니다.
+              // MongoDB 데이터를 덤프하고 지정된 디렉토리에 저장합니다.
               await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
             }
-      
+
+            // 백업한 데이터를 압축한 후 원본 폴더를 삭제합니다.
             await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
-      
-            return true;
-      
+
+            return true; // 백업이 성공적으로 완료되었음을 반환합니다.
+
           } catch (e) {
-            return false;
+            return false; // 오류가 발생한 경우 false를 반환합니다.
           }
         }
-    
+
+        // 백업 함수를 비동기적으로 실행합니다.
         mongoToJsonFunction().then((boo) => {
           if (boo) {
-            return logger.cron("mongo to json done");
+            return logger.cron("mongo to json done"); // 백업이 성공적으로 완료되었음을 로그에 기록합니다.
           }
         }).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
+          logger.error(err, req).catch((e) => { console.log(e); }); // 오류 발생 시 로그를 기록합니다.
         });
-    
-        res.send(JSON.stringify({ message: "will do" }));
+
+        res.send(JSON.stringify({ message: "will do" })); // 클라이언트에 백업 작업이 시작되었음을 알리는 메시지를 반환합니다.
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /mysqlQuery
+     * @description 클라이언트가 전송한 SQL 쿼리를 실행하고 그 결과를 반환하는 라우터입니다.
+     * 이 라우터는 안전성을 고려하여 'DROP'이나 'DELETE' 명령어가 포함된 쿼리는 실행하지 않습니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/mysqlQuery" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 클라이언트로부터 전송된 SQL 쿼리 문자열이 유효한지 확인합니다.
         if (typeof req.body.query !== "string") {
-          throw new Error("invaild post");
+          throw new Error("invalid post"); // 쿼리가 문자열이 아니면 오류를 발생시킵니다.
         }
+
         let query, response;
+
+        // 쿼리 문자열이 세미콜론(;)으로 끝나는지 확인하고, 없으면 추가합니다.
         if (/;$/.test(req.body.query.trim())) {
           query = req.body.query.trim();
         } else {
           query = req.body.query.trim() + ';';
         }
+
+        // 'DROP'이나 'DELETE' 명령어가 포함된 쿼리는 실행하지 않도록 합니다.
         if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
+          // 쿼리를 실행하고 결과를 가져옵니다. 'local: true' 옵션은 로컬 데이터베이스에 연결하기 위한 설정입니다.
           response = await mysqlQuery(query, { local: true });
         } else {
-          response = [];
+          response = []; // 위험한 쿼리일 경우 빈 배열을 반환합니다.
         }
+
+        // 실행된 쿼리의 결과를 JSON 형태로 클라이언트에 반환합니다.
         res.send(JSON.stringify(response));
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /parsingCashReceipt
+     * @description 이 라우터는 현금 영수증 데이터를 파싱하여 성공 여부를 반환합니다.
+     * 현금 영수증 데이터를 파싱하는 작업을 시도하며, 실패할 경우 최대 세 번까지 재시도합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/parsingCashReceipt" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
         let boo;
-    
+
+        // Bill 객체의 parsingCashReceipt 메서드를 호출하여 현금 영수증 데이터를 파싱합니다.
         boo = await bill.parsingCashReceipt();
         if (boo) {
+          // 파싱에 성공한 경우 로그를 기록합니다.
           logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
         }
-    
+
+        // 첫 번째 시도가 실패한 경우 3초 대기 후 재시도합니다.
         if (!boo) {
           await sleep(3000);
           boo = await bill.parsingCashReceipt();
@@ -1420,7 +2084,8 @@ class StaticRouter {
             logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
           }
         }
-    
+
+        // 두 번째 시도가 실패한 경우 3초 대기 후 마지막으로 한 번 더 재시도합니다.
         if (!boo) {
           await sleep(3000);
           boo = await bill.parsingCashReceipt();
@@ -1428,32 +2093,48 @@ class StaticRouter {
             logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
           }
         }
-    
+
+        // 최종적으로 성공 여부를 클라이언트에게 반환합니다.
         res.send(JSON.stringify({ success: boo ? 1 : 0 }));
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /issueCashReceipt
+     * @description 클라이언트가 요청한 금액과 전화번호를 기반으로 현금 영수증을 발급하는 라우터입니다.
+     * 요청이 성공할 때까지 재시도하며, 발급 성공 시 로그를 기록합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/issueCashReceipt" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 클라이언트가 요청한 금액과 전화번호가 전달되었는지 확인합니다.
         if (req.body.amount === undefined || req.body.phone === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 금액 또는 전화번호가 없으면 오류를 발생시킵니다.
         }
+
         let boo;
-    
+
+        // bill 객체의 issueCashReceipt 메서드를 호출하여 현금 영수증을 발급합니다.
         boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
         if (boo) {
+          // 발급에 성공한 경우 로그를 기록합니다.
           logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
         }
-    
+
+        // 발급이 실패한 경우, 성공할 때까지 3초 간격으로 재시도합니다.
         while (!boo) {
           await sleep(3000);
           boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
@@ -1461,157 +2142,139 @@ class StaticRouter {
             logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
           }
         }
-    
+
+        // 최종적으로 성공 여부를 클라이언트에게 반환합니다.
         res.send(JSON.stringify({ success: boo ? 1 : 0 }));
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
-    router.post([ "/textToVoice" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        if (typeof req.body.text !== "string") {
-          throw new Error("invalid post");
-        }
-        res.send(JSON.stringify({ message: "will do" }));
-    
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    });
-    
-    router.post([ "/printText" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        if (typeof req.body.text !== "string") {
-          throw new Error("invalid post");
-        }
-        const lpstat = spawn("lpstat", [ "-p" ]);
-        const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
-        let printer;
-        let targetFile;
-    
-        targetFile = process.cwd() + "/temp/printerTemp_" + uniqueValue("hex") + ".txt";
-    
-        lpstat.stdout.on("data", (data) => {
-          const arr = String(data).split("\n").map((i) => { return i.trim(); });
-          const printerRaw = arr.find((i) => { return /Brother/gi.test(i); });
-          printer = printerRaw.trim().split(' ')[1];
-          lpstat.kill();
-          fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
-            return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 ${req.body.landScape !== undefined ? String("-L ") : ""}-media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
-          }).then(() => {
-            return shellExec("rm", [ "-rf", targetFile ]);
-          }).catch((err) => {
-            logger.error(err, req).catch((e) => { console.log(e); });
-            console.log(err);
-          });
-        });
-    
-        res.send(JSON.stringify({ message: "will do" }));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    });
-    
+    /**
+     * @route POST /pageToPdf
+     * @description 웹 페이지의 URL을 받아 해당 페이지를 PDF로 변환하는 라우터입니다.
+     * URL에서 페이지 스크린샷을 찍고, 이를 HTML로 변환한 뒤, 최종적으로 PDF로 출력합니다.
+     * @param {Object} req - 클라이언트 요청 객체입니다.
+     * @param {Object} res - 서버 응답 객체입니다.
+     */
     router.post([ "/pageToPdf" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트와의 CORS(Cross-Origin Resource Sharing) 문제를 해결합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 콘텐츠 타입을 JSON으로 설정합니다.
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정합니다.
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 설정합니다.
       });
+
       try {
+        // 요청 본문에 URL이 문자열 형태로 전달되었는지 확인합니다.
         if (typeof req.body.url !== "string") {
-          throw new Error("invaild post : url must be string");
+          throw new Error("invalid post : url must be string"); // URL이 문자열이 아닌 경우 오류를 발생시킵니다.
         }
+
+        // 이미지 파일명과 HTML, PDF 파일명을 고유한 값으로 생성합니다.
         const imageName = `pagePrint_${uniqueValue("string")}.png`;
         const htmlName = imageName.replace(/\.png$/i, ".html");
         const pdfName = imageName.replace(/\.png$/i, ".pdf");
         let htmlString;
-    
+
+        // Chrome API를 이용하여 페이지의 스크린샷을 PNG 파일로 저장합니다.
         await chrome.pageToPng(global.decodeURIComponent(req.body.url), staticConst + "/" + imageName, true);
-    
+
+        // 저장된 이미지를 포함한 HTML 문자열을 생성합니다.
         htmlString = `<html><head><style>*{margin:0;padding:0}</style></head><body><img src="https://${address.officeinfo.ghost.host}/${imageName}" style="width:100%"></body></html>`;
+        // 파일 시스템을 이용하여 HTML 파일로 저장합니다.
         await fileSystem(`write`, [ `${staticConst}/${htmlName}`, htmlString ]);
-    
+
+        // 생성된 HTML 파일을 PDF로 변환합니다.
         await chrome.pdfPrint(`https://${address.officeinfo.ghost.host}/${htmlName}`, `${staticConst}/${pdfName}`, false);
-    
+
+        // 중간 생성된 PNG와 HTML 파일을 삭제하여 임시 파일을 정리합니다.
         await shellExec(`rm`, [ `-rf`, `${staticConst}/${imageName}` ]);
         await shellExec(`rm`, [ `-rf`, `${staticConst}/${htmlName}` ]);
-    
+
+        // 생성된 PDF 파일의 URL을 클라이언트에 반환합니다.
         res.send(JSON.stringify({
           url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName),
         }));
-    
+
       } catch (e) {
+        // 오류가 발생하면 오류를 로깅하고, 오류 메시지를 클라이언트에 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
     
+    /**
+     * @route POST /analyticsDaily
+     * @description 주간 및 일일 캠페인, 인스타그램, 유튜브, Google Analytics 등의 데이터를 수집하고 이를 MongoDB에 저장하는 라우터입니다.
+     * 특정 날짜 범위에 대한 분석 결과를 처리하며, 클라이언트로부터 전달된 데이터를 기반으로 다양한 메트릭을 수집합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 'date'와 'dayNumber'가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 반환합니다.
+     */
     router.post([ "/analyticsDaily" ], async function (req, res) {
+      // 클라이언트에 대한 응답 헤더 설정, JSON 형식의 데이터를 반환함을 알리고 CORS 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // JSON 형식으로 응답
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용하는 HTTP 메서드
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용하는 HTTP 헤더
       });
+
       try {
+        // 클라이언트에서 전달받은 요청 본문을 equalJson으로 처리하여 깊은 복사와 데이터 파싱 수행
         const { date } = equalJson(req.body);
+        // 로컬 MongoDB 인스턴스를 가져옴
         const selfMongo = instance.mongolocal;
+        // 일 단위로 처리할 날짜 범위 설정, 기본값은 7일
         const dayNumber = req.body.dayNumber === undefined ? 7 : Number(req.body.dayNumber);
-        let dateArr;
-        let collection;
-        let anaid, ancid, key, rows;
-        let fromCollection;
-        let toCollection;
-        let targets;
-        let tempRows;
-        let json;
-        let now, todayDate;
-    
+        let dateArr; // 날짜 배열
+        let collection; // MongoDB 컬렉션 이름 저장
+        let anaid, ancid, key, rows; // 분석 ID, 클라이언트 ID, 키, 데이터베이스 행 저장용 변수
+        let fromCollection; // 데이터를 복사할 출처 컬렉션
+        let toCollection; // 데이터를 저장할 목표 컬렉션
+        let targets; // 특정 조건을 만족하는 대상 데이터
+        let tempRows; // 임시로 사용할 데이터베이스 행 저장용 배열
+        let json; // JSON 형태로 변환된 데이터 저장용 변수
+        let now, todayDate; // 현재 날짜와 오늘 날짜 저장용 변수
+
+        // date가 문자열이 아닌 경우 예외 처리
         if (typeof date !== "string") {
-          throw new Error("invaild post");
+          throw new Error("invalid post");
         }
-    
+
+        // 쉼표로 구분된 날짜 문자열을 배열로 변환하고, 공백을 제거한 후 유효한 날짜만 필터링
         dateArr = date.split(",").map((str) => { return str.trim(); }).filter((str) => { return str !== ''; });
+        // 날짜 문자열이 10자리인지 확인하여 유효성 검사
         if (!(dateArr.every((str) => { return str.length === 10 }))) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");
         }
+        // 문자열 형태의 날짜를 Date 객체로 변환
         dateArr = dateArr.map((str) => { return stringToDate(str) });
-    
+
+        // 현재 시각을 가져와서 오늘 날짜의 시작 시각 설정
         now = new Date();
         todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    
+
+        // 비동기 IIFE(즉시 호출 함수 표현식)를 사용하여 데이터를 처리
         (async () => {
           try {
             let result;
-    
-            // daily campaign
+
+            // Facebook, Naver, Google의 일일 캠페인 데이터를 수집하여 MongoDB에 저장
             await instance.facebook.dailyCampaign(selfMongo, dayNumber, logger);
             await instance.naver.dailyCampaign(selfMongo, dayNumber, logger);
             await instance.google.dailyCampaign(selfMongo, dayNumber, logger);
-    
-            // daily aspirant campaign
+
+            // 특정 조건을 만족하는 캠페인 데이터를 dailyAspirantCampaign 컬렉션으로 이동
             fromCollection = "dailyCampaign";
             toCollection = "dailyAspirantCampaign";
+            // MongoDB에서 dailyCampaign 컬렉션의 모든 데이터를 읽어옴
             rows = await back.mongoRead(fromCollection, {}, { selfMongo });
             targets = [];
+            // 디자이너와 관련된 특정 캠페인만 필터링하여 targets 배열에 저장
             for (let row of rows) {
               if (/디자이너/gi.test(row.information.name)) {
                 if (/모객/gi.test(row.information.name) || /모집/gi.test(row.information.name) || /신청/gi.test(row.information.name) || /채용/gi.test(row.information.name) || /전환/gi.test(row.information.name) || /캠패인/gi.test(row.information.name)) {
@@ -1619,29 +2282,32 @@ class StaticRouter {
                 }
               }
             }
+            // 필터링된 캠페인 데이터를 dailyAspirantCampaign 컬렉션에 저장
             for (let row of targets) {
-              json = equalJson(JSON.stringify(row));
+              json = equalJson(JSON.stringify(row)); // row 데이터를 JSON으로 변환
               tempRows = await back.mongoRead(toCollection, { key: row.key }, { selfMongo });
               if (tempRows.length !== 0) {
+                // 이미 존재하는 데이터가 있을 경우 삭제 후 재저장
                 await back.mongoDelete(toCollection, { key: row.key }, { selfMongo });
               }
               await back.mongoCreate(toCollection, json, { selfMongo });
               tempRows = await back.mongoRead(fromCollection, { key: row.key }, { selfMongo });
               if (tempRows.length !== 0) {
+                // 기존 컬렉션의 데이터를 삭제하여 이동 처리 완료
                 await back.mongoDelete(fromCollection, { key: row.key }, { selfMongo });
               }
             }
-    
-            // daily channel
+
+            // 인스타그램과 유튜브의 일일 채널 데이터를 수집하여 MongoDB에 저장
             await instance.facebook.dailyInstagram(selfMongo, dayNumber, logger);
             await instance.youtube.dailyYoutube(selfMongo, dayNumber, logger);
-    
-            // daily analytics
+
+            // Google Analytics의 일일 분석 데이터를 dailyAnalytics 컬렉션에 저장
             collection = "dailyAnalytics";
             for (let thisDate of dateArr) {
               result = await analytics.dailyMetric(thisDate);
               if (result === null) {
-                await sleep(1000);
+                await sleep(1000); // 데이터 수집에 실패한 경우 1초 대기 후 재시도
                 result = await analytics.dailyMetric(thisDate);
                 if (result === null) {
                   await sleep(1000);
@@ -1650,11 +2316,13 @@ class StaticRouter {
                     await sleep(1000);
                     result = await analytics.dailyMetric(thisDate);
                     if (result === null) {
+                      // 실패 시 로그만 남기고 넘어감
                     } else {
+                      // 데이터를 성공적으로 수집한 경우 MongoDB에 저장
                       anaid = result.anaid;
                       rows = await back.mongoRead(collection, { anaid }, { selfMongo });
                       if (rows.length !== 0) {
-                        await back.mongoDelete(collection, { anaid }, { selfMongo })
+                        await back.mongoDelete(collection, { anaid }, { selfMongo });
                       }
                       await back.mongoCreate(collection, result, { selfMongo });
                       logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1663,7 +2331,7 @@ class StaticRouter {
                     anaid = result.anaid;
                     rows = await back.mongoRead(collection, { anaid }, { selfMongo });
                     if (rows.length !== 0) {
-                      await back.mongoDelete(collection, { anaid }, { selfMongo })
+                      await back.mongoDelete(collection, { anaid }, { selfMongo });
                     }
                     await back.mongoCreate(collection, result, { selfMongo });
                     logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1672,7 +2340,7 @@ class StaticRouter {
                   anaid = result.anaid;
                   rows = await back.mongoRead(collection, { anaid }, { selfMongo });
                   if (rows.length !== 0) {
-                    await back.mongoDelete(collection, { anaid }, { selfMongo })
+                    await back.mongoDelete(collection, { anaid }, { selfMongo });
                   }
                   await back.mongoCreate(collection, result, { selfMongo });
                   logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1681,25 +2349,25 @@ class StaticRouter {
                 anaid = result.anaid;
                 rows = await back.mongoRead(collection, { anaid }, { selfMongo });
                 if (rows.length !== 0) {
-                  await back.mongoDelete(collection, { anaid }, { selfMongo })
+                  await back.mongoDelete(collection, { anaid }, { selfMongo });
                 }
                 await back.mongoCreate(collection, result, { selfMongo });
                 logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
               }
-              await sleep(1000);
+              await sleep(1000); // 각 데이터 처리 후 1초 대기
             }
-    
-            // daily clients
+
+            // dailyClients 컬렉션에 고객 데이터를 저장
             collection = "dailyClients";
             for (let thisDate of dateArr) {
               result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolocal);
               if (result === null) {
-                 
+                
               } else {
                 ancid = result.ancid;
                 rows = await back.mongoRead(collection, { ancid }, { selfMongo });
                 if (rows.length !== 0) {
-                  await back.mongoDelete(collection, { ancid }, { selfMongo })
+                  await back.mongoDelete(collection, { ancid }, { selfMongo });
                 }
                 await back.mongoCreate(collection, result, { selfMongo });
                 logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1708,41 +2376,41 @@ class StaticRouter {
             }
             result = await analytics.dailyClients(todayDate, instance.mongo, instance.mongolocal);
             if (result === null) {
-               
+              
             } else {
               ancid = result.ancid;
               rows = await back.mongoRead(collection, { ancid }, { selfMongo });
               if (rows.length !== 0) {
-                await back.mongoDelete(collection, { ancid }, { selfMongo })
+                await back.mongoDelete(collection, { ancid }, { selfMongo });
               }
               await back.mongoCreate(collection, result, { selfMongo });
               logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
-    
-            // daily query
+
+            // daily query 분석 데이터를 queryAnalytics 컬렉션에 저장
             collection = "queryAnalytics";
             for (let thisDate of dateArr) {
               result = await analytics.queryParsing(thisDate, instance.mongolocal);
               if (result === null) {
-                 
+                
                 await sleep(1000);
                 result = await analytics.queryParsing(thisDate, instance.mongolocal);
                 if (result === null) {
-                   
+                  
                   await sleep(1000);
                   result = await analytics.queryParsing(thisDate, instance.mongolocal);
                   if (result === null) {
-                     
+                    
                     await sleep(1000);
                     result = await analytics.queryParsing(thisDate, instance.mongolocal);
                     if (result === null) {
-                       
+                      
                     } else {
                       key = result.key;
                       rows = await back.mongoRead(collection, { key }, { selfMongo });
                       if (rows.length !== 0) {
-                        await back.mongoDelete(collection, { key }, { selfMongo })
+                        await back.mongoDelete(collection, { key }, { selfMongo });
                       }
                       await back.mongoCreate(collection, result, { selfMongo });
                       logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1751,7 +2419,7 @@ class StaticRouter {
                     key = result.key;
                     rows = await back.mongoRead(collection, { key }, { selfMongo });
                     if (rows.length !== 0) {
-                      await back.mongoDelete(collection, { key }, { selfMongo })
+                      await back.mongoDelete(collection, { key }, { selfMongo });
                     }
                     await back.mongoCreate(collection, result, { selfMongo });
                     logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1760,7 +2428,7 @@ class StaticRouter {
                   key = result.key;
                   rows = await back.mongoRead(collection, { key }, { selfMongo });
                   if (rows.length !== 0) {
-                    await back.mongoDelete(collection, { key }, { selfMongo })
+                    await back.mongoDelete(collection, { key }, { selfMongo });
                   }
                   await back.mongoCreate(collection, result, { selfMongo });
                   logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
@@ -1769,78 +2437,89 @@ class StaticRouter {
                 key = result.key;
                 rows = await back.mongoRead(collection, { key }, { selfMongo });
                 if (rows.length !== 0) {
-                  await back.mongoDelete(collection, { key }, { selfMongo })
+                  await back.mongoDelete(collection, { key }, { selfMongo });
                 }
                 await back.mongoCreate(collection, result, { selfMongo });
                 logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
               }
               await sleep(1000);
             }
-    
-            // monthly analytics
+
+            // monthly analytics, meta 및 naver complex 데이터를 수집 및 처리
             await sleep(1000);
             await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsMonthly", { date: new Date() }, { headers: { "Content-Type": "application/json" } });
-    
-            // meta, naver complex
+
             await sleep(1000);
             await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: dayNumber }, { headers: { "Content-Type": "application/json" } });
-    
+
             return true;
           } catch (e) {
+            // 처리 중 에러가 발생할 경우 로그에 기록
             logger.error(e, req).catch((e) => { console.log(e); });
             return false;
           }
         })().catch((err) => {
           logger.error(err, req).catch((e) => { console.log(e); });
         });
-    
-        res.send({ message: "will do" });
+
+        res.send({ message: "will do" }); // 클라이언트에 작업이 시작되었음을 알림
       } catch (e) {
-         
+        // 예외 처리 및 에러 메시지 반환
+        logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /analyticsToday
+     * @description 오늘의 분석 데이터를 수집하여 MongoDB에 저장하는 라우터입니다. 
+     * 이 라우터는 오늘의 클라이언트 데이터, 쿼리 데이터, 분석 데이터를 수집하고, 요청에 따라 보고서를 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 'report' 플래그가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 반환합니다.
+     */
     router.post([ "/analyticsToday" ], async function (req, res) {
+      // 클라이언트에 대한 응답 헤더 설정, JSON 형식의 데이터를 반환함을 알리고 CORS 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // JSON 형식으로 응답
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용하는 HTTP 메서드
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용하는 HTTP 헤더
       });
+
       try {
+        // 로컬 MongoDB 인스턴스를 가져옴
         const selfMongo = instance.mongolocal;
+        // 클라이언트에서 전달된 'report' 플래그를 확인하여 보고서 모드 설정
         const reportMode = (req.body.report === 1 || req.body.report === "1")
-        let collection;
-        let anaid, ancid, key, rows;
-        let result;
-        let thisDate;
-        let now;
-    
+        let collection; // MongoDB 컬렉션 이름 저장
+        let anaid, ancid, key, rows; // 분석 ID, 클라이언트 ID, 키, 데이터베이스 행 저장용 변수
+        let result; // 분석 결과 저장 변수
+        let thisDate; // 오늘 날짜 저장 변수
+        let now; // 현재 시각 저장 변수
+
+        // 비동기 IIFE(즉시 호출 함수 표현식)를 사용하여 데이터를 처리
         (async () => {
           try {
-    
-            now = new Date();
-            thisDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    
-            // daily analytics
+
+            now = new Date(); // 현재 시각을 가져옴
+            thisDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0); // 오늘 날짜의 시작 시각 설정
+
+            // daily analytics - 오늘의 Google Analytics 데이터를 수집하여 MongoDB에 저장
             collection = "dailyAnalytics";
             result = await analytics.dailyMetric(thisDate);
             if (result === null) {
-               
-              await sleep(1000);
+              await sleep(1000); // 데이터 수집에 실패한 경우 1초 대기 후 재시도
               result = await analytics.dailyMetric(thisDate);
               if (result === null) {
-                 
                 await sleep(1000);
                 result = await analytics.dailyMetric(thisDate);
                 if (result === null) {
-                   
                   await sleep(1000);
                   result = await analytics.dailyMetric(thisDate);
                   if (result === null) {
-                     
+                    // 네 번의 시도 후에도 실패하면 로그만 남기고 넘어감
                   } else {
+                    // 데이터를 성공적으로 수집한 경우 MongoDB에 저장
                     anaid = result.anaid;
                     rows = await back.mongoRead(collection, { anaid }, { selfMongo });
                     if (rows.length !== 0) {
@@ -1876,13 +2555,13 @@ class StaticRouter {
               await back.mongoCreate(collection, result, { selfMongo });
               logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
-            await sleep(1000);
-    
-            // today clients
+            await sleep(1000); // 각 데이터 처리 후 1초 대기
+
+            // today clients - 오늘의 클라이언트 데이터를 수집하여 MongoDB에 저장
             collection = "dailyClients";
             result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolocal);
             if (result === null) {
-               
+              // 데이터 수집에 실패한 경우 처리 없음
             } else {
               ancid = result.ancid;
               rows = await back.mongoRead(collection, { ancid }, { selfMongo });
@@ -1893,24 +2572,21 @@ class StaticRouter {
               logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
-    
-            // daily query
+
+            // daily query - 오늘의 쿼리 데이터를 수집하여 MongoDB에 저장
             collection = "queryAnalytics";
             result = await analytics.queryParsing(thisDate, instance.mongolocal);
             if (result === null) {
-               
               await sleep(1000);
               result = await analytics.queryParsing(thisDate, instance.mongolocal);
               if (result === null) {
-                 
                 await sleep(1000);
                 result = await analytics.queryParsing(thisDate, instance.mongolocal);
                 if (result === null) {
-                   
                   await sleep(1000);
                   result = await analytics.queryParsing(thisDate, instance.mongolocal);
                   if (result === null) {
-                     
+                    // 네 번의 시도 후에도 실패하면 로그만 남기고 넘어감
                   } else {
                     key = result.key;
                     rows = await back.mongoRead(collection, { key }, { selfMongo });
@@ -1948,93 +2624,124 @@ class StaticRouter {
               logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
-    
+
+            // 보고서 모드가 활성화된 경우 기본 보고서 생성 요청을 실행
             if (reportMode) {
               await requestSystem("https://" + address.officeinfo.ghost.host + "/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
             }
-    
-            return true;
+
+            return true; // 성공적으로 모든 작업이 완료되었음을 반환
           } catch (e) {
+            // 처리 중 예외가 발생한 경우 예외를 기록하고 false 반환
             console.log(e);
             logger.error(e, req).catch((e) => { console.log(e); });
             return false;
           }
         })().catch((err) => {
+          // 비동기 함수에서 예외가 발생한 경우 예외를 기록
           logger.error(err, req).catch((e) => { console.log(e); });
         });
-    
-        res.send({ message: "will do" });
+
+        res.send({ message: "will do" }); // 클라이언트에 작업이 시작되었음을 알림
       } catch (e) {
-         
+        // 예외 처리 및 에러 메시지 반환
+        logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /analyticsMonthly
+     * @description 매월의 분석 데이터를 수집하여 MongoDB에 저장하는 라우터입니다. 
+     * 이 라우터는 지정된 날짜 또는 현재 날짜를 기준으로 분석 데이터를 수집하고 이를 MongoDB에 저장합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 'date' 필드를 포함할 수 있습니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 반환합니다.
+     */
     router.post([ "/analyticsMonthly" ], async function (req, res) {
+      // 클라이언트에 대한 응답 헤더 설정, JSON 형식의 데이터를 반환함을 알리고 CORS 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // JSON 형식으로 응답
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용하는 HTTP 메서드
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용하는 HTTP 헤더
       });
+
       try {
+        // 요청 본문에서 'date' 값을 equalJson 메서드를 사용해 추출. 이는 깊은 복사 및 Date 객체를 복원하기 위한 JSON.parse 업그레이드 버전 메서드.
         const { date } = equalJson(req.body);
-        const selfMongo = instance.mongolocal;
-        const collection = "complexAnalytics";
-        let targetDate;
-        let key;
-        let searchKey;
-        let rows;
-    
+        const selfMongo = instance.mongolocal; // 로컬 MongoDB 인스턴스를 가져옴
+        const collection = "complexAnalytics"; // MongoDB 컬렉션 이름을 설정
+        let targetDate; // 분석을 위한 대상 날짜
+        let key; // 데이터베이스에서 사용할 키
+        let searchKey; // 정규식 검색을 위한 키
+        let rows; // MongoDB에서 조회된 데이터 저장 변수
+
+        // 요청으로 받은 date가 Date 객체인지 확인. 만약 그렇지 않다면 현재 날짜로 설정
         if (!(date instanceof Date)) {
           targetDate = new Date();
         } else {
           targetDate = date;
         }
-    
+
+        // 비동기 IIFE(즉시 호출 함수 표현식)를 사용하여 데이터를 처리
         (async () => {
           try {
             let result;
+
+            // targetDate를 기준으로 월간 분석 데이터를 수집
             result = await analytics.monthlyMetric(targetDate);
+
             if (result === null) {
-               
+              // 분석 데이터 수집이 실패한 경우 처리 없음
             } else {
+              // 지난달 분석 데이터의 키를 설정하고, 이를 기준으로 MongoDB에서 기존 데이터를 검색
               key = result.pastMonth.key;
               searchKey = "^" + key.split("_").slice(0, -1).join("_");
               rows = await back.mongoRead(collection, { key: { $regex: searchKey } }, { selfMongo });
+
+              // 기존 데이터가 존재하면 삭제
               if (rows.length !== 0) {
                 await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
               }
+
+              // 새로운 데이터를 MongoDB에 생성
               await back.mongoCreate(collection, result.pastMonth, { selfMongo });
               logger.cron("monthly analytics done : " + dateToString(result.pastMonth.date.from)).catch((err) => { console.log(err); });
-    
+
+              // 이번 달 분석 데이터가 존재하는 경우 처리
               if (result.thisMonth !== null) {
-                await sleep(1000);
+                await sleep(1000); // 1초 대기
                 key = result.thisMonth.key;
                 searchKey = "^" + key.split("_").slice(0, -1).join("_");
                 rows = await back.mongoRead(collection, { key: { $regex: searchKey } }, { selfMongo });
+
+                // 기존 데이터가 존재하면 삭제
                 if (rows.length !== 0) {
                   await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
                 }
+
+                // 새로운 데이터를 MongoDB에 생성
                 await back.mongoCreate(collection, result.thisMonth, { selfMongo });
                 logger.cron("monthly analytics done : " + dateToString(result.thisMonth.date.from)).catch((err) => { console.log(err); });
-    
               }
             }
-            return true;
+            return true; // 성공적으로 모든 작업이 완료되었음을 반환
           } catch (e) {
+            // 처리 중 예외가 발생한 경우 예외를 기록하고 false 반환
             console.log(e);
             logger.error(e, req).catch((e) => { console.log(e); });
             return false;
           }
         })().catch((err) => {
+          // 비동기 함수에서 예외가 발생한 경우 예외를 기록
           logger.error(err, req).catch((e) => { console.log(e); });
           console.log(err);
         });
-    
-        res.send({ message: "will do" });
+
+        res.send({ message: "will do" }); // 클라이언트에 작업이 시작되었음을 알림
       } catch (e) {
-         
+        // 예외 처리 및 에러 메시지 반환
+        logger.error(e, req).catch((e) => { console.log(e); });
         res.send(JSON.stringify({ error: e.message }));
       }
     });
@@ -3296,8 +4003,7 @@ class StaticRouter {
           return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
         }).then(() => {
           if (mode === "general") {
-            // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-            // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
           } else if (mode === "update") {
             if (naverId !== "") {
               logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {

@@ -70,7 +70,7 @@ DevContext.prototype.launching = async function () {
 
 
     
-    await findCode("/kakaoComplex")
+    await findCode("/printText")
     
     
 
