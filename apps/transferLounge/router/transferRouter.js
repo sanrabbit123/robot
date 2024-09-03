@@ -1,5 +1,5 @@
 /**
- * @file TransferRouter.js
+ * @file transferRouter.js
  * @description 이 파일은 Transfer Lounge 서버의 라우터를 정의합니다. 
  * 주로 파일 업로드, 클라이언트 및 디자이너 데이터 관리, 디렉토리 읽기 등을 처리합니다.
  */

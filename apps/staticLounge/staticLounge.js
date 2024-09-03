@@ -1,17 +1,19 @@
-const StaticLounge = function (mother = null, back = null, address = null) {
-  if (mother !== null && back !== null && address !== null) {
-    this.mother = mother;
-    this.back = back;
-    this.address = address;
-  } else {
-    const Mother = require(process.cwd() + "/apps/mother.js");
-    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-    const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-    this.mother = new Mother();
-    this.back = new BackMaker();
-    this.address = ADDRESS;
+class StaticLounge {
+  constructor (mother = null, back = null, address = null) {
+    if (mother !== null && back !== null && address !== null) {
+      this.mother = mother;
+      this.back = back;
+      this.address = address;
+    } else {
+      const Mother = require(process.cwd() + "/apps/mother.js");
+      const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+      const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+      this.mother = new Mother();
+      this.back = new BackMaker();
+      this.address = ADDRESS;
+    }
+    this.dir = process.cwd() + "/apps/staticLounge";
   }
-  this.dir = process.cwd() + "/apps/staticLounge";
 }
 
 StaticLounge.prototype.staticConnect = async function () {
@@ -94,80 +96,9 @@ StaticLounge.prototype.staticConnect = async function () {
 
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, kakaoInstance, humanInstance);
-    await router.setMembers();
-    const rouObj = router.getAll();
-    const logStream = fs.createWriteStream(thisLogFile);
-    await expressLog(serverName, logStream, "start");
-    const logger = {
-      alert: async (text) => {
-        try {
-          expressLog(serverName, logStream, "alert", { text }).catch((err) => { console.log(err) });
-          await emergencyAlarm(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      log: async (text) => {
-        try {
-          expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
-          await errorLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      error: async (text) => {
-        try {
-          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
-          await alertLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      cron: async (text) => {
-        try {
-          expressLog(serverName, logStream, "cron", { text }).catch((err) => { console.log(err) });
-          await cronLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      alive: async (text) => {
-        try {
-          expressLog(serverName, logStream, "alive", { text }).catch((err) => { console.log(err) });
-          await aliveLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      stream: logStream,
-      path: thisLogFile,
-    };
-    for (let obj of rouObj.get) {
-      app.get(obj.link, async function (req, res) {
-        try {
-          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res, logger);
-        } catch (e) {
-          console.log(e);
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ error: e.message }));
-        }
-      });
-    }
-    for (let obj of rouObj.post) {
-      app.post(obj.link, async function (req, res) {
-        try {
-          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res, logger);
-        } catch (e) {
-          console.log(e);
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ error: e.message }));
-        }
-      });
-    }
-    console.log(`set router`);
+    const staticRouter = new StaticRouter(MONGOC, kakaoInstance, humanInstance);
+    const router = staticRouter.setRouter();
+    app.use("/", router);
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

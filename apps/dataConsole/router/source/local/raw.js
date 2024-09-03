@@ -1334,14 +1334,6 @@ RawJs.prototype.baseMaker = function () {
             if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
-            } else if (/drawio$/.test(absolute)) {
-              loading = instance.mother.grayLoading();
-              ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-              ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
-              if (typeof url === "string") {
-                blankHref(url);
-              }
-              loading.remove();
             } else if (/pdf$/.test(absolute)) {
               blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
             }
@@ -3533,14 +3525,6 @@ RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
-                  } else if (/drawio$/.test(absolute)) {
-                    loading = instance.mother.grayLoading();
-                    ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-                    ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
-                    if (typeof url === "string") {
-                      blankHref(url);
-                    }
-                    loading.remove();
                   } else if (/pdf$/.test(absolute)) {
                     blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
                   } else if (/hlschedule$/.test(absolute)) {
