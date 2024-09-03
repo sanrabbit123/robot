@@ -5028,35 +5028,6 @@ KakaoTalk.prototype.ObserveRemain = async function () {
 }
 
 /**
- * @method getAccessToken
- * @description Kakao API에 접근하기 위한 액세스 토큰을 가져옵니다.
- * @returns {Promise<string|null>} 액세스 토큰을 반환하며, 실패 시 null을 반환합니다.
- * @throws {Error} 액세스 토큰 요청 중 오류가 발생한 경우 예외를 발생시킵니다.
- */
-KakaoTalk.prototype.getAccessToken = async function () {
-  // 인스턴스를 참조하기 위한 상수입니다.
-  const instance = this;
-
-  // Kakao API 서버 주소를 가져옵니다.
-  const address = this.address;
-
-  // Mother 클래스에서 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
-  const { requestSystem } = this.mother;
-
-  try {
-    // Kakao API 서버로부터 액세스 토큰을 요청합니다.
-    const { accessToken } = (await requestSystem("https://" + address.secondinfo.host + ":3003/kakaoAccessToken")).data;
-
-    // 액세스 토큰을 반환합니다.
-    return accessToken;
-
-  } catch (e) {
-    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
-    return null;  // 실패 시 null을 반환합니다.
-  }
-}
-
-/**
  * @method campaignsIdMap
  * @description 광고 캠페인의 ID 맵을 생성하고, 필요 시 JSON 파일로 저장하는 메서드입니다.
  * @param {boolean} store - 캠페인 데이터를 JSON 파일로 저장할지 여부를 결정하는 플래그

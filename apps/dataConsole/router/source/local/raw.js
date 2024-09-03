@@ -2332,11 +2332,6 @@ RawJs.prototype.baseMaker = function () {
             event: function (e) {
               const toId = this.getAttribute("to");
               const fromId = this.getAttribute("from");
-              ajaxJson({ fromId, toId }, S3HOST + ":3000/fromToFileAlarm").then(() => {
-                removeByClass(memberContextmenuPopupClassName);
-              }).catch((err) => {
-                console.log(err);
-              });
             }
           }
         ]
