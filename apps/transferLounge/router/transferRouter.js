@@ -3812,6 +3812,7 @@ class TransferRouter {
           let rows;
           let jsonModel;
           let targetData;
+          let whereQuery;
 
           // mode가 "save"인 경우, 사진 경로를 저장하는 작업을 수행합니다.
           if (mode === "save") {
