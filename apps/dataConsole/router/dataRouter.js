@@ -55,7 +55,7 @@ const queryFilter = function (str) {
 }
 
 class DataRouter {
-  constructor (MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
+  constructor (MONGOC, kakaoInstance, humanInstance) {
     this.mother = new Mother();
     this.back = new BackMaker();
     this.work = new BackWorker();
@@ -68,8 +68,8 @@ class DataRouter {
     this.calendar = new GoogleCalendar();
     this.analytics = new GoogleAnalytics();
     this.mongo = MONGOC;
-    this.mongolocal = MONGOLOCALC;
-    this.mongolog = MONGOLOGC;
+    this.mongolocal = MONGOC;
+    this.mongolog = MONGOC;
     this.pythonApp = this.dir + "/python/app.py";
     this.members = {};
     this.kakao = kakaoInstance;

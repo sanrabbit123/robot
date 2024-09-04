@@ -674,15 +674,9 @@ DataConsole.prototype.connect = async function () {
 
     //set mongo connetion
     await this.back.setInfoObj({ getMode: false });
-
     const MONGOC = new mongo(mongoinfo);
-    const MONGOLOCALC = new mongo(mongoofficeinfo);
-    const MONGOLOGC = new mongo(mongotestinfo);
-
     await MONGOC.connect();
-    await MONGOLOCALC.connect();
-    await MONGOLOGC.connect();
-    console.log(`set db`);
+
 
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -723,7 +717,7 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance);
+    const router = new DataRouter(MONGOC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
