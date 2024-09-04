@@ -1388,7 +1388,10 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
   // HTTP 메서드가 POST인 경우
   if (method === "POST") {
     command += "-X " + method + " "; // curl 명령어에 HTTP 메서드를 추가합니다.
-    command += "-d '" + JSON.stringify(data) + "' "; // data 객체를 JSON 문자열로 변환하여 curl 명령어에 추가합니다.
+    // data 객체를 url encode 문자열로 변환하여 curl 명령어에 추가합니다.
+    for (let key in data) {
+      command += "--data-urlencode '" + key + "=" + String(data[key]) + "' ";
+    }
   }
 
   // config 객체에 headers 속성이 객체로 존재하는지 확인합니다.
@@ -1399,7 +1402,7 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
     }
   } else {
     // headers 속성이 없으면 기본 Content-Type 헤더를 추가합니다.
-    command += "-H \"Content-Type: application/json\" ";
+    command += "-H \"Content-Type: x-www-form-urlencoded\" ";
   }
 
   command += to; // 요청할 URL을 curl 명령어에 추가합니다.

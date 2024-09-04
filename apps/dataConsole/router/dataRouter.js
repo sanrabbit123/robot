@@ -3970,26 +3970,46 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               }
 
               buyer_tel = autoHypenPhone(paymentData.customer.phoneNumber);
-              convertingData = {
-                goodName: paymentData.orderName,
-                goodsName: paymentData.orderName,
-                resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
-                resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
-                tid: paymentData.pgTxId,
-                payMethod: "CARD",
-                applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-                mid: mid,
-                MOID: paymentData.id,
-                TotPrice: String(paymentData.amount.total),
-                buyerName: paymentData.customer.name,
-                CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
-                CARD_Num: paymentData.method.card.number,
-                CARD_ApplPrice: String(paymentData.amount.total),
-                CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
-                vactBankName: paymentData.method.card.name,
-                payDevice: "MOBILE",
-                P_FN_NM: paymentData.method.card.name,
-              };
+              if (/card/gi.test(paymentData.method.type)) {
+                convertingData = {
+                  goodName: paymentData.orderName,
+                  goodsName: paymentData.orderName,
+                  resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
+                  resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
+                  tid: paymentData.pgTxId,
+                  payMethod: "CARD",
+                  applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+                  mid: mid,
+                  MOID: paymentData.id,
+                  TotPrice: String(paymentData.amount.total),
+                  buyerName: paymentData.customer.name,
+                  CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
+                  CARD_Num: paymentData.method.card.number,
+                  CARD_ApplPrice: String(paymentData.amount.total),
+                  CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
+                  vactBankName: paymentData.method.card.name,
+                  payDevice: "MOBILE",
+                  P_FN_NM: paymentData.method.card.name,
+                };
+              } else {
+                convertingData = {
+                  goodName: paymentData.orderName,
+                  goodsName: paymentData.orderName,
+                  resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
+                  resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
+                  tid: paymentData.pgTxId,
+                  payMethod: paymentData.method.type,
+                  applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+                  mid: mid,
+                  MOID: paymentData.id,
+                  TotPrice: String(paymentData.amount.total),
+                  buyerName: paymentData.customer.name,
+                  vactBankName: paymentData.method.bank,
+                  payDevice: "MOBILE",
+                  P_FN_NM: paymentData.method.bank,
+                  CARD_BankCode: paymentData.method.bank,
+                };
+              }
 
               const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
               let requestNumber, projects;
@@ -5106,6 +5126,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             vactBankName: paymentData.method.card.name,
             payDevice: "MOBILE",
             P_FN_NM: paymentData.method.card.name,
+            "__ignorethis__": 1,
           };
           res.send(JSON.stringify({ convertingData }));
         } else {
@@ -10057,10 +10078,14 @@ DataRouter.prototype.rou_post_ghostClientBill = function () {
           updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
           proofs = bill.returnBillDummies("proofs");
-          if (typeof data.P_FN_NM === "string") {
-            proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+          if (/card/gi.test(data.payMethod)) {
+            if (typeof data.P_FN_NM === "string") {
+              proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+            } else {
+              proofs.method = "카드(알 수 없음)";
+            }
           } else {
-            proofs.method = "카드(알 수 없음)";
+            proofs.method = "가상계좌";
           }
           proofs.proof = inisis;
           proofs.to = data.buyerName;

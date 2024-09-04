@@ -4750,7 +4750,6 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
       boo = true;  // 성공 메시지가 포함된 경우 boo를 true로 설정합니다.
     } else {
-      console.log(data);
       boo = false;  // 그렇지 않은 경우 boo를 false로 설정합니다.
     }
 
