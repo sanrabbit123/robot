@@ -1997,10 +1997,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
-    if (/홈리에종 계약금/gi.test(this.bill.requests[this.requestNumber].name)) {
-      GeneralJs.selfHref(FRONTHOST + "/payment.php?proid=" + proid + "&desid=" + desid + "&method=" + method);
-    }
-
     this.request = {
       name: "",
       amount: 0,
