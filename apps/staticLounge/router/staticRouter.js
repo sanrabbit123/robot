@@ -51,7 +51,7 @@ const bar = "============================================================"; // �
 const { 
   errorLog, alertLog, cronLog, aliveLog, expressLog, requestSystem, equalJson, dateToString, stringToDate, sleep, 
   mysqlQuery, diskReading, aliveMongo, fileSystem, shellExec, shellLink, leafParsing, uniqueValue, stringToLink, 
-  binaryRequest, zeroAddition, autoHypenPhone, processSystem, messageSend, cryptoString, objectDeepCopy, 
+  binaryRequest, zeroAddition, autoHypenPhone, processSystem, messageSend, cryptoString, objectDeepCopy, emergencyAlarm,
   linkToString, ghostFileUpload, jsonToString, tempReplaceImage, serviceParsing, ipParsing, messageLog, autoComma 
 } = mother; // Mother 클래스에서 제공하는 다양한 유틸리티 메서드 및 정보를 디스트럭처링 할당합니다.
 
