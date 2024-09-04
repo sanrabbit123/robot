@@ -3819,116 +3819,117 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const mid = address.officeinfo.inicis.mid;
       const status = req.body.status;
 
-      console.log(req.body);
-      console.log(JSON.stringify(req.body, null, 2));
-
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
-          if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
+          if (req.body.imp_uid !== undefined && req.body.tx_id === undefined) {
+            if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
 
-            const bill = new BillMaker();
-            const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-              imp_key: address.officeinfo.import.key,
-              imp_secret: address.officeinfo.import.secret
-            }, { headers: { "Content-Type": "application/json" } }));
-            const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
-              method: "get",
-              headers: { "Authorization": accessToken }
-            });
-            const { buyer_tel, paid_at } = paymentData;
-            const today = new Date();
-            logger.alert(JSON.stringify(paymentData, null, 2)).catch((e) => { console.log(e); });
-            const convertingData = {
-              goodName: paymentData.name,
-              goodsName: paymentData.name,
-              resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
-              resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
-              tid: paymentData.pg_tid,
-              payMethod: "CARD",
-              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-              mid: mid,
-              MOID: oid,
-              TotPrice: String(paymentData.amount),
-              buyerName: paymentData.buyer_name,
-              CARD_BankCode: paymentData.card_code,
-              CARD_Num: paymentData.card_number,
-              CARD_ApplPrice: String(paymentData.amount),
-              CARD_Code: paymentData.card_code,
-              vactBankName: paymentData.card_name,
-              payDevice: "MOBILE",
-              P_FN_NM: paymentData.card_name,
-            };
-            const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
-            let requestNumber, projects;
-            if (clients.length > 0) {
-              const [ client ] = clients;
-              if (/잔금/gi.test(paymentData.name)) {
-                projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
-              } else {
-                projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
-              }
-              if (projects.length > 0) {
-                projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
-                const [ project ] = projects;
-                let bills;
-                bills = await bill.getBillsByQuery({ $and: [
-                    { "links.proid": project.proid },
-                    { "links.cliid": client.cliid },
-                    { "links.method": project.service.online ? "online" : "offline" }
-                  ]
-                });
-                if (bills.length === 0) {
+              const bill = new BillMaker();
+              const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+                imp_key: address.officeinfo.import.key,
+                imp_secret: address.officeinfo.import.secret
+              }, { headers: { "Content-Type": "application/json" } }));
+              const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+                method: "get",
+                headers: { "Authorization": accessToken }
+              });
+              const { buyer_tel, paid_at } = paymentData;
+              const today = new Date();
+              logger.alert(JSON.stringify(paymentData, null, 2)).catch((e) => { console.log(e); });
+              const convertingData = {
+                goodName: paymentData.name,
+                goodsName: paymentData.name,
+                resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
+                resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
+                tid: paymentData.pg_tid,
+                payMethod: "CARD",
+                applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+                mid: mid,
+                MOID: oid,
+                TotPrice: String(paymentData.amount),
+                buyerName: paymentData.buyer_name,
+                CARD_BankCode: paymentData.card_code,
+                CARD_Num: paymentData.card_number,
+                CARD_ApplPrice: String(paymentData.amount),
+                CARD_Code: paymentData.card_code,
+                vactBankName: paymentData.card_name,
+                payDevice: "MOBILE",
+                P_FN_NM: paymentData.card_name,
+              };
+              const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
+              let requestNumber, projects;
+              if (clients.length > 0) {
+                const [ client ] = clients;
+                if (/잔금/gi.test(paymentData.name)) {
+                  projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+                } else {
+                  projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
+                }
+                if (projects.length > 0) {
+                  projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
+                  const [ project ] = projects;
+                  let bills;
                   bills = await bill.getBillsByQuery({ $and: [
                       { "links.proid": project.proid },
                       { "links.cliid": client.cliid },
+                      { "links.method": project.service.online ? "online" : "offline" }
                     ]
                   });
-                }
-                if (bills.length > 0) {
-                  const [ thisBill ] = bills;
-                  requestNumber = 0;
-                  for (let i = 0; i < thisBill.requests.length; i++) {
-                    if (convertingData.goodName === thisBill.requests[i].name) {
-                      requestNumber = i;
-                      break;
-                    }
+                  if (bills.length === 0) {
+                    bills = await bill.getBillsByQuery({ $and: [
+                        { "links.proid": project.proid },
+                        { "links.cliid": client.cliid },
+                      ]
+                    });
                   }
-                  await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
-                    bilid: thisBill.bilid,
-                    requestNumber,
-                    data: convertingData
-                  }, { headers: { "Content-Type": "application/json" } });
-                } else {
-                  throw new Error("cannot find bills (from links.proid and links.cliid)");
+                  if (bills.length > 0) {
+                    const [ thisBill ] = bills;
+                    requestNumber = 0;
+                    for (let i = 0; i < thisBill.requests.length; i++) {
+                      if (convertingData.goodName === thisBill.requests[i].name) {
+                        requestNumber = i;
+                        break;
+                      }
+                    }
+                    await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
+                      bilid: thisBill.bilid,
+                      requestNumber,
+                      data: convertingData
+                    }, { headers: { "Content-Type": "application/json" } });
+                  } else {
+                    throw new Error("cannot find bills (from links.proid and links.cliid)");
+                  }
                 }
               }
+  
+            } else if (/dreg_/g.test(oid)) {
+              const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+                imp_key: address.officeinfo.import.key,
+                imp_secret: address.officeinfo.import.secret
+              }, { headers: { "Content-Type": "application/json" } }));
+              const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+                method: "get",
+                headers: { "Authorization": accessToken }
+              });
+              const [ oidConst, aspid0, aspid1 ] = oid.split("_");
+              const aspid = aspid0 + "_" + aspid1;
+  
+              if (paymentData.pay_method === "card") {
+                await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
+                  aspid,
+                  mode: "card",
+                  status: "paid"
+                }, { headers: { "Content-Type": "application/json" } });
+              } else {
+                await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
+                  aspid,
+                  mode: "vbank",
+                  status: "paid"
+                }, { headers: { "Content-Type": "application/json" } });
+              }
             }
-
-          } else if (/dreg_/g.test(oid)) {
-            const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-              imp_key: address.officeinfo.import.key,
-              imp_secret: address.officeinfo.import.secret
-            }, { headers: { "Content-Type": "application/json" } }));
-            const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
-              method: "get",
-              headers: { "Authorization": accessToken }
-            });
-            const [ oidConst, aspid0, aspid1 ] = oid.split("_");
-            const aspid = aspid0 + "_" + aspid1;
-
-            if (paymentData.pay_method === "card") {
-              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                aspid,
-                mode: "card",
-                status: "paid"
-              }, { headers: { "Content-Type": "application/json" } });
-            } else {
-              await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                aspid,
-                mode: "vbank",
-                status: "paid"
-              }, { headers: { "Content-Type": "application/json" } });
-            }
+          } else {
+            console.log(req.body);
           }
         }
       }
