@@ -1523,14 +1523,15 @@ ClientJs.prototype.spreadData = async function (search = null) {
       const ago = new Date();
       ago.setDate(ago.getDate() - 64);
       clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
+
+      console.log(clients);
+
     } else {
       clients = await ajaxJson({ query: search }, "/searchClients");
     }
 
     GeneralJs.stacks.entireDesignerTong = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
-    console.log(GeneralJs.stacks.entireDesignerTong);
-    console.log(clients);
-    // GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
+    GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
 
     const { standard, data } = clients;
     const addInfoTargetArr = data.map((o) => { return { cliid: o.standard.cliid, status: o.info.status, timeline: stringToDate(o.info.timeline) } }).filter((o) => {
