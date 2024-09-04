@@ -3931,6 +3931,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           } else {
             if (req.body.payment_id !== undefined) {
               
+              const oid = req.body.payment_id;
               const bill = new BillMaker();
               const url = "https://api.portone.io";
               const today = new Date();
