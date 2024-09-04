@@ -8265,7 +8265,7 @@ class TransferRouter {
               /**
                * @description 외부 시스템에 요청을 보내 디자인 제안서 정보를 가져옵니다.
                */
-              thisResponse = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/listDesignProposal", {
+              thisResponse = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/listDesignProposal", {
                   mode: "pick", // 디자인 제안서 정보를 조회할 때 사용되는 mode
                   desid, // 조회할 디자이너의 ID
               }, {
