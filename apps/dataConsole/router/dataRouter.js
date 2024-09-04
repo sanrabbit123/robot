@@ -3992,7 +3992,6 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               };
 
               const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
-              console.log(clients);
               let requestNumber, projects;
               if (clients.length > 0) {
                 const [ client ] = clients;
@@ -4002,7 +4001,6 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                   projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
                 }
 
-                console.log(projects);
                 if (projects.length > 0) {
                   projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
                   const [ project ] = projects;
@@ -4029,8 +4027,6 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                         break;
                       }
                     }
-                    console.log(convertingData);
-                    console.log(thisBill.bilid, requestNumber)
 
                     await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
                       bilid: thisBill.bilid,

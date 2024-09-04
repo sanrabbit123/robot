@@ -105,17 +105,8 @@ KakaoTalk.prototype.setAuth = async function () {
     this.authObj.userid = this.userid;
     this.authObj.senderkey = this.senderkey;
 
-    // 서버에 요청을 보내 IP 주소를 확인합니다.
-    const { data } = await requestSystem("https://" + address.officeinfo.host + ":3002");
-
     // 응답된 IP 주소에 따라 적절한 토큰을 설정합니다.
-    if (this.ipRegExp.office.test(data.trim())) {
-      this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
-    } else if (this.ipRegExp.console.test(data.trim())) {
-      this.authObj.token = this.token.console;  // 콘솔 IP일 경우 콘솔 토큰을 설정합니다.
-    } else if (this.ipRegExp.second.test(data.trim())) {
-      this.authObj.token = this.token.second;  // 두 번째 IP일 경우 두 번째 토큰을 설정합니다.
-    }
+    this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
 
     return true;  // 인증이 성공적으로 설정되면 true를 반환합니다.
   } catch (e) {
