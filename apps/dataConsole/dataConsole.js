@@ -485,7 +485,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
     cpCommandTong = (commandTong.filter((o) => { return /\.js[\'\"]? /.test(o) }).map((c) => {
       const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
       const updatedJs = tempCommandArr[1].replace(/\/([a-zA-Z0-9_\- ]+\.js[\'\"]?)/g, (match, p1) => {
-        return "/updated_" + p1;
+        return "/" + p1;
       });
       return tempCommandArr.slice(0, -1).join(" ").replace(/^scp/, "cp") + " " + updatedJs;
     }));
@@ -607,7 +607,7 @@ DataConsole.prototype.renderDesignerPhp = async function () {
     cpCommandTong = (commandTong.filter((o) => { return /\.js[\'\"]? /.test(o) }).map((c) => {
       const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
       const updatedJs = tempCommandArr[1].replace(/\/([a-zA-Z0-9_\- ]+\.js[\'\"]?)/g, (match, p1) => {
-        return "/updated_" + p1;
+        return "/" + p1;
       });
       return tempCommandArr.slice(0, -1).join(" ").replace(/^scp/, "cp") + " " + updatedJs;
     }));
@@ -618,14 +618,11 @@ DataConsole.prototype.renderDesignerPhp = async function () {
     });
     scpCommand2 = scpCommand2Tong.join(";");
 
-    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-      await shellExec(command);
-      await shellExec(cpCommand);
-      await shellExec(scpCommand2);
-      console.log(`front update done`);
-    }
+    await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+    await shellExec(command);
+    await shellExec(cpCommand);
+    await shellExec(scpCommand2);
+    console.log(`front update done`);
 
   } catch (e) {
     console.log(e);

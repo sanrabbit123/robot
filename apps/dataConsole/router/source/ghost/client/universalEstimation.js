@@ -2024,6 +2024,26 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     }
 
+    // const portoneSDK = await GeneralJs.requestPromise("https://cdn.portone.io/v2/browser-sdk.js");
+    // const portoneFunction = new Function(portoneSDK);
+    // portoneFunction();
+
+    // window.PortOne.requestPayment({
+    //   customer: {
+    //     fullName: "배창규",
+    //     phoneNumber: "010-2747-3403",
+    //     email: "uragenbooks@gmail.com",
+    //   },
+    //   card: {},
+    //   storeId: "MOIhomeli1",
+    //   paymentId: "testm0njis9g",
+    //   orderName: "홈리에종 계약금",
+    //   totalAmount: 10,
+    //   currency: "KRW",
+    //   channelKey: "channel-key-17297ee2-039b-44c1-82d8-f3d4907b5549",
+    //   payMethod: "CARD",
+    // });
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "universalEstimation",

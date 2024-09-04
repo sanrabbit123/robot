@@ -7,10 +7,10 @@ const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
 const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
 const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
 const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
-const express = require('express');
+const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
 const { resolve } = require('path');
-const router = express.Router();
-const cookieParsing = function (req) {
+
+const cookieParsing = (req) => {
   if (req.headers.cookie === undefined) {
     return null;
   } else {
@@ -47,12 +47,13 @@ const cookieParsing = function (req) {
     }
   }
 }
-const queryFilter = function (str) {
+const queryFilter = (str) => {
   str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
   str = str.replace(/\n/g, '');
   str = str.replace(/\t/g, '');
   return str;
 }
+
 
 class DataRouter {
   constructor (MONGOC, kakaoInstance, humanInstance) {
@@ -70,7 +71,6 @@ class DataRouter {
     this.mongo = MONGOC;
     this.mongolocal = MONGOC;
     this.mongolog = MONGOC;
-    this.pythonApp = this.dir + "/python/app.py";
     this.members = {};
     this.kakao = kakaoInstance;
     this.human = humanInstance;
@@ -79,90 +79,6 @@ class DataRouter {
 
   static timeouts = {};
 }
-
-DataRouter.prototype.getDateMatrix = async function (length = 6) {
-  const instance = this;
-  try {
-    const today = new Date();
-    const dateMatrix = await this.mother.pythonExecute(this.pythonApp, [ "dateMatrix" ], { length });
-
-    let year, month;
-    let day0, day1, day2;
-    let dateString0, dateString1;
-    let resultArr, middleResultArr, resultFactorArr;
-
-    resultArr = [];
-    for (let j = 0; j < dateMatrix.length; j++) {
-
-      year = today.getFullYear();
-      month = today.getMonth() + 1 - j;
-
-      year = today.getFullYear() + Math.floor(month / 12) + ((month % 12) === 0 ? -1 : 0);
-      month = (month % 12) > 0 ? (month % 12) : 12 + (month % 12);
-
-      middleResultArr = [];
-      for (let i = 0; i < dateMatrix[j].length; i++) {
-        resultFactorArr = [];
-
-        day0 = dateMatrix[j][i][0];
-        resultFactorArr.push(new Date(year, month - 1, day0));
-
-        day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];
-        resultFactorArr.push(new Date(year, month - 1, day1));
-
-        if (i !== dateMatrix[j].length - 1) {
-          day2 = dateMatrix[j][i + 1][0];
-          resultFactorArr.push(new Date(year, month - 1, day2));
-        } else {
-          day2 = 1;
-          if (month === 12) {
-            resultFactorArr.push(new Date(year + 1, 0, day2));
-          } else {
-            resultFactorArr.push(new Date(year, month, day2));
-          }
-        }
-        middleResultArr.push(resultFactorArr);
-      }
-      resultArr.push(middleResultArr);
-    }
-
-    return resultArr;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC, logger) {
-  if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
-  const app = new AddressParser();
-  const back = this.back;
-  const { messageSend, messageLog } = this.mother;
-  try {
-    let arr;
-    arr = await app.addressInspection([ { id, address: rawString } ]);
-    if (arr.length === 0) {
-      return { result: true, id };
-    } else {
-      const res = await app.getAddress(rawString);
-      if (res === null) {
-        return { result: false, id };
-      } else {
-        const { address: { road } } = res;
-        await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
-        return { result: true, id };
-      }
-    }
-  } catch (e) {
-    await logger.error("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
-    console.log(e);
-  }
-}
-
-//GET ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_get_Root = function () {
   const instance = this;
@@ -1459,11 +1375,130 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   const back = this.back;
   const address = this.address;
   const port = 3000;
-  const { equalJson, zeroAddition, requestSystem } = this.mother;
+  const { equalJson, zeroAddition, requestSystem, objectDeepCopy } = this.mother;
   let obj = {};
   obj.link = "/getClientReport";
   obj.func = async function (req, res, logger) {
     try {
+      const getDateMatrix = async (length = 6) => {
+        const tripleMatrixByDate = (length = 6) => {
+          const matrixCalendar = (year, month) => {
+            let matrix, weekArr;
+            let leftDates;
+            let weeks;
+            let weekLeft;
+            let first, last;
+            let firstDate, lastDate;
+            let firstDay;
+            let weekLength;
+            let firstWeekLength, middleWeekLength, fianlWeekLength;
+      
+            first = new Date(year, month - 1, 0);
+            last = new Date(year, month, 0);
+      
+            firstDate = first.getDate();
+            firstDay = first.getDay();
+            lastDate = last.getDate();
+      
+            leftDates = lastDate - (7 - firstDay)
+            weeks = Math.floor(leftDates / 7)
+            weekLeft = leftDates % 7
+      
+            firstWeekLength = lastDate - weekLeft - (weeks * 7)
+            middleWeekLength = weeks;
+            fianlWeekLength = weekLeft;
+      
+            matrix = [];
+            weekArr = [];
+            for (let i = 0; i < firstWeekLength; i++) {
+              weekArr.push(i + 1)
+            }
+            matrix.push(objectDeepCopy(weekArr));
+            
+            for (let i = 0; i < middleWeekLength; i++) {
+              weekArr = [];
+              for (let j = 0; j < 7; j++) {
+                weekArr.push(matrix[0][matrix[0].length - 1] + 1 + j + (i * 7));
+              }
+              matrix.push(objectDeepCopy(weekArr));
+            }
+      
+            weekArr = [];
+            for (let i = 0; i < fianlWeekLength; i++) {
+              weekArr.unshift(lastDate - i);
+            }
+            if (weekArr.length !== 0) {
+              matrix.push(objectDeepCopy(weekArr));
+            }
+            return matrix;
+          }
+      
+          const today = new Date();
+          let copiedDate;
+          let year, month;
+          let motherMatrix;
+          
+          motherMatrix = [];
+          for (let i = 0; i < length; i++) {
+            copiedDate = new Date(JSON.stringify(today).slice(1, -1));
+            copiedDate.setMonth(copiedDate.getMonth() - i);
+            year = copiedDate.getFullYear();
+            month = copiedDate.getMonth() + 1;
+            motherMatrix.push(objectDeepCopy(matrixCalendar(year, month)));
+          }
+      
+          return motherMatrix;
+        }
+        try {
+          const today = new Date();
+          const dateMatrix = tripleMatrixByDate(length);
+            
+          let year, month;
+          let day0, day1, day2;
+          let dateString0, dateString1;
+          let resultArr, middleResultArr, resultFactorArr;
+      
+          resultArr = [];
+          for (let j = 0; j < dateMatrix.length; j++) {
+      
+            year = today.getFullYear();
+            month = today.getMonth() + 1 - j;
+      
+            year = today.getFullYear() + Math.floor(month / 12) + ((month % 12) === 0 ? -1 : 0);
+            month = (month % 12) > 0 ? (month % 12) : 12 + (month % 12);
+      
+            middleResultArr = [];
+            for (let i = 0; i < dateMatrix[j].length; i++) {
+              resultFactorArr = [];
+      
+              day0 = dateMatrix[j][i][0];
+              resultFactorArr.push(new Date(year, month - 1, day0));
+      
+              day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];
+              resultFactorArr.push(new Date(year, month - 1, day1));
+      
+              if (i !== dateMatrix[j].length - 1) {
+                day2 = dateMatrix[j][i + 1][0];
+                resultFactorArr.push(new Date(year, month - 1, day2));
+              } else {
+                day2 = 1;
+                if (month === 12) {
+                  resultFactorArr.push(new Date(year + 1, 0, day2));
+                } else {
+                  resultFactorArr.push(new Date(year, month, day2));
+                }
+              }
+              middleResultArr.push(resultFactorArr);
+            }
+            resultArr.push(middleResultArr);
+          }
+      
+          return resultArr;
+        } catch (e) {
+          console.log(e);
+          return [];
+        }
+      }
       const today = new Date();
       const proposalStandardDate = new Date(2021, 8, 1);
       const proposalStandardDateValue = proposalStandardDate.valueOf();
@@ -1513,9 +1548,9 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       }
 
       if (!searchBoo) {
-        dateMatrix = await instance.getDateMatrix(Number(req.body.month));
+        dateMatrix = await getDateMatrix(Number(req.body.month));
       } else {
-        dateMatrix = await instance.getDateMatrix(Number(req.body.month));
+        dateMatrix = await getDateMatrix(Number(req.body.month));
         for (let i = 0; i < req.body.endMonth; i++) {
           dateMatrix.shift();
         }
@@ -3008,7 +3043,6 @@ DataRouter.prototype.rou_post_sendCertification = function () {
 
 DataRouter.prototype.rou_post_clientSubmit = function () {
   const instance = this;
-  const back = this.back;
   const { equalJson, stringToDate, messageSend, messageLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/clientSubmit" ];
@@ -3020,6 +3054,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const back = instance.back;
       const selfMongo = instance.mongo;
       const { map } = equalJson(req.body);
       const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
@@ -3064,11 +3099,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       living = map.find((obj) => { return obj.property === "living" });
       etc = map.find((obj) => { return obj.property === "etc" });
       contract = map.find((obj) => { return obj.property === "contract" });
-
       sessionId = map.find((obj) => { return obj.property === "sessionId" });
-
-      // budget = map.find((obj) => { return obj.property === "budget" });
-      // furniture = map.find((obj) => { return obj.property === "furniture" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
         throw new Error("invaild post");
@@ -3079,13 +3110,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       } else {
         sessionId = [ sessionId.value.trim() ];
       }
-
-      // if (budget === undefined) {
-      //   budget = { property: "budget", value: budgetArr[9] };
-      // }
-      // if (furniture === undefined) {
-      //   furniture = { property: "furniture", value: furnitureArr[1] };
-      // }
 
       if (contract === undefined) {
         contract = { property: "contract", value: contractArr[0] };
@@ -3193,9 +3217,31 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       }
 
-      instance.parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).then((r) => {
-        const { result, id } = r;
-      }).catch((err) => {
+      const parsingAddress = async (id, rawString, MONGOC, logger) => {
+        if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
+          throw new Error("invaild input");
+        }
+        const app = new AddressParser();
+        try {
+          let arr;
+          arr = await app.addressInspection([ { id, address: rawString } ]);
+          if (arr.length === 0) {
+            return { result: true, id };
+          } else {
+            const res = await app.getAddress(rawString);
+            if (res === null) {
+              return { result: false, id };
+            } else {
+              const { address: { road } } = res;
+              await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
+              return { result: true, id };
+            }
+          }
+        } catch (e) {
+          await logger.error("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
+        }
+      }
+      parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).catch((err) => {
         logger.error("주소 연산 중 오류 생김 : " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
@@ -4106,10 +4152,6 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
 
 DataRouter.prototype.rou_post_parsingAddress = function () {
   const instance = this;
-  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
-  const addressApp = new AddressParser();
-  const back = this.back;
-  const calendar = this.calendar;
   const { equalJson, autoComma, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/parsingAddress" ];
@@ -4121,6 +4163,9 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const addressApp = new AddressParser();
+      const calendar = instance.calendar;
+      const back = instance.back;
       if (req.body.mode === undefined) {
         throw new Error("must be mode => inspection, distance");
       }
