@@ -1866,12 +1866,6 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
       }
     }
 
-    if (!refresh) {
-      if (pythonSend) {
-        await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
-      }
-    }
-
     completeInfo.raw = data;
 
     if (data.CARD_BankCode !== undefined) {
@@ -1890,6 +1884,11 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
       completeInfo.price = Number(data.raw.amount.total);
     }
 
+    if (!refresh) {
+      if (pythonSend) {
+        await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
+      }
+    }
     this.completeMode = true;
 
   } catch (e) {

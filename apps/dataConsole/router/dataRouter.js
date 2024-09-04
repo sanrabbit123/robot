@@ -3801,7 +3801,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageSend, zeroAddition } = this.mother;
+  const { requestSystem, messageSend, zeroAddition, autoHypenPhone } = this.mother;
   let obj = {};
   obj.link = "/webHookPayment";
   obj.public = true;
@@ -3820,7 +3820,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const status = req.body.status;
 
       if (typeof status === "string") {
-        if (/paid/gi.test(status)) {
+        if (/paid/gi.test(status) || /Paid/gi.test(status)) {
           if (req.body.imp_uid !== undefined && req.body.tx_id === undefined) {
             if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
 
@@ -3929,7 +3929,117 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               }
             }
           } else {
-            console.log(req.body);
+            if (req.body.payment_id !== undefined) {
+              
+              const bill = new BillMaker();
+              const url = "https://api.portone.io";
+              const today = new Date();
+              let config, accessToken, accessTokenResponse;
+              let getPaymentInfoResponse;
+              let getPaymentInfoConfig;
+              let paymentData;
+              let convertingData;
+              let buyer_tel;
+              let responseFromPG;
+              let tempMatrix;
+
+              config = { headers: { "Content-Type": "application/json" } };
+    
+              accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
+              accessToken = accessTokenResponse.data.accessToken;
+              config.headers["Authorization"] = "Bearer " + accessToken;
+          
+              getPaymentInfoConfig = objectDeepCopy(config);
+              getPaymentInfoConfig.method = "get";
+          
+              getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
+              paymentData = getPaymentInfoResponse.data;
+              try {
+                responseFromPG = JSON.parse(paymentData.pgResponse);
+              } catch {
+                try {
+                  tempMatrix = paymentData.pgResponse.split("&").map((str) => { return str.split("=") });
+                  responseFromPG = {};
+                  for (let [ key, value ] of tempMatrix) {
+                    responseFromPG[key] = value;
+                  }
+                } catch {
+                  responseFromPG = {};
+                }
+              }
+
+              buyer_tel = autoHypenPhone(paymentData.customer.phoneNumber);
+
+              console.log(paymentData);
+
+              convertingData = {
+                goodName: paymentData.orderName,
+                goodsName: paymentData.orderName,
+                resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
+                resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
+                tid: paymentData.pgTxId,
+                payMethod: "CARD",
+                applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+                mid: mid,
+                MOID: paymentData.id,
+                TotPrice: String(paymentData.amount.total),
+                buyerName: paymentData.customer.name,
+                CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
+                CARD_Num: paymentData.method.card.number,
+                CARD_ApplPrice: String(paymentData.amount.total),
+                CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
+                vactBankName: paymentData.method.card.name,
+                payDevice: "MOBILE",
+                P_FN_NM: paymentData.method.card.name,
+              };
+
+              const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
+              let requestNumber, projects;
+              if (clients.length > 0) {
+                const [ client ] = clients;
+                if (/잔금/gi.test(paymentData.name)) {
+                  projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+                } else {
+                  projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
+                }
+                if (projects.length > 0) {
+                  projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
+                  const [ project ] = projects;
+                  let bills;
+                  bills = await bill.getBillsByQuery({ $and: [
+                      { "links.proid": project.proid },
+                      { "links.cliid": client.cliid },
+                      { "links.method": project.service.online ? "online" : "offline" }
+                    ]
+                  });
+                  if (bills.length === 0) {
+                    bills = await bill.getBillsByQuery({ $and: [
+                        { "links.proid": project.proid },
+                        { "links.cliid": client.cliid },
+                      ]
+                    });
+                  }
+                  if (bills.length > 0) {
+                    const [ thisBill ] = bills;
+                    requestNumber = 0;
+                    for (let i = 0; i < thisBill.requests.length; i++) {
+                      if (convertingData.goodName === thisBill.requests[i].name) {
+                        requestNumber = i;
+                        break;
+                      }
+                    }
+                    await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
+                      bilid: thisBill.bilid,
+                      requestNumber,
+                      data: convertingData
+                    }, { headers: { "Content-Type": "application/json" } });
+                  } else {
+                    throw new Error("cannot find bills (from links.proid and links.cliid)");
+                  }
+                }
+              }
+
+            }
           }
         }
       }
@@ -4996,7 +5106,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             vactBankName: paymentData.method.card.name,
             payDevice: "MOBILE",
             P_FN_NM: paymentData.method.card.name,
-            "__ignorethis__": 1,
           };
           res.send(JSON.stringify({ convertingData }));
         } else {
