@@ -10137,19 +10137,6 @@ class StaticRouter {
           await back.mongoCreate(collection, thisData, { selfMongo: instance.mongolocal });
         }
 
-        // Facebook Conversion API에 이벤트를 보냅니다.
-        instance.facebook.conversionEvent({
-          name,
-          data: {
-            ip: ip,
-            userAgent: userAgent,
-          },
-          custom,
-        }).catch((err) => {
-          // 이벤트 전송에 실패하면 에러를 로그에 기록합니다.
-          logger.error(err, req).catch((e) => { console.log(e); });
-        });
-
         // 클라이언트에게 작업이 완료되었음을 알립니다.
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
