@@ -78,42 +78,6 @@ class DataRouter {
   }
 
   static timeouts = {};
-
-}
-
-DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
-  const instance = this;
-  let html;
-  if (mode === "first") {
-    html = `<!DOCTYPE html>
-    <html lang="ko" dir="ltr">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
-        <title>HomeLiaison Console: ${target}</title>
-        <style></style>
-      </head>
-      <body>
-        <div id="totalcontents"></div>
-        <script src="/${target}.js"></script>
-      </body>
-    </html>`;
-    return new Promise((resolve, reject) => {
-      resolve(html);
-    });
-  } else if (mode === "middle") {
-
-    return new Promise((resolve, reject) => {
-      resolve(`<!DOCTYPE html>
-      <html lang="ko" dir="ltr"><head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
-      <title>${target.trim().replace(/\.js/gi, '')}</title><style></style>
-      </head><body><div id="totalcontents"></div><script src="/middle/${target.trim().replace(/\.js/gi, '')}.js"></script>
-      </body></html>`)
-    });
-
-  }
 }
 
 DataRouter.prototype.getDateMatrix = async function (length = 6) {
@@ -179,21 +143,17 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC, log
   const { messageSend, messageLog } = this.mother;
   try {
     let arr;
-
-    //client
-    if (/^c/gi.test(id)) {
-      arr = await app.addressInspection([ { id, address: rawString } ]);
-      if (arr.length === 0) {
-        return { result: true, id };
+    arr = await app.addressInspection([ { id, address: rawString } ]);
+    if (arr.length === 0) {
+      return { result: true, id };
+    } else {
+      const res = await app.getAddress(rawString);
+      if (res === null) {
+        return { result: false, id };
       } else {
-        const res = await app.getAddress(rawString);
-        if (res === null) {
-          return { result: false, id };
-        } else {
-          const { address: { road } } = res;
-          await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
-          return { result: true, id };
-        }
+        const { address: { road } } = res;
+        await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
+        return { result: true, id };
       }
     }
   } catch (e) {
@@ -337,58 +297,25 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (/^cl/i.test(req.params.id)) {
-          target = "client";
-        } else if (/^bu/i.test(req.params.id)) {
-          target = "builder";
-        } else if (/^de/i.test(req.params.id)) {
-          target = "designer";
-        } else if (/^dash/i.test(req.params.id)) {
-          target = "dashboard";
-        } else if (/^proj/i.test(req.params.id)) {
-          target = "project";
-        } else if (/^prop/i.test(req.params.id)) {
-          target = "proposal";
-        } else if (/^proc/i.test(req.params.id)) {
-          target = "process";
-        } else if (/^con/i.test(req.params.id)) {
-          target = "contents";
-        } else if (/^fil/i.test(req.params.id)) {
-          target = "file";
-        } else if (/^mes/i.test(req.params.id)) {
-          target = "message";
-        } else if (/^use/i.test(req.params.id)) {
-          target = "user";
-        } else if (/^mpr/i.test(req.params.id)) {
-          target = "mpr";
-        } else if (/^ana/i.test(req.params.id)) {
-          target = "analytics";
-        } else if (/^ca/i.test(req.params.id)) {
-          target = "calculation";
-        } else if (/^sa/i.test(req.params.id)) {
-          target = "sales";
-        } else if (/^flo/i.test(req.params.id)) {
-          target = "flow";
-        } else if (/^numb/i.test(req.params.id)) {
-          target = "numbers";
-        } else if (/^raw/i.test(req.params.id)) {
-          target = "raw";
-        } else {
-          target = "client";
-        }
-
-        instance.baseMaker(target, "first", null).then(function (html) {
-          res.set("Content-Type", "text/html");
-          res.send(html);
-        }).catch(function (err) {
-          throw new Error(err);
-        });
+        res.set("Content-Type", "text/html");
+        res.send(`<!DOCTYPE html>
+        <html lang="ko" dir="ltr">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+            <title>HomeLiaison Console: ${req.params.id}</title>
+            <style></style>
+          </head>
+          <body>
+            <div id="totalcontents"></div>
+            <script src="/${req.params.id}.js"></script>
+          </body>
+        </html>`);
 
       }
 
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
       res.set({ "Content-Type": "text/plain" });
       res.send("error");
     }
@@ -402,15 +329,18 @@ DataRouter.prototype.rou_get_Middle = function () {
   obj.link = "/middle/:id";
   obj.func = async function (req, res, logger) {
     try {
-      instance.baseMaker(req.params.id, "middle", req).then(function (html) {
-        res.set("Content-Type", "text/html");
-        res.send(html);
-      }).catch(function (err) {
-        throw new Error(err);
-      });
+      res.set("Content-Type", "text/html");
+      res.send(`<!DOCTYPE html>
+      <html lang="ko" dir="ltr"><head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+      <title>${req.params.id.trim().replace(/\.js/gi, '')}</title><style></style>
+      </head><body><div id="totalcontents"></div><script src="/middle/${req.params.id.trim().replace(/\.js/gi, '')}.js"></script>
+      </body></html>`);
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      res.set({ "Content-Type": "text/plain" });
+      res.send("error");
     }
   }
   return obj;
