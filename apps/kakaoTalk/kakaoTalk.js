@@ -106,7 +106,8 @@ KakaoTalk.prototype.setAuth = async function () {
     this.authObj.senderkey = this.senderkey;
 
     // 응답된 IP 주소에 따라 적절한 토큰을 설정합니다.
-    this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
+    // this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
+    this.authObj.token = "c0832d822a788e478151d14c55743a24dbc30b739885898519e8709c3bb6ec9af11a52a42d474f6884f8c759fd1bc63eacf1a698bd884bceaccd8115de220b6eHKEFd+jum5g9DJrwlLRJKkheISNqZKe89o4Rlk0kqb1d5wFNO+4OUBWDjIFMtbISQWQDv0Yrmj92QEbBukbyHg==";
 
     return true;  // 인증이 성공적으로 설정되면 true를 반환합니다.
   } catch (e) {
@@ -4710,8 +4711,8 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
   // HumanPacket 클래스의 인스턴스를 가져옵니다.
   const human = this.human;
 
-  // Mother 클래스에서 curlRequest 메서드를 구조 분해 할당으로 가져옵니다.
-  const { curlRequest } = this.mother;
+  // Mother 클래스에서 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
+  const { requestSystem } = this.mother;
 
   try {
     let options, boo, data;
@@ -4735,13 +4736,12 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
 
       try {
         // 알림톡을 전송합니다.
-        console.log(options);
-        (data = await curlRequest("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
-        console.log(data);
+        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
       } catch (e) {
         console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
         data = null;  // 데이터는 null로 설정합니다.
       }
+
       boo = true;  // 전송 성공 시 boo를 true로 설정합니다.
     } catch (e) {
       console.log(e);  // 인증 또는 옵션 설정 중 오류 발생 시 로그를 출력합니다.

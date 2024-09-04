@@ -79,32 +79,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-    const mid = "MOIhomeli1";
-    const oid = "homeliaisonBill_1725451805369";
-    const impId = "0191bc8d-0c99-6193-4651-52c61b505fb0";
   
-    const url = "https://api.portone.io";
-    let config, accessToken, accessTokenResponse;
-    let getPaymentInfoResponse;
-    let getPaymentInfoConfig;
-    let paymentData;
-    let responseFromPG;
-
-    config = { headers: { "Content-Type": "application/json" } };
-
-    accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
-    accessToken = accessTokenResponse.data.accessToken;
-    config.headers["Authorization"] = "Bearer " + accessToken;
-
-    getPaymentInfoConfig = objectDeepCopy(config);
-    getPaymentInfoConfig.method = "get";
-
-    getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
-    paymentData = getPaymentInfoResponse.data;
-
-    console.log(paymentData);
+    
 
     
 
