@@ -331,8 +331,6 @@ Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
     config.headers["Content-Type"] = "application/json";
   }
 
-  console.log(nvpBoo, data);
-
   // GET 메서드의 경우 URL에 데이터 추가
   if (method === "get") {
     getData = "?";
@@ -968,7 +966,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   if (configBoo) {
     if (/json/gi.test(JSON.stringify(config))) {
       jsonBoo = true;
-    } else if (/x\-www\-form\-urlencoded/gi.test(JSON.stringify(config))) {
+    } else if (/x-www-form-urlencoded/gi.test(JSON.stringify(config))) {
       nvpBoo = true;
       dataString = "";
       for (let i in data) {
@@ -999,6 +997,9 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       method = "patch";
     }
   }
+
+  console.log(nvpBoo, data);
+
 
   // Promise 반환
   return new Promise(function (resolve, reject) {
