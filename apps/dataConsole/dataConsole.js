@@ -496,9 +496,10 @@ DataConsole.prototype.renderFrontPhp = async function () {
     });
     scpCommand2 = scpCommand2Tong.join(";");
 
-    await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+    console.log(command);
     await shellExec(command);
-    await shellExec(cpCommand);
+
+    console.log(scpCommand2);
     await shellExec(scpCommand2);
     console.log(`front update done`);
     
@@ -618,9 +619,10 @@ DataConsole.prototype.renderDesignerPhp = async function () {
     });
     scpCommand2 = scpCommand2Tong.join(";");
 
-    await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+
+    console.log(command);
     await shellExec(command);
-    await shellExec(cpCommand);
+    console.log(scpCommand2);
     await shellExec(scpCommand2);
     console.log(`front update done`);
 
