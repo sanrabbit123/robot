@@ -20702,8 +20702,6 @@ GeneralJs.updateValue = async function (dataObj) {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
     } else if (window.location.pathname === "/project") {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
-    } else if (window.location.pathname === "/contents") {
-      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
     }
 
     if (response.message !== "success") {
@@ -20762,8 +20760,6 @@ GeneralJs.returnValue = async function () {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
       } else if (window.location.pathname === "/project") {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
-      } else if (window.location.pathname === "/contents") {
-        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
       }
 
       if (response.message !== "success") {

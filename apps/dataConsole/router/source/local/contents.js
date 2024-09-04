@@ -1334,31 +1334,6 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         pid,
         conid,
       },
-      // event: {
-      //   click: async function (e) {
-      //     try {
-      //       const pid = this.getAttribute("pid");
-      //       const conid = this.getAttribute("conid");
-      //       let whereQuery, updateQuery;
-            
-      //       whereQuery = { conid };
-      //       updateQuery = {};
-      //       updateQuery.conid = conid;
-      //       updateQuery.pid = pid;
-      //       updateQuery.complete = true;
-      //       updateQuery.date = new Date();
-
-      //       await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
-      //       instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
-
-      //       fireEvent(cancelBack, "click");
-      //       await instance.spreadContents(null);
-
-      //     } catch (e) {
-      //       console.log(e);
-      //     }
-      //   }
-      // },
       style: {
         top: String(8) + ea,
         right: String(0),

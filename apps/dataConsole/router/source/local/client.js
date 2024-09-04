@@ -1523,12 +1523,10 @@ ClientJs.prototype.spreadData = async function (search = null) {
       const ago = new Date();
       ago.setDate(ago.getDate() - 64);
       clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
-
-      console.log(clients);
-
     } else {
       clients = await ajaxJson({ query: search }, "/searchClients");
     }
+    clients.standard = DataPatch.clientStandard();
 
     GeneralJs.stacks.entireDesignerTong = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
     GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });

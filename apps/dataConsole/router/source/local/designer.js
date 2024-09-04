@@ -1635,6 +1635,7 @@ DesignerJs.prototype.spreadData = async function (search = null, localMode = fal
     } else {
       designers = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchDesigners"));
     }
+    designers.standard = DataPatch.designerStandard();
 
     const { standard, data } = designers;
 

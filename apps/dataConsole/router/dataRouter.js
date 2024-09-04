@@ -6,6 +6,7 @@ const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
 const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
 const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
 const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
 const express = require('express');
 const { resolve } = require('path');
 const router = express.Router();
@@ -54,10 +55,7 @@ const queryFilter = function (str) {
 }
 
 class DataRouter {
-  constructor (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
-    if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
-      throw new Error("must be mongo, mongo_local connection");
-    }
+  constructor (MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
     this.mother = new Mother();
     this.back = new BackMaker();
     this.work = new BackWorker();
@@ -65,7 +63,6 @@ class DataRouter {
     this.address = require(`${process.cwd()}/apps/infoObj.js`);
     this.bill = new BillMaker();
     this.patch = new DataPatch();
-    this.middle = DataMiddle;
     this.sheets = new GoogleSheet();
     this.drive = new GoogleDrive();
     this.calendar = new GoogleCalendar();
@@ -86,12 +83,8 @@ class DataRouter {
 
 DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const instance = this;
-  const ADDRESS = this.address;
-  const DataMiddle = this.middle;
   let html;
-
   if (mode === "first") {
-
     html = `<!DOCTYPE html>
     <html lang="ko" dir="ltr">
       <head>
@@ -105,24 +98,19 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
         <script src="/${target}.js"></script>
       </body>
     </html>`;
-
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       resolve(html);
     });
-
-
   } else if (mode === "middle") {
 
-    return new Promise(function(resolve, reject) {
-      if (DataMiddle !== null) {
-        DataMiddle.baseHtml(target, req, instance.mongo, instance.mongolocal).then(function (html) {
-          resolve(html);
-        }).catch(function (e) {
-          reject(e);
-        });
-      } else {
-        resolve(`<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`);
-      }
+    return new Promise((resolve, reject) => {
+      resolve(`<!DOCTYPE html>
+      <html lang="ko" dir="ltr"><head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+      <title>${target.trim().replace(/\.js/gi, '')}</title><style></style>
+      </head><body><div id="totalcontents"></div><script src="/middle/${target.trim().replace(/\.js/gi, '')}.js"></script>
+      </body></html>`)
     });
 
   }
@@ -547,11 +535,12 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       let thisEvaluationSendRow;
       let thisEvaluationResultRow;
 
+      standard = null;
+
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
         req.body.where = req.body.whereQuery;
       }
       if (req.url === "/getClients") {
-        standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
           optionQuery.sort = equalJson(req.body.sort);
@@ -569,7 +558,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           raw_data = await back.getClientsByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getDesigners") {
-        standard = instance.patch.designerStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
           optionQuery.sort = equalJson(req.body.sort);
@@ -587,7 +575,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           raw_data = await back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getProjects") {
-        standard = instance.patch.projectStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
           optionQuery.sort = equalJson(req.body.sort);
@@ -606,7 +593,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           raw_data = await back.getProjectsByQuery(whereQuery, optionQuery);
         }
       } else if (req.url === "/getContents") {
-        standard = instance.patch.contentsStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
           optionQuery.sort = equalJson(req.body.sort);
@@ -624,7 +610,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           raw_data = await back.getContentsArrByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getBuilders") {
-        standard = null;
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
           optionQuery.sort = equalJson(req.body.sort);
@@ -795,7 +780,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
   const back = this.back;
   const { equalJson, dateToString, serviceParsing, db, stringToDate, requestSystem } = this.mother;
   let obj = {};
-  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
+  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners" ];
   obj.func = async function (req, res, logger) {
     try {
       const selfMongo = instance.mongolocal;
@@ -832,22 +817,16 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       let thisEvaluationSendRow;
       let thisEvaluationResultRow;
 
+      standard = null;
       if (req.url === "/searchClients") {
-        standard = instance.patch.clientStandard();
         map = instance.patch.clientMap();
         idName = "cliid";
       } else if (req.url === "/searchProjects") {
-        standard = instance.patch.projectStandard();
         map = instance.patch.projectMap();
         idName = "proid";
       } else if (req.url === "/searchDesigners") {
-        standard = instance.patch.designerStandard();
         map = instance.patch.designerMap();
         idName = "desid";
-      } else if (req.url === "/searchContents") {
-        standard = instance.patch.contentsStandard();
-        map = instance.patch.contentsMap();
-        idName = "conid";
       }
 
       mapArr = Object.values(map);
@@ -1036,8 +1015,6 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         }
       } else if (req.url === "/searchDesigners") {
         rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-      } else if (req.url === "/searchContents") {
-        rawJson = await instance.back.getContentsArrByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
       }
 
       if (req.body.noFlat === undefined) {
@@ -1184,7 +1161,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   const back = this.back;
   const { fileSystem, shellExec, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
-  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject" ];
   obj.func = async function (req, res, logger) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user, thisCase } = equalJson(req.body);
@@ -1209,9 +1186,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       } else if (req.url === "/updateProject") {
         thisPath = "project";
         map = instance.patch.projectMap();
-      } else if (req.url === "/updateContents") {
-        thisPath = "contents";
-        map = instance.patch.contentsMap();
       }
 
       noUpdate = false;
@@ -1309,8 +1283,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             whereQuery[map.desid.position] = thisId;
           } else if (req.url === "/updateProject") {
             whereQuery[map.proid.position] = thisId;
-          } else if (req.url === "/updateContents") {
-            whereQuery[map.conid.position] = thisId;
           }
 
           if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
@@ -1320,8 +1292,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
               message = await instance.back.updateHistory("designer", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
             } else if (req.url === "/updateProject") {
               message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-            } else if (req.url === "/updateContents") {
-              message = await instance.back.updateHistory("contents", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
             }
           } else {
             if (req.url === "/updateClient") {
@@ -1330,8 +1300,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
               message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
             } else if (req.url === "/updateProject") {
               message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-            } else if (req.url === "/updateContents") {
-              message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
             }
           }
 

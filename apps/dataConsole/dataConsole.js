@@ -176,7 +176,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataMiddle) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder) {
   const instance = this;
   const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
@@ -190,7 +190,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataMid
   const CONTENTSHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
-  const testDir = this.frontDir + "/test";
   try {
     //set static
     const staticTargets = [
@@ -280,15 +279,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataMid
       }
 
       //set data patch
-      const { patch: onoffObj, class: classOnOffObj, meta, name, route } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+      const { class: classOnOffObj, name, route } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
 
       //set meta info
       route.unshift(name);
-      for (let routeName of route) {
-        DataMiddle.setMetadata(routeName, meta);
-        DataMiddle.setNamedata(routeName, name);
-        DataMiddle.setNamedata(routeName + ".js", name);
-      }
 
       //set browser js
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
@@ -371,10 +365,8 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const staticMiddleFolder = staticFolder + "/middle";
   const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/client";
-  const testDir = this.frontDir + "/test";
-  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataMiddle);
+    await this.renderMiddleStatic(staticFolder);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "clientEvaluation", to: "evaluation", path: "/middle/evaluation" },
@@ -504,15 +496,14 @@ DataConsole.prototype.renderFrontPhp = async function () {
     });
     scpCommand2 = scpCommand2Tong.join(";");
 
-    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-      await shellExec(command);
-      await shellExec(cpCommand);
-      await shellExec(scpCommand2);
-      console.log(`front update done`);
-    }
+    await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+    await shellExec(command);
+    await shellExec(cpCommand);
+    await shellExec(scpCommand2);
+    console.log(`front update done`);
     
+    await instance.renderDesignerPhp();
+
   } catch (e) {
     console.log(e);
   }
@@ -528,10 +519,8 @@ DataConsole.prototype.renderDesignerPhp = async function () {
   const frontClientDir = this.frontDir + "/client";
   const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/designer";
-  const testDir = this.frontDir + "/test";
-  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataMiddle);
+    await this.renderMiddleStatic(staticFolder);
     const targetMap = [
       { from: "designerAbout", to: "about", path: "/middle/designerAbout" },
       { from: "designerBoard", to: "dashboard", path: "/middle/designerBoard" },
@@ -733,10 +722,8 @@ DataConsole.prototype.connect = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const DataPatch = require(`${this.dir}/router/dataPatch.js`);
-    const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance);
+    const router = new DataRouter(MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
@@ -834,7 +821,7 @@ DataConsole.prototype.connect = async function () {
         sleep(500).then(() => {
           return instance.renderStatic(staticFolder);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataMiddle);
+          return instance.renderMiddleStatic(staticFolder);
         }).then(() => {
           console.log(`static done`);
         }).catch((err) => {
@@ -844,7 +831,7 @@ DataConsole.prototype.connect = async function () {
         fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
           return instance.renderStatic(staticFolder);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataMiddle);
+          return instance.renderMiddleStatic(staticFolder);
         }).then(() => {
           console.log(`static done`);
           return shellExec("rm", [ "-rf", process.env.HOME + "/" + tempProcessName ]);

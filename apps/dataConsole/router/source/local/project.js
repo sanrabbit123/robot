@@ -1553,6 +1553,8 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     } else {
       projects = await GeneralJs.ajaxJson({ query: search }, "/searchProjects");
     }
+    projects.standard = DataPatch.projectStandard();
+
     sortStandard = (str) => {
       const date = stringToDate(str);
       if (date.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
