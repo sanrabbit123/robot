@@ -107,7 +107,7 @@ KakaoTalk.prototype.setAuth = async function () {
 
     // 응답된 IP 주소에 따라 적절한 토큰을 설정합니다.
     // this.authObj.token = this.token.office;  // 사무실 IP일 경우 사무실 토큰을 설정합니다.
-    this.authObj.token = "c0832d822a788e478151d14c55743a24dbc30b739885898519e8709c3bb6ec9af11a52a42d474f6884f8c759fd1bc63eacf1a698bd884bceaccd8115de220b6eHKEFd+jum5g9DJrwlLRJKkheISNqZKe89o4Rlk0kqb1d5wFNO+4OUBWDjIFMtbISQWQDv0Yrmj92QEbBukbyHg==";
+    this.authObj.token = "7946e40839c6c10f5d7d2004aea008275c018f068a05b2a4cf94c2cdb5b6f85e46b00d7cbe9f65f7aa5371072fdd5726e75f30242ec923c67f9df02e60d327feE0GLlfCgJxbRnDxc84LCgBeh2lWZgpFb6efAvWCyFVzz7HC4RYkFSSEXIlX/zzixrb8FrL+IxUV/5zdzdRWdDQ==";
 
     return true;  // 인증이 성공적으로 설정되면 true를 반환합니다.
   } catch (e) {
