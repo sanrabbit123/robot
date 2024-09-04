@@ -68,10 +68,10 @@ DevContext.prototype.launching = async function () {
     // await this.certRefreshing();
     // =======================================================================================================================================================
 
-    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/syncDesignProposal", { data: null }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
-    
 
+
+    
+    
     
     
 
