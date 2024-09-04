@@ -1,20 +1,23 @@
+// Mother 모듈을 현재 작업 디렉토리에서 불러옵니다. 
+// 이 모듈은 다양한 백엔드 유틸리티 기능을 제공합니다.
+const Mother = require(process.cwd() + "/apps/mother.js");
+
+// BackMaker 모듈을 현재 작업 디렉토리에서 불러옵니다. 
+// 이 모듈은 백엔드 관련 추가 기능을 제공합니다.
+const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+
+// ADDRESS 모듈을 현재 작업 디렉토리에서 불러옵니다. 
+// 이 모듈은 주소 관련 정보를 관리하는 객체를 제공합니다.
+const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+const mother = new Mother();
+const back = new BackMaker();
+const address = ADDRESS;
+
 /**
  * BillMaker 클래스는 청구서와 관련된 여러 기능을 수행하는 클래스입니다.
  * @constructor
  */
 const BillMaker = function () {
-  // Mother 모듈을 현재 작업 디렉토리에서 불러옵니다. 
-  // 이 모듈은 다양한 백엔드 유틸리티 기능을 제공합니다.
-  const Mother = require(process.cwd() + "/apps/mother.js");
-
-  // BackMaker 모듈을 현재 작업 디렉토리에서 불러옵니다. 
-  // 이 모듈은 백엔드 관련 추가 기능을 제공합니다.
-  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-
-  // ADDRESS 모듈을 현재 작업 디렉토리에서 불러옵니다. 
-  // 이 모듈은 주소 관련 정보를 관리하는 객체를 제공합니다.
-  const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-
   // mother 속성에 Mother 클래스의 인스턴스를 생성하여 할당합니다.
   this.mother = new Mother();
 
