@@ -3992,6 +3992,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               };
 
               const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
+              console.log(clients);
               let requestNumber, projects;
               if (clients.length > 0) {
                 const [ client ] = clients;
