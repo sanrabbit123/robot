@@ -4735,7 +4735,7 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
 
       try {
         // 알림톡을 전송합니다.
-        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options, { headers: { "Content-Type": "x-www-form-urlencoded" } }));
+        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options, { headers: { "Content-Type": "application/json" } }));
       } catch (e) {
         console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
         data = null;  // 데이터는 null로 설정합니다.
@@ -4750,7 +4750,6 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
       boo = true;  // 성공 메시지가 포함된 경우 boo를 true로 설정합니다.
     } else {
-      console.log(options);
       console.log(data);
       boo = false;  // 그렇지 않은 경우 boo를 false로 설정합니다.
     }
