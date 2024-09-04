@@ -488,6 +488,16 @@ Robot.prototype.cronServer = async function () {
   }
 }
 
+Robot.prototype.taxBill = async function () {
+  try {
+    const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+    const app = new BillMaker();
+    await app.taxBill();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.localLog = async function () {
   const instance = this;
   const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
@@ -686,6 +696,13 @@ const MENU = {
   clientReportToSheets: async function () {
     try {
       await robot.clientReportToSheets();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  taxBill: async function () {
+    try {
+      await robot.taxBill();
     } catch (e) {
       console.log(e);
     }

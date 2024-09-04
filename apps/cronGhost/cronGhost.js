@@ -551,6 +551,17 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
         { headers: { "Content-Type": "application/json" } });
       })
 
+      // 열한 번째 요청이 성공적으로 완료되면 마지막 요청을 실행합니다.
+      .then(() => {
+        /**
+         * /taxBill 엔드포인트로 요청을 보내 세금 계산서를 처리합니다.
+         * @returns {Promise} 모든 요청이 성공적으로 완료된 후 최종적으로 작업이 종료됩니다.
+         */
+        return requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/taxBill", 
+        { data: null }, 
+        { headers: { "Content-Type": "application/json" } });
+      })
+
       // 모든 요청이 완료된 후 발생하는 오류를 처리합니다.
       .catch((e) => {
         throw new Error(e);

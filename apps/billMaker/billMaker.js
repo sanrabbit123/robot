@@ -7843,10 +7843,11 @@ BillMaker.prototype.taxBill = async function () {
   // human 변수에 HumanPacket 클래스의 인스턴스를 생성하여 저장합니다.
   const human = new HumanPacket();
 
+  // 로컬 MongoDB 데이터베이스에 연결을 시도합니다.
+  await MONGOLOCALC.connect();
+  const selfMongo = MONGOLOCALC;
+
   try {
-    // 로컬 MongoDB 데이터베이스에 연결을 시도합니다.
-    await MONGOLOCALC.connect();
-    const selfMongo = MONGOLOCALC;
 
     // jsdom 모듈을 가져와 HTML을 파싱하고 DOM 구조로 변환하는 데 사용합니다.
     const jsdom = require("jsdom");
@@ -8198,18 +8199,27 @@ BillMaker.prototype.taxBill = async function () {
     for (let i = 0; i < count; i++) {
       [ newMail ] = await human.getMails(id0, password0, [ count - i ]);
       if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
-        await readTaxBill(newMail);
+        try {
+          await readTaxBill(newMail);
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
-  } catch (e) {
-    // 오류가 발생하면 로그를 기록합니다.
-    await errorLog(e.message);
-    console.log(e);
-  } finally {
     // MongoDB 연결을 종료하고, 작업이 성공적으로 완료되었음을 로그에 기록합니다.
     await MONGOLOCALC.close();
-    await errorLog("taxBill success : " + JSON.stringify(new Date()));
+    await client.quit();
+    return true;
+
+  } catch (e) {
+    // 오류가 발생하면 로그를 기록합니다.
+    try {
+      await MONGOLOCALC.close();
+    } catch {}
+    await errorLog(e.message);
+    console.log(e);
+    return false;
   }
 }
 
