@@ -4001,6 +4001,8 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                 } else {
                   projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
                 }
+
+                console.log(projects);
                 if (projects.length > 0) {
                   projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
                   const [ project ] = projects;
