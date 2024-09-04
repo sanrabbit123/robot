@@ -2065,7 +2065,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, BACKHOST + "/errorLog");
-    alert("잘못된 접근입니다!");
+    window.alert("잘못된 접근입니다!");
     window.location.href = this.frontPage;
   }
 }

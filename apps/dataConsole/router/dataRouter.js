@@ -3768,11 +3768,14 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const oid = req.body.merchant_uid;
       const mid = address.officeinfo.inicis.mid;
       const status = req.body.status;
+
+      console.log(req.body);
+      console.log(JSON.stringify(req.body, null, 2));
+
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
           if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
 
-            const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
             const bill = new BillMaker();
             const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
               imp_key: address.officeinfo.import.key,

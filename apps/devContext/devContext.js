@@ -69,10 +69,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-
-    
-
-
+    const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
+    // https://localhost:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline
+    const channelKey = "channel-key-17297ee2-039b-44c1-82d8-f3d4907b5549"
+    const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
     
     
     

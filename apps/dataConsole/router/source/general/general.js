@@ -20146,7 +20146,6 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
             reject(err);
           })
         } else {
-          window.location.href = FRONTHOST + "/sessionClear.php";
           reject("invalid id");
         }
       }
