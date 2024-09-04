@@ -999,9 +999,6 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
     }
   }
 
-  console.log(nvpBoo, data);
-
-
   // Promise 반환
   return new Promise(function (resolve, reject) {
     if (method === "get") {
