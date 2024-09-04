@@ -1390,7 +1390,11 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
     command += "-X " + method + " "; // curl 명령어에 HTTP 메서드를 추가합니다.
     // data 객체를 url encode 문자열로 변환하여 curl 명령어에 추가합니다.
     for (let key in data) {
-      command += "--data-urlencode '" + key + "=" + String(data[key]) + "' ";
+      if (typeof data[key] === "object") {
+        command += "--data-urlencode \"" + key + "=" + JSON.stringify(data[key]) + "\" ";
+      } else {
+        command += "--data-urlencode \"" + key + "=" + String(data[key]) + "\" ";
+      }
     }
   }
 
