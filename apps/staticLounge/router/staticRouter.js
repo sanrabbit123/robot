@@ -5893,7 +5893,6 @@ class StaticRouter {
                   const endPoint = "https://" + address.secondinfo.host + ":" + String(3003); // 외부 API 엔드포인트 주소
                   const config = { headers: { "Content-Type": "application/json" } }; // 요청에 사용할 헤더 설정
                   const userName = "ubuntu"; // 서버에 접속할 사용자 이름
-                  const scpRoot = userName + "@" + address.secondinfo.host + ":"; // scp로 파일을 전송할 기본 경로
                   const scpPath = "/home/" + userName + "/static/photo/designer"; // 디자이너 파일 경로
                   const representativeFolderPath = "/representative"; // 대표 이미지 폴더 경로
                   const representativeRootPath = "/photo/designer" + representativeFolderPath; // 대표 이미지 루트 경로
@@ -6023,7 +6022,7 @@ class StaticRouter {
 
                       // 작업 파일 처리
                       worksFilesTargets = worksFiles.filter((o) => { return o.desid === desid; });
-                      worksFilesTargets = worksFilesTargets.map((o) => { return scpRoot + o.file; });
+                      worksFilesTargets = worksFilesTargets.map((o) => { return o.file; });
                       for (let downloadPath of worksFilesTargets) {
                           thisFileName = downloadPath.split("/")[downloadPath.split("/").length - 1];
                           thisFilePureName = thisFileName.split(".")[0];
