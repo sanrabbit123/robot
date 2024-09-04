@@ -3996,7 +3996,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               let requestNumber, projects;
               if (clients.length > 0) {
                 const [ client ] = clients;
-                if (/잔금/gi.test(paymentData.name)) {
+                if (/잔금/gi.test(paymentData.orderName)) {
                   projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
                 } else {
                   projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
