@@ -4710,8 +4710,8 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
   // HumanPacket 클래스의 인스턴스를 가져옵니다.
   const human = this.human;
 
-  // Mother 클래스에서 requestSystem 메서드를 구조 분해 할당으로 가져옵니다.
-  const { requestSystem } = this.mother;
+  // Mother 클래스에서 curlRequest 메서드를 구조 분해 할당으로 가져옵니다.
+  const { curlRequest } = this.mother;
 
   try {
     let options, boo, data;
@@ -4735,7 +4735,9 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
 
       try {
         // 알림톡을 전송합니다.
-        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+        console.log(options);
+        (data = await curlRequest("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+        console.log(data);
       } catch (e) {
         console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
         data = null;  // 데이터는 null로 설정합니다.
