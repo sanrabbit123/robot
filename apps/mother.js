@@ -964,7 +964,6 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
 
   // 설정에 따라 JSON 또는 x-www-form-urlencoded 형식 결정
   if (configBoo) {
-    console.log(JSON.stringify(config));
     if (/json/gi.test(JSON.stringify(config))) {
       jsonBoo = true;
     } else if (/x-www-form-urlencoded/gi.test(JSON.stringify(config))) {

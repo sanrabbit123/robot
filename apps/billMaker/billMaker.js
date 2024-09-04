@@ -2522,6 +2522,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
   // 현재 BillMaker 인스턴스를 instance 변수에 할당합니다.
   const instance = this;
+  const back = this.back;
 
   // Mother 클래스에서 필요한 모듈과 함수를 추출합니다.
   // mongo는 MongoDB와의 연결을 관리하는 모듈, mongoinfo와 mongoconsoleinfo는 각각 MongoDB 연결 정보입니다.
