@@ -1391,9 +1391,9 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
     // data 객체를 url encode 문자열로 변환하여 curl 명령어에 추가합니다.
     for (let key in data) {
       if (typeof data[key] === "object") {
-        command += "--data-urlencode \"" + key + "=" + JSON.stringify(data[key]) + "\" ";
+        command += "--data-urlencode \'" + key + "=" + JSON.stringify(data[key]) + "\' ";
       } else {
-        command += "--data-urlencode \"" + key + "=" + String(data[key]) + "\" ";
+        command += "--data-urlencode \'" + key + "=" + String(data[key]) + "\' ";
       }
     }
   }
@@ -1410,8 +1410,6 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
   }
 
   command += to; // 요청할 URL을 curl 명령어에 추가합니다.
-
-  console.log(command);
 
   // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
