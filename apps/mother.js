@@ -1407,6 +1407,8 @@ Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
 
   command += to; // 요청할 URL을 curl 명령어에 추가합니다.
 
+  console.log(command);
+
   // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
     // exec 함수를 사용하여 curl 명령어를 실행합니다.
