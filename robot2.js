@@ -199,16 +199,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
       return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
     }).then(() => {
       return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
-    }).then(() => {
-
-      return requestSystem("https://" + instance.address.officeinfo.host + ":3002/updateLog", {
-        id: cliid,
-        column: "action",
-        position: "requests." + String(requestNumber) + ".analytics.response.action",
-        pastValue: client.requests[requestNumber].analytics.response.action.value,
-        finalValue: action
-      }, { headers: { "origin": "https://" + instance.address.officeinfo.host, "Content-Type": "application/json" } });
-
+      
     }).then(() => {
 
       const targetProposal = project.toNormal().proposal;

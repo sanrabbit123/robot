@@ -1528,7 +1528,9 @@ ClientJs.prototype.spreadData = async function (search = null) {
     }
 
     GeneralJs.stacks.entireDesignerTong = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
-    GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
+    console.log(GeneralJs.stacks.entireDesignerTong);
+    console.log(clients);
+    // GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
 
     const { standard, data } = clients;
     const addInfoTargetArr = data.map((o) => { return { cliid: o.standard.cliid, status: o.info.status, timeline: stringToDate(o.info.timeline) } }).filter((o) => {

@@ -7,39 +7,9 @@ const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
 const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
 const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
 const express = require('express');
+const { resolve } = require('path');
 const router = express.Router();
-
-const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
-  if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
-    throw new Error("must be mongo, mongo_local connection");
-  }
-  this.mother = new Mother();
-  this.back = new BackMaker();
-  this.work = new BackWorker();
-  this.dir = process.cwd() + "/apps/dataConsole";
-  this.module = this.dir + "/module";
-  this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.bill = new BillMaker();
-  this.patchClass = DataPatch;
-  this.patch = new DataPatch();
-  this.middle = DataMiddle;
-  this.sheets = new GoogleSheet();
-  this.drive = new GoogleDrive();
-  this.calendar = new GoogleCalendar();
-  this.analytics = new GoogleAnalytics();
-  this.mongo = MONGOC;
-  this.mongolocal = MONGOLOCALC;
-  this.mongolog = MONGOLOGC;
-  this.pythonApp = this.dir + "/python/app.py";
-  this.members = {};
-  this.kakao = kakaoInstance;
-  this.human = humanInstance;
-  this.bankCode = BillMaker.returnBankCode("", "matrix");
-}
-
-DataRouter.timeouts = {};
-
-DataRouter.cookieParsing = function (req) {
+const cookieParsing = function (req) {
   if (req.headers.cookie === undefined) {
     return null;
   } else {
@@ -76,108 +46,47 @@ DataRouter.cookieParsing = function (req) {
     }
   }
 }
-
-DataRouter.queryFilter = function (str) {
+const queryFilter = function (str) {
   str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
   str = str.replace(/\n/g, '');
   str = str.replace(/\t/g, '');
   return str;
 }
 
-DataRouter.dateToString = function (obj) {
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return "0" + String(number);
-    } else {
-      return String(number);
+class DataRouter {
+  constructor (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance) {
+    if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
+      throw new Error("must be mongo, mongo_local connection");
     }
+    this.mother = new Mother();
+    this.back = new BackMaker();
+    this.work = new BackWorker();
+    this.dir = process.cwd() + "/apps/dataConsole";
+    this.address = require(`${process.cwd()}/apps/infoObj.js`);
+    this.bill = new BillMaker();
+    this.patch = new DataPatch();
+    this.middle = DataMiddle;
+    this.sheets = new GoogleSheet();
+    this.drive = new GoogleDrive();
+    this.calendar = new GoogleCalendar();
+    this.analytics = new GoogleAnalytics();
+    this.mongo = MONGOC;
+    this.mongolocal = MONGOLOCALC;
+    this.mongolog = MONGOLOGC;
+    this.pythonApp = this.dir + "/python/app.py";
+    this.members = {};
+    this.kakao = kakaoInstance;
+    this.human = humanInstance;
+    this.bankCode = BillMaker.returnBankCode("", "matrix");
   }
-  return `${String(obj.getFullYear())}-${zeroAddition(obj.getMonth() + 1)}-${zeroAddition(obj.getDate())}`;
+
+  static timeouts = {};
+
 }
-
-DataRouter.autoComma = function (str) {
-  if (typeof str === "number") {
-    str = String(str);
-  }
-  let minus, num, tmp;
-  if (/\-/g.test(str)) {
-    minus = /\-/g.exec(str)[0];
-  } else {
-    minus = '';
-  }
-  num = str.replace(/[^0-9]/g, '');
-  tmp = '';
-  if (num.length < 4) {
-    return minus + num;
-  } else if (num.length < 7) {
-    tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 10) {
-    tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 13) {
-    tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 16) {
-    tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  }
-  return minus + num;
-}
-
-DataRouter.stringFilter = function (str) {
-  let filtered;
-  filtered = str.replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '');
-  filtered = filtered.replace(/^\n/, '');
-  filtered = filtered.replace(/\n$/, '');
-  filtered = filtered.replace(/\n\n/g, '\n');
-  filtered = filtered.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ0-9a-zA-Z\)\(\.\,\?\!\/\'\"\;\:\@\#\$\%\&\*\-\_\+\=\n\t ]/g, '');
-  filtered = filtered.replace(/^ /g, '');
-  filtered = filtered.replace(/ $/g, '');
-  filtered = filtered.replace(/  /g, ' ');
-  filtered = filtered.replace(/   /g, ' ');
-  filtered = filtered.replace(/    /g, ' ');
-  filtered = filtered.replace(/     /g, ' ');
-  filtered = filtered.replace(/      /g, ' ');
-  filtered = filtered.replace(/     /g, ' ');
-  filtered = filtered.replace(/    /g, ' ');
-  filtered = filtered.replace(/   /g, ' ');
-  filtered = filtered.replace(/  /g, ' ');
-  return filtered;
-}
-
-DataRouter.objectToFlat = function (arr) {
-  let totalString;
-  let temp, tempArr;
-  totalString = '';
-  for (let obj of arr) {
-    totalString += obj.title_plaintext;
-    totalString += "__split__";
-    if (obj.children !== undefined) {
-      temp = DataRouter.objectToFlat(obj.children);
-      tempArr = temp.split("__split__");
-      for (let i = 0; i < tempArr.length; i++) {
-        tempArr[i] = "- " + tempArr[i];
-      }
-      totalString += tempArr.join("__split__");
-      totalString += "__split__";
-    }
-  }
-  totalString = totalString.slice(0, -9);
-  return totalString;
-}
-
-DataRouter.splitToSpace = function (str) {
-  return str.replace(/__split__/g, '\n');
-}
-
-
-//GENERAL METHODS ---------------------------------------------------------------------------------
 
 DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const instance = this;
   const ADDRESS = this.address;
-  const DataPatch = this.patchClass;
   const DataMiddle = this.middle;
   let html;
 
@@ -266,16 +175,6 @@ DataRouter.prototype.getDateMatrix = async function (length = 6) {
     }
 
     return resultArr;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DataRouter.prototype.getCalendar = async function (length = 12) {
-  const instance = this;
-  try {
-    const dateMatrix = await this.mother.pythonExecute(this.pythonApp, [ "dateMatrixFullSet" ], { length });
-    return dateMatrix;
   } catch (e) {
     console.log(e);
   }
@@ -608,276 +507,6 @@ DataRouter.prototype.rou_get_Trigger = function () {
   }
   return obj;
 }
-
-DataRouter.prototype.rou_get_AllLogStore = function () {
-  const instance = this;
-  const { fileSystem, requestSystem, equalJson } = this.mother;
-  const allLogToFile = async (logger) => {
-    try {
-      const allLogKeyword = logger.all;
-      const logFolder = logger.folder;
-      const allLogFileName = `${allLogKeyword}_${(new Date()).valueOf()}.json`;
-      const allLogFile = `${logFolder}/${allLogFileName}`;
-      let stringTemp;
-      let logString, pastJsonArr;
-      let pastPastArr;
-      let pastLoggerFiles;
-      let thisLoggerFiles;
-      let allLoggerFiles;
-
-      pastLoggerFiles = (await fileSystem("readDir", [ logFolder ])).filter((str) => { return str !== ".DS_Store" });
-
-      thisLoggerFiles = pastLoggerFiles.filter((str) => { return (new RegExp("^" + logger.keyword, "gi")).test(str) });
-      thisLoggerFiles.sort((a, b) => {
-        return Number(b.split("_")[1].replace(/[^0-9]/gi, '')) - Number(a.split("_")[1].replace(/[^0-9]/gi, ''));
-      })
-      thisLoggerFiles = thisLoggerFiles.slice(0, logger.instances);
-
-      allLoggerFiles = equalJson(JSON.stringify(pastLoggerFiles));
-      pastLoggerFiles = pastLoggerFiles.filter((str) => { return !thisLoggerFiles.includes(str) });
-
-      if (allLoggerFiles.length > 0) {
-        logString = '';
-        pastPastArr = [];
-        for (let fileName of allLoggerFiles) {
-          stringTemp = await fileSystem(`readString`, [ `${logFolder}/${fileName}` ]);
-          if (/^\{/.test(stringTemp)) {
-            logString += stringTemp;
-            logString += "\n\n";
-          } else if (/^\[/.test(stringTemp)) {
-            pastPastArr = JSON.parse(stringTemp);
-          }
-        }
-
-        pastJsonArr = logString.split("\n").map((str) => { return str.trim(); }).filter((str) => { return str !== "" }).filter((str) => {
-          return (/^\{/.test(str) && /\}$/.test(str))
-        }).filter((str) => {
-          try {
-            const obj = JSON.parse(str);
-            return true;
-          } catch {
-            return false;
-          }
-        }).map((str) => {
-          return equalJson(str);
-        });
-
-        pastJsonArr = pastPastArr.concat(pastJsonArr);
-        pastJsonArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-
-        await fileSystem(`write`, [ allLogFile, JSON.stringify(pastJsonArr) ]);
-        for (let fileName of pastLoggerFiles) {
-          await fileSystem(`remove`, [ `${logFolder}/${fileName}` ]);
-        }
-      }
-
-      return allLogFileName;
-    } catch (e) {
-      await logger.error("past log to file error : " + e.message);
-      console.log(e);
-      return null;
-    }
-  }
-  let obj = {};
-  obj.link = "/log/allLogStore";
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      allLogToFile(logger).then((file) => {
-        if (typeof file === "string") {
-          logger.cron("back console all log store success").catch((err) => { console.log(err); });
-        } else {
-          throw new Error("back console all log store fail");
-        }
-      }).catch((err) => {
-        logger.error("Console 서버 문제 생김 (rou_get_AllLogStore): " + err.message).catch((err) => { console.log(err); });
-      });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_AllLogStore): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_get_Patch = function () {
-  const instance = this;
-  const { fileSystem } = this.mother;
-  let obj = {};
-  obj.link = "/patch/:key";
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      let target, stream;
-      if (typeof req.query.directory === "string") {
-        target = instance.dir + "/router/source/patch/" + req.query.directory + "/" + req.params.key + ".js";
-      } else {
-        target = instance.dir + "/router/source/patch" + "/" + req.params.key + ".js";
-      }
-      if (await fileSystem("exist", [ target ])) {
-        stream = await fileSystem("readStream", [ target ]);
-        stream.pipe(res);
-      } else {
-        throw new Error("invaild key");
-      }
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send("error : " + e.message);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_get_ServerSent = function () {
-  const instance = this;
-  const back = this.back;
-  const SseStream = require(`${this.module}/sseStream.js`);
-  const { readFileSync } = require(`fs`);
-  let obj = {};
-  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
-  obj.func = async function (req, res, logger) {
-    try {
-      const thisPath = req.url.split('_')[1];
-      const sseStream = new SseStream(req);
-      let log_past, log_new;
-
-      res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-
-      sseStream.pipe(res);
-
-      const pusher = setInterval(async function () {
-        try {
-          log_new = String(readFileSync(instance.dir + "/log/" + thisPath + "_latest.json"));
-          if (log_new !== log_past) {
-            sseStream.write({ event: 'updateTong', data: log_new });
-          }
-          log_past = log_new;
-        } catch (e) {
-          console.log(e);
-        }
-      }, 400);
-
-      res.on('close', function () {
-        clearInterval(pusher);
-        sseStream.unpipe(res);
-      });
-
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_get_SpecificServerSent = function () {
-  const instance = this;
-  const back = this.back;
-  const { fileSystem, equalJson } = this.mother;
-  const SseStream = require(`${this.module}/sseStream.js`);
-  const { readFileSync } = require(`fs`);
-  const os = require(`os`);
-  const cpuLength = os.cpus().length;
-  let connectionNumber_raw = 0;
-  let connectionNumber = 0;
-  let totalOrder = 0;
-  let obj = {};
-  obj.link = [ "/specificsse/:id" ];
-  obj.func = async function (req, res, logger) {
-    try {
-      const idConst = "sse";
-      const sseConst = idConst + "_" + req.params.id;
-      const sseFile = instance.dir + "/log/sse_" + req.params.id + "_latest.json"
-      let sseObjs;
-      let orderRaw, order;
-      let trigger;
-
-      res.set({
-        "Content-Type": "text/event-stream; charset=utf-8",
-        "Cache-Control": "no-cache",
-        "Connection": 'keep-alive',
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-
-      sseObjs = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
-      if (sseObjs.length === 0) {
-        await back.mongoCreate(sseConst, { id: idConst, order: [] }, { selfMongo: instance.mongolocal });
-      }
-
-      if (!(await fileSystem(`exist`, [ sseFile ]))) {
-        await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
-      }
-
-      connectionNumber_raw = connectionNumber_raw + 1;
-      connectionNumber = cpuLength * connectionNumber_raw;
-      totalOrder = connectionNumber;
-
-      const pusher = setInterval(async function () {
-        try {
-          if (totalOrder <= 0) {
-            totalOrder = connectionNumber;
-          }
-          try {
-            trigger = JSON.parse(String(readFileSync(sseFile)));
-          } catch (e) {
-            trigger = [];
-          }
-          if (trigger.length > 0) {
-            orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
-            order = orderRaw[0].order;
-            for (let i = 0; i < order.length; i++) {
-              if (/^[\{\[]/.test(order[i].trim()) && /[\}\]]$/.test(order[i].trim())) {
-                order[i] = equalJson(order[i]);
-              }
-            }
-            res.write(`event: updateTong\ndata: ${JSON.stringify(order)}\n\n`);
-            totalOrder = totalOrder - 1;
-            if (totalOrder <= 0) {
-              await back.mongoUpdate(sseConst, [ { id: idConst }, { order: [] } ], { selfMongo: instance.mongolocal });
-              await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
-            }
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }, 100);
-
-      res.on('close', function () {
-        clearInterval(pusher);
-        res.end();
-        connectionNumber_raw = connectionNumber_raw - 1;
-        connectionNumber = cpuLength * connectionNumber_raw;
-      });
-
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-
-//POST ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
@@ -1233,7 +862,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             tempObj = {};
             tempObj2 = {};
             if (req.body.query !== "") {
-              tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+              tempObj["$regex"] = new RegExp(queryFilter(req.body.query), 'gi');
             } else {
               tempObj["$regex"] = new RegExp('.', 'gi');
             }
@@ -1268,7 +897,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
                   tempObj = {};
                   tempObj2 = {};
                   if (req.body.query !== "") {
-                    tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                    tempObj["$regex"] = new RegExp(queryFilter(req.body.query), 'gi');
                   } else {
                     tempObj["$regex"] = new RegExp('.', 'gi');
                   }
@@ -1306,7 +935,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
                   tempObj = {};
                   tempObj2 = {};
                   if (req.body.query !== "") {
-                    tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                    tempObj["$regex"] = new RegExp(queryFilter(req.body.query), 'gi');
                   } else {
                     tempObj["$regex"] = new RegExp('.', 'gi');
                   }
@@ -1342,7 +971,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
                     tempObj = {};
                     tempObj2 = {};
                     if (req.body.query !== "") {
-                      tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                      tempObj["$regex"] = new RegExp(queryFilter(req.body.query), 'gi');
                     } else {
                       tempObj["$regex"] = new RegExp('.', 'gi');
                     }
@@ -1553,7 +1182,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, pythonExecute, shellExec, shellLink, equalJson, dateToString } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res, logger) {
@@ -1570,7 +1199,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       let userArr;
       let today;
       let noUpdate;
-      let updateTong;
 
       if (req.url === "/updateClient") {
         thisPath = "client";
@@ -1707,53 +1335,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             }
           }
 
-          //update log
-          const members = instance.members;
-          const logDir = `${instance.dir}/log`;
-          let thisPerson, fileTarget;
-
-          userArr = user.split("__split__");
-          today = new Date();
-
-          for (let { name, email } of members) {
-            if (email.includes(userArr[1])) {
-              thisPerson = name;
-              break;
-            }
-          }
-
-          updateTong = {
-            user: {
-              name: thisPerson,
-              email: userArr[1]
-            },
-            where: thisId,
-            update: {
-              target: position,
-              value: finalValue,
-              pastValue: pastFinalValue
-            },
-            date: today
-          };
-
-          back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
-            throw new Error(e);
-          });
-
-          await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
-          const dir = await fileSystem(`readDir`, [ logDir ]);
-          fileTarget = null;
-
-          for (let fileName of dir) {
-            if ((new RegExp("^" + thisId)).test(fileName)) {
-              fileTarget = fileName;
-            }
-          }
-          if (fileTarget !== null) {
-            await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-          }
-          await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
-
         } else {
           message = "success";
         }
@@ -1784,94 +1365,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       res.send(JSON.stringify({ message }));
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_updateLog = function () {
-  const instance = this;
-  const back = this.back;
-  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/updateLog" ];
-  obj.func = async function (req, res, logger) {
-    try {
-      if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
-        throw new Error("invaild post");
-      }
-      const { id: thisId, column, position, pastValue, finalValue } = equalJson(req.body);
-      const fixedEmail = "uragenbooks@gmail.com";
-      const members = instance.members;
-      const logDir = `${instance.dir}/log`;
-      const today = new Date();
-      let thisPerson, fileTarget, thisPath, dir;
-      let updateTong;
-      let logCollectionName;
-
-      if (/^c/.test(thisId)) {
-        thisPath = "client";
-        logCollectionName = "updateClientLog";
-      } else if (/^d/.test(thisId)) {
-        thisPath = "designer";
-        logCollectionName = "updateDesignerLog";
-      } else if (/^p/.test(thisId)) {
-        thisPath = "project";
-        logCollectionName = "updateProjectLog";
-      } else if (/^t/.test(thisId)) {
-        thisPath = "contents";
-        logCollectionName = "updateContentsLog";
-      }
-
-      for (let { name, email } of members) {
-        if (email.includes(fixedEmail)) {
-          thisPerson = name;
-          break;
-        }
-      }
-
-      updateTong = {
-        user: {
-          name: thisPerson,
-          email: fixedEmail
-        },
-        where: thisId,
-        update: {
-          target: position,
-          value: finalValue,
-          pastValue: pastValue
-        },
-        date: today
-      };
-
-      back.mongoCreate(logCollectionName, updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
-        throw new Error(e);
-      });
-
-      await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: finalValue, date: today }) ]);
-      dir = await fileSystem(`readDir`, [ logDir ]);
-      fileTarget = null;
-      for (let fileName of dir) {
-        if ((new RegExp("^" + thisId)).test(fileName)) {
-          fileTarget = fileName;
-        }
-      }
-      if (fileTarget !== null) {
-        await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-      }
-      await fileSystem(`write`, [ `${logDir}/${thisId}__name__${thisPerson}`, `0` ]);
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "done" }));
-
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_post_updateLog): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1938,7 +1431,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         date: new Date()
       };
 
-      cookies = DataRouter.cookieParsing(req);
+      cookies = cookieParsing(req);
       if (cookies !== null) {
         if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
           updateTong.user.name = cookies.homeliaisonConsoleLoginedName;
@@ -2719,32 +2212,6 @@ DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
   const { equalJson } = this.mother;
-  const stringFilter = function (raw) {
-    const originalValue = raw;
-    const originalValueArr = originalValue.split("\n");
-
-    let str;
-    let tempString;
-    let item = null;
-    let tong = [];
-
-    for (let text of originalValueArr) {
-      if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
-        tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-        tong.push(tempString);
-      } else if (/^\<\%item\%\>/.test(text)) {
-        item = text;
-      }
-    }
-
-    if (item !== null) {
-      str = item + "\n\n" + tong.join("\n");
-    } else {
-      str = tong.join("\n");
-    }
-
-    return str.replace(/\&/g, ",");
-  }
   let obj = {};
   obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
   obj.func = async function (req, res, logger) {
@@ -2844,7 +2311,6 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       const today = new Date();
       if (req.body.newMode === undefined || req.body.newMode === null || req.body.newMode === 0) {
         const { id, column, value, email } = equalJson(req.body);
-        const logDir = `${instance.dir}/log`;
         const managerInteraction = {
           designer: {
             to: "project",
@@ -2941,21 +2407,6 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           if (Object.keys(updateQuery).length > 0) {
             await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
-        }
-
-        if (column !== null && thisPerson !== null) {
-          await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
-          const dir = await fileSystem(`readDir`, [ logDir ]);
-          fileTarget = null;
-          for (let fileName of dir) {
-            if ((new RegExp("^" + id)).test(fileName)) {
-              fileTarget = fileName;
-            }
-          }
-          if (fileTarget !== null) {
-            await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-          }
-          await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
         }
 
         if (column === "manager") {
@@ -3526,55 +2977,6 @@ DataRouter.prototype.rou_post_getMembers = function () {
       logger.error("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_parsingLatestLog = function () {
-  const instance = this;
-  const { fileSystem, equalJson } = this.mother;
-  let obj = {};
-  obj.link = "/parsingLatestLog";
-  obj.func = async function (req, res, logger) {
-    try {
-      if (req.body.idArr === undefined) {
-        throw new Error("must be id arr: Array");
-      }
-      const logDir = `${instance.dir}/log`;
-      const idArr = equalJson(req.body.idArr);
-      const logAll = await fileSystem(`readDir`, [ logDir ]);
-
-      let logParsing, logIdArr;
-      let result;
-      let tempArr;
-      let index;
-
-      logParsing = [];
-      logIdArr = [];
-      for (let log of logAll) {
-        if (log !== `.DS_Store`) {
-          tempArr = log.split("__name__");
-          logParsing.push({ id: tempArr[0], name: tempArr[1] });
-          logIdArr.push(tempArr[0]);
-        }
-      }
-
-      result = [];
-      for (let id of idArr) {
-        index = logIdArr.indexOf(id);
-        if (index === -1) {
-          result.push("-");
-        } else {
-          result.push(logParsing[index].name);
-        }
-      }
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(result));
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_post_parsingLatestLog): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
     }
   }
   return obj;
@@ -4681,7 +4083,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
     });
     try {
       if (req.body.mode === undefined) {
-        throw new Error("must be mode => [ create, read, update, delete, sse ]");
+        throw new Error("must be mode => [ create, read, update, delete ]");
       }
       if (req.body.collection === undefined) {
         throw new Error("must be collection name");
@@ -4735,66 +4137,8 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         whereQuery = equalJson(req.body.whereQuery);
         await back.mongoDelete(collection, whereQuery, { selfMongo });
         result = { message: "done" };
-      } else if (mode === "sse") {
-        if (req.body.updateQueries === undefined) {
-
-          if (req.body.updateQuery === undefined) {
-            throw new Error("must be updateQuery");
-          }
-          updateQuery = equalJson(req.body.updateQuery);
-          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
-          if (result.length === 0) {
-            await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
-          } else {
-            result[0].order.push(JSON.stringify(updateQuery));
-            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
-          }
-
-        } else {
-
-          updateQueries = equalJson(req.body.updateQueries);
-          if (!Array.isArray(updateQueries)) {
-            throw new Error("updateQueries must be updateQuery array");
-          }
-          if (!updateQueries.every((obj) => { return typeof obj === "object" })) {
-            throw new Error("updateQueries must be updateQuery array");
-          }
-          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
-          if (result.length === 0) {
-            order = [];
-            for (let updateQuery of updateQueries) {
-              order.push(JSON.stringify(updateQuery));
-            }
-            await back.mongoCreate(collection, { id: "sse", order }, { selfMongo });
-          } else {
-            for (let updateQuery of updateQueries) {
-              result[0].order.push(JSON.stringify(updateQuery));
-            }
-            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
-          }
-          updateQuery = updateQueries;
-
-        }
-
-        await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
-        if (req.body.log !== undefined) {
-          if (req.body.who === undefined) {
-            throw new Error("in log, must be who");
-          }
-          ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-          device = req.headers['user-agent'] || "unknown";
-          logObject = {
-            date: (new Date()),
-            who: req.body.who,
-            where: { ip, device },
-            update: JSON.stringify(updateQuery)
-          };
-          await back.mongoCreate(collection.replace(/^sse\_/, "log_"), logObject, { selfMongo });
-        }
-        result = { message: "done" };
-
       } else {
-        throw new Error("must be mode => [ create, read, update, delete, sse ]");
+        throw new Error("must be mode => [ create, read, update, delete ]");
       }
 
       res.send(JSON.stringify(result));
@@ -5992,33 +5336,6 @@ DataRouter.prototype.rou_post_errorLog = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       await logger.error("Console 서버 문제 생김 (rou_post_errorLog): " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_getDataPatch = function () {
-  const instance = this;
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/getDataPatch", "/dataPatch" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (typeof req.body.method !== "string") {
-        throw new Error("invalid post");
-      }
-      const { method } = req.body;
-      const result = (instance.patch[method])();
-      res.send(JSON.stringify(result));
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_getDataPatch): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -10189,7 +9506,7 @@ DataRouter.prototype.rou_post_generalBill = function () {
     });
     try {
       if (req.body.mode === undefined) {
-        throw new Error("must be mode => [ create, read, update, delete, sse ]");
+        throw new Error("must be mode => [ create, read, update, delete ]");
       }
       const collection = "generalBill";
       const { mode } = req.body;
@@ -13069,31 +12386,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           if (newProid === null) {
             newProid = proid;
           }
-          return requestSystem("https://" + address.officeinfo.host + ":3002/updateLog", {
-            id: cliid,
-            column: "action",
-            position: "requests." + String(requestNumber) + ".analytics.response.action",
-            pastValue: client.requests[requestNumber].analytics.response.action.value,
-            finalValue: action
-          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
-
-        }).then(() => {
-
-          return requestSystem("https://" + address.officeinfo.host + ":3002/generalMongo", {
-            mode: "sse",
-            db: "console",
-            collection: "sse_clientCard",
-            log: true,
-            who: "autoBot",
-            updateQuery: {
-              cliid,
-              requestNumber,
-              mode: "action",
-              from: client.requests[requestNumber].analytics.response.action.value,
-              to: action,
-              randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-            }
-          }, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } });
+          return new Promise((resolve, rejects) => {
+            resolve(null);
+          });
 
         }).then(() => {
 

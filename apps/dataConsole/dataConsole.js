@@ -16,7 +16,7 @@ class DataConsole {
   }
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
+DataConsole.prototype.renderStatic = async function (staticFolder) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, sleep, mediaQuery, uniqueValue } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
@@ -43,36 +43,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
     const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", moduleName ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
-    let folderSize, tempScriptString;
+    let tempScriptString;
     let tempMediaResult;
-    let subModuleList;
 
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       await shellExec(`mkdir ${shellLink(staticFolder)}`);
-    }
-
-    const thisDirList = await fileSystem(`readDir`, [ this.dir ]);
-    if (thisDirList.includes("log")) {
-      folderSize = await fileSystem("size", [ this.dir + "/log" ]);
-      if (folderSize > 100 * 100 * 100) {
-        await shellExec(`rm -rf ${shellLink(this.dir)}/log`);
-        await shellExec(`mkdir ${shellLink(this.dir)}/log`);
-      }
-    } else {
-      await shellExec(`mkdir ${shellLink(this.dir)}/log`);
-    }
-    const thisLogDirList = await fileSystem(`readDir`, [ this.dir + "/log" ]);
-    if (!thisDirList.includes("client_latest.json")) {
-      await shellExec(`touch ${shellLink(this.dir)}/log/client_latest.json`);
-    }
-    if (!thisDirList.includes("designer_latest.json")) {
-      await shellExec(`touch ${shellLink(this.dir)}/log/designer_latest.json`);
-    }
-    if (!thisDirList.includes("project_latest.json")) {
-      await shellExec(`touch ${shellLink(this.dir)}/log/project_latest.json`);
-    }
-    if (!thisDirList.includes("contents_latest.json")) {
-      await shellExec(`touch ${shellLink(this.dir)}/log/contents_latest.json`);
     }
 
     const staticFolderList = await fileSystem(`readDir`, [ staticFolder ]);
@@ -95,8 +70,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
     }
 
     for (let i of staticDirList) {
-
-      //self module
       tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
       tempScriptString = tempScriptString.replace(/^const ([A-Z][^ \=]+) = function \(/, (match, p1, offset, string) => {
         return p1 + ".prototype.constructor = function (";
@@ -111,16 +84,12 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
         await sleep(500);
       }
       await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
-
     }
-
-    console.log(`set static`);
 
     let svgTongString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result;
-    let prototypes, dataPatchScript, prototypeBoo;
     let resultFromArr;
 
     //set general js
@@ -164,18 +133,9 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
         }
       }
 
-      //set data patch
-      prototypes = Object.keys(DataPatch.prototype);
-      dataPatchScript = `const DataPatch = new Function();\n`;
-      for (let p of prototypes) {
-        if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
-          dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-        }
-      }
-
       //merge
       code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
-      code1 = dataPatchScript;
+      code1 = "";
       code2 = consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
 
@@ -216,7 +176,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, DataPatch) {
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPatch, DataMiddle) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataMiddle) {
   const instance = this;
   const { fileSystem, shell, shellLink, treeParsing, mediaQuery } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
@@ -232,55 +192,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
   const testDir = this.frontDir + "/test";
   try {
-
-    //module transform function
-    const moduleTrans = async function (tree, name) {
-      try {
-        const thisModuleDir = await fileSystem(`readDir`, [ instance.middleModuleDir + "/" + name ]);
-        const { flatDeath } = tree;
-        const render = function (code) {
-          let totalModuleObjectConst;
-          code = code.replace(/\$CURRENT_DIR_ARRAY/g, JSON.stringify(thisModuleDir));
-
-          totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
-          code = code.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => {
-            return `const ${totalModuleObjectConst} = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}; ${p1}${p2} = ${totalModuleObjectConst}[Object.keys(${totalModuleObjectConst})[0]];`;
-          });
-
-          code = code.replace(/module\.exports = ([^\=\;\/\n]+)/i, (match, p1, offset, string) => { return "export { " + p1 + " }"; });
-          return code;
-        }
-        const from = tree.fromDir.replace(/\/$/gi, '');
-        const to = tree.toDir.replace(/\/$/gi, '');
-        let fileTargets;
-        let targetPath, targetFolder;
-        let resultFromArr;
-        flatDeath.sort((a, b) => { return a.length - b.length });
-        resultFromArr = [];
-        for (let { directory, absolute } of flatDeath) {
-          if (!directory) {
-            if (!/\.DS_Store/g.test(absolute)) {
-              targetPath = to + '/' + absolute.split('/').slice(from.split('/').length).join('/');
-              targetPath = targetPath.replace(/\.js$/i, ".mjs");
-              targetFolder = targetPath.split('/').slice(0, -1).join('/');
-              if (!(await fileSystem(`exist`, [ targetFolder ]))) {
-                await fileSystem(`mkdir`, [ targetFolder ]);
-              }
-              await fileSystem(`write`, [ targetPath, render(await fileSystem(`readString`, [ absolute ])) ]);
-              resultFromArr.push(targetPath);
-            }
-          }
-        }
-        console.log(`${name} module render done`);
-        return resultFromArr;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
     //set static
     const staticTargets = [
-      `${this.dir}/router/source/middle`,
       `${this.dir}/router/source/ghost/client`,
       `${this.dir}/router/source/ghost/designer`,
     ];
@@ -300,9 +213,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
     let numbersString, parserString;
     let code0, code1, code2, code3;
     let result, moduleString;
-    let prototypes, dataPatchScript, prototypeBoo;
-    let treeArray;
-    let moduleBoo;
     let totalModuleObjectConst;
     let resultFromArr;
     let tempArr;
@@ -362,7 +272,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
       code0 = '';
       code1 = '';
       svgTongItemsString = '';
-      moduleBoo = false;
 
       fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
 
@@ -380,34 +289,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
         DataMiddle.setNamedata(routeName, name);
         DataMiddle.setNamedata(routeName + ".js", name);
       }
-      moduleBoo = meta.module;
 
       //set browser js
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//g, (name.slice(0, 1).toUpperCase() + name.slice(1)));
 
       fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
-
-      //set data patch
-      prototypes = Object.keys(DataPatch.prototype);
-      dataPatchScript = `const DataPatch = new Function();\n`;
-      if (onoffObj.entire) {
-        for (let z of prototypes) {
-          dataPatchScript += `DataPatch.${z} = ${DataPatch.prototype[z].toString().replace(/\n/g, '')};\n`;
-        }
-      } else {
-        for (let z of prototypes) {
-          prototypeBoo = /^tools/.test(z);
-          for (let j in onoffObj) {
-            if (onoffObj[j] && !prototypeBoo) {
-              prototypeBoo = (new RegExp("^" + j)).test(z);
-            }
-          }
-          if (prototypeBoo) {
-            dataPatchScript += `DataPatch.${z} = ${DataPatch.prototype[z].toString().replace(/\n/g, '')};\n`;
-          }
-        }
-      }
 
       //front class set
       frontClassString = '';
@@ -420,7 +307,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
 
       //merge
       code0 = svgTongString + "\n\n" + s3String + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
-      code1 = dataPatchScript + "\n\n";
+      code1 = "" + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = consoleGeneralString + "\n\n" + frontClassString + "\n\n";
       } else {
@@ -458,40 +345,13 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, DataPat
       result += code1;
       result += "\n\n";
       result += code2;
-      if (moduleBoo) {
-        totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
-        moduleString = code3.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => {
-          return `const ${totalModuleObjectConst} = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, ".mjs")}; ${p1}${p2} = ${totalModuleObjectConst}[Object.keys(${totalModuleObjectConst})[0]];`;
-        });
-      } else {
-        result += "\n\n";
-        result += code3;
-      }
+      result += "\n\n";
+      result += code3;
       result += "\n\n";
 
-      console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
-      if (moduleBoo) {
-
-        treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
-        treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
-        treeArray.setToDir(staticFolder + "/middle/module/" + i.replace(/\.js$/i, ''));
-        if (!(await fileSystem(`exist`, [ staticFolder + "/middle/module" ]))) {
-          await fileSystem(`mkdir`, [ staticFolder + "/middle/module" ]);
-        }
-        if (!(await fileSystem(`exist`, [ treeArray.toDir ]))) {
-          await fileSystem(`mkdir`, [ treeArray.toDir ]);
-        }
-        tempArr = await moduleTrans(treeArray, i.replace(/\.js$/i, ''));
-        resultFromArr = resultFromArr.concat(tempArr);
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`, result ]);
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, moduleString ]);
-        resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`);
-        resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`);
-
-      } else {
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
-        resultFromArr.push(`${staticFolder}/middle/${i}`);
-      }
+      console.log(`${i} merge success`);
+      await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
+      resultFromArr.push(`${staticFolder}/middle/${i}`);
 
     }
 
@@ -512,10 +372,9 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/client";
   const testDir = this.frontDir + "/test";
-  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
+    await this.renderMiddleStatic(staticFolder, DataMiddle);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
       { from: "clientEvaluation", to: "evaluation", path: "/middle/evaluation" },
@@ -670,10 +529,9 @@ DataConsole.prototype.renderDesignerPhp = async function () {
   const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/designer";
   const testDir = this.frontDir + "/test";
-  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
   try {
-    await this.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
+    await this.renderMiddleStatic(staticFolder, DataMiddle);
     const targetMap = [
       { from: "designerAbout", to: "about", path: "/middle/designerAbout" },
       { from: "designerBoard", to: "dashboard", path: "/middle/designerBoard" },
@@ -800,7 +658,6 @@ DataConsole.prototype.connect = async function () {
   const allLogKeyword = "allExpressLog";
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
-  const topFolder = process.env.HOME + "/server/top";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
   const serverName = "back";
   const processDoingKeywords = "processDoing_";
@@ -935,7 +792,6 @@ DataConsole.prototype.connect = async function () {
     for (let obj of rouObj.get) {
       app.get(obj.link, async function (req, res) {
         try {
-          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
           await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
@@ -947,65 +803,8 @@ DataConsole.prototype.connect = async function () {
     for (let obj of rouObj.post) {
       if (obj.public !== true) {
         app.post(obj.link, async function (req, res) {
-          try {
-            
-            expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-
-            let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
-
-            __vailHosts = [
-              instance.address.frontinfo.host,
-              instance.address.frontinfo.host + ":3000",
-              instance.address.secondinfo.host,
-              instance.address.secondinfo.host + ":3003",
-              instance.address.officeinfo.ghost.host,
-              instance.address.officeinfo.ghost.host + ":3000",
-              instance.address.officeinfo.ghost.host + ":3002",
-              instance.address.officeinfo.ghost.host + ":3003",
-              instance.address.officeinfo.test.host,
-              instance.address.officeinfo.test.host + ":" + instance.address.officeinfo.test.port,
-              "localhost:3000",
-              "localhost:8080",
-              "stdpay.inicis.com",
-              "fcstdpay.inicis.com",
-              "ksstdpay.inicis.com",
-              "stgmobile.inicis.com",
-              "ksmobile.inicis.com",
-              "fcmobile.inicis.com",
-              "172.30.1.90:3000",
-              "172.30.1.37:3000",
-              "192.168.0.90:3000",
-              "192.168.0.20:3000",
-              "1.229.181.6:53000",
-            ];
-            __wallLogicBoo = false;
-            __originTarget = req.headers["origin"] || "invaild";
-            if (__originTarget === "invaild" || __originTarget === "null" || __originTarget === "undefined" || __originTarget === null) {
-              __originTarget = req.headers["host"] || "invaild";
-            }
-            for (let host of __vailHosts) {
-              __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
-              if (__wallLogicBoo) {
-                break;
-              }
-            }
-  
-            if (!__wallLogicBoo) {
-              __headers = JSON.parse(JSON.stringify(req.headers));
-              __slackMessage = JSON.stringify(__headers, null, 2);
-              if (req.body !== null && req.body !== undefined) {
-                __slackMessage += "\n\n";
-                __slackMessage += JSON.stringify(req.body, null, 2);
-              }
-              emergencyAlarm({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + __slackMessage, channel: "#error_log" }).catch((e) => { console.log(e); });
-  
-              res.set("Content-Type", "application/json");
-              res.send(JSON.stringify({ message: "OK" }));
-  
-            } else {
-              await obj.func(req, res, logger);
-            }
-
+          try {  
+            await obj.func(req, res, logger);
           } catch (e) {
             console.log(e);
             res.set("Content-Type", "application/json");
@@ -1033,9 +832,9 @@ DataConsole.prototype.connect = async function () {
     }).then((homeFolderList) => {
       if (homeFolderList.some((str) => { return (new RegExp("^" + processDoingKeywords, "i")).test(str) })) {
         sleep(500).then(() => {
-          return instance.renderStatic(staticFolder, DataPatch);
+          return instance.renderStatic(staticFolder);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
+          return instance.renderMiddleStatic(staticFolder, DataMiddle);
         }).then(() => {
           console.log(`static done`);
         }).catch((err) => {
@@ -1043,9 +842,9 @@ DataConsole.prototype.connect = async function () {
         })
       } else {
         fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
-          return instance.renderStatic(staticFolder, DataPatch);
+          return instance.renderStatic(staticFolder);
         }).then(() => {
-          return instance.renderMiddleStatic(staticFolder, DataPatch, DataMiddle);
+          return instance.renderMiddleStatic(staticFolder, DataMiddle);
         }).then(() => {
           console.log(`static done`);
           return shellExec("rm", [ "-rf", process.env.HOME + "/" + tempProcessName ]);

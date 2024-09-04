@@ -3,8 +3,6 @@ const DataPatch = function () {
   this.mother = new Mother();
 }
 
-//TOOL ------------------------------------------------------------------------------------------
-
 DataPatch.toolsDateFilter = function (value) {
   let filteredValue, temp, tempArr, today;
 
@@ -474,8 +472,6 @@ DataPatch.prototype.toolsDashboard = function (button) {
 
   return resultObj;
 }
-
-//CLIENT ----------------------------------------------------------------------------------------
 
 DataPatch.prototype.clientDropPoint = function () {
   return { column: "status", map: "requests.0.analytics.response.status", values: [ "드랍" ] };

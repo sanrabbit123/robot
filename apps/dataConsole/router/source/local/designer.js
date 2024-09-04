@@ -23,7 +23,6 @@ const DesignerJs = function () {
   this.whiteMatrixB = null;
   this.aspirants = [];
   this.aspirants_searchInput = null;
-  this.whiteSse = null;
   this.ea = <%% "px", "px", "px", "px", "vw" %%>;
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   this.designers = [];
@@ -3036,12 +3035,6 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
       instance.aspirants_searchInput.previousElementSibling.style.opacity = String(1);
       instance.aspirants_searchInput.parentNode.removeChild(instance.aspirants_searchInput);
       instance.aspirants_searchInput = null;
-    }
-
-    //sse close
-    if (instance.whiteSse !== null && instance.whiteSse !== undefined) {
-      instance.whiteSse.close();
-      instance.whiteSse = null;
     }
 
     //dom delete
@@ -43434,7 +43427,7 @@ DesignerJs.prototype.projectView = async function () {
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
 
-    this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
+    this.projectMap = DataPatch.projectMap();
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
 
     loading.parentNode.removeChild(loading);
@@ -52807,7 +52800,6 @@ DesignerJs.prototype.launching = async function () {
   const { returnGet, getUser } = GeneralJs;
   try {
     const getObj = returnGet();
-    const modulePath = BACKHOST + "/module/designer";
     let getTarget;
     let tempFunction;
 

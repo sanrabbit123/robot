@@ -3722,7 +3722,7 @@ SalesJs.prototype.reportCardView = function () {
 
 SalesJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, colorChip } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");

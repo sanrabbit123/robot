@@ -23,7 +23,6 @@ const BuilderJs = function () {
   this.whiteMatrixB = null;
   this.aspirants = [];
   this.aspirants_searchInput = null;
-  this.whiteSse = null;
   this.ea = <%% "px", "px", "px", "px", "vw" %%>;
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   this.designers = [];
@@ -3180,12 +3179,6 @@ BuilderJs.prototype.whiteCancelMaker = function (callback = null, recycle = fals
       instance.aspirants_searchInput.previousElementSibling.style.opacity = String(1);
       instance.aspirants_searchInput.parentNode.removeChild(instance.aspirants_searchInput);
       instance.aspirants_searchInput = null;
-    }
-
-    //sse close
-    if (instance.whiteSse !== null && instance.whiteSse !== undefined) {
-      instance.whiteSse.close();
-      instance.whiteSse = null;
     }
 
     //dom delete
