@@ -3970,9 +3970,6 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               }
 
               buyer_tel = autoHypenPhone(paymentData.customer.phoneNumber);
-
-              console.log(paymentData);
-
               convertingData = {
                 goodName: paymentData.orderName,
                 goodsName: paymentData.orderName,
@@ -4029,6 +4026,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                         break;
                       }
                     }
+                    console.log(convertingData);
+                    console.log(thisBill.bilid, requestNumber)
+
                     await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
                       bilid: thisBill.bilid,
                       requestNumber,
