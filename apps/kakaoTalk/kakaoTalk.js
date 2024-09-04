@@ -4733,8 +4733,6 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
         throw new Error("set error");  // 옵션 설정 실패 시 오류를 발생시킵니다.
       }
 
-      console.log(options);
-
       try {
         // 알림톡을 전송합니다.
         ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options, { headers: { "Content-Type": "x-www-form-urlencoded" } }));
@@ -4752,6 +4750,7 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
       boo = true;  // 성공 메시지가 포함된 경우 boo를 true로 설정합니다.
     } else {
+      console.log(data);
       boo = false;  // 그렇지 않은 경우 boo를 false로 설정합니다.
     }
 

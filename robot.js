@@ -290,16 +290,6 @@ Robot.prototype.recordCloud = async function (sw, boo = true) {
   }
 }
 
-Robot.prototype.taxBill = async function () {
-  try {
-    const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-    const app = new BillMaker();
-    await app.taxBill();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.kakaoTokenGenerate = async function () {
   try {
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -796,13 +786,6 @@ const MENU = {
   publicSector: async function () {
     try {
       await robot.publicSector();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  taxBill: async function () {
-    try {
-      await robot.taxBill();
     } catch (e) {
       console.log(e);
     }

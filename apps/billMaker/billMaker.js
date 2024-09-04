@@ -7831,10 +7831,10 @@ BillMaker.prototype.taxBill = async function () {
   const back = this.back;
 
   // 여러 유틸리티 함수와 모듈들을 this.mother에서 가져옵니다.
-  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson, zeroAddition } = this.mother;
+  const { mongo, mongoinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson, zeroAddition } = this.mother;
 
   // MONGOLOCALC는 MongoDB 로컬 데이터베이스에 연결하기 위한 객체를 생성합니다.
-  const MONGOLOCALC = new mongo(mongolocalinfo);
+  const MONGOLOCALC = new mongo(mongoinfo);
 
   // HumanPacket 클래스는 사람이 처리하는 작업을 대신 수행하는 모듈로, 해당 경로에서 가져옵니다.
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
