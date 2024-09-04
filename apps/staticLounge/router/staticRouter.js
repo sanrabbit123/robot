@@ -5894,7 +5894,7 @@ class StaticRouter {
                   const config = { headers: { "Content-Type": "application/json" } }; // 요청에 사용할 헤더 설정
                   const userName = "ubuntu"; // 서버에 접속할 사용자 이름
                   const scpRoot = userName + "@" + address.secondinfo.host + ":"; // scp로 파일을 전송할 기본 경로
-                  const scpPath = scpRoot + "/home/" + userName + "/static/photo/designer"; // 디자이너 파일 경로
+                  const scpPath = "/home/" + userName + "/static/photo/designer"; // 디자이너 파일 경로
                   const representativeFolderPath = "/representative"; // 대표 이미지 폴더 경로
                   const representativeRootPath = "/photo/designer" + representativeFolderPath; // 대표 이미지 루트 경로
                   const indexToken = "____index____"; // 파일 인덱싱을 위한 구분자
@@ -5988,7 +5988,7 @@ class StaticRouter {
                               downloadPath = scpPath + "/" + desid + "/" + proid + "/" + fileName; // 다운로드 경로 설정
                               // 해당 파일이 기존 폴더에 없는 경우 다운로드 및 PDF 변환
                               if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g"); }).some((r) => { return r.test(thisFilePureName); })) {
-                                  await shellExec("scp", [ downloadPath, thisFolderPath ]);
+                                  await shellExec("cp", [ downloadPath, thisFolderPath ]);
                                   if (/pdf/gi.test(thisFileExe)) {
                                       try {
                                           await imageReader.pdfToJpg(thisFilePath, true); // PDF 파일을 JPG로 변환
@@ -6010,7 +6010,7 @@ class StaticRouter {
                           thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
                           thisFilePath = thisFolderPath + thisFileName;
                           if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g"); }).some((r) => { return r.test(thisFilePureName); })) {
-                              await shellExec("scp", [ downloadPath, thisFolderPath ]);
+                              await shellExec("cp", [ downloadPath, thisFolderPath ]);
                               if (/pdf/gi.test(thisFileExe)) {
                                   try {
                                       await imageReader.pdfToJpg(thisFilePath, true);
@@ -6030,7 +6030,7 @@ class StaticRouter {
                           thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
                           thisFilePath = thisFolderPath + thisFileName;
                           if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g"); }).some((r) => { return r.test(thisFilePureName); })) {
-                              await shellExec("scp", [ downloadPath, thisFolderPath ]);
+                              await shellExec("cp", [ downloadPath, thisFolderPath ]);
                               if (/pdf/gi.test(thisFileExe)) {
                                   try {
                                       await imageReader.pdfToJpg(thisFilePath, true);
@@ -6095,7 +6095,6 @@ class StaticRouter {
                   return true;
               } catch (e) {
                   logger.error(e, req).catch((e) => { console.log(e); });
-                  console.log(e);
                   return false;
               }
           }
