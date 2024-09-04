@@ -4733,9 +4733,11 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
         throw new Error("set error");  // 옵션 설정 실패 시 오류를 발생시킵니다.
       }
 
+      console.log(options);
+
       try {
         // 알림톡을 전송합니다.
-        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options, { headers: { "Content-Type": "x-www-form-urlencoded" } }));
       } catch (e) {
         console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
         data = null;  // 데이터는 null로 설정합니다.
