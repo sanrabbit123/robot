@@ -70,17 +70,43 @@ DevContext.prototype.launching = async function () {
 
 
     const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
-    // https://localhost:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline
-    const channelKey = "channel-key-17297ee2-039b-44c1-82d8-f3d4907b5549"
+    const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"
     const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
+    const MID = "MOIhomeli1";
     
-    
+    // https://localhost:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline
+    // https://192.168.0.20:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline&mobilecard=true&mid=MOIhomeli1&oid=homeliaisonBill_1725445245869&imp_uid=0191bc8d-0c99-6193-4651-52c61b505fb0&merchant_uid=homeliaisonBill_1725445245869&imp_success=true&request=0
+
+
 
     
 
+    const mid = "MOIhomeli1";
+    const oid = "homeliaisonBill_1725445245869";
+    const impId = "0191bc8d-0c99-6193-4651-52c61b505fb0";
+  
+    const url = "https://api.portone.io";
+    let config, accessToken, accessTokenResponse;
+    let getPaymentInfoResponse;
+    let getPaymentInfoConfig;
+    let paymentData;
+    let responseFromPG;
 
-    
-    
+    config = { headers: { "Content-Type": "application/json" } };
+
+    accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
+    accessToken = accessTokenResponse.data.accessToken;
+    config.headers["Authorization"] = "Bearer " + accessToken;
+
+    getPaymentInfoConfig = objectDeepCopy(config);
+    getPaymentInfoConfig.method = "get";
+
+    getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
+    paymentData = getPaymentInfoResponse.data;
+    responseFromPG = JSON.parse(paymentData.pgResponse);
+    console.log(paymentData);
+    console.log(responseFromPG);
+
 
     
 

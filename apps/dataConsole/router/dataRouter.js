@@ -9,6 +9,10 @@ const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytic
 const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
 const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
 const { resolve } = require('path');
+const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
+const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"
+const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
+const MID = "MOIhomeli1";
 
 const cookieParsing = (req) => {
   if (req.headers.cookie === undefined) {
@@ -4769,7 +4773,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, cryptoString, decryptoHash, equalJson, messageSend, dateToString } = this.mother;
+  const { requestSystem, cryptoString, decryptoHash, equalJson, messageSend, dateToString, objectDeepCopy, zeroAddition, autoComma } = this.mother;
   const crypto = require("crypto");
   const password = "homeliaison";
   let obj = {};
@@ -4783,6 +4787,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
     });
     try {
       const now = new Date();
+      const kakao = instance.kakao;
 
       if (req.body.mode === "script") {
         const { cliid, kind, desid, proid, method, device, bilid } = req.body;
@@ -4933,6 +4938,95 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           res.send(JSON.stringify({ convertingData: { error: "error" } }));
         }
 
+      } else if (req.body.mode === "v2") {
+
+        const { mid, oid } = req.body;
+        const url = "https://api.portone.io";
+        let config, accessToken, accessTokenResponse;
+        let getPaymentInfoResponse;
+        let getPaymentInfoConfig;
+        let paymentData;
+        let responseFromPG;
+        let tempMatrix;
+    
+        config = { headers: { "Content-Type": "application/json" } };
+    
+        accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
+        accessToken = accessTokenResponse.data.accessToken;
+        config.headers["Authorization"] = "Bearer " + accessToken;
+    
+        getPaymentInfoConfig = objectDeepCopy(config);
+        getPaymentInfoConfig.method = "get";
+    
+        getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
+        paymentData = getPaymentInfoResponse.data;
+        try {
+          responseFromPG = JSON.parse(paymentData.pgResponse);
+        } catch {
+          try {
+            tempMatrix = paymentData.pgResponse.split("&").map((str) => { return str.split("=") });
+            responseFromPG = {};
+            for (let [ key, value ] of tempMatrix) {
+              responseFromPG[key] = value;
+            }
+          } catch {
+            responseFromPG = {};
+          }
+        }
+
+        if (paymentData.status.trim() === "PAID") {
+          const today = new Date();
+          const convertingData = {
+            goodName: paymentData.orderName,
+            goodsName: paymentData.orderName,
+            resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
+            resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
+            tid: paymentData.pgTxId,
+            payMethod: "CARD",
+            applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+            mid: mid,
+            MOID: paymentData.id,
+            TotPrice: String(paymentData.amount.total),
+            buyerName: paymentData.customer.name,
+            CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
+            CARD_Num: paymentData.method.card.number,
+            CARD_ApplPrice: String(paymentData.amount.total),
+            CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
+            vactBankName: paymentData.method.card.name,
+            payDevice: "MOBILE",
+            P_FN_NM: paymentData.method.card.name,
+            "__ignorethis__": 1,
+          };
+          res.send(JSON.stringify({ convertingData }));
+        } else {
+          const today = new Date();
+          const expired = new Date();
+          expired.setHours(expired.getHours() + 47);
+          await kakao.sendTalk("virtualAccount", paymentData.customer.name, paymentData.customer.phoneNumber, {
+            client: paymentData.customer.name,
+            goodName: paymentData.orderName,
+            bankName: paymentData.method.bank,
+            account: paymentData.method.accountNumber,
+            to: paymentData.method.remitteeName,
+            amount: autoComma(paymentData.amount.total),
+            date: dateToString(expired, true),
+          });
+          const convertingData = {
+            goodName: paymentData.orderName,
+            goodsName: paymentData.orderName,
+            resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
+            resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
+            tid: paymentData.pgTxId,
+            payMethod: "VACCOUNT",
+            applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+            mid: mid,
+            MOID: paymentData.id,
+            raw: paymentData,
+            "__ignorethis__": 1,
+          };
+          res.send(JSON.stringify({ convertingData }));
+        }
+
       } else if (req.body.mode === "cashPhone") {
 
         const { phone, hash, bilid, proid, desid, cliid, name } = equalJson(req.body);
@@ -5069,6 +5163,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_inicisPayment): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

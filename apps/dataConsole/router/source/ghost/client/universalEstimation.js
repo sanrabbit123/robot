@@ -87,7 +87,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: [ "카드 결제", "무통장 입금", "계좌 이체" ],
+    button: [ "카드 결제", "무통장 입금", "무통장 입금" ],
     pannel: [
       {
         name: "계좌 이체시",
@@ -1053,19 +1053,14 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       document.body.removeChild(document.body.lastChild);
     }
     document.head.removeChild(document.head.lastChild);
-    //close callback
     window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
   }
+
   window.addEventListener("message", GeneralJs.stacks.messageCancelEvent);
 
   paymentEvent = function (motherMethod) {
     return async function (e) {
       try {
-        if (motherMethod === "account") {
-          if (!window.confirm("계좌 이체를 위한 안내를 받으시겠습니까?")) {
-            return;
-          }
-        }
         const { pluginScript, formValue } = await ajaxJson({
           cliid: instance.cliid,
           kind: instance.class,
@@ -1079,7 +1074,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
           buyerPhone: instance.client.phone,
           buyerEmail: instance.client.email,
           currentPage: window.location.protocol + "//" + window.location.host,
-          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : (/vbank/gi.test(motherMethod) ? "VBank" : "Account")),
+          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : (/vbank/gi.test(motherMethod) ? "VBank" : "VBank")),
           device: (desktop ? "desktop" : "mobile"),
           requestNumber: String(instance.requestNumber),
           bilid: instance.bill.bilid,
@@ -1096,7 +1091,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         document.body.appendChild(formMother);
         formMother.appendChild(form);
 
-        if (!/vbank/gi.test(motherMethod) && !/card/gi.test(motherMethod)) {
+        if (false) {
 
           cashInput = {};
           businessInput = {};
@@ -1532,99 +1527,141 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         } else {
 
           if (desktop) {
-            // if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
-            if (/vbank/gi.test(motherMethod)) {
+            if (!/card/gi.test(motherMethod)) {
 
-              for (let name in formValue) {
-                value = String(formValue[name]);
-                createNode({
-                  mother: form,
-                  mode: "input",
-                  attribute: [ { name }, { value } ],
-                  style: { display: "none" }
-                });
-              }
-              plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-              plugin();
+              window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+              window.PortOne.requestPayment({
+                storeId: "store-90e0b405-610c-4964-8d0d-2701de0660b4",
+                paymentId: formValue.oid,
+                orderName: formValue.goodname,
+                totalAmount: Math.floor(request.amount),
+                currency: "KRW",
+                channelKey: "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f",
+                payMethod: "VIRTUAL_ACCOUNT",
+                virtualAccount: {
+                  accountExpiry: {
+                    validHours: 48,
+                  },
+                },
+                customer: {
+                  fullName: instance.client.name,
+                  phoneNumber: instance.client.phone,
+                  email: instance.client.email,
+                },
+              }).then((paymentResult) => {
+                if (paymentResult.message === undefined && paymentResult.transactionType === "PAYMENT") {
+                  const thisId = paymentResult.txId;
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + thisId + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
+                } else {
+                  throw new Error("payment fail");
+                }
+              }).catch((err) => {
+                window.alert("결제에 실패하였습니다! 처음부터 다시 시작해주세요!");
+                window.location.reload();
+              });
 
             } else if (/card/gi.test(motherMethod)) {
 
               window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
-              plugin = new Function(pluginScript);
-              plugin();
-              window.IMP.init("imp71921105");
-              window.IMP.request_pay({
-                pg: "inicis",
-                pay_method: "card",
-                merchant_uid: formValue.oid,
-                name: formValue.goodname,
-                amount: Math.floor(request.amount),
-                buyer_email: instance.client.email,
-                buyer_name: instance.client.name,
-                buyer_tel: instance.client.phone,
-              }, (rsp) => {
-                try {
-                  if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + rsp.imp_uid + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
-                  } else {
-                    window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                  }
-                } catch (e) {
-                  window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+              window.PortOne.requestPayment({
+                customer: {
+                  fullName: instance.client.name,
+                  phoneNumber: instance.client.phone,
+                  email: instance.client.email,
+                },
+                card: {},
+                storeId: "store-90e0b405-610c-4964-8d0d-2701de0660b4",
+                paymentId: formValue.oid,
+                orderName: formValue.goodname,
+                totalAmount: Math.floor(request.amount),
+                currency: "KRW",
+                channelKey: "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f",
+                payMethod: "CARD",
+              }).then((paymentResult) => {
+                if (paymentResult.message === undefined && paymentResult.transactionType === "PAYMENT") {
+                  const thisId = paymentResult.txId;
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + thisId + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
+                } else {
+                  throw new Error("payment fail");
                 }
+              }).catch((err) => {
+                window.alert("결제에 실패하였습니다! 처음부터 다시 시작해주세요!");
+                window.location.reload();
               });
 
             }
-
           } else {
+            if (!/card/gi.test(motherMethod)) {
 
-            if (/vbank/gi.test(motherMethod)) {
-              form.setAttribute("method", "post");
-              form.setAttribute("accept-charset", "euc-kr");
-              mobileInisisInfo = {
-                P_INI_PAYMENT: "VBANK",
-                P_MID: formValue.mid,
-                P_OID: formValue.oid,
-                P_AMT: Math.floor(request.amount),
-                P_GOODS: formValue.goodname,
-                P_UNAME: instance.client.name,
-                P_NEXT_URL: formValue.returnUrl,
-                P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
-                P_HPP_METHOD: String(1),
-                P_CHARSET: "utf8",
-                P_RESERVED: "vbank_receipt=Y",
-                P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
-              };
-              for (let name in mobileInisisInfo) {
-                value = String(mobileInisisInfo[name]);
-                createNode({
-                  mother: form,
-                  mode: "input",
-                  attribute: [ { name }, { value } ],
-                  style: { display: "none" }
-                });
-              }
-              form.action = "https://mobile.inicis.com/smart/payment/";
-              form.target = "_self";
-              form.submit();
-            } else if (/card/gi.test(motherMethod)) {
               window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
-              plugin = new Function(pluginScript);
-              plugin();
-              window.IMP.init("imp71921105");
-              window.IMP.request_pay({
-                pg: "inicis",
-                pay_method: "card",
-                merchant_uid: formValue.oid,
-                name: formValue.goodname,
-                amount: Math.floor(request.amount),
-                buyer_email: instance.client.email,
-                buyer_name: instance.client.name,
-                buyer_tel: instance.client.phone,
-                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&request=" + String(instance.requestNumber),
-              }, (rsp) => {});
-            }
+              window.PortOne.requestPayment({
+                storeId: "store-90e0b405-610c-4964-8d0d-2701de0660b4",
+                paymentId: formValue.oid,
+                orderName: formValue.goodname,
+                totalAmount: Math.floor(request.amount),
+                currency: "KRW",
+                channelKey: "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f",
+                payMethod: "VIRTUAL_ACCOUNT",
+                virtualAccount: {
+                  accountExpiry: {
+                    validHours: 48,
+                  },
+                },
+                customer: {
+                  fullName: instance.client.name,
+                  phoneNumber: instance.client.phone,
+                  email: instance.client.email,
+                },
+                windowType: {
+                  mobile: "REDIRECTION",
+                },
+                redirectUrl: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&request=" + String(instance.requestNumber),
+              }).then((paymentResult) => {
+                if (paymentResult.message === undefined && paymentResult.transactionType === "PAYMENT") {
+                  const thisId = paymentResult.txId;
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + thisId + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
+                } else {
+                  throw new Error("payment fail");
+                }
+              }).catch((err) => {
+                window.alert("결제에 실패하였습니다! 처음부터 다시 시작해주세요!");
+                window.location.reload();
+              });
 
+            } else if (/card/gi.test(motherMethod)) {
+
+              window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+              window.PortOne.requestPayment({
+                customer: {
+                  fullName: instance.client.name,
+                  phoneNumber: instance.client.phone,
+                  email: instance.client.email,
+                },
+                card: {},
+                storeId: "store-90e0b405-610c-4964-8d0d-2701de0660b4",
+                paymentId: formValue.oid,
+                orderName: formValue.goodname,
+                totalAmount: Math.floor(request.amount),
+                currency: "KRW",
+                channelKey: "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f",
+                payMethod: "CARD",
+                windowType: {
+                  mobile: "REDIRECTION",
+                },
+                redirectUrl: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&request=" + String(instance.requestNumber),
+              }).then((paymentResult) => {
+                if (paymentResult.message === undefined && paymentResult.transactionType === "PAYMENT") {
+                  const thisId = paymentResult.txId;
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&v2=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + thisId + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
+                } else {
+                  throw new Error("payment fail");
+                }
+              }).catch((err) => {
+                window.alert("결제에 실패하였습니다! 처음부터 다시 시작해주세요!");
+                window.location.reload();
+              });
+
+            }
           }
 
         }
@@ -1840,20 +1877,17 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
     if (data.CARD_BankCode !== undefined) {
       completeInfo.method = "card";
     } else {
-      year = Number(data.VACT_Date.slice(0, 4));
-      month = Number(data.VACT_Date.slice(4, -2).replace(/^0/, '')) - 1;
-      date = Number(data.VACT_Date.slice(-2).replace(/^0/, ''));
-      to = new Date(year, month, date, 15);
-      to.setDate(to.getDate() - 1);
-      completeInfo.method = data.REAL_Account === undefined ? "bank" : "real";
+      to = new Date();
+      to.setHours(to.getHours() + 47);
+      completeInfo.method = "bank";
       completeInfo.when = to;
       completeInfo.where = {
-        bank: data.vactBankName,
-        account: data.VACT_Num,
-        to: data.VACT_Name,
-        input: data.VACT_InputName
+        bank: data.raw.method.bank,
+        account: data.raw.method.accountNumber,
+        to: data.raw.method.remitteeName,
+        input: data.raw.method.remitterName,
       };
-      completeInfo.price = Number(data.TotPrice);
+      completeInfo.price = Number(data.raw.amount.total);
     }
 
     this.completeMode = true;
@@ -1986,7 +2020,20 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         mid: getObj.mid,
         oid: getObj.oid,
         impId: getObj.imp_uid,
-      }, BACKHOST + "/inicisPayment");
+      }, "/inicisPayment");
+      if (convertingData.error === "error") {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      } else {
+        await this.payComplete(convertingData, false);
+      }
+    }
+
+    if (getObj.v2 !== undefined) {
+      const { convertingData } = await ajaxJson({
+        mode: "v2",
+        mid: getObj.mid,
+        oid: getObj.oid,
+      }, "/inicisPayment");
       if (convertingData.error === "error") {
         window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       } else {
@@ -2024,25 +2071,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     }
 
-    // const portoneSDK = await GeneralJs.requestPromise("https://cdn.portone.io/v2/browser-sdk.js");
-    // const portoneFunction = new Function(portoneSDK);
-    // portoneFunction();
-
-    // window.PortOne.requestPayment({
-    //   customer: {
-    //     fullName: "배창규",
-    //     phoneNumber: "010-2747-3403",
-    //     email: "uragenbooks@gmail.com",
-    //   },
-    //   card: {},
-    //   storeId: "MOIhomeli1",
-    //   paymentId: "testm0njis9g",
-    //   orderName: "홈리에종 계약금",
-    //   totalAmount: 10,
-    //   currency: "KRW",
-    //   channelKey: "channel-key-17297ee2-039b-44c1-82d8-f3d4907b5549",
-    //   payMethod: "CARD",
-    // });
+    const portoneSDK = await GeneralJs.requestPromise("https://cdn.portone.io/v2/browser-sdk.js");
+    const portoneFunction = new Function(portoneSDK);
+    portoneFunction();
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
@@ -2084,8 +2115,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, BACKHOST + "/errorLog");
-    window.alert("잘못된 접근입니다!");
-    window.location.href = this.frontPage;
+    console.log(e);
+    window.alert("잘못된 접근입니다! : " + e.message);
   }
 }
