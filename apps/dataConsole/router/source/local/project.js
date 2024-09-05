@@ -4354,7 +4354,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     await GeneralJs.ajaxJson({ amount: thisAmount, bilid: thisBill.bilid, index: requestNumber }, S3HOST + ":3002/passivePayment");
 
                                     await GeneralJs.sleep(500);
-                                    window.alert("입금을 강제로 처리중입니다! 슬랙에서 완료 알림이 뜨면 반드시 새로고침을 해서 확인해주세요!");
+                                    window.alert("입금을 수동으로 처리중입니다! 슬랙에서 완료 알림이 뜨면 반드시 새로고침을 해서 확인해주세요!");
+                                    await GeneralJs.sleep(1000);
+                                    window.location.reload();
 
                                   } catch (e) {
                                     console.log(e);

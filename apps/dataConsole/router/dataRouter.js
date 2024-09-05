@@ -9900,6 +9900,7 @@ class DataRouter {
         let updateQuery;
         let proofs;
         let message;
+        let whereQuery;
         
         bills = await bill.getBillsByQuery({ "bilid": bilid }, { selfMongo });
         thisBill = bills[0];
@@ -9914,6 +9915,8 @@ class DataRouter {
         payObject.oid = "real_" + uniqueValue("hex");
         payObject.amount = amount;
         payArr.unshift(payObject);
+
+        whereQuery = { bilid: thisBill.bilid };
 
         updateQuery = {};
         updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
