@@ -5504,7 +5504,6 @@ class DataRouter {
             closeUrl = req.body.currentPage + "/tools/trigger";
           }
     
-          // if (device === "mobile" && gopaymethod === "Card") {
           if (gopaymethod === "Card") {
             pluginScript = '';
             pluginScript += (await requestSystem("https://cdn.iamport.kr/v1/iamport.js")).data;
@@ -9867,6 +9866,73 @@ class DataRouter {
           logger.log(ignoreMessage).catch((e) => { console.log(e); });
         }
     
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        logger.error(e, req).catch((e) => { console.log(e); });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+
+    // 수동 입금 처리
+    router.post([ "/passivePayment" ], async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        if (req.body.amount === undefined || req.body.bilid === undefined || req.body.index === undefined) {
+          throw new Error("invaild post");
+        }
+        const selfMongo = instance.mongo;
+        const amount = Number(req.body.amount);
+        const bilid = req.body.bilid;
+        const requestNumber = Number(req.body.index);
+        let bills;
+        let thisBill;
+        let client;
+        let itemArr;
+        let payArr;
+        let cancelArr;
+        let payObject;
+        let updateQuery;
+        let proofs;
+        let message;
+        
+        bills = await bill.getBillsByQuery({ "bilid": bilid }, { selfMongo });
+        thisBill = bills[0];
+
+        client = await back.getClientById(thisBill.links.cliid, { selfMongo });
+        client = client.toNormal();
+
+        itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+        payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+        cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+        payObject = bill.returnBillDummies("pay");
+        payObject.oid = "real_" + uniqueValue("hex");
+        payObject.amount = amount;
+        payArr.unshift(payObject);
+
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+        updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+
+        proofs = bill.returnBillDummies("proofs");
+        proofs.method = "계좌 이체";
+        proofs.proof = "이니시스";
+        proofs.to = client.name;
+
+        thisBill.requests[requestNumber].proofs.unshift(proofs);
+        updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
+
+        message = client.name + " 고객님이 " + proofs.method + "로 " + thisBill.requests[requestNumber].name.trim() + "을 결제하셨습니다!";
+        messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+          console.log(err);
+        });
+        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
         logger.error(e, req).catch((e) => { console.log(e); });

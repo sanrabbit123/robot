@@ -1074,7 +1074,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
           buyerPhone: instance.client.phone,
           buyerEmail: instance.client.email,
           currentPage: window.location.protocol + "//" + window.location.host,
-          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : (/vbank/gi.test(motherMethod) ? "VBank" : "VBank")),
+          gopaymethod: (instance.constructMode ? "Account" : (/card/gi.test(motherMethod) ? "Card" : "VBank")),
           device: (desktop ? "desktop" : "mobile"),
           requestNumber: String(instance.requestNumber),
           bilid: instance.bill.bilid,
@@ -1091,7 +1091,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         document.body.appendChild(formMother);
         formMother.appendChild(form);
 
-        if (false) {
+        if (instance.constructMode) {
 
           cashInput = {};
           businessInput = {};
@@ -1112,11 +1112,11 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                     thisInput.value = instance.client.phone;
                     thisInput.focus();
                   } else {
-                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + thisInput.value.trim();
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&cash=true&hash=" + pluginScript + "&cashphone=" + thisInput.value.trim();
                   }
                 }
               } else {
-                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + instance.client.phone;
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&cash=true&hash=" + pluginScript + "&cashphone=" + instance.client.phone;
               }
             }
           }
@@ -1710,45 +1710,6 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       ]
     });
 
-    /*
-    createNode({
-      mother: greenButtonBase,
-      class: [ "hoverDefault_lite" ],
-      events: [
-        {
-          type: "click",
-          event: paymentEvent("vbank"),
-        }
-      ],
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(greenButtonWidth + 3) + ea,
-        height: String(greenButtonHeight) + ea,
-        background: colorExtended.gradientGray,
-        textAlign: "center",
-        borderRadius: String(3) + "px",
-        marginLeft: String(greenButtonBetween) + ea,
-        marginRight: String(greenButtonBetween) + ea,
-      },
-      children: [
-        {
-          text: wordings.button[1],
-          style: {
-            position: "absolute",
-            top: String(greenButtonTextTop) + ea,
-            width: String(100) + '%',
-            left: String(0),
-            fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(800),
-            color: colorChip.white,
-            textAlign: "center",
-          }
-        }
-      ]
-    });
-    */
-
     createNode({
       mother: greenButtonBase,
       class: [ "hoverDefault_lite" ],
@@ -1770,7 +1731,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       },
       children: [
         {
-          text: wordings.button[2],
+          text: wordings.button[1],
           style: {
             position: "absolute",
             top: String(greenButtonTextTop) + ea,
@@ -1808,7 +1769,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       },
       children: [
         {
-          text: wordings.button[2],
+          text: "계좌 이체",
           style: {
             position: "absolute",
             top: String(greenButtonTextTop) + ea,
@@ -1834,9 +1795,6 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
   const { ajaxJson, returnGet, colorExtended } = GeneralJs;
   const { bill, requestNumber, completeInfo } = this;
   try {
-    if (typeof data.MOID !== "string") {
-      throw new Error("invaild data");
-    }
     const getObj = returnGet();
     const bilid = bill.bilid;
     let year, month, date;
@@ -1875,13 +1833,23 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
       to.setHours(to.getHours() + 47);
       completeInfo.method = "bank";
       completeInfo.when = to;
-      completeInfo.where = {
-        bank: data.raw.method.bank,
-        account: data.raw.method.accountNumber,
-        to: data.raw.method.remitteeName,
-        input: data.raw.method.remitterName,
-      };
-      completeInfo.price = Number(data.raw.amount.total);
+      if (typeof data.raw === "object" && data.raw !== null && data.raw !== undefined) {
+        completeInfo.where = {
+          bank: data.raw.method.bank,
+          account: data.raw.method.accountNumber,
+          to: data.raw.method.remitteeName,
+          input: data.raw.method.remitterName,
+        };
+        completeInfo.price = Number(data.raw.amount.total);
+      } else {
+        completeInfo.where = {
+          bank: data.vactBankName,
+          account: data.VACT_Num,
+          to: data.VACT_Name,
+          input: data.buyerName,
+        };
+        completeInfo.price = Number(data.TotPrice);
+      }
     }
 
     if (!refresh) {
@@ -1892,7 +1860,6 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
     this.completeMode = true;
 
   } catch (e) {
-    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.payComplete : " + e.message }, BACKHOST + "/errorLog");
     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     window.location.reload();
   }
@@ -2036,15 +2003,12 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
-    if (getObj.hash !== undefined) {
-
+    if (getObj.cash === "true") {
       data = await ajaxJson({
         hash: getObj.hash,
         mode: "decrypto",
       }, BACKHOST + "/inicisPayment", { equal: true });
-
       if (typeof getObj.cashphone === "string") {
-
         await ajaxJson({
           mode: "cashPhone",
           phone: getObj.cashphone,
@@ -2056,12 +2020,12 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
           name: client.name,
         }, BACKHOST + "/inicisPayment");
         data.cashPhone = getObj.cashphone;
-
       }
       if (getObj.mode === "complete") {
         await this.payComplete(data, true);
       }
     }
+
     if (getObj.mode === "fail") {
       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     }
@@ -2069,6 +2033,12 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     const portoneSDK = await GeneralJs.requestPromise("https://cdn.portone.io/v2/browser-sdk.js");
     const portoneFunction = new Function(portoneSDK);
     portoneFunction();
+
+    this.constructMode = false;
+    if (/시공/gi.test(this.bill.requests[this.requestNumber].name)) {
+      this.constructMode = true;
+      this.inicisDeactive = true;
+    }
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

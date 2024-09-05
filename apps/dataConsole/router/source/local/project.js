@@ -4326,6 +4326,41 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   }
                                 }
                               },
+                              {
+                                text: "수동 입금",
+                                eventFunction: async function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  try {
+                                    const [ thisBill ] = await GeneralJs.ajaxJson({
+                                      mode: "read",
+                                      whereQuery: {
+                                        $and: [
+                                          { class: "style" },
+                                          { "links.cliid": cliid },
+                                          { "links.desid": desid },
+                                          { "links.proid": proid },
+                                          { "links.method": method },
+                                        ]
+                                      },
+                                    }, PYTHONHOST + "/generalBill", { equal: true });
+                                    let thisName, thisAmount;
+                                    let requestNumber;
+
+                                    thisName = (thisBill.requests.find((o) => { return o.id === index }).target.name);
+                                    requestNumber = thisBill.requests.findIndex((o) => { return o.id === index });
+                                    thisAmount = String(Math.floor(thisBill.requests.find((o) => { return o.id === index }).items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)))
+
+                                    await GeneralJs.ajaxJson({ amount: thisAmount, bilid: thisBill.bilid, index: requestNumber }, S3HOST + ":3002/passivePayment");
+
+                                    await GeneralJs.sleep(500);
+                                    window.alert("입금을 강제로 처리중입니다! 슬랙에서 완료 알림이 뜨면 반드시 새로고침을 해서 확인해주세요!");
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
                             ];
                           }
                           let menuFontSize;

@@ -1250,6 +1250,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           paddingBottom: String(titleAreaPaddingBottom) + ea,
           alignItems: "center",
           borderBottom: "1px solid " + colorChip.gray3,
+          flexDirection: "row",
         }
       });
       createNode({
