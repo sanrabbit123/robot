@@ -1714,6 +1714,7 @@ DataPatch.prototype.projectMap = function () {
     photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
   };
+  
   return map;
 }
 
