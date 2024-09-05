@@ -27,6 +27,7 @@ class BackWorker {
 }
 
 /**
+ * @async
  * @method setProposalToClient
  * @description 고객 데이터에 프로젝트 제안 기록을 연결하는 메서드입니다. 프로젝트의 아이디를 고객 데이터 내에 삽입하여 고객과 프로젝트 간의 관계를 설정합니다.
  * @param {Array<Date>} dateArray - 시작 및 종료 날짜를 포함하는 배열입니다. 예를 들어 [startDate, endDate] 형식입니다.
@@ -162,6 +163,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
 }
 
 /**
+ * @async
  * @method aspirantToDesigner
  * @description 디자이너 신청자(aspirant)를 홈리에종의 협업 인테리어 디자이너로 변환하는 메서드입니다. 신청자의 정보를 바탕으로 새로운 디자이너로 등록합니다.
  * @param {Array<Object>} aspidArr - 지원자 ID와 계약 날짜가 포함된 객체 배열입니다.
@@ -484,6 +486,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 }
 
 /**
+ * @async
  * @method newDesignerToFront
  * @description 홈리에종에 신규 디자이너가 등록되었을 때 이 디자이너에 대한 정보를 홈리에종 프론트 웹에 자동으로 올려주는 메서드입니다.
  *              porlid는 해당 디자이너가 직접 수행한 콘텐츠의 ID이고, index는 그 콘텐츠를 대표하는 사진의 순서 번호를 지정하는 number 값입니다.
@@ -778,6 +781,7 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
 }
 
 /**
+ * @async
  * @method designerCalculation
  * @description 홈리에종에서 매주 월요일 인테리어 디자이너들에게 디자인 비용을 정산해주는 정산 리스트를 자동으로 추적하여 홈리에종 슬랙 채널에 알림을 보내는 메서드입니다.
  * @param {boolean} [alarm=true] - 알림을 보낼지 여부를 결정하는 플래그입니다. 기본값은 true입니다.
@@ -1244,6 +1248,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
 }
     
 /**
+ * @async
  * @method designerTendencySync
  * @description 디자이너 디자인 경향성에 대한 연산을 수행하고, 이를 동기화하는 메서드입니다.
  *              디자인 경향성(designer Tendency)이란 해당 디자이너가 어떤 스타일로 인테리어 디자인을 수행하는지에 대한 수치화된 지표입니다.
@@ -1349,6 +1354,7 @@ BackWorker.prototype.designerTendencySync = async function () {
 }
 
 /**
+ * @async
  * @method designerFeeTable
  * @description 디자이너의 디자인비 가격 테이블을 연산하고 데이터베이스로부터 가져오는 메서드입니다.
  * @param {string} desid - 디자이너의 ID입니다.
@@ -1504,6 +1510,7 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
 }
 
 /**
+ * @async
  * @method getDesignerFee
  * @description 해당 디자이너의 디자인 비용을 고객 정보와 함께 자동으로 계산하고 상세한 정보를 반환하는 메서드입니다.
  * @param {string} proid - 프로젝트 ID입니다.
@@ -2131,13 +2138,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 }
 
 /**
+ * @async
  * @function designerCuration
  * @description 이 메서드는 고객의 정보를 바탕으로 적절한 디자이너를 큐레이션하여 추천 리스트를 자동으로 생성합니다. 고객의 요청, 서비스 ID, 디자이너의 경력 및 실시간 가능성을 고려하여 큐레이션됩니다.
  * @param {string} cliid - 고객의 고유 아이디입니다.
  * @param {number} selectNumber - 추천할 디자이너의 수입니다.
  * @param {Array} seridArr - 서비스 아이디들의 배열입니다.
  * @param {Object} [option={ selfMongo: null, selfLocalMongo: null }] - 선택 사항으로 MongoDB 연결 정보가 포함된 객체입니다.
- * @returns {Array|String} 큐레이션된 디자이너 리스트 또는 오류 메시지를 반환합니다.
+ * @returns {Promise<Array>} 큐레이션된 디자이너 리스트 또는 오류 빈 배열을 반환합니다.
  * @throws {Error} 입력 값이 유효하지 않으면 에러를 발생시킵니다.
  */
 BackWorker.prototype.designerCuration = async function (cliid, selectNumber, seridArr, option = { selfMongo: null, selfLocalMongo: null }) {
@@ -2492,7 +2500,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
 
 /**
  * 이 메서드는 특정 고객(cliid)에 대해 디자이너 추천을 초기화하고 다시 추천 리스트를 생성하여 프로젝트에 업데이트하는 역할을 합니다.
- *
+ * @async
  * @param {string} cliid - 고객 아이디 또는 프로젝트 아이디입니다. 'c'로 시작하면 고객 아이디, 'p'로 시작하면 프로젝트 아이디입니다.
  * @param {Object} option - 선택적 파라미터로, 데이터베이스 연결 객체를 포함할 수 있습니다.
  * @param {Object} option.selfMongo - 이미 연결된 MongoDB 객체를 사용하려면 여기에 전달합니다.
@@ -2578,7 +2586,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
       const { proid, cliid: id, service: { serid } } = project;  // 프로젝트 정보에서 필요한 데이터를 추출합니다.
 
       // 디자이너 추천 리스트를 생성합니다.
-      detail = await instance.designerCalculation(id, 4, [serid], { selfMongo, selfLocalMongo });
+      detail = await instance.designerCuration(id, 4, [serid], { selfMongo, selfLocalMongo });
 
       // 추천된 디자이너 리스트를 업데이트 목록에 추가합니다.
       for (let d of detail) {
@@ -2612,7 +2620,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
  * 이 메서드는 실시간으로 디자이너의 일정 정보를 동기화하여 업데이트하는 기능을 수행합니다.
  * 프로젝트 ID를 기반으로 해당 프로젝트의 일정과 디자이너의 일정을 비교하고, 
  * 그 결과를 실시간 일정 컬렉션에 반영합니다.
- *
+ * @async
  * @param {string} proid - 프로젝트 ID로, 'p'로 시작하는 문자열이어야 합니다.
  * @param {Object} option - 옵션 객체로, 이미 연결된 MongoDB 객체 등을 포함할 수 있습니다.
  * @param {Object} option.selfMongo - 이미 연결된 MongoDB 객체를 사용할 경우 전달합니다.
@@ -2936,6 +2944,7 @@ BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { se
 /**
  * 디자이너의 가능한 일정 배열을 기반으로 일정이 가능한지 여부를 판단하는 메서드입니다.
  * 이 메서드는 가능한 일정들을 병합하고 최종적으로 가능한 일정 목록을 반환합니다.
+ * @async
  * @param {Array} possibleArr - 디자이너의 가능한 일정이 담겨 있는 배열입니다. 각 객체는 start와 end 날짜를 포함해야 합니다.
  * @param {number} [dateMargin=10] - 일정 병합을 고려하는 날짜 간격입니다. 기본값은 10일입니다.
  * @returns {Array} - 병합된 가능한 일정 목록을 반환합니다.
@@ -3076,7 +3085,7 @@ BackWorker.prototype.realtimePossibleConverting = function (possibleArr, dateMar
 /**
  * 프로젝트에서 일정이 가능한 디자이너를 찾아주는 메서드입니다.
  * 주어진 디자이너 ID와 프로젝트 ID를 기반으로 해당 디자이너가 프로젝트 기간 동안 일정이 가능한지 여부를 확인합니다.
- *
+ * @async
  * @param {string} desid - 디자이너 ID입니다.
  * @param {string} proid - 프로젝트 또는 고객 ID입니다.
  * @param {string|object} serid - 서비스 ID 또는 옵션 객체입니다.
@@ -3227,7 +3236,7 @@ BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid
 /**
  * 이 메서드는 고객의 응대 상태를 자동으로 업데이트하고, 각 고객의 상황에 맞는 적절한 응대 상태로 변경해주는 기능을 수행합니다.
  * 이 과정에서 MongoDB 연결 객체들을 사용하여 필요한 데이터를 가져오고, 응대 상태를 업데이트합니다.
- *
+ * @async
  * @param {object} option - 다양한 MongoDB 연결 객체와 설정을 포함하는 옵션 객체입니다.
  */
 BackWorker.prototype.clientActionSync = async function (option = { selfMongo: null, selfConsoleMongo: null, updateMongo: null }) {
@@ -3854,7 +3863,7 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
 
 /**
  * 프로젝트의 응대 상태를 자동으로 업데이트하고 적절한 응대 상태로 변경해주는 메서드입니다.
- * 
+ * @async
  * @param {Object} option - MongoDB 연결 옵션을 포함하는 객체
  * @param {Object} option.selfMongo - 메인 MongoDB 연결 객체
  * @param {Object} option.selfConsoleMongo - 보조 MongoDB 연결 객체
@@ -4189,7 +4198,7 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 /**
  * 디자이너의 레벨에 따라 홈리에종의 프로젝트 메트릭스를 동기화하는 메서드입니다.
  * 이 메서드는 각 디자이너의 레벨과 프로젝트에 대한 정보를 기반으로 메트릭스를 업데이트합니다.
- *
+ * @async
  * @param {object} selfMongo - MongoDB 연결 객체입니다.
  * @returns {boolean} - 동기화가 성공하면 true, 실패하면 false를 반환합니다.
  */
