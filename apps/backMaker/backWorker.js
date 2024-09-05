@@ -2372,7 +2372,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     }
 
     // 고객 선호 디자이너를 반영하여 최종 선택된 디자이너 리스트를 생성합니다.
-    selectedResult = null;
+    selectedResult = [];
     if (preferBoo) {
       selectedDesigner = [];
       for (let desid of preferDesigners) {
@@ -2486,7 +2486,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
 
   } catch (e) {
     console.log(e);
-    return e.message; // 오류 발생 시 오류 메시지를 반환합니다.
+    return []; // 오류 발생 시 빈 배열을 반환합니다.
   }
 }
 
@@ -2578,7 +2578,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
       const { proid, cliid: id, service: { serid } } = project;  // 프로젝트 정보에서 필요한 데이터를 추출합니다.
 
       // 디자이너 추천 리스트를 생성합니다.
-      detail = await this.designerCuration(id, 4, [serid], { selfMongo, selfLocalMongo });
+      detail = await instance.designerCalculation(id, 4, [serid], { selfMongo, selfLocalMongo });
 
       // 추천된 디자이너 리스트를 업데이트 목록에 추가합니다.
       for (let d of detail) {

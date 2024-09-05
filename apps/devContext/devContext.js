@@ -45,7 +45,16 @@ DevContext.prototype.launching = async function () {
     const findCode = this.findCode.bind(this);
     const human = new HumanPacket();
 
-    
+    // const kakao = new KakaoTalk();
+    // await kakao.sendTalk("virtualAccount", "배창규", "010-2747-3403", {
+    //   client: "배창규",
+    //   goodName: "홈리에종 계약금",
+    //   bankName: "우리",
+    //   account: "1000",
+    //   to: "홈리에종",
+    //   amount: autoComma(1100),
+    //   date: dateToString(new Date(), true),
+    // });
 
     // monthly must ==========================================================================================================================================
     // =======================================================================================================================================================
