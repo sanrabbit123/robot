@@ -738,12 +738,15 @@ DataConsole.prototype.connect = async function () {
           console.log(e);
         }
       },
-      error: async (text) => {
+      error: async (obj, req = { url: "unknown" }) => {
         try {
-          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
-          await alertLog(text);
+          console.log(bar);
+          console.log(new Date(), "error");
+          console.log("in " + String(req.url));
+          console.log(obj);
+          console.log(bar);
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       },
       cron: async (text) => {
