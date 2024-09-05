@@ -215,24 +215,6 @@ Robot.prototype.proposalMaker = function (button, arg) {
 
     }).then(() => {
 
-      return requestSystem("https://" + instance.address.officeinfo.host + ":3002/generalMongo", {
-        mode: "sse",
-        db: "console",
-        collection: "sse_clientCard",
-        log: true,
-        who: "autoBot",
-        updateQuery: {
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: client.requests[requestNumber].analytics.response.action.value,
-          to: action,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        }
-      }, { headers: { "origin": "https://" + instance.address.officeinfo.host, "Content-Type": "application/json" } });
-
-    }).then(() => {
-
       let updateObj;
       updateObj = {};
       updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;

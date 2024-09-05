@@ -16693,24 +16693,6 @@ DesignerJs.prototype.calendarView = async function () {
         };
         await GeneralJs.ajaxJson(updateData, url);
 
-        if (type !== "blur") {
-          url = "/generalMongo";
-          updateData = {
-            mode: "sse",
-            db: "console",
-            collection: "sse_realtimeDesigner",
-            updateQuery: {
-              mode: type,
-              alt: alt ? 1 : 0,
-              desid,
-              proid,
-              x: String(x),
-              who: instance.cookiesWho,
-            }
-          };
-          await GeneralJs.ajaxJson(updateData, url);
-        }
-
         return 1;
       }
 
@@ -16821,9 +16803,6 @@ DesignerJs.prototype.calendarView = async function () {
       collection: "realtimeDesigner",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
-
-    // this.calendarData.mergeProjects(projects);
-    // await this.calendarData.updateThisState();
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
@@ -17269,20 +17248,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             if (window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
-                                                mode: "sse",
-                                                db: "console",
-                                                collection: "sse_checklistDesigner",
-                                                log: true,
-                                                who: (cookies.homeliaisonConsoleLoginedEmail),
-                                                updateQuery: {
-                                                  desid,
-                                                  type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
-                                                  value: text,
-                                                  position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
-                                                  update: { whereQuery, updateQuery }
-                                                }
-                                              }, "/generalMongo");
-                                              await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
                                                 who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
@@ -17432,20 +17397,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
                                             if (window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                                              await ajaxJson({
-                                                mode: "sse",
-                                                db: "console",
-                                                collection: "sse_checklistDesigner",
-                                                log: true,
-                                                who: (cookies.homeliaisonConsoleLoginedEmail),
-                                                updateQuery: {
-                                                  desid,
-                                                  type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
-                                                  value: text,
-                                                  position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
-                                                  update: { whereQuery, updateQuery }
-                                                }
-                                              }, "/generalMongo");
                                               await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
@@ -20035,14 +19986,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                     }
                                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                     await ajaxJson({
-                                      mode: "sse",
-                                      db: "console",
-                                      collection: "sse_checklistDesigner",
-                                      log: true,
-                                      who: (cookies.homeliaisonConsoleLoginedEmail),
-                                      updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                                      update: { whereQuery, updateQuery } } }, "/generalMongo");
-                                    await ajaxJson({
                                       page: "checklist",
                                       mode: "update",
                                       who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
@@ -20184,14 +20127,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
                       await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                       await ajaxJson({
-                        mode: "sse",
-                        db: "console",
-                        collection: "sse_checklistDesigner",
-                        log: true,
-                        who: (cookies.homeliaisonConsoleLoginedEmail),
-                        updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                        update: { whereQuery, updateQuery } } }, "/generalMongo");
-                      await ajaxJson({
                         page: "checklist",
                         mode: "update",
                         who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
@@ -20324,14 +20259,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
                         await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                         await ajaxJson({
-                          mode: "sse",
-                          db: "console",
-                          collection: "sse_checklistDesigner",
-                          log: true,
-                          who: (cookies.homeliaisonConsoleLoginedEmail),
-                          updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                          update: { whereQuery, updateQuery } } }, "/generalMongo");
-                        await ajaxJson({
                           page: "checklist",
                           mode: "update",
                           who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
@@ -20439,14 +20366,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         this.value = this.getAttribute("past");
                       } else {
                         await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                        await ajaxJson({
-                          mode: "sse",
-                          db: "console",
-                          collection: "sse_checklistDesigner",
-                          log: true,
-                          who: (cookies.homeliaisonConsoleLoginedEmail),
-                          updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                          update: { whereQuery, updateQuery } } }, "/generalMongo");
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
@@ -35294,25 +35213,12 @@ DesignerJs.prototype.possibleUpdate = async function (desid) {
     instance.realtimeDesigner.possible = finalPossible;
 
     ajaxJson({
-      mode: "sse",
-      db: "console",
-      collection: "sse_possibleDesigner",
-      log: true,
+      page: "possible",
+      mode: "update",
       who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
-      updateQuery: {
-        desid,
-        type: "possible",
-        possible: finalPossible
-      }
-    }, "/generalMongo").then(() => {
-      return ajaxJson({
-        page: "possible",
-        mode: "update",
-        who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
-        update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-        desid,
-      }, "/ghostDesigner_updateAnalytics");
-    }).catch((err) => {
+      update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
+      desid,
+    }, "/ghostDesigner_updateAnalytics").catch((err) => {
       console.log(err);
     });
 
@@ -39038,16 +38944,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
 
                       updateQuery = {};
                       updateQuery["matrix." + String(x) + '.' + String(y)] = finalValue;
-                      // await ajaxJson({
-                      //   mode: "update",
-                      //   db: "console",
-                      //   collection: "designerPrice",
-                      //   whereQuery: { key: key },
-                      //   updateQuery
-                      // }, BACKHOST + "/generalMongo");
-                      // instance.price.pick(Math.floor(key / 10), key % 10).matrix[x][y] = finalValue;
-                      // self.setAttribute("value", String(finalValue));
-                      // self.textContent = String(finalValue);
+
                       for (let dom of removeTargets) {
                         dom.remove();
                       }

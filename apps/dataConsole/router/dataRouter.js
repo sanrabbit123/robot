@@ -1,53 +1,64 @@
 /**
  * @file dataRouter.js
- * @description 이 파일은 Data Console 서버의 라우터를 정의합니다. 
+ * @description 이 파일은 DataConsole 서버의 라우팅을 정의하며, 여러 모듈과의 상호작용을 처리합니다.
  */
 
-const Mother = require(`${process.cwd()}/apps/mother.js`);
-const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
-const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
-const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
-const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
-const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
-const { resolve } = require('path');
-const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
-const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"
-const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
-const MID = "MOIhomeli1";
-const mother = new Mother();
-const back = new BackMaker();
-const { spawn } = require("child_process");
-const querystring = require("querystring");
-const parser = require("ua-parser-js");
-const url = require("url");
-const address = require(process.cwd() + "/apps/infoObj.js");
-const host = address.officeinfo.ghost.host;
-const work = new BackWorker();
-const dir = process.cwd() + "/apps/dataConsole";
-const bill = new BillMaker();
-const patch = new DataPatch();
-const sheets = new GoogleSheet();
-const drive = new GoogleDrive();
-const calendar = new GoogleCalendar();
-const analytics = new GoogleAnalytics();
-const imageReader = new ImageReader(mother, back, address);
-const hangul = new ParsingHangul();
-const bankCode = BillMaker.returnBankCode("", "matrix");
-const crypto = require("crypto");
-const password = "homeliaison";
+const Mother = require(`${process.cwd()}/apps/mother.js`); // Mother 클래스의 인스턴스를 가져옴
+const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`); // BackMaker 클래스 가져옴
+const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`); // 백엔드 작업을 위한 Worker 클래스
+const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`); // 청구서 처리 관련 클래스
+const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`); // 구글 스프레드시트 API 모듈
+const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`); // 구글 드라이브 API 모듈
+const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`); // 구글 캘린더 API 모듈
+const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`); // 구글 애널리틱스 API 모듈
+const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`); // 데이터 패치 및 저장 관련 클래스
+const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`); // 주소 파서
+const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js"); // 이미지 처리 모듈
+const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js"); // 한글 파싱 관련 모듈
+const { resolve } = require('path'); // 경로 처리 유틸리티
+const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9"; // 포트원 API 키
+const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"; // 채널 키
+const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4"; // 스토어 ID
+const MID = "MOIhomeli1"; // MID 값
+const mother = new Mother(); // Mother 클래스의 인스턴스를 생성하여 라우터에서 사용
+const back = new BackMaker(); // BackMaker 클래스의 인스턴스를 생성하여 라우터에서 사용
+const { spawn } = require("child_process"); // 프로세스 스폰을 위한 모듈
+const querystring = require("querystring"); // 쿼리스트링을 처리하기 위한 유틸리티
+const parser = require("ua-parser-js"); // 사용자 에이전트 파싱
+const url = require("url"); // URL 유틸리티
+const address = require(process.cwd() + "/apps/infoObj.js"); // 서버 주소 정보를 불러옴
+const host = address.officeinfo.ghost.host; // 호스트 정보
+const work = new BackWorker(); // 백엔드 작업을 위한 BackWorker 인스턴스
+const dir = process.cwd() + "/apps/dataConsole"; // 데이터 콘솔 디렉터리 경로
+const bill = new BillMaker(); // 청구서 생성기 인스턴스
+const patch = new DataPatch(); // 데이터 패치 모듈 인스턴스
+const sheets = new GoogleSheet(); // 구글 스프레드시트 API 인스턴스
+const drive = new GoogleDrive(); // 구글 드라이브 API 인스턴스
+const calendar = new GoogleCalendar(); // 구글 캘린더 API 인스턴스
+const analytics = new GoogleAnalytics(); // 구글 애널리틱스 API 인스턴스
+const imageReader = new ImageReader(mother, back, address); // 이미지 리더 인스턴스, Mother와 BackMaker 사용
+const hangul = new ParsingHangul(); // 한글 파싱 모듈 인스턴스
+const bankCode = BillMaker.returnBankCode("", "matrix"); // 은행 코드 설정
+const crypto = require("crypto"); // 암호화 모듈
+const password = "homeliaison"; // 비밀번호 설정
 
-const bar = "============================================================";
+// 로그 관련 설정
+const bar = "============================================================"; // 로그 출력을 위한 구분선
+
+// 여러 유틸리티 메서드와 Mother의 메서드를 가져옴
 const { errorLog, alertLog, cronLog, aliveLog, emergencyAlarm, expressLog, mysqlQuery, leafParsing, processSystem, linkToString, ghostFileUpload, jsonToString, tempReplaceImage } = mother;
 const { diskReading, aliveMongo, equalJson, dateToString, serviceParsing, stringToDate, requestSystem, db, fileSystem, shellExec, shellLink, messageLog, zeroAddition, objectDeepCopy, messageSend, shell, homeliaisonAnalytics, sleep, stringToLink, autoHypenPhone, autoComma, mongo, mongoconsoleinfo, cryptoString, decryptoHash, ipParsing, uniqueValue, setQueue, binaryRequest, generalFileUpload } = mother;
 const { consoleQ, copyToClipboard, http2InNode, orderSystem, stringToJson, chromeOpen, curlRequest, ajaxJson, getDateMatrix, promiseTimeout, headRequest, treeParsing, appleScript, copyJson, pythonExecute, ipCheck, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, localUnique, sha256Hmac, variableArray, designerCareer, mediaQuery, getHoliday, capitalizeString } = mother;
 
+/**
+ * 로그와 에러 처리 관련 유틸리티 클래스
+ * @class
+ */
 const logger = {
+  /**
+   * 비상 알림을 전송합니다.
+   * @param {string} text - 전송할 텍스트
+   */
   alert: async (text) => {
     try {
       await emergencyAlarm(text);
@@ -55,6 +66,12 @@ const logger = {
       console.error(e);
     }
   },
+  
+  /**
+   * 로그를 출력합니다.
+   * @param {object} obj - 출력할 로그 객체
+   * @param {object} req - 요청 객체 (기본값: {url: "unknown"})
+   */
   log: async (obj, req = { url: "unknown" }) => {
     try {
       console.log(bar);
@@ -66,6 +83,12 @@ const logger = {
       console.error(e);
     }
   },
+
+  /**
+   * 에러를 출력합니다.
+   * @param {object} obj - 출력할 에러 객체
+   * @param {object} req - 요청 객체 (기본값: {url: "unknown"})
+   */
   error: async (obj, req = { url: "unknown" }) => {
     try {
       console.log(bar);
@@ -77,6 +100,11 @@ const logger = {
       console.error(e);
     }
   },
+
+  /**
+   * 크론 로그를 기록합니다.
+   * @param {string} text - 기록할 텍스트
+   */
   cron: async (text) => {
     try {
       await cronLog(text);
@@ -84,6 +112,11 @@ const logger = {
       console.error(e);
     }
   },
+
+  /**
+   * 서버 상태를 기록합니다.
+   * @param {string} text - 기록할 상태 메시지
+   */
   alive: async (text) => {
     try {
       await aliveLog(text);
@@ -92,73 +125,139 @@ const logger = {
     }
   },
 };
+
+/**
+ * 쿠키 파싱 함수
+ * @function cookieParsing
+ * @description 이 함수는 HTTP 요청에서 전달된 쿠키 문자열을 객체 형식으로 변환합니다. 
+ *             쿠키가 없거나, 잘못된 형식일 경우 null을 반환합니다.
+ * 
+ * @param {object} req - HTTP 요청 객체. 쿠키 정보가 포함되어 있습니다.
+ * @returns {object|null} - 쿠키 이름과 값을 key-value 형식으로 담은 객체를 반환하며, 
+ *                          쿠키가 없거나 파싱에 실패하면 null을 반환합니다.
+ */
 const cookieParsing = (req) => {
+  // 요청 헤더에 쿠키가 없을 경우 null을 반환
   if (req.headers.cookie === undefined) {
     return null;
   } else {
+    // 쿠키가 문자열로 존재하며, "=" 기호가 있을 경우에만 처리
     if (typeof req.headers.cookie === "string" && /=/gi.test(req.headers.cookie)) {
+      // 쿠키 문자열을 저장
       const str = req.headers.cookie;
+
+      /**
+       * @function tryDecode
+       * @description 쿠키 값을 URL 디코딩 시도, 디코딩에 실패하면 원래 문자열 반환
+       * 
+       * @param {string} str - 디코딩할 쿠키 값
+       * @returns {string} - 디코딩된 문자열, 실패하면 원래 문자열 반환
+       */
       const tryDecode = (str) => {
         try {
-          return decodeURIComponent(str);
+          return decodeURIComponent(str); // URL 디코딩을 시도
         } catch (e) {
-          return str;
+          return str; // 디코딩 실패 시 원래 값을 반환
         }
       }
+
+      // 쿠키 문자열을 세미콜론(;) 기준으로 분리하여 각각의 쿠키 값으로 나눔
       const pairs = str.split(/; */);
+
+      // 쿠키를 저장할 객체를 초기화
       let o;
       let key, val;
       o = {};
+
+      // 쿠키 배열을 순회하며 키-값 쌍을 추출
       for (let pair of pairs) {
+        // "=" 기호가 있는 위치를 찾음
         eq_idx = pair.indexOf('=');
+
+        // "=" 기호가 없으면 잘못된 쿠키 포맷이므로 건너뜀
         if (eq_idx < 0) {
           continue;
         }
-        key = pair.slice(0, eq_idx).trim();
-        val = pair.slice(eq_idx + 1, pair.length).trim();
+
+        // "=" 기호 앞부분을 키로, 뒷부분을 값으로 분리
+        key = pair.slice(0, eq_idx).trim(); // 키를 추출하고 공백을 제거
+        val = pair.slice(eq_idx + 1, pair.length).trim(); // 값을 추출하고 공백을 제거
+
+        // 값이 큰따옴표로 감싸져 있을 경우 제거
         if (val[0] === '"') {
           val = val.slice(1, -1);
         }
+
+        // 쿠키 객체에 키-값 쌍 추가 (중복되지 않는 경우에만)
         if (o[key] === undefined) {
-          o[key] = tryDecode(val);
+          o[key] = tryDecode(val); // URL 디코딩된 값을 저장
         }
       }
+
+      // 파싱된 쿠키 객체를 반환
       return o;
     } else {
+      // 쿠키가 없거나 올바른 형식이 아닐 경우 null 반환
       return null;
     }
   }
-}
+};
+
+/**
+ * 쿼리 필터링 함수
+ * @param {string} str - 필터링할 문자열
+ * @returns {string} 필터링된 문자열
+ */
 const queryFilter = (str) => {
-  str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
-  str = str.replace(/\n/g, '');
-  str = str.replace(/\t/g, '');
+  str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, ''); // 특수문자를 제거
+  str = str.replace(/\n/g, ''); // 줄바꿈 제거
+  str = str.replace(/\t/g, ''); // 탭 제거
   return str;
 }
 
+/**
+ * @class DataRouter
+ * @classdesc 이 클래스는 Data Console 서버에서 MongoDB, Kakao API, AI 등과 같은 다양한 인스턴스를 초기화하고 관리하는 역할을 담당합니다.
+ *
+ * @param {object} MONGOC - MongoDB 커넥션 객체, 데이터베이스와의 통신을 담당합니다.
+ * @param {object} kakaoInstance - 카카오톡 API 인스턴스, 카카오톡과의 통신을 처리합니다.
+ * @param {object} humanInstance - 인공지능(AI) 처리 인스턴스, AI 관련 작업을 처리합니다.
+ */
 class DataRouter {
-  constructor (MONGOC, kakaoInstance, humanInstance) {
-    this.mother = mother;
-    this.back = back;
-    this.work = work;
-    this.dir = dir;
-    this.address = address;
-    this.bill = bill;
-    this.patch = patch;
-    this.sheets = sheets;
-    this.drive = drive;
-    this.calendar = calendar;
-    this.analytics = analytics;
-    this.bankCode = bankCode;
-    this.mongo = MONGOC;
-    this.mongolocal = MONGOC;
-    this.members = {};
-    this.kakao = kakaoInstance;
-    this.human = humanInstance;
+
+  /**
+   * @constructor
+   * @param {object} MONGOC - MongoDB 커넥션 객체
+   * @param {object} kakaoInstance - 카카오톡 API 인스턴스
+   * @param {object} humanInstance - AI 인스턴스
+   */
+  constructor(MONGOC, kakaoInstance, humanInstance) {
+    this.mother = mother; // Mother 객체를 인스턴스로 할당, 로그 기록, 에러 처리 등을 담당.
+    this.back = back; // BackMaker 객체를 인스턴스로 할당, 백엔드 작업 관련 기능을 제공.
+    this.work = work; // BackWorker 객체를 인스턴스로 할당, 백그라운드 작업을 관리.
+    this.dir = dir; // 데이터 콘솔 디렉터리 경로를 설정.
+    this.address = address; // 서버 주소 정보가 담긴 객체.
+    this.bill = bill; // BillMaker 객체, 송장 및 결제 관련 작업을 처리.
+    this.patch = patch; // DataPatch 객체, 데이터 패치 및 업데이트 작업을 처리.
+    this.sheets = sheets; // GoogleSheet 객체, 구글 시트와의 통신을 처리.
+    this.drive = drive; // GoogleDrive 객체, 구글 드라이브 관련 작업을 처리.
+    this.calendar = calendar; // GoogleCalendar 객체, 구글 캘린더와의 통신을 처리.
+    this.analytics = analytics; // GoogleAnalytics 객체, 구글 애널리틱스 데이터를 관리.
+    this.bankCode = bankCode; // 은행 코드 정보를 저장.
+    this.mongo = MONGOC; // MongoDB와 연결된 커넥션 객체.
+    this.mongolocal = MONGOC; // 로컬 MongoDB 커넥션, 동일한 MongoDB 객체를 사용.
+    this.members = {}; // 서버 구성원 정보를 저장하는 객체.
+    this.kakao = kakaoInstance; // 카카오톡 API 인스턴스를 할당.
+    this.human = humanInstance; // 인공지능 처리 인스턴스를 할당.
   }
 
+  // 데이터 라우터에서 사용하는 타임아웃 관리 객체
   static timeouts = {};
 
+  /**
+   * 개인정보 처리 방침(policy) 텍스트를 생성하는 함수
+   * @returns {string} - 개인정보 처리 방침에 대한 HTML 텍스트를 반환.
+   */
   static policy = function () {
     let text = '';
     text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";
@@ -207,16 +306,24 @@ class DataRouter {
     text += "(국번없이) 182<br><br><b>제12조 고지의 의무</b><br><br>현 개인정보 처리방침은 법령, 정부의 정책 또는 회사 내부정책 등 필요에 의하여 변경될 수 있으며, 변경시에는 개정 최소 7일전부터 홈페이지의 ‘공지사항’을 통해 고지할 것입니다. 다만, 회원에게 불리한 ";
     text += "내용으로 변경하는 경우에는 최소 30일 전에 고지합니다.<br><br>귀하는 위의 개인정보 수집과 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 당사의 서비스 이용이 어려울 수 있습니다.";
     text = text.replace(/[\=\&]/g, '');
-    return text;
-  }
+    return text; // 처리된 개인정보 방침 텍스트를 반환.
+  };
 
+  /**
+   * 개인정보 동의 버튼에 대한 SVG 이미지를 생성하는 함수
+   * @returns {object} - 켜짐(on) 및 꺼짐(off) 상태에 대한 SVG 이미지를 포함한 객체를 반환.
+   */
   static policyButton = function () {
     let obj;
-    obj = {};
+    obj = {}; // 빈 객체를 생성.
+    
+    // 'off' 상태의 SVG 코드
     obj.off = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#575757"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#575757"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#575757"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#575757"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#575757"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#575757"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#575757"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#575757"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#575757"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#575757"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#575757"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#575757"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#575757"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#575757"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#575757"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#575757"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#575757"/><circle cx="4.604" cy="10.231" r="4.604" fill="#ECECEC"/></svg>';
+    
+    // 'on' 상태의 SVG 코드
     obj.on = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#9bbdd1"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#9bbdd1"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#9bbdd1"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#9bbdd1"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#9bbdd1"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#9bbdd1"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#9bbdd1"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#9bbdd1"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#9bbdd1"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#9bbdd1"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#9bbdd1"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#9bbdd1"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#9bbdd1"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#9bbdd1"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#9bbdd1"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#9bbdd1"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#9bbdd1"/><circle cx="4.604" cy="10.231" r="4.604" fill="#9bbdd1"/></svg>';
-    return obj;
-  }
+    return obj; // 켜짐(on)과 꺼짐(off) 상태의 SVG 이미지가 담긴 객체를 반환.
+  };
 
   setRouter () {
     const instance = this;
@@ -4108,7 +4215,7 @@ class DataRouter {
           await back.mongoDelete(collection, whereQuery, { selfMongo });
           result = { message: "done" };
         } else {
-          throw new Error("must be mode => [ create, read, update, delete ]");
+          throw new Error("must be mode => [ create, read, update, delete ]" + " this mode => " + mode);
         }
     
         res.send(JSON.stringify(result));
@@ -12179,12 +12286,28 @@ class DataRouter {
     }
   }
 
-  async setMembers () {
+  /**
+   * @function setMembers
+   * @description 회사의 직원 정보를 데이터베이스에서 가져와 members 객체에 저장합니다.
+   * 이 함수는 MongoDB를 이용하여 직원 데이터를 가져오며, 가져온 데이터를 객체로 변환합니다.
+   * @returns {Promise<void>} - 비동기 작업을 처리하며 반환값이 없습니다.
+   */
+  async setMembers() {
+    // 인스턴스의 this를 instance라는 변수에 할당 (this는 DataRouter 클래스의 인스턴스를 참조)
     const instance = this;
+    
+    // BackMaker 객체를 this.back에서 가져와 back 변수에 저장
     const back = this.back;
+    
     try {
+      // back 객체의 setMemberObj 메서드를 호출하여 회사 직원 정보를 가져옴
+      // getMode: true로 설정하여 데이터베이스로부터 데이터를 가져오는 모드로 설정
+      // selfMongo는 MongoDB 커넥션을 전달하여 데이터베이스 작업을 처리할 수 있도록 함
+      // 가져온 직원 정보는 인스턴스의 members 객체에 저장
       instance.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
+      
     } catch (e) {
+      // 예외가 발생했을 경우 에러 내용을 콘솔에 출력
       console.log(e);
     }
   }
