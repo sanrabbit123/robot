@@ -642,12 +642,6 @@ DataConsole.prototype.connect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
-  const fs = require("fs");
-  const allLogKeyword = "allExpressLog";
-  const logKeyword = "expressLog";
-  const logFolder = process.env.HOME + "/server/log";
-  const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
-  const serverName = "back";
   const processDoingKeywords = "processDoing_";
   const tempProcessName = processDoingKeywords + uniqueValue("hex") + ".temp";
 
@@ -675,7 +669,6 @@ DataConsole.prototype.connect = async function () {
     await this.back.setInfoObj({ getMode: false });
     const MONGOC = new mongo(mongoinfo);
     await MONGOC.connect();
-
 
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -716,99 +709,10 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC, kakaoInstance, humanInstance);
-    await router.setMembers();
-    const rouObj = router.getAll();
-    const logStream = fs.createWriteStream(thisLogFile);
-    await expressLog(serverName, logStream, "start");
-    const bar = "============================================================";
-    const logger = {
-      alert: async (text) => {
-        try {
-          expressLog(serverName, logStream, "alert", { text }).catch((err) => { console.log(err) });
-          await emergencyAlarm(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      log: async (text) => {
-        try {
-          expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
-          await errorLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      error: async (obj, req = { url: "unknown" }) => {
-        try {
-          console.log(bar);
-          console.log(new Date(), "error");
-          console.log("in " + String(req.url));
-          console.log(obj);
-          console.log(bar);
-        } catch (e) {
-          console.error(e);
-        }
-      },
-      cron: async (text) => {
-        try {
-          expressLog(serverName, logStream, "cron", { text }).catch((err) => { console.log(err) });
-          await cronLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      alive: async (text) => {
-        try {
-          expressLog(serverName, logStream, "alive", { text }).catch((err) => { console.log(err) });
-          await aliveLog(text);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      stream: logStream,
-      path: thisLogFile,
-      keyword: logKeyword,
-      all: allLogKeyword,
-      folder: logFolder,
-      instances: 2,
-    };
-    for (let obj of rouObj.get) {
-      app.get(obj.link, async function (req, res) {
-        try {
-          await obj.func(req, res, logger);
-        } catch (e) {
-          console.log(e);
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ error: e.message }));
-        }
-      });
-    }
-    for (let obj of rouObj.post) {
-      if (obj.public !== true) {
-        app.post(obj.link, async function (req, res) {
-          try {  
-            await obj.func(req, res, logger);
-          } catch (e) {
-            console.log(e);
-            res.set("Content-Type", "application/json");
-            res.send(JSON.stringify({ error: e.message }));
-          }
-        });
-      } else {
-        app.post(obj.link, async function (req, res) {
-          try {
-            expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-            await obj.func(req, res, logger);
-          } catch (e) {
-            console.log(e);
-            res.set("Content-Type", "application/json");
-            res.send(JSON.stringify({ error: e.message }));
-          }
-        });
-      }
-    }
-    console.log(`set router`);
+    const dataRouter = new DataRouter(MONGOC, kakaoInstance, humanInstance);
+    await dataRouter.setMembers();
+    const router = dataRouter.setRouter();
+    app.use("/", router);
 
     //set static
     sleep(1000 * Math.random()).then(() => {
