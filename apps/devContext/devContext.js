@@ -69,25 +69,41 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
-    const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"
-    const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
-    const MID = "MOIhomeli1";
-    
-    // https://localhost:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline
-    // https://192.168.0.20:3002/middle/universalEstimation?cliid=c1801_aa01s&needs=style,d1701_aa01s,p1801_aa01s,offline&mobilecard=true&mid=MOIhomeli1&oid=homeliaisonBill_1725445245869&imp_uid=0191bc8d-0c99-6193-4651-52c61b505fb0&merchant_uid=homeliaisonBill_1725445245869&imp_success=true&request=0
 
 
+    // const title = "2024디자인계약서_000고객님_주홈리에종_YYMMDD";
+    // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+    // const today = new Date();
+    // let url, requestNumber, proposalDate;
+    // let widsignRes, token, target, targetFormId, safeNum;
+    // let titleName, titleAddress, formTitle;
+    // let request, analytics;
+    // let tempArr;
+    // let map;
+    // let data;
+    // let todayYear, todayMonth ,todayDate;
+    // let delta;
+    // let json;
+    // todayYear = String(today.getFullYear());
+    // todayMonth = String(today.getMonth() + 1);
+    // todayDate = String(today.getDate());
+    // widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+    // token = widsignRes.data.access_token;
+    // widsignRes = await requestSystem(endPoint + "/v2/form", { page: 1, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+    // target = widsignRes.data.result.filter((obj) => { return obj.title === title });
+    // [ { id: targetFormId } ] = target;
+    // widsignRes = await requestSystem(endPoint + "/v2/form/detail", { form_id: targetFormId }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+    // json = (widsignRes.data.result) 
+    // for (let obj of json) {
+    //   obj.items.sort((a, b) => { return a.x - b.x });
+    //   obj.items.sort((a, b) => { return a.y - b.y });
+    // }
+    // await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, json ]);
+
+    
 
 
     
-    
-    
-    
-
-    
-    
-
     
     
     // const selfMongo = this.MONGOC;
