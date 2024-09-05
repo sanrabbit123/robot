@@ -68,22 +68,7 @@ DevContext.prototype.launching = async function () {
     // await this.certRefreshing();
     // =======================================================================================================================================================
 
-    const crypto = require("crypto"); // crypto 모듈을 가져와 암호화 작업에 사용합니다.
-    const sha = "sha512"; // 해시 알고리즘은 sha512를 사용합니다.
-    const hashType = "hex"; // 해시 값을 hex 형식으로 변환합니다.
-    const key = "ItEQKi3rY7uvDS8l";
-    const mid = `INIpayTest`;
-    const type = `refund`;
-    const timestamp = `20231012145039`;
-    const data = `{"tid":"StdpayCARDINIpayTest20231005123848068162","msg":"취소"}`;
-    const inicisKey = "Zp57ZixWL2v6sppd";
-    const inicisIv = "6CGcDrnQl8jdus==";
 
-    const hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + data).digest(hashType);
-
-    console.log(hash);
-
-    
 
 
     // const title = "2024디자인계약서_000고객님_주홈리에종_YYMMDD";

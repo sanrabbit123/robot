@@ -8221,9 +8221,7 @@ BillMaker.prototype.taxBill = async function () {
       if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
         try {
           await readTaxBill(newMail);
-        } catch (e) {
-          console.log(e);
-        }
+        } catch {}
       }
     }
 
