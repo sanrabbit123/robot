@@ -1854,6 +1854,9 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
 
     if (!refresh) {
       if (pythonSend) {
+        try {
+          delete data.CARD_BankCode;
+        } catch {}
         await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
       }
     }
