@@ -6912,7 +6912,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       paymethod = "Card";
       data = { tid, msg: "취소" };
       hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
-      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
+      res = await requestSystem("https://iniapi.inicis.com/v2/pg/refund", { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
       price = originalPrice;
 
     } 
@@ -6923,7 +6923,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       paymethod = "Card";
       data = { tid, msg: "취소", price, confirmPrice, currency, };
       hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
-      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
+      res = await requestSystem("https://iniapi.inicis.com/v2/pg/partialRefund", { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
 
     } 
     // 가상 계좌 전체 환불을 처리합니다.
@@ -6939,7 +6939,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
         refundAcctName: option.accountName
       };
       hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
-      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
+      res = await requestSystem("https://iniapi.inicis.com/v2/pg/refund/vacct", { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
       price = originalPrice;
 
     } 
@@ -6948,11 +6948,17 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       type = "partialRefund";
       paymethod = "Vacct";
-      refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
-      refundBankCode = BillMaker.returnBankCode(option.bankName);
-      refundAcctName = option.accountName;
-      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice + refundAcctNum).digest(hashType);
-      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": contentType });
+      data = {
+        tid,
+        msg: "취소",
+        price,
+        confirmPrice,
+        refundAcctNum: (await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest })),
+        refundBankCode: BillMaker.returnBankCode(option.bankName),
+        refundAcctName: option.accountName
+      };
+      hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
+      res = await requestSystem("https://iniapi.inicis.com/v2/pg/partialRefund/vacct", { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
 
     }
 
