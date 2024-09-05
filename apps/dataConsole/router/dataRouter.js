@@ -159,6 +159,65 @@ class DataRouter {
 
   static timeouts = {};
 
+  static policy = function () {
+    let text = '';
+    text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";
+    text += "<b>개인정보 처리 방침</b><br><br><b>제1조 총칙</b><br><br>① 개인정보라 함은 생존하고 있는 개인에 관한 정보로써 성명, 주민등록번호 및 영상 등을 통하여 개인을 알아볼 수 있는 정보(해당 정보만으로는 특정 개인은 알아볼 수 없더라도 다른 정보와 쉽게 결합하여 알아볼 수 있는 것을 포함한다)를 말합니다.<br>";
+    text += "② 개인정보 처리방침이란 회원의 개인정보를 보호함으로써 이용자가 안심하고 서비스를 이용할 수 있도록 홈리에종을 운영함에 있어 준수해야 할 지침을 의미합니다.<br>③ 홈리에종은 ‘정보통신망 ";
+    text += "이용촉진 및 정보보호에 등에 관한 법률’과 ‘개인정보 보호법’ 및 관련 법령에 따라 개인정보 보호규정을 준수합니다.<br>④ 홈리에종은 회원(디자이너, 구매자)의 동의를 기반으로 개인정보를 수집, 이용 및 제공하고 있으며 회원의 권리(개인정보 자기결정권)를 적극적으로 보장합니다.";
+    text += "<br>⑤ 개인정보 처리방침은 회원이 언제나 쉽게 열람할 수 있도록 홈리에종 웹사이트에 게시하며 개인정보 관련법령, 지침, 고시 또는 홈리에종의 서비스 정책의 변경에 따라 달라질 수 있습니다.<br><br><b>제2조 개인정보의 수집항목 및 목적</b><br><br>";
+    text += "① 고객이 의뢰한 홈디자인 업무 수행 및 이와 관련하여 필요한 연락, 거래 관계의 설정과 유지와 이행과 관리, 분쟁해결, 민원 처리 및 기타 법령상 의무의 이행 홈리에종이 처리하고 있는 개인정보는 다음의 수집, 이용 목적 이외의 용도로는 활용되지 않으며, 수집, 이용목적이 변경되는 경우에는 개인정보보호법에 따라 별도의 동의를 받는 등의 필요한 조치를 이행합니다.";
+    text += "<br>② 회원의 인권을 침해할 우려가 있는 민감한 정보(인증, 사상 및 신조, 정치적 성향이나 범죄기록, 의료정보 등)는 수집하지 않으며, 만약 법령에서 정한 의무가 따라 불가피하게 수집하는 경우에는 반드시 회원에게 사전동의를 받습니다.<br>③ 홈리에종은 다음과 같이 회원의 ";
+    text += "개인정보를 수집합니다.<br>④ 회원 가입시, 문의사항 작성시 : 성명, 주소, E-mail, 연락처(전화번호), 비밀번호 이용자 식별을 통한 이용계약 이행 및 회원 상호간 계약체결을 위한 지원(문의사항에 대한 답변, 계약이행을 위한 연락, 구매자와 디자이너간 계약체결 지원, 회원간 정보 안내 등)";
+    text += "<br>⑤ 상담 문의시 : 주거공간 특성 관련 정보(주거유형, 공간이미지, 공간면적, 주거공간 구성 등)<br>⑥ 디자이너 신청시 : 회사명, 사업자등록번호, 대표자이름, 개업일, 주소, 전화번호, 휴대전화번호, E-mail, Fax, 은행명, 예금주명, 계좌 번호 등";
+    text += "디자이너 식별, 서비스 개설/제공, 각종 알림, 정산 등<br>⑦ 자동수집정보 : 기기정보, 로그정보, 위치정보, 애플리케이션번호, 로컬저장소 등 시스템 운영 관리<br>⑧ 개인정보의 이용목적<br>⑨ 회원관리 : 회원제 서비스 제공에 따른 개인식별, 가입의사 확인, 이용약관 위반 ";
+    text += "회원에 대한 이용제한 조치, 가입 및 가입횟수 제한, 서비스 부정 이용 제재, 고충 처리 및 분쟁 조정을 위한 기록 보존, 고지사항 전달, 회원탈퇴 의사의 확인 등<br>⑩ 중개서비스 등 이용약관에 따른 서비스 제공(광고 포함) 및 서비스 개선 : 인구통계학적 분석, 서비스 방문 및 ";
+    text += "이용기록의 분석, 개인정보 및 관심에 기반한 이용자간 관계의 형성, 지인 및 관심사 등에 기반한 맞춤형 서비스 제공 등 신규 서비스 요소의 발굴 및 기존 서비스 개선 등<br>⑪ 신규 서비스 개발 및 홍보 및 마케팅 광고에의 활용 : 홈디자인 서비스 정보 제공 목적, 신규 서비스 개발 및 맞춤 서비스 제공, 인구통계학적 ";
+    text += "특성에 따른 서비스 제공 및 광고 게재, 서비스의 유효성 확인, 이벤트/광고성 정보 및 참여 기회 제공 등<br>⑫ 결제 시스템 제공 : 예약 및 요금 결제, 상품 및 서비스 제공 등<br>⑬ 정보보호 : 보안, 프라이버시, 안전 측면에서 이용자가 안심하고 이용할 수 있는 환경 ";
+    text += "구축 등<br><br><b>제3조 개인정보 제3자 제공</b><br><br>① 홈리에종은 원칙적으로 회원의 동의 없이 개인정보를 제3자에게 제공하지 않으며 개인정보를 제3자에게 제공해야 하는 경우 법령에 따른 동의를 받고 있습니다.<br>② 홈리에종은 개인정보를  ‘개인정보 수집항목 ";
+    text += "및 목적’에서 명시한 범위 내에서 사용하며 회원의 사전 동의 없이 개인정보 수집 이용 목적 범위를 초과하여 이용하거나 회원의 개인정보를 제공하지 않습니다.<br>③ 다만 아래와 같이 양질의 서비스 제공을 위해 이용자의 개인정보를 협력업체와 공유할 필요가 있는 경우 제공 ";
+    text += "받는 자, 제공목적, 제공정보 항목, 이용 및 보유기간 등을 회원에게 고지하여 동의를 구하거나 관련법령에 따른 경우는 예외로 합니다.<br>④ 회원이 사전에 공개 또는 제3자 제공에 동의한 경우 : 대표적으로 구매자의 개인정보를 디자이너에게 제공하는 경우, 디자이너의 ";
+    text += "개인정보를 구매자에게 제공하는 경우가 제3자제공의 예입니다. 디자이너의 개인정보는 일반적으로 회원을 포함한 제3자에게 공개되며(가입시 사전에 포괄적 제3자 제공동의를 받습니다.) 구매자의 개인정보는 디자이너의 물품(서비스) 구매결제가 완료된 이후 디자이너에게 제공됩니다.";
+    text += "<br>⑤ 관계법령의 규정에 의거하거나, 수사목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우<br><br><b>제4조 개인정보 처리위탁</b><br><br>① 홈리에종은 서비스의 제공에 관한 계약을 이행하고 이용자의 편의증진 등을 위하여 개인정보를 타인에게 위탁 ";
+    text += "처리할 수 있습니다. 타인에게 위탁업무를 하는 경우에는 다음의 내용을 이용자에게 알리고 동의를 받습니다. 다음의 내용에 대하여 어느 하나의 사항이 변경되는 경우에도 같습니다.<br>② 개인정보 처리위탁을 받는 자(이하 수탁자라 함)<br>③ 개인정보 처리위탁을 하는 업무의 내용";
+    text += "<br>④ 홈리에종은 아래와 같이 개인정보를 위탁하고 있으며, 개인정보의 수탁자와 위탁업무의 범위는 아래와 같습니다.<br>⑤ PG사 : ㈜이니시스(결제대행 서비스 제공)<br>⑥ E-mail 및 문자 발송 : widsign, 알리고(서비스 운영관련 알림 및 정보 제공)<br>⑦ ";
+    text += "배송대행업체 : 업체명(홈리에종이 직접 판매한 물품의 배송 위탁)<br><br><b>제5조 개인정보의 보유 및 이용기간</b><br><br>홈리에종의 개인 정보 보유 기간은 위임업무 종료 시 또는 목적 달성 시 또는 정부 주체의 동의 철회 시까지입니다. 단, 관계 법령에 따라 파기하지 않고 보존하여야 하는 경우에는 해당 기간까지 입니다.<br><br>① 홈리에종은 회원의 개인정보를 원칙적으로 보유/이용기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체없이 해당 ";
+    text += "개인정보를 파기합니다.<br>② 원으로부터 동의받은 개인정보 보유기간이 경과하거나 처리목적이 달성되었음에도 불구하고 다른 법령에 따라 개인정보를 계속 보존하여야 하는 경우에는 해당 개인정보를 별도의 데이터베이스(DB)로 옮기거나 보관장소를 달리하여 보존합니다.<br>③ ";
+    text += "홈리에종은 1년동안 회사의 서비스를 이용하지 않은 회원의 개인정보는 ‘정보통신망 이용촉진 및 정보보호 등에 관한 법률 제 29조’에 근거하여 회원에게 사전통지하고 개인정보를 파기하거나 별도로 분리하여 저장합니다.(회사는 개인정보가 파기되거나 분리되어 저장/관리된다는 ";
+    text += "사실, 서비스 미이용기간 만료일, 해당 개인정보의 항목을 E-mail 등의 방법으로 미이용기간 30일전에 회원에게 알립니다. 이를 위해 회원은 회사에게 정확한 연락처 정보를 알리거나 수정해야 합니다.<br>④ 관련 법률에 따른 정보보유 사유는 아래와 같습니다. 서비스 결제 ";
+    text += "및 정산 발생시 관련 법률에 따라 개인정보를 포함한 결제, 정산 관련 정보가 5년간 보관이 됩니다.<br>⑤ 전자상거래 등에서의 소비자 보호에 관한 법률<br>⑥ 계약 또는 청약철회 등에 관한 기록 : 5년<br>⑦ 대금결제 및 재화 등의 공급에 관한 기록 : 5년<br>⑧ 소비자의 ";
+    text += "불만 또는 분쟁처리에 관한 기록 : 3년<br>⑨ 통신비밀보호법 - 로그인 기록 : 3개월<br>⑩ 조세 관련 법령 - 매출 관련 기록 : 5년<br>⑪ 개인정보 파기절차 – 회사는 파기사유가 발생한 개인정보를 개인정보 보호책임자의 승인 절차를 거쳐 파기합니다.<br>⑫ 개인정보 ";
+    text += "파기방법 – 회사는 전자적 파일형태로 기록/저장된 개인정보는 기록을 재생할 수 없도록 기술적인 방법 또는 물리적인 방법을 이용하여 파기하며, 종이에 출력된 개인정보는 분쇄기로 분쇄하거나 소각 등을 통하여 파기합니다.<br><br><b>제6조 개인정보의 수집 및 이용을 ";
+    text += "거부할 권리</b><br><br>개인정보 주체는 개인정보의 수집 및 이용을 거부할 권리가 있으나, 서비스 제공을 위한 필수적인 개인정보는 그 수집이용 동의를 거부할 시 회원가입을 할 수 없습니다.<br><br><b>제7조 링크 사이트에 대한 책임</b><br><br>홈리에종은 ";
+    text += "회원에게 다른 웹사이트에 대한 링크를 제공할 수 있습니다. 다만, 링크되어 있는 웹사이트들이 개인정보를 수집하는 행위에 대해서는 본 \“개인정보처리방침\”이 적용되지 않습니다.<br><br><b>제8조 회원 및 법정대리인의 권리</b><br><br>① 회원 및 법정 대리인은 ";
+    text += "언제든지 등록되어 있는 자신의 개인정보를 조회하거나 수정, 탈퇴를 요청할 수 있습니다. 다만, 이 경우 서비스의 일부 또는 전체 이용에 제한이 있을 수 있습니다.<br>② 회원 및 법정 대리인의 개인정보 조회, 수정, 탈퇴는 홈리에종 웹사이트에서 가능하며, 회사는 ";
+    text += "이에 대해 지체없이 조치하겠습니다.<br>③ 회원이 개인정보의 오류에 대한 정정을 요청한 경우에는 정정을 완료하기 전까지 해당 개인정보를 이용 또는 제공하지 않습니다. 또한 잘못된 개인정보를 제3자에게 이미 제공한 경우에는 정정 처리결과를 제3자에게 지체없이 ";
+    text += "통지하여 정정이 이루어지도록 하겠습니다.<br>④ 회원은 자신의 개인정보를 최신의 상태로 유지해야 하며, 회원의 부정확한 정보 입력으로 발생하는 문제의 책인은 이용자 자신에게 있습니다.<br>⑤ 타인의 개인정보를 도용한 회원가입의 경우 회원자격을 상실하거나 관련 ";
+    text += "개인정보보호 법령에 의해 처벌 받을 수 있습니다.<br>⑥ 회원은 E-mail, 비밀번호 등에 대한 보안을 유지할 책임이 있으며 제3자에게 이를 양도하거나 대여할 수 없습니다.<br>⑦ 회원 또는 법정대리인의 요청에 의해 해지 또는 삭제된 개인정보는 \“개인정보의 보유 ";
+    text += "및 이용기간\”에 명시된 바에 따라 처리하고 그 외의 용도로 열람 또는 이용할 수 없도록 처리하고 있습니다.<br><br><b>제9조 개인정보의 기술적, 관리적 보호대책</b><br><br>① 회사는 회원을 개인정보를 처리함에 있어 개인정보가 분실, 도난, 유출, 변조, 훼손 ";
+    text += "등이 되지 않도록 안전성을 확보하기 위하여 다음과 같이 기술적, 관리적 보호대책을 강구하고 있습니다.<br>② 비밀번호의 암호화 – 이용자의 비밀번호는 일방향 암호화하여 저장 및 관리되고 있으며, 개인정보의 확인/변경은 비밀번호를 알고 있는 본인에 의해서만 가능합니다.";
+    text += "<br>③ 해킹 등에 대비한 대책 - 해킹, 컴퓨터 바이러스 등 정보통신망 침입에 의해 회원의 개인정보가 유출되거나 훼손되는 것을 막기 위해 최선을 다하고 있습니다.<br>④ 만일의 사태에 대비하여 침입차단 시스템을 이용하여 보안에 최선을 다하고 있습니다.<br>⑤ ";
+    text += "민감한 개인정보는 암호화 통신 등을 통하여 네트워크상에서 개인정보를 안전하게 전손할 수 있도록 하고 있습니다.<br>⑥ 개인정보 처리 최소화 및 교육 – 개인정보 관련 처리 담당자를 최소한으로 제한하고 개인정보 처리자에 대한 교육 등 관리적 조치를 통해 법령 및 ";
+    text += "내부방침 등의 준수를 강조하고 있습니다.<br>⑦ 개인정보보호 전담담당부서 운영 – 개인정보의 보호를 위해 개인정보보호 전담부서를 운영하고 있으며, 개인정보처리방침의 이행사항 및 담당자의 준수여부를 확인하여 문제가 발견 될 경우 즉시 해결하고 바로 잡을 수 있도록 ";
+    text += "최선을 다하고 있습니다.<br><br><b>제10조 개인정보보호 책임자</b><br><br>① 홈리에종은 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자 및 개인정보보호 전담담당부서를 ";
+    text += "지정하고 있습니다.<br>② 개인정보보호 책임자 이름 : 박혜연 연락처 : 02-2039-2252<br>③ 회원은 서비스 이용 중 발생한 모든 개인정보와 관련된 문의, 불만처리, 피해구제 등에 관한 사항을 개인정보 보호책임자 및 개인정보보호 전담 담당부서로 문의할 수 있습니다.";
+    text += "홈리에종은 이용자의 문의에 대해 최대한 빠른 시간 내에 답변 및 처리합니다.<br><br><b>제11조 기타 개인정보침해에 대한 신고 및 상담</b><br><br>① 회원은 아래의 기관에 개인정보 침해에 대한 피해구제, 상담 등을 문의할 수 있습니다. 아래의 기관은 정부기관";
+    text += "소속으로서, 홈리에종의 자체적인 개인정보 불만처리 또는 개인정보 피해구제 결과가 만족스럽지 않을 경우, 구체적인 도움이 필요한 경우에 문의하시면 됩니다.<br>② 개인정보침해신고센터 : http://privacy.kisa.or.kr/kor/mail.jsp (국번없이) 118<br>";
+    text += "③ 개인정보분쟁조정위원회 : http://www.kopico.go.kr 02-2100-2499<br>④ 대검찰청 사이버수사과 : http://www.spo.go.kr/spo/index.jsp (국번없이) 130<br>⑤ 경찰청 사이버안전국 : http://cyberbureau.police.go.kr/index.do ";
+    text += "(국번없이) 182<br><br><b>제12조 고지의 의무</b><br><br>현 개인정보 처리방침은 법령, 정부의 정책 또는 회사 내부정책 등 필요에 의하여 변경될 수 있으며, 변경시에는 개정 최소 7일전부터 홈페이지의 ‘공지사항’을 통해 고지할 것입니다. 다만, 회원에게 불리한 ";
+    text += "내용으로 변경하는 경우에는 최소 30일 전에 고지합니다.<br><br>귀하는 위의 개인정보 수집과 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 당사의 서비스 이용이 어려울 수 있습니다.";
+    text = text.replace(/[\=\&]/g, '');
+    return text;
+  }
+
+  static policyButton = function () {
+    let obj;
+    obj = {};
+    obj.off = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#575757"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#575757"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#575757"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#575757"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#575757"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#575757"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#575757"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#575757"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#575757"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#575757"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#575757"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#575757"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#575757"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#575757"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#575757"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#575757"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#575757"/><circle cx="4.604" cy="10.231" r="4.604" fill="#ECECEC"/></svg>';
+    obj.on = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#9bbdd1"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#9bbdd1"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#9bbdd1"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#9bbdd1"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#9bbdd1"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#9bbdd1"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#9bbdd1"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#9bbdd1"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#9bbdd1"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#9bbdd1"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#9bbdd1"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#9bbdd1"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#9bbdd1"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#9bbdd1"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#9bbdd1"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#9bbdd1"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#9bbdd1"/><circle cx="4.604" cy="10.231" r="4.604" fill="#9bbdd1"/></svg>';
+    return obj;
+  }
+
   setRouter () {
     const instance = this;
     const express = require("express");
@@ -189,6 +248,252 @@ class DataRouter {
     return router;
   }
 
+}
+
+DataRouter.prototype.sync_paymentProject = async function (bilid, requestNumber, data, amount, proofs, inisis, needs, logger) {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, autoComma, requestSystem, messageSend } = this.mother;
+  try {
+    const { thisBill, client, designer, project, proposal } = needs;
+    const { cliid } = client;
+    const { desid } = designer;
+    const { proid } = project;
+    let projectQuery;
+    let pureDesignFee;
+    let vat, consumer;
+    let classification, percentage;
+    let businessMethod;
+    let bankName, bankTo;
+    let calculate;
+    let discount;
+    let thisProposal;
+    let thisMethod;
+    let thisFeeObject;
+    let billsDuplication;
+
+    if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
+      projectQuery = {};
+      if (proposal !== undefined && proposal !== null) {
+        if (proposal.fee.length === 1) {
+          pureDesignFee = Math.round(proposal.fee[0].amount);
+          discount = proposal.fee[0].discount;
+        } else {
+          for (let obj of proposal.fee) {
+            if (obj.method === thisBill.links.method) {
+              pureDesignFee = Math.round(obj.amount);
+              discount = obj.discount;
+            }
+          }
+        }
+      } else {
+        pureDesignFee = 0;
+        discount = 0;
+      }
+
+      if (/계약금/gi.test(data.goodName.trim())) {
+
+        billsDuplication = await bill.getBillsByQuery({ "links.proid": proid, "links.desid": desid, "links.method": thisBill.links.method }, { selfMongo: instance.mongolocal });
+        if (billsDuplication.length > 1) {
+          for (let b of billsDuplication) {
+            if (b.bilid !== thisBill.bilid) {
+              if (typeof b.bilid === "string") {
+                await bill.deleteBill(b.bilid, { selfMongo: instance.mongolocal });
+              }
+            }
+          }
+        }
+
+        projectQuery["process.contract.first.date"] = new Date();
+        projectQuery["process.contract.first.calculation.amount"] = amount;
+        projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
+        projectQuery["process.contract.first.calculation.info.proof"] = inisis;
+        projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
+
+        projectQuery["desid"] = desid;
+        projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
+        projectQuery["process.status"] = "대기";
+        projectQuery["proposal.status"] = "고객 선택";
+
+        vat = Math.round(pureDesignFee * 0.1);
+        consumer = Math.round(pureDesignFee * 1.1);
+
+        projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
+        projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+        projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+        projectQuery["process.contract.remain.calculation.discount"] = Number(discount);
+
+        classification = designer.information.business.businessInfo.classification;
+        percentage = Number(designer.information.business.service.cost.percentage);
+        businessMethod = "사업자(일반)";
+        if (/사업자/g.test(classification)) {
+          if (/일반/g.test(classification)) {
+            businessMethod = "사업자(일반)";
+          } else {
+            businessMethod = "사업자(간이)";
+          }
+        } else {
+          businessMethod = "프리랜서";
+        }
+        projectQuery["process.calculation.method"] = businessMethod;
+        projectQuery["process.calculation.percentage"] = percentage;
+
+        if (designer.information.business.account.length > 0) {
+          bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+          bankTo = designer.information.business.account[0].to;
+          projectQuery["process.calculation.info.account"] = bankName;
+          projectQuery["process.calculation.info.proof"] = bankTo;
+          projectQuery["process.calculation.info.to"] = bankTo;
+        }
+
+        [ calculate ] = bill.designerCalculation((pureDesignFee / (1 - discount)), businessMethod, percentage, client, { toArray: true });
+        projectQuery["process.calculation.payments.totalAmount"] = calculate;
+        projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+        projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+        if (Number(project.service.serid.split("_")[1].replace(/[^0-9]/gi, '').replace(/^0/, '')) !== 1) {
+          projectQuery["process.design.construct"] = back.returnProjectDummies("process.design.construct");
+        }
+
+        await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+        await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
+
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+        await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
+        thisProposal = project.proposal.detail.find((p) => { return p.desid === desid });
+        thisMethod = (project.service.online ? "online" : "offline");
+        if (thisProposal !== undefined) {
+          thisFeeObject = thisProposal.fee.find((f) => { return f.method === thisMethod });
+          if (thisFeeObject !== undefined) {
+            if (thisFeeObject.distance.amount !== 0) {
+              await bill.travelInjection("request", proid, thisMethod, 1, { selfMongo: instance.mongolocal });
+            }
+          }
+        }
+
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": "https://" + instance.address.officeinfo.host,
+          }
+        }).then((res) => {
+          const { data } = res;
+          return requestSystem("https://" + instance.address.officeinfo.host + ":3002/updateHistory", {
+            method: "project",
+            id: proid,
+            column: "manager",
+            value: data[desid],
+            email: null
+          }, {
+            headers: {
+              "Content-Type": "application/json",
+              "origin": "https://" + instance.address.officeinfo.host,
+            }
+          });
+        }).catch((err) => {
+          logger.error("Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
+        });
+
+        instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+          host: instance.address.frontinfo.host,
+          path: "caution",
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        requestSystem("https://" + instance.address.officeinfo.host + ":3002/realtimeDesigner", { mode: "sync", proid }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": "https://" + instance.address.officeinfo.host
+          }
+        }).then((obj) => {
+          if (obj.status >= 300) {
+            return logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) ");
+          }
+        }).catch((err) => {
+          logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
+        });
+
+      } else if (/잔금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.status"] = "진행중";
+        projectQuery["process.action"] = "시작 대기";
+        projectQuery["process.contract.remain.date"] = new Date();
+        projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
+        projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
+        projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+        instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+          emoji: "(방긋)",
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
+
+    } else if (/시공 계약금/gi.test(data.goodName.trim()) || /시공 착수금/gi.test(data.goodName.trim()) || /시공 중도금/gi.test(data.goodName.trim()) || /시공 잔금/gi.test(data.goodName.trim())) {
+
+      projectQuery = {};
+
+      if (/계약금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "계약금 입금";
+        projectQuery["process.design.construct.contract.payments.first.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/착수금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "착수금 입금";
+        projectQuery["process.design.construct.contract.payments.start.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/중도금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "중도금 입금";
+        projectQuery["process.design.construct.contract.payments.middle.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/잔금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "잔금 입금";
+        projectQuery["process.design.construct.contract.payments.remain.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      }
+
+      instance.kakao.sendTalk("generalPayments", client.name, client.phone, {
+        client: client.name,
+        goods: data.goodName.trim(),
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    }
+
+  } catch (e) {
+    logger.error("Python 서버 문제 생김 (sync_paymentProject) : " + e.message).catch((e) => { console.log(e); })
+    console.log(e);
+  }
 }
 
 DataRouter.prototype.rou_get_Root = function () {
@@ -7725,9 +8030,6 @@ DataRouter.prototype.rou_post_frontMemberParsing = function () {
 
 DataRouter.prototype.rou_post_blackButtonsClick = function () {
   const instance = this;
-  const address = this.address;
-  const back = this.back;
-  const { equalJson, messageSend, dateToString, stringToDate, sleep, setQueue, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/blackButtonsClick" ];
   obj.func = async function (req, res, logger) {
@@ -7800,7 +8102,7 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
               mode: "consulting",
             }, { selfMongo });
 
-            await logger.error("Console 서버 문제 생김 (rou_post_blackButtonsClick): " + e.message);
+            logger.error(e, req).catch((e) => { console.log(e); });
           }
         }, delta);
       }
@@ -7808,8 +8110,8 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_blackButtonsClick): " + e.message);
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7818,10 +8120,6 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
 
 DataRouter.prototype.rou_post_justClientEvaluation = function () {
   const instance = this;
-  const address = this.address;
-  const back = this.back;
-  const kakao = this.kakao;
-  const { equalJson, messageSend, dateToString, stringToDate, sleep, setQueue, requestSystem, objectDeepCopy } = this.mother;
   let obj = {};
   obj.link = [ "/justClientEvaluation" ];
   obj.func = async function (req, res, logger) {
@@ -7957,8 +8255,8 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
       }
 
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_justClientEvaluation): " + e.message);
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7967,9 +8265,6 @@ DataRouter.prototype.rou_post_justClientEvaluation = function () {
 
 DataRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, messageLog } = this.mother;
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res, logger) {
@@ -8011,8 +8306,9 @@ DataRouter.prototype.rou_post_cashReceipt = function () {
 
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -8020,11 +8316,6 @@ DataRouter.prototype.rou_post_cashReceipt = function () {
 
 DataRouter.prototype.rou_post_createStylingContract = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createStylingContract";
   obj.func = async function (req, res, logger) {
@@ -8225,8 +8516,8 @@ DataRouter.prototype.rou_post_createStylingContract = function () {
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -8236,10 +8527,6 @@ DataRouter.prototype.rou_post_createStylingContract = function () {
 DataRouter.prototype.rou_post_removeStylingContract = function () {
   const instance = this;
   const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/removeStylingContract";
   obj.func = async function (req, res, logger) {
@@ -8260,9 +8547,9 @@ DataRouter.prototype.rou_post_removeStylingContract = function () {
       }
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_removeStylingContract): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "ERROR" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -8295,9 +8582,9 @@ DataRouter.prototype.rou_post_removeConstructContract = function () {
       }
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_removeConstructContract): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "ERROR" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -8305,11 +8592,6 @@ DataRouter.prototype.rou_post_removeConstructContract = function () {
 
 DataRouter.prototype.rou_post_createConstructContract = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { requestSystem, messageSend, messageLog, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createConstructContract";
   obj.func = async function (req, res, logger) {
@@ -8523,8 +8805,8 @@ DataRouter.prototype.rou_post_createConstructContract = function () {
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -8533,11 +8815,6 @@ DataRouter.prototype.rou_post_createConstructContract = function () {
 
 DataRouter.prototype.rou_post_createPartnershipContract = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createPartnershipContract";
   obj.func = async function (req, res, logger) {
@@ -8650,8 +8927,8 @@ DataRouter.prototype.rou_post_createPartnershipContract = function () {
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_createPartnershipContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -8660,11 +8937,6 @@ DataRouter.prototype.rou_post_createPartnershipContract = function () {
 
 DataRouter.prototype.rou_post_createDesignerContract = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createDesignerContract";
   obj.func = async function (req, res, logger) {
@@ -8782,8 +9054,8 @@ DataRouter.prototype.rou_post_createDesignerContract = function () {
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     } catch (e) {
-      console.log(e);
-      logger.error("Python 서버 문제 생김 (rou_post_createDesignerContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -8792,10 +9064,6 @@ DataRouter.prototype.rou_post_createDesignerContract = function () {
 
 DataRouter.prototype.rou_post_receiveConstructContract = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const { equalJson, fileSystem, dateToString, autoComma, messageSend, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/receiveConstructContract";
   obj.func = async function (req, res, logger) {
@@ -8832,8 +9100,9 @@ DataRouter.prototype.rou_post_receiveConstructContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_receiveConstructContract): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -8841,10 +9110,6 @@ DataRouter.prototype.rou_post_receiveConstructContract = function () {
 
 DataRouter.prototype.rou_post_constructAmountSync = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const { equalJson, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/constructAmountSync";
   obj.func = async function (req, res, logger) {
@@ -9002,8 +9267,9 @@ DataRouter.prototype.rou_post_constructAmountSync = function () {
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_constructAmountSync): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9011,10 +9277,6 @@ DataRouter.prototype.rou_post_constructAmountSync = function () {
 
 DataRouter.prototype.rou_post_stylingAmountSync = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const { equalJson, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/stylingAmountSync";
   obj.func = async function (req, res, logger) {
@@ -9204,15 +9466,12 @@ DataRouter.prototype.rou_post_stylingAmountSync = function () {
           }
         ]
       }
-
-      console.log(whereQuery, updateQuery);
-
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_stylingAmountSync): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9220,12 +9479,6 @@ DataRouter.prototype.rou_post_stylingAmountSync = function () {
 
 DataRouter.prototype.rou_post_smsParsing = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, messageLog, messageSend, autoComma, requestSystem, sleep } = this.mother;
-  const collection = "accountTransfer";
-  const designerCollection = "designerTransfer";
-  const standardDay = 7;
   let obj = {};
   obj.link = "/smsParsing";
   obj.func = async function (req, res, logger) {
@@ -9235,6 +9488,9 @@ DataRouter.prototype.rou_post_smsParsing = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const collection = "accountTransfer";
+    const designerCollection = "designerTransfer";
+    const standardDay = 7;
     try {
       if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
@@ -9299,7 +9555,7 @@ DataRouter.prototype.rou_post_smsParsing = function () {
             requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/issueCashReceipt", { amount: Number(amount), phone }, { headers: { "Content-Type": "application/json" } }).then(() => {
               return messageSend(`${name} 고객님의 현금 영수증을 발행하였습니다!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
             }).catch((err) => {
-              logger.error("Python 서버 문제 생김 (rou_post_smsParsing): " + err.message).catch((e) => { console.log(e); });
+              logger.error(err, req).catch((e) => { console.log(e); });
               throw new Error(err.message);
             });
           }
@@ -9379,9 +9635,9 @@ DataRouter.prototype.rou_post_smsParsing = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9389,10 +9645,6 @@ DataRouter.prototype.rou_post_smsParsing = function () {
 
 DataRouter.prototype.rou_post_accountTimeSet = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
-  const collection = "accountTransfer";
   let obj = {};
   obj.link = "/accountTimeSet";
   obj.func = async function (req, res, logger) {
@@ -9402,6 +9654,7 @@ DataRouter.prototype.rou_post_accountTimeSet = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const collection = "accountTransfer";
     try {
       if (req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
@@ -9415,9 +9668,9 @@ DataRouter.prototype.rou_post_accountTimeSet = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_accountTimeSet): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9425,13 +9678,8 @@ DataRouter.prototype.rou_post_accountTimeSet = function () {
 
 DataRouter.prototype.rou_post_designerTransfer = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const kakao = this.kakao;
-  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
-  const collection = "designerTransfer";
   let obj = {};
-  obj.link = "/designerTransfer";
+  obj.link = [ "/designerTransfer" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -9439,6 +9687,7 @@ DataRouter.prototype.rou_post_designerTransfer = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const collection = "designerTransfer";
     try {
       if (req.body.designer === undefined || req.body.desid === undefined || req.body.body === undefined) {
         throw new Error("invaild post");
@@ -9464,9 +9713,9 @@ DataRouter.prototype.rou_post_designerTransfer = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_designerTransfer): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9474,12 +9723,8 @@ DataRouter.prototype.rou_post_designerTransfer = function () {
 
 DataRouter.prototype.rou_post_accountTimeUpdate = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
-  const collection = "accountTransfer";
   let obj = {};
-  obj.link = "/accountTimeUpdate";
+  obj.link = [ "/accountTimeUpdate" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -9487,6 +9732,7 @@ DataRouter.prototype.rou_post_accountTimeUpdate = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const collection = "accountTransfer";
     try {
       const selfMongo = instance.mongolocal;
       const { whereQuery, updateQuery, name, phone } = equalJson(req.body);
@@ -9502,9 +9748,9 @@ DataRouter.prototype.rou_post_accountTimeUpdate = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_accountTimeUpdate): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9512,8 +9758,6 @@ DataRouter.prototype.rou_post_accountTimeUpdate = function () {
 
 DataRouter.prototype.rou_post_createStylingBill = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
   let obj = {};
   obj.link = "/createStylingBill";
   obj.func = async function (req, res, logger) {
@@ -9536,8 +9780,9 @@ DataRouter.prototype.rou_post_createStylingBill = function () {
       });
       res.send(JSON.stringify(bilidArr));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_createStylingBill): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -9545,9 +9790,6 @@ DataRouter.prototype.rou_post_createStylingBill = function () {
 
 DataRouter.prototype.rou_post_generalBill = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalBill";
   obj.func = async function (req, res, logger) {
@@ -9595,265 +9837,16 @@ DataRouter.prototype.rou_post_generalBill = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_generalBill): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
 }
 
-DataRouter.prototype.sync_paymentProject = async function (bilid, requestNumber, data, amount, proofs, inisis, needs, logger) {
-  const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, autoComma, requestSystem, messageSend } = this.mother;
-  try {
-    const { thisBill, client, designer, project, proposal } = needs;
-    const { cliid } = client;
-    const { desid } = designer;
-    const { proid } = project;
-    let projectQuery;
-    let pureDesignFee;
-    let vat, consumer;
-    let classification, percentage;
-    let businessMethod;
-    let bankName, bankTo;
-    let calculate;
-    let discount;
-    let thisProposal;
-    let thisMethod;
-    let thisFeeObject;
-    let billsDuplication;
-
-    if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
-      projectQuery = {};
-      if (proposal !== undefined && proposal !== null) {
-        if (proposal.fee.length === 1) {
-          pureDesignFee = Math.round(proposal.fee[0].amount);
-          discount = proposal.fee[0].discount;
-        } else {
-          for (let obj of proposal.fee) {
-            if (obj.method === thisBill.links.method) {
-              pureDesignFee = Math.round(obj.amount);
-              discount = obj.discount;
-            }
-          }
-        }
-      } else {
-        pureDesignFee = 0;
-        discount = 0;
-      }
-
-      if (/계약금/gi.test(data.goodName.trim())) {
-
-        billsDuplication = await bill.getBillsByQuery({ "links.proid": proid, "links.desid": desid, "links.method": thisBill.links.method }, { selfMongo: instance.mongolocal });
-        if (billsDuplication.length > 1) {
-          for (let b of billsDuplication) {
-            if (b.bilid !== thisBill.bilid) {
-              if (typeof b.bilid === "string") {
-                await bill.deleteBill(b.bilid, { selfMongo: instance.mongolocal });
-              }
-            }
-          }
-        }
-
-        projectQuery["process.contract.first.date"] = new Date();
-        projectQuery["process.contract.first.calculation.amount"] = amount;
-        projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
-        projectQuery["process.contract.first.calculation.info.proof"] = inisis;
-        projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
-
-        projectQuery["desid"] = desid;
-        projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
-        projectQuery["process.status"] = "대기";
-        projectQuery["proposal.status"] = "고객 선택";
-
-        vat = Math.round(pureDesignFee * 0.1);
-        consumer = Math.round(pureDesignFee * 1.1);
-
-        projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
-        projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
-        projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
-        projectQuery["process.contract.remain.calculation.discount"] = Number(discount);
-
-        classification = designer.information.business.businessInfo.classification;
-        percentage = Number(designer.information.business.service.cost.percentage);
-        businessMethod = "사업자(일반)";
-        if (/사업자/g.test(classification)) {
-          if (/일반/g.test(classification)) {
-            businessMethod = "사업자(일반)";
-          } else {
-            businessMethod = "사업자(간이)";
-          }
-        } else {
-          businessMethod = "프리랜서";
-        }
-        projectQuery["process.calculation.method"] = businessMethod;
-        projectQuery["process.calculation.percentage"] = percentage;
-
-        if (designer.information.business.account.length > 0) {
-          bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
-          bankTo = designer.information.business.account[0].to;
-          projectQuery["process.calculation.info.account"] = bankName;
-          projectQuery["process.calculation.info.proof"] = bankTo;
-          projectQuery["process.calculation.info.to"] = bankTo;
-        }
-
-        [ calculate ] = bill.designerCalculation((pureDesignFee / (1 - discount)), businessMethod, percentage, client, { toArray: true });
-        projectQuery["process.calculation.payments.totalAmount"] = calculate;
-        projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
-        projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
-
-        if (Number(project.service.serid.split("_")[1].replace(/[^0-9]/gi, '').replace(/^0/, '')) !== 1) {
-          projectQuery["process.design.construct"] = back.returnProjectDummies("process.design.construct");
-        }
-
-        await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-        await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
-
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-        await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
-
-        thisProposal = project.proposal.detail.find((p) => { return p.desid === desid });
-        thisMethod = (project.service.online ? "online" : "offline");
-        if (thisProposal !== undefined) {
-          thisFeeObject = thisProposal.fee.find((f) => { return f.method === thisMethod });
-          if (thisFeeObject !== undefined) {
-            if (thisFeeObject.distance.amount !== 0) {
-              await bill.travelInjection("request", proid, thisMethod, 1, { selfMongo: instance.mongolocal });
-            }
-          }
-        }
-
-        requestSystem("https://" + instance.address.officeinfo.host + ":3002/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
-          headers: {
-            "Content-Type": "application/json",
-            "origin": "https://" + instance.address.officeinfo.host,
-          }
-        }).then((res) => {
-          const { data } = res;
-          return requestSystem("https://" + instance.address.officeinfo.host + ":3002/updateHistory", {
-            method: "project",
-            id: proid,
-            column: "manager",
-            value: data[desid],
-            email: null
-          }, {
-            headers: {
-              "Content-Type": "application/json",
-              "origin": "https://" + instance.address.officeinfo.host,
-            }
-          });
-        }).catch((err) => {
-          logger.error("Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
-        });
-
-        instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-          client: client.name,
-          designer: designer.designer,
-          host: instance.address.frontinfo.host,
-          path: "caution",
-        }).catch((err) => {
-          console.log(err);
-        });
-
-        requestSystem("https://" + instance.address.officeinfo.host + ":3002/realtimeDesigner", { mode: "sync", proid }, {
-          headers: {
-            "Content-Type": "application/json",
-            "origin": "https://" + instance.address.officeinfo.host
-          }
-        }).then((obj) => {
-          if (obj.status >= 300) {
-            return logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) ");
-          }
-        }).catch((err) => {
-          logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
-        });
-
-      } else if (/잔금/gi.test(data.goodName.trim())) {
-
-        projectQuery["process.status"] = "진행중";
-        projectQuery["process.action"] = "시작 대기";
-        projectQuery["process.contract.remain.date"] = new Date();
-        projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
-        projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
-        projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
-
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-        instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
-          client: client.name,
-          designer: designer.designer,
-          emoji: "(방긋)",
-        }).catch((err) => {
-          console.log(err);
-        });
-
-      }
-
-    } else if (/시공 계약금/gi.test(data.goodName.trim()) || /시공 착수금/gi.test(data.goodName.trim()) || /시공 중도금/gi.test(data.goodName.trim()) || /시공 잔금/gi.test(data.goodName.trim())) {
-
-      projectQuery = {};
-
-      if (/계약금/gi.test(data.goodName.trim())) {
-
-        projectQuery["process.design.construct.status"] = "계약금 입금";
-        projectQuery["process.design.construct.contract.payments.first.date"] = new Date();
-        projectQuery["process.design.construct.contract.payments.first.calculation.info.method"] = proofs.method;
-        projectQuery["process.design.construct.contract.payments.first.calculation.info.proof"] = inisis;
-        projectQuery["process.design.construct.contract.payments.first.calculation.info.to"] = proofs.to;
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-      } else if (/착수금/gi.test(data.goodName.trim())) {
-
-        projectQuery["process.design.construct.status"] = "착수금 입금";
-        projectQuery["process.design.construct.contract.payments.start.date"] = new Date();
-        projectQuery["process.design.construct.contract.payments.start.calculation.info.method"] = proofs.method;
-        projectQuery["process.design.construct.contract.payments.start.calculation.info.proof"] = inisis;
-        projectQuery["process.design.construct.contract.payments.start.calculation.info.to"] = proofs.to;
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-      } else if (/중도금/gi.test(data.goodName.trim())) {
-
-        projectQuery["process.design.construct.status"] = "중도금 입금";
-        projectQuery["process.design.construct.contract.payments.middle.date"] = new Date();
-        projectQuery["process.design.construct.contract.payments.middle.calculation.info.method"] = proofs.method;
-        projectQuery["process.design.construct.contract.payments.middle.calculation.info.proof"] = inisis;
-        projectQuery["process.design.construct.contract.payments.middle.calculation.info.to"] = proofs.to;
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-      } else if (/잔금/gi.test(data.goodName.trim())) {
-
-        projectQuery["process.design.construct.status"] = "잔금 입금";
-        projectQuery["process.design.construct.contract.payments.remain.date"] = new Date();
-        projectQuery["process.design.construct.contract.payments.remain.calculation.info.method"] = proofs.method;
-        projectQuery["process.design.construct.contract.payments.remain.calculation.info.proof"] = inisis;
-        projectQuery["process.design.construct.contract.payments.remain.calculation.info.to"] = proofs.to;
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-      }
-
-      instance.kakao.sendTalk("generalPayments", client.name, client.phone, {
-        client: client.name,
-        goods: data.goodName.trim(),
-      }).catch((err) => {
-        console.log(err);
-      });
-
-    }
-
-  } catch (e) {
-    logger.error("Python 서버 문제 생김 (sync_paymentProject) : " + e.message).catch((e) => { console.log(e); })
-    console.log(e);
-  }
-}
-
 DataRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, autoComma, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res, logger) {
@@ -10028,7 +10021,6 @@ DataRouter.prototype.rou_post_ghostClientBill = function () {
         res.send(JSON.stringify({ message: "success" }));
 
       } else {
-
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -10036,19 +10028,11 @@ DataRouter.prototype.rou_post_ghostClientBill = function () {
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
         res.send(JSON.stringify({ message: "success" }));
-
       }
-
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10056,16 +10040,12 @@ DataRouter.prototype.rou_post_ghostClientBill = function () {
 
 DataRouter.prototype.rou_post_webHookVAccount = function () {
   const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const bill = this.bill;
-  const { equalJson, requestSystem, messageSend } = this.mother;
-  const impWebhookUrl = "https://service.iamport.kr/inicis_payments/notice_vbank";
   let obj = {};
   obj.link = "/webHookVAccount";
   obj.public = true;
   obj.func = async function (req, res, logger) {
     try {
+      const impWebhookUrl = "https://service.iamport.kr/inicis_payments/notice_vbank";
       const oid = req.body.no_oid;
       const inisis = "현금 영수증";
       const bankFrom = req.body.nm_inputbank;
@@ -10269,10 +10249,9 @@ DataRouter.prototype.rou_post_webHookVAccount = function () {
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_webHookVAccount): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
-      console.log(e);
     }
   }
   return obj;
@@ -10280,8 +10259,6 @@ DataRouter.prototype.rou_post_webHookVAccount = function () {
 
 DataRouter.prototype.rou_post_designerSelect = function () {
   const instance = this;
-  const bill = this.bill;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/designerSelect";
   obj.func = async function (req, res, logger) {
@@ -10300,15 +10277,9 @@ DataRouter.prototype.rou_post_designerSelect = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_designerSelect): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10337,15 +10308,9 @@ DataRouter.prototype.rou_post_travelInjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_travelInjection): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10374,15 +10339,9 @@ DataRouter.prototype.rou_post_travelEjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10411,15 +10370,9 @@ DataRouter.prototype.rou_post_travelUpDown = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_travelUpDown): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10449,15 +10402,9 @@ DataRouter.prototype.rou_post_travelReconfig = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_travelReconfig): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10465,11 +10412,6 @@ DataRouter.prototype.rou_post_travelReconfig = function () {
 
 DataRouter.prototype.rou_post_serviceConverting = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/serviceConverting";
   obj.func = async function (req, res, logger) {
@@ -10596,15 +10538,9 @@ DataRouter.prototype.rou_post_serviceConverting = function () {
 
       }
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10612,11 +10548,6 @@ DataRouter.prototype.rou_post_serviceConverting = function () {
 
 DataRouter.prototype.rou_post_designerConverting = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/designerConverting";
   obj.func = async function (req, res, logger) {
@@ -10633,75 +10564,6 @@ DataRouter.prototype.rou_post_designerConverting = function () {
       const firstContract = project.process.contract.first.calculation.amount;
       const report = await bill.designerConverting(proid, method, desid, { selfMongo, selfCoreMongo: instance.mongo });
       const newProject = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
-      const timeConst = 410;
-      const map = [
-        {
-          column: "designer",
-          position: "desid",
-          pastValue: pastDesigner.desid,
-          finalValue: designer.desid,
-        },
-        {
-          column: "calculationInfo",
-          position: "process.calculation.info",
-          pastValue: project.process.calculation.info,
-          finalValue: newProject.process.calculation.info,
-        },
-        {
-          column: "method",
-          position: "process.calculation.method",
-          pastValue: project.process.calculation.method,
-          finalValue: newProject.process.calculation.method,
-        },
-        {
-          column: "percentage",
-          position: "process.calculation.percentage",
-          pastValue: project.process.calculation.percentage,
-          finalValue: newProject.process.calculation.percentage,
-        },
-        {
-          column: "remainSupply",
-          position: "process.contract.remain.calculation.amount.supply",
-          pastValue: report.request.from.supply,
-          finalValue: report.request.to.supply,
-        },
-        {
-          column: "remainVat",
-          position: "process.contract.remain.calculation.amount.vat",
-          pastValue: report.request.from.vat,
-          finalValue: report.request.to.vat,
-        },
-        {
-          column: "remainConsumer",
-          position: "process.contract.remain.calculation.amount.consumer",
-          pastValue: report.request.from.consumer,
-          finalValue: report.request.to.consumer,
-        },
-        {
-          column: "remainPure",
-          position: "process.contract.remain.calculation.amount.consumer",
-          pastValue: report.request.from.consumer - firstContract,
-          finalValue: report.request.to.consumer - firstContract,
-        },
-        {
-          column: "paymentsTotalAmount",
-          position: "process.calculation.payments.totalAmount",
-          pastValue: report.response.from.total,
-          finalValue: report.response.to.total,
-        },
-        {
-          column: "paymentsFirstAmount",
-          position: "process.calculation.payments.first.amount",
-          pastValue: report.response.from.first,
-          finalValue: report.response.to.first,
-        },
-        {
-          column: "paymentsRemainAmount",
-          position: "process.calculation.payments.remain.amount",
-          pastValue: report.response.from.remain,
-          finalValue: report.response.to.remain,
-        },
-      ];
 
       if (report.request.additional) {
         await kakao.sendTalk("plusDesignerFee", client.name, client.phone, {
@@ -10729,15 +10591,9 @@ DataRouter.prototype.rou_post_designerConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_designerConverting): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10745,11 +10601,6 @@ DataRouter.prototype.rou_post_designerConverting = function () {
 
 DataRouter.prototype.rou_post_amountConverting = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/amountConverting";
   obj.func = async function (req, res, logger) {
@@ -10768,9 +10619,9 @@ DataRouter.prototype.rou_post_amountConverting = function () {
       await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_amountConverting): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10778,11 +10629,6 @@ DataRouter.prototype.rou_post_amountConverting = function () {
 
 DataRouter.prototype.rou_post_requestRefund = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, sleep, requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/requestRefund" ];
   obj.func = async function (req, res, logger) {
@@ -10895,13 +10741,11 @@ DataRouter.prototype.rou_post_requestRefund = function () {
         } else {
           throw new Error(report.message);
         }
-
       }
-
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10909,11 +10753,6 @@ DataRouter.prototype.rou_post_requestRefund = function () {
 
 DataRouter.prototype.rou_post_contractCancel = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, sleep, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/contractCancel";
   obj.func = async function (req, res, logger) {
@@ -10943,33 +10782,11 @@ DataRouter.prototype.rou_post_contractCancel = function () {
       project = report.project;
       proid = project.proid;
 
-      timeConst = 410;
-      map = [
-        {
-          column: "paymentsTotalAmount",
-          position: "process.calculation.payments.totalAmount",
-          pastValue: pastProject.process.calculation.payments.totalAmount,
-          finalValue: project.process.calculation.payments.totalAmount,
-        },
-        {
-          column: "paymentsFirstAmount",
-          position: "process.calculation.payments.first.amount",
-          pastValue: pastProject.process.calculation.payments.first.amount,
-          finalValue: project.process.calculation.payments.first.amount,
-        },
-        {
-          column: "paymentsRemainAmount",
-          position: "process.calculation.payments.remain.amount",
-          pastValue: pastProject.process.calculation.payments.remain.amount,
-          finalValue: project.process.calculation.payments.remain.amount,
-        },
-      ];
-
       res.send(JSON.stringify(report));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_contractCancel): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -10977,8 +10794,6 @@ DataRouter.prototype.rou_post_contractCancel = function () {
 
 DataRouter.prototype.rou_post_returnBankCode = function () {
   const instance = this;
-  const bankCode = this.bankCode;
-  const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/returnBankCode";
   obj.func = async function (req, res, logger) {
@@ -10989,11 +10804,12 @@ DataRouter.prototype.rou_post_returnBankCode = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const bankCode = instance.bankCode;
       res.send(JSON.stringify(bankCode));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_returnBankCode): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11001,9 +10817,6 @@ DataRouter.prototype.rou_post_returnBankCode = function () {
 
 DataRouter.prototype.rou_post_designerCalculation = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/designerCalculation";
   obj.func = async function (req, res, logger) {
@@ -11051,9 +10864,9 @@ DataRouter.prototype.rou_post_designerCalculation = function () {
         res.send(JSON.stringify({ calculate }));
       }
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11061,8 +10874,6 @@ DataRouter.prototype.rou_post_designerCalculation = function () {
 
 DataRouter.prototype.rou_post_returnDummy = function () {
   const instance = this;
-  const bill = this.bill;
-  const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/returnDummy";
   obj.func = async function (req, res, logger) {
@@ -11080,9 +10891,9 @@ DataRouter.prototype.rou_post_returnDummy = function () {
       const dummy = bill.returnDummies(collection, subject);
       res.send(JSON.stringify(dummy));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_returnDummy): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11090,8 +10901,6 @@ DataRouter.prototype.rou_post_returnDummy = function () {
 
 DataRouter.prototype.rou_post_taxBill = function () {
   const instance = this;
-  const bill = this.bill;
-  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/taxBill";
   obj.func = async function (req, res, logger) {
@@ -11103,13 +10912,13 @@ DataRouter.prototype.rou_post_taxBill = function () {
     });
     try {
       bill.taxBill().catch((err) => {
-        logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + err.message).catch((e) => { console.log(e); });
+        logger.error(err, req).catch((e) => { console.log(e); });
       })
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11117,8 +10926,6 @@ DataRouter.prototype.rou_post_taxBill = function () {
 
 DataRouter.prototype.rou_post_weeklyCalculation = function () {
   const instance = this;
-  const work = this.work;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/weeklyCalculation";
   obj.func = async function (req, res, logger) {
@@ -11132,13 +10939,13 @@ DataRouter.prototype.rou_post_weeklyCalculation = function () {
       work.designerCalculation().then(() => {
         return logger.cron("weeklyCalculation success");
       }).catch((e) => {
-        logger.error("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
+        logger.error(e, req).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11146,8 +10953,6 @@ DataRouter.prototype.rou_post_weeklyCalculation = function () {
 
 DataRouter.prototype.rou_post_nonPaidResponses = function () {
   const instance = this;
-  const work = this.work;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/nonPaidResponses";
   obj.func = async function (req, res, logger) {
@@ -11161,9 +10966,9 @@ DataRouter.prototype.rou_post_nonPaidResponses = function () {
       const result = await work.designerCalculation(false);
       res.send(JSON.stringify(result));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_nonPaidResponses): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11171,11 +10976,6 @@ DataRouter.prototype.rou_post_nonPaidResponses = function () {
 
 DataRouter.prototype.rou_post_excuteResponse = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const address = this.address;
-  const kakao = this.kakao;
-  const { equalJson, messageSend } = this.mother;
   let obj = {};
   obj.link = "/excuteResponse";
   obj.func = async function (req, res, logger) {
@@ -11294,9 +11094,9 @@ DataRouter.prototype.rou_post_excuteResponse = function () {
       }));
 
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_excuteResponse): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11304,9 +11104,6 @@ DataRouter.prototype.rou_post_excuteResponse = function () {
 
 DataRouter.prototype.rou_post_excuteRepay = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/excuteRepay";
   obj.func = async function (req, res, logger) {
@@ -11401,9 +11198,9 @@ DataRouter.prototype.rou_post_excuteRepay = function () {
       }));
 
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_excuteRepay): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11411,9 +11208,6 @@ DataRouter.prototype.rou_post_excuteRepay = function () {
 
 DataRouter.prototype.rou_post_passiveResponse = function () {
   const instance = this;
-  const back = this.back;
-  const bill = this.bill;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/passiveResponse";
   obj.func = async function (req, res, logger) {
@@ -11486,9 +11280,9 @@ DataRouter.prototype.rou_post_passiveResponse = function () {
       }));
 
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_passiveResponse): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11496,205 +11290,6 @@ DataRouter.prototype.rou_post_passiveResponse = function () {
 
 DataRouter.prototype.rou_post_stylingFormSync = function () {
   const instance = this;
-  const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = this.mother;
-  const address = this.address;
-  const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-  const collections = [ "stylingForm", "constructForm", "partnershipForm", "designerForm" ];
-  const back = this.back;
-  const formSync = async (MONGOC, MONGOPYTHONC) => {
-    try {
-      const selfMongo = MONGOPYTHONC;
-      let widsignResponse, token;
-      let num;
-      let forms, resultForms, finalForms;
-      let pageSize;
-      let monthAgoValue;
-      let boo;
-      let whereQuery, updateQuery;
-      let dbForms;
-      let target;
-      let formDetail;
-      let thisClient;
-      let thisProject, thisDesigner;
-      let text;
-
-      for (let collection of collections) {
-        monthAgoValue = new Date();
-        monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
-        monthAgoValue = monthAgoValue.valueOf();
-
-        pageSize = 30;
-        widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-
-        if (widsignResponse.data.result_code !== 200) {
-          throw new Error("access token error");
-        } else {
-          token = widsignResponse.data.access_token;
-          resultForms = [];
-          forms = [ null ];
-          num = 1;
-          while (forms.length > 0) {
-            widsignResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-            forms = equalJson(JSON.stringify(widsignResponse.data.result)).map((obj) => {
-              let newObj;
-              newObj = {};
-              newObj.form = obj.form_id;
-              newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
-              newObj.name = obj.title;
-              newObj.date = stringToDate(obj.created_date);
-              newObj.confirm = (obj.status === 'END');
-              return newObj;
-            });
-            if (forms.length > 0) {
-              forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-              if (forms[0].date.valueOf() <= monthAgoValue) {
-                break;
-              }
-              resultForms = resultForms.concat(forms);
-            }
-            num++;
-          }
-
-          resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-
-          finalForms = [];
-          for (let f of resultForms) {
-            boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
-            if (!boo) {
-              finalForms.push(f);
-            }
-          }
-
-          widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-          if (widsignResponse.data.result_code !== 200) {
-            throw new Error("access token error");
-          }
-          token = widsignResponse.data.access_token;
-
-          if (/styling/gi.test(collection) || /construct/gi.test(collection)) {
-            whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-            dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-            for (let f of dbForms) {
-              whereQuery = { proid: f.proid };
-              updateQuery = {};
-  
-              target = null;
-              for (let i of finalForms) {
-                if (i.name === f.name) {
-                  target = i;
-                }
-              }
-  
-              if (target !== null) {
-                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                if (typeof widsignResponse.data === "object") {
-                  if (widsignResponse.data.result !== undefined) {
-                    if (widsignResponse.data.result.receiver_list.length > 0) {
-                      updateQuery["id"] = target.id;
-                      updateQuery["date"] = target.date;
-                      updateQuery["confirm"] = target.confirm;
-                      updateQuery["form"] = target.form;
-                      updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
-                      widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                      if (typeof widsignResponse.data === "object") {
-                        if (Array.isArray(widsignResponse.data.result)) {
-                          updateQuery["history"] = widsignResponse.data.result.map((obj) => {
-                            obj.date = stringToDate(obj.created_date);
-                            delete obj.created_date;
-                            return obj;
-                          });
-                          if (f.confirm !== true && target.confirm === true) {
-  
-                            thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
-                            thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
-                            thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
-  
-                            text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                            await messageSend({ text, channel: "#400_customer", voice: true });
-  
-                          }
-                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-  
-                          if (/styling/gi.test(collection)) {
-                            await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                          } else if (/construct/gi.test(collection)) {
-                            await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                          }
-  
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-  
-            }
-          } else {
-
-            whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-            dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-            for (let f of dbForms) {
-              whereQuery = { aspid: f.aspid };
-              updateQuery = {};
-  
-              target = null;
-              for (let i of finalForms) {
-                if (i.name === f.name) {
-                  target = i;
-                }
-              }
-  
-              if (target !== null) {
-                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                if (typeof widsignResponse.data === "object") {
-                  if (widsignResponse.data.result !== undefined) {
-                    if (widsignResponse.data.result.receiver_list.length > 0) {
-                      updateQuery["id"] = target.id;
-                      updateQuery["date"] = target.date;
-                      updateQuery["confirm"] = target.confirm;
-                      updateQuery["form"] = target.form;
-                      updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
-                      widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                      if (typeof widsignResponse.data === "object") {
-                        if (Array.isArray(widsignResponse.data.result)) {
-                          updateQuery["history"] = widsignResponse.data.result.map((obj) => {
-                            obj.date = stringToDate(obj.created_date);
-                            delete obj.created_date;
-                            return obj;
-                          });
-                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-                          if (f.confirm !== true && target.confirm === true) {
-                            thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC });
-                            text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!";
-                            await messageSend({ text, channel: "#301_apply", voice: true });
-                            if (/partnership/gi.test(collection)) {
-                              await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
-                            } else if (/designer/gi.test(collection)) {
-                              await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
-                            }
-                            await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-  
-            }
-
-          }
-
-        }
-
-      }
-    
-      return true;
-
-    } catch (e) {
-      return false;
-    }
-  }
   let obj = {};
   obj.link = "/stylingFormSync";
   obj.func = async function (req, res, logger) {
@@ -11704,22 +11299,219 @@ DataRouter.prototype.rou_post_stylingFormSync = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = instance.mother;
+    const address = instance.address;
+    const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+    const collections = [ "stylingForm", "constructForm", "partnershipForm", "designerForm" ];
+    const back = instance.back;
+    const formSync = async (MONGOC, MONGOPYTHONC) => {
+      try {
+        const selfMongo = MONGOPYTHONC;
+        let widsignResponse, token;
+        let num;
+        let forms, resultForms, finalForms;
+        let pageSize;
+        let monthAgoValue;
+        let boo;
+        let whereQuery, updateQuery;
+        let dbForms;
+        let target;
+        let formDetail;
+        let thisClient;
+        let thisProject, thisDesigner;
+        let text;
+  
+        for (let collection of collections) {
+          monthAgoValue = new Date();
+          monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
+          monthAgoValue = monthAgoValue.valueOf();
+  
+          pageSize = 30;
+          widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+  
+          if (widsignResponse.data.result_code !== 200) {
+            throw new Error("access token error");
+          } else {
+            token = widsignResponse.data.access_token;
+            resultForms = [];
+            forms = [ null ];
+            num = 1;
+            while (forms.length > 0) {
+              widsignResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+              forms = equalJson(JSON.stringify(widsignResponse.data.result)).map((obj) => {
+                let newObj;
+                newObj = {};
+                newObj.form = obj.form_id;
+                newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
+                newObj.name = obj.title;
+                newObj.date = stringToDate(obj.created_date);
+                newObj.confirm = (obj.status === 'END');
+                return newObj;
+              });
+              if (forms.length > 0) {
+                forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+                if (forms[0].date.valueOf() <= monthAgoValue) {
+                  break;
+                }
+                resultForms = resultForms.concat(forms);
+              }
+              num++;
+            }
+  
+            resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+  
+            finalForms = [];
+            for (let f of resultForms) {
+              boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
+              if (!boo) {
+                finalForms.push(f);
+              }
+            }
+  
+            widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+            if (widsignResponse.data.result_code !== 200) {
+              throw new Error("access token error");
+            }
+            token = widsignResponse.data.access_token;
+  
+            if (/styling/gi.test(collection) || /construct/gi.test(collection)) {
+              whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+              dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+              for (let f of dbForms) {
+                whereQuery = { proid: f.proid };
+                updateQuery = {};
+    
+                target = null;
+                for (let i of finalForms) {
+                  if (i.name === f.name) {
+                    target = i;
+                  }
+                }
+    
+                if (target !== null) {
+                  widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                  if (typeof widsignResponse.data === "object") {
+                    if (widsignResponse.data.result !== undefined) {
+                      if (widsignResponse.data.result.receiver_list.length > 0) {
+                        updateQuery["id"] = target.id;
+                        updateQuery["date"] = target.date;
+                        updateQuery["confirm"] = target.confirm;
+                        updateQuery["form"] = target.form;
+                        updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
+                        widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                        if (typeof widsignResponse.data === "object") {
+                          if (Array.isArray(widsignResponse.data.result)) {
+                            updateQuery["history"] = widsignResponse.data.result.map((obj) => {
+                              obj.date = stringToDate(obj.created_date);
+                              delete obj.created_date;
+                              return obj;
+                            });
+                            if (f.confirm !== true && target.confirm === true) {
+    
+                              thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
+                              thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
+                              thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
+    
+                              text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
+                              await messageSend({ text, channel: "#400_customer", voice: true });
+    
+                            }
+                            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    
+                            if (/styling/gi.test(collection)) {
+                              await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                            } else if (/construct/gi.test(collection)) {
+                              await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                            }
+    
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+    
+              }
+            } else {
+  
+              whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+              dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+              for (let f of dbForms) {
+                whereQuery = { aspid: f.aspid };
+                updateQuery = {};
+    
+                target = null;
+                for (let i of finalForms) {
+                  if (i.name === f.name) {
+                    target = i;
+                  }
+                }
+    
+                if (target !== null) {
+                  widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                  if (typeof widsignResponse.data === "object") {
+                    if (widsignResponse.data.result !== undefined) {
+                      if (widsignResponse.data.result.receiver_list.length > 0) {
+                        updateQuery["id"] = target.id;
+                        updateQuery["date"] = target.date;
+                        updateQuery["confirm"] = target.confirm;
+                        updateQuery["form"] = target.form;
+                        updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
+                        widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                        if (typeof widsignResponse.data === "object") {
+                          if (Array.isArray(widsignResponse.data.result)) {
+                            updateQuery["history"] = widsignResponse.data.result.map((obj) => {
+                              obj.date = stringToDate(obj.created_date);
+                              delete obj.created_date;
+                              return obj;
+                            });
+                            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+                            if (f.confirm !== true && target.confirm === true) {
+                              thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC });
+                              text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!";
+                              await messageSend({ text, channel: "#301_apply", voice: true });
+                              if (/partnership/gi.test(collection)) {
+                                await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
+                              } else if (/designer/gi.test(collection)) {
+                                await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
+                              }
+                              await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+    
+              }
+  
+            }
+  
+          }
+  
+        }
+      
+        return true;
+  
+      } catch (e) {
+        return false;
+      }
+    }
     try {
       formSync(instance.mongo, instance.mongolocal).then((boo) => {
         if (boo) {
           logger.cron("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-        } else {
-          logger.error("styling form sync fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
         }
         return requestSystem("https://" + address.officeinfo.host + ":3002/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
       }).catch((err) => {
-        logger.error("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
+        logger.error(err, req).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11727,10 +11519,6 @@ DataRouter.prototype.rou_post_stylingFormSync = function () {
 
 DataRouter.prototype.rou_post_stylingFormFile = function () {
   const instance = this;
-  const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, messageSend } = this.mother;
-  const address = this.address;
-  const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-  const back = this.back;
   let obj = {};
   obj.link = "/stylingFormFile";
   obj.func = async function (req, res, logger) {
@@ -11740,6 +11528,10 @@ DataRouter.prototype.rou_post_stylingFormFile = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, messageSend } = instance.mother;
+    const address = instance.address;
+    const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+    const back = instance.back;
     try {
       const selfMongo = instance.mongolocal;
       const splitToken = "__split__";
@@ -11790,9 +11582,9 @@ DataRouter.prototype.rou_post_stylingFormFile = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_stylingFormFile): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ message: "error " + e.message }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11800,9 +11592,6 @@ DataRouter.prototype.rou_post_stylingFormFile = function () {
 
 DataRouter.prototype.rou_post_responseInjection = function () {
   const instance = this;
-  const bill = this.bill;
-  const back = this.back;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/responseInjection";
   obj.func = async function (req, res, logger) {
@@ -11841,9 +11630,9 @@ DataRouter.prototype.rou_post_responseInjection = function () {
       thisBill = await bill.getBillById(bilid, { selfMongo });
       res.send(JSON.stringify({ bill: thisBill }));
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -11914,79 +11703,16 @@ DataRouter.prototype.rou_post_calculationConsole = function () {
       }
 
     } catch (e) {
-      logger.error("Python 서버 문제 생김 (rou_post_calculationConsole): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
 }
 
-
-DataRouter.policy = function () {
-  let text = '';
-  text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";
-  text += "<b>개인정보 처리 방침</b><br><br><b>제1조 총칙</b><br><br>① 개인정보라 함은 생존하고 있는 개인에 관한 정보로써 성명, 주민등록번호 및 영상 등을 통하여 개인을 알아볼 수 있는 정보(해당 정보만으로는 특정 개인은 알아볼 수 없더라도 다른 정보와 쉽게 결합하여 알아볼 수 있는 것을 포함한다)를 말합니다.<br>";
-  text += "② 개인정보 처리방침이란 회원의 개인정보를 보호함으로써 이용자가 안심하고 서비스를 이용할 수 있도록 홈리에종을 운영함에 있어 준수해야 할 지침을 의미합니다.<br>③ 홈리에종은 ‘정보통신망 ";
-  text += "이용촉진 및 정보보호에 등에 관한 법률’과 ‘개인정보 보호법’ 및 관련 법령에 따라 개인정보 보호규정을 준수합니다.<br>④ 홈리에종은 회원(디자이너, 구매자)의 동의를 기반으로 개인정보를 수집, 이용 및 제공하고 있으며 회원의 권리(개인정보 자기결정권)를 적극적으로 보장합니다.";
-  text += "<br>⑤ 개인정보 처리방침은 회원이 언제나 쉽게 열람할 수 있도록 홈리에종 웹사이트에 게시하며 개인정보 관련법령, 지침, 고시 또는 홈리에종의 서비스 정책의 변경에 따라 달라질 수 있습니다.<br><br><b>제2조 개인정보의 수집항목 및 목적</b><br><br>";
-  text += "① 고객이 의뢰한 홈디자인 업무 수행 및 이와 관련하여 필요한 연락, 거래 관계의 설정과 유지와 이행과 관리, 분쟁해결, 민원 처리 및 기타 법령상 의무의 이행 홈리에종이 처리하고 있는 개인정보는 다음의 수집, 이용 목적 이외의 용도로는 활용되지 않으며, 수집, 이용목적이 변경되는 경우에는 개인정보보호법에 따라 별도의 동의를 받는 등의 필요한 조치를 이행합니다.";
-  text += "<br>② 회원의 인권을 침해할 우려가 있는 민감한 정보(인증, 사상 및 신조, 정치적 성향이나 범죄기록, 의료정보 등)는 수집하지 않으며, 만약 법령에서 정한 의무가 따라 불가피하게 수집하는 경우에는 반드시 회원에게 사전동의를 받습니다.<br>③ 홈리에종은 다음과 같이 회원의 ";
-  text += "개인정보를 수집합니다.<br>④ 회원 가입시, 문의사항 작성시 : 성명, 주소, E-mail, 연락처(전화번호), 비밀번호 이용자 식별을 통한 이용계약 이행 및 회원 상호간 계약체결을 위한 지원(문의사항에 대한 답변, 계약이행을 위한 연락, 구매자와 디자이너간 계약체결 지원, 회원간 정보 안내 등)";
-  text += "<br>⑤ 상담 문의시 : 주거공간 특성 관련 정보(주거유형, 공간이미지, 공간면적, 주거공간 구성 등)<br>⑥ 디자이너 신청시 : 회사명, 사업자등록번호, 대표자이름, 개업일, 주소, 전화번호, 휴대전화번호, E-mail, Fax, 은행명, 예금주명, 계좌 번호 등";
-  text += "디자이너 식별, 서비스 개설/제공, 각종 알림, 정산 등<br>⑦ 자동수집정보 : 기기정보, 로그정보, 위치정보, 애플리케이션번호, 로컬저장소 등 시스템 운영 관리<br>⑧ 개인정보의 이용목적<br>⑨ 회원관리 : 회원제 서비스 제공에 따른 개인식별, 가입의사 확인, 이용약관 위반 ";
-  text += "회원에 대한 이용제한 조치, 가입 및 가입횟수 제한, 서비스 부정 이용 제재, 고충 처리 및 분쟁 조정을 위한 기록 보존, 고지사항 전달, 회원탈퇴 의사의 확인 등<br>⑩ 중개서비스 등 이용약관에 따른 서비스 제공(광고 포함) 및 서비스 개선 : 인구통계학적 분석, 서비스 방문 및 ";
-  text += "이용기록의 분석, 개인정보 및 관심에 기반한 이용자간 관계의 형성, 지인 및 관심사 등에 기반한 맞춤형 서비스 제공 등 신규 서비스 요소의 발굴 및 기존 서비스 개선 등<br>⑪ 신규 서비스 개발 및 홍보 및 마케팅 광고에의 활용 : 홈디자인 서비스 정보 제공 목적, 신규 서비스 개발 및 맞춤 서비스 제공, 인구통계학적 ";
-  text += "특성에 따른 서비스 제공 및 광고 게재, 서비스의 유효성 확인, 이벤트/광고성 정보 및 참여 기회 제공 등<br>⑫ 결제 시스템 제공 : 예약 및 요금 결제, 상품 및 서비스 제공 등<br>⑬ 정보보호 : 보안, 프라이버시, 안전 측면에서 이용자가 안심하고 이용할 수 있는 환경 ";
-  text += "구축 등<br><br><b>제3조 개인정보 제3자 제공</b><br><br>① 홈리에종은 원칙적으로 회원의 동의 없이 개인정보를 제3자에게 제공하지 않으며 개인정보를 제3자에게 제공해야 하는 경우 법령에 따른 동의를 받고 있습니다.<br>② 홈리에종은 개인정보를  ‘개인정보 수집항목 ";
-  text += "및 목적’에서 명시한 범위 내에서 사용하며 회원의 사전 동의 없이 개인정보 수집 이용 목적 범위를 초과하여 이용하거나 회원의 개인정보를 제공하지 않습니다.<br>③ 다만 아래와 같이 양질의 서비스 제공을 위해 이용자의 개인정보를 협력업체와 공유할 필요가 있는 경우 제공 ";
-  text += "받는 자, 제공목적, 제공정보 항목, 이용 및 보유기간 등을 회원에게 고지하여 동의를 구하거나 관련법령에 따른 경우는 예외로 합니다.<br>④ 회원이 사전에 공개 또는 제3자 제공에 동의한 경우 : 대표적으로 구매자의 개인정보를 디자이너에게 제공하는 경우, 디자이너의 ";
-  text += "개인정보를 구매자에게 제공하는 경우가 제3자제공의 예입니다. 디자이너의 개인정보는 일반적으로 회원을 포함한 제3자에게 공개되며(가입시 사전에 포괄적 제3자 제공동의를 받습니다.) 구매자의 개인정보는 디자이너의 물품(서비스) 구매결제가 완료된 이후 디자이너에게 제공됩니다.";
-  text += "<br>⑤ 관계법령의 규정에 의거하거나, 수사목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우<br><br><b>제4조 개인정보 처리위탁</b><br><br>① 홈리에종은 서비스의 제공에 관한 계약을 이행하고 이용자의 편의증진 등을 위하여 개인정보를 타인에게 위탁 ";
-  text += "처리할 수 있습니다. 타인에게 위탁업무를 하는 경우에는 다음의 내용을 이용자에게 알리고 동의를 받습니다. 다음의 내용에 대하여 어느 하나의 사항이 변경되는 경우에도 같습니다.<br>② 개인정보 처리위탁을 받는 자(이하 수탁자라 함)<br>③ 개인정보 처리위탁을 하는 업무의 내용";
-  text += "<br>④ 홈리에종은 아래와 같이 개인정보를 위탁하고 있으며, 개인정보의 수탁자와 위탁업무의 범위는 아래와 같습니다.<br>⑤ PG사 : ㈜이니시스(결제대행 서비스 제공)<br>⑥ E-mail 및 문자 발송 : widsign, 알리고(서비스 운영관련 알림 및 정보 제공)<br>⑦ ";
-  text += "배송대행업체 : 업체명(홈리에종이 직접 판매한 물품의 배송 위탁)<br><br><b>제5조 개인정보의 보유 및 이용기간</b><br><br>홈리에종의 개인 정보 보유 기간은 위임업무 종료 시 또는 목적 달성 시 또는 정부 주체의 동의 철회 시까지입니다. 단, 관계 법령에 따라 파기하지 않고 보존하여야 하는 경우에는 해당 기간까지 입니다.<br><br>① 홈리에종은 회원의 개인정보를 원칙적으로 보유/이용기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체없이 해당 ";
-  text += "개인정보를 파기합니다.<br>② 원으로부터 동의받은 개인정보 보유기간이 경과하거나 처리목적이 달성되었음에도 불구하고 다른 법령에 따라 개인정보를 계속 보존하여야 하는 경우에는 해당 개인정보를 별도의 데이터베이스(DB)로 옮기거나 보관장소를 달리하여 보존합니다.<br>③ ";
-  text += "홈리에종은 1년동안 회사의 서비스를 이용하지 않은 회원의 개인정보는 ‘정보통신망 이용촉진 및 정보보호 등에 관한 법률 제 29조’에 근거하여 회원에게 사전통지하고 개인정보를 파기하거나 별도로 분리하여 저장합니다.(회사는 개인정보가 파기되거나 분리되어 저장/관리된다는 ";
-  text += "사실, 서비스 미이용기간 만료일, 해당 개인정보의 항목을 E-mail 등의 방법으로 미이용기간 30일전에 회원에게 알립니다. 이를 위해 회원은 회사에게 정확한 연락처 정보를 알리거나 수정해야 합니다.<br>④ 관련 법률에 따른 정보보유 사유는 아래와 같습니다. 서비스 결제 ";
-  text += "및 정산 발생시 관련 법률에 따라 개인정보를 포함한 결제, 정산 관련 정보가 5년간 보관이 됩니다.<br>⑤ 전자상거래 등에서의 소비자 보호에 관한 법률<br>⑥ 계약 또는 청약철회 등에 관한 기록 : 5년<br>⑦ 대금결제 및 재화 등의 공급에 관한 기록 : 5년<br>⑧ 소비자의 ";
-  text += "불만 또는 분쟁처리에 관한 기록 : 3년<br>⑨ 통신비밀보호법 - 로그인 기록 : 3개월<br>⑩ 조세 관련 법령 - 매출 관련 기록 : 5년<br>⑪ 개인정보 파기절차 – 회사는 파기사유가 발생한 개인정보를 개인정보 보호책임자의 승인 절차를 거쳐 파기합니다.<br>⑫ 개인정보 ";
-  text += "파기방법 – 회사는 전자적 파일형태로 기록/저장된 개인정보는 기록을 재생할 수 없도록 기술적인 방법 또는 물리적인 방법을 이용하여 파기하며, 종이에 출력된 개인정보는 분쇄기로 분쇄하거나 소각 등을 통하여 파기합니다.<br><br><b>제6조 개인정보의 수집 및 이용을 ";
-  text += "거부할 권리</b><br><br>개인정보 주체는 개인정보의 수집 및 이용을 거부할 권리가 있으나, 서비스 제공을 위한 필수적인 개인정보는 그 수집이용 동의를 거부할 시 회원가입을 할 수 없습니다.<br><br><b>제7조 링크 사이트에 대한 책임</b><br><br>홈리에종은 ";
-  text += "회원에게 다른 웹사이트에 대한 링크를 제공할 수 있습니다. 다만, 링크되어 있는 웹사이트들이 개인정보를 수집하는 행위에 대해서는 본 \“개인정보처리방침\”이 적용되지 않습니다.<br><br><b>제8조 회원 및 법정대리인의 권리</b><br><br>① 회원 및 법정 대리인은 ";
-  text += "언제든지 등록되어 있는 자신의 개인정보를 조회하거나 수정, 탈퇴를 요청할 수 있습니다. 다만, 이 경우 서비스의 일부 또는 전체 이용에 제한이 있을 수 있습니다.<br>② 회원 및 법정 대리인의 개인정보 조회, 수정, 탈퇴는 홈리에종 웹사이트에서 가능하며, 회사는 ";
-  text += "이에 대해 지체없이 조치하겠습니다.<br>③ 회원이 개인정보의 오류에 대한 정정을 요청한 경우에는 정정을 완료하기 전까지 해당 개인정보를 이용 또는 제공하지 않습니다. 또한 잘못된 개인정보를 제3자에게 이미 제공한 경우에는 정정 처리결과를 제3자에게 지체없이 ";
-  text += "통지하여 정정이 이루어지도록 하겠습니다.<br>④ 회원은 자신의 개인정보를 최신의 상태로 유지해야 하며, 회원의 부정확한 정보 입력으로 발생하는 문제의 책인은 이용자 자신에게 있습니다.<br>⑤ 타인의 개인정보를 도용한 회원가입의 경우 회원자격을 상실하거나 관련 ";
-  text += "개인정보보호 법령에 의해 처벌 받을 수 있습니다.<br>⑥ 회원은 E-mail, 비밀번호 등에 대한 보안을 유지할 책임이 있으며 제3자에게 이를 양도하거나 대여할 수 없습니다.<br>⑦ 회원 또는 법정대리인의 요청에 의해 해지 또는 삭제된 개인정보는 \“개인정보의 보유 ";
-  text += "및 이용기간\”에 명시된 바에 따라 처리하고 그 외의 용도로 열람 또는 이용할 수 없도록 처리하고 있습니다.<br><br><b>제9조 개인정보의 기술적, 관리적 보호대책</b><br><br>① 회사는 회원을 개인정보를 처리함에 있어 개인정보가 분실, 도난, 유출, 변조, 훼손 ";
-  text += "등이 되지 않도록 안전성을 확보하기 위하여 다음과 같이 기술적, 관리적 보호대책을 강구하고 있습니다.<br>② 비밀번호의 암호화 – 이용자의 비밀번호는 일방향 암호화하여 저장 및 관리되고 있으며, 개인정보의 확인/변경은 비밀번호를 알고 있는 본인에 의해서만 가능합니다.";
-  text += "<br>③ 해킹 등에 대비한 대책 - 해킹, 컴퓨터 바이러스 등 정보통신망 침입에 의해 회원의 개인정보가 유출되거나 훼손되는 것을 막기 위해 최선을 다하고 있습니다.<br>④ 만일의 사태에 대비하여 침입차단 시스템을 이용하여 보안에 최선을 다하고 있습니다.<br>⑤ ";
-  text += "민감한 개인정보는 암호화 통신 등을 통하여 네트워크상에서 개인정보를 안전하게 전손할 수 있도록 하고 있습니다.<br>⑥ 개인정보 처리 최소화 및 교육 – 개인정보 관련 처리 담당자를 최소한으로 제한하고 개인정보 처리자에 대한 교육 등 관리적 조치를 통해 법령 및 ";
-  text += "내부방침 등의 준수를 강조하고 있습니다.<br>⑦ 개인정보보호 전담담당부서 운영 – 개인정보의 보호를 위해 개인정보보호 전담부서를 운영하고 있으며, 개인정보처리방침의 이행사항 및 담당자의 준수여부를 확인하여 문제가 발견 될 경우 즉시 해결하고 바로 잡을 수 있도록 ";
-  text += "최선을 다하고 있습니다.<br><br><b>제10조 개인정보보호 책임자</b><br><br>① 홈리에종은 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자 및 개인정보보호 전담담당부서를 ";
-  text += "지정하고 있습니다.<br>② 개인정보보호 책임자 이름 : 박혜연 연락처 : 02-2039-2252<br>③ 회원은 서비스 이용 중 발생한 모든 개인정보와 관련된 문의, 불만처리, 피해구제 등에 관한 사항을 개인정보 보호책임자 및 개인정보보호 전담 담당부서로 문의할 수 있습니다.";
-  text += "홈리에종은 이용자의 문의에 대해 최대한 빠른 시간 내에 답변 및 처리합니다.<br><br><b>제11조 기타 개인정보침해에 대한 신고 및 상담</b><br><br>① 회원은 아래의 기관에 개인정보 침해에 대한 피해구제, 상담 등을 문의할 수 있습니다. 아래의 기관은 정부기관";
-  text += "소속으로서, 홈리에종의 자체적인 개인정보 불만처리 또는 개인정보 피해구제 결과가 만족스럽지 않을 경우, 구체적인 도움이 필요한 경우에 문의하시면 됩니다.<br>② 개인정보침해신고센터 : http://privacy.kisa.or.kr/kor/mail.jsp (국번없이) 118<br>";
-  text += "③ 개인정보분쟁조정위원회 : http://www.kopico.go.kr 02-2100-2499<br>④ 대검찰청 사이버수사과 : http://www.spo.go.kr/spo/index.jsp (국번없이) 130<br>⑤ 경찰청 사이버안전국 : http://cyberbureau.police.go.kr/index.do ";
-  text += "(국번없이) 182<br><br><b>제12조 고지의 의무</b><br><br>현 개인정보 처리방침은 법령, 정부의 정책 또는 회사 내부정책 등 필요에 의하여 변경될 수 있으며, 변경시에는 개정 최소 7일전부터 홈페이지의 ‘공지사항’을 통해 고지할 것입니다. 다만, 회원에게 불리한 ";
-  text += "내용으로 변경하는 경우에는 최소 30일 전에 고지합니다.<br><br>귀하는 위의 개인정보 수집과 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 당사의 서비스 이용이 어려울 수 있습니다.";
-  text = text.replace(/[\=\&]/g, '');
-  return text;
-}
-
-DataRouter.policyButton = function () {
-  let obj;
-  obj = {};
-  obj.off = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#575757"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#575757"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#575757"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#575757"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#575757"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#575757"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#575757"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#575757"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#575757"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#575757"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#575757"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#575757"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#575757"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#575757"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#575757"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#575757"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#575757"/><circle cx="4.604" cy="10.231" r="4.604" fill="#ECECEC"/></svg>';
-  obj.on = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 346.511 20.463"><rect width="346.511" height="20.463" fill="#FFF"/><path d="M29.108 10.848c-1.811-0.836-3.708-2.509-4.549-4.511 -0.604 2.156-2.63 4.07-4.808 5.127L18.5 9.835c2.868-1.254 4.98-3.718 4.98-6.931V0.946h2.07v1.87c0 3.234 2.458 5.61 4.744 6.403L29.108 10.848zM27.9 20.463c-4.226 0-6.748-1.54-6.748-4.005 0-2.464 2.522-4.004 6.748-4.004 4.248 0 6.77 1.54 6.77 4.004C34.67 18.923 32.148 20.463 27.9 20.463zM23.244 16.458c0 1.452 1.768 2.311 4.657 2.311 2.911 0 4.7-0.858 4.7-2.311s-1.789-2.31-4.7-2.31C25.011 14.148 23.244 15.006 23.244 16.458zM34.39 7.063v5.413h-2.026V0h2.026v5.347h2.997V7.063H34.39z" fill="#9bbdd1"/><path d="M48.792 2.179c-0.129 6.49-3.838 11.287-9.314 14.323l-1.25-1.584c4.744-2.311 7.999-6.579 8.366-11.001h-7.46V2.179H48.792zM52.63 20.463V0H54.656v20.463H52.63z" fill="#9bbdd1"/><path d="M71.473 2.509C71.408 8.56 68.972 12.938 64.077 16.282l-1.38-1.519c4.14-2.464 6.403-6.381 6.749-10.562h-5.865V2.509H71.473zM77.984 20.463V9.571h-2.35v9.88h-1.919V0.462h1.919v7.415h2.35V0h1.962v20.463H77.984z" fill="#9bbdd1"/><path d="M93.464 6.469c0 2.948-2.264 4.995-5.347 4.995 -3.083 0-5.347-2.047-5.347-4.973 0-2.949 2.264-5.105 5.347-5.105C91.2 1.386 93.464 3.542 93.464 6.469zM84.904 6.447c0 1.892 1.315 3.278 3.212 3.278 1.962 0 3.213-1.364 3.213-3.257 0-1.937-1.25-3.322-3.213-3.322C86.22 3.146 84.904 4.555 84.904 6.447zM85.573 19.825v-6.381h2.027v4.708h11.621v1.673H85.573zM96.72 14.853V0h2.026v14.853H96.72z" fill="#9bbdd1"/><path d="M102.066 1.65h10.953v1.694h-4.377v0.682c0 2.904 2.523 5.215 4.787 5.919l-1.121 1.65c-1.79-0.727-3.838-2.509-4.679-4.379 -0.647 1.958-2.976 4.115-5.045 4.973l-1.143-1.628c2.609-0.968 5.131-3.631 5.131-6.491V3.345h-4.506V1.65zM111.401 20.463c-4.291 0-6.749-1.519-6.749-3.961s2.458-3.982 6.749-3.982c4.334 0 6.77 1.54 6.77 3.982S115.735 20.463 111.401 20.463zM106.723 16.502c0 1.431 1.747 2.267 4.679 2.267 2.976 0 4.7-0.836 4.7-2.267 0-1.43-1.725-2.266-4.7-2.266C108.469 14.236 106.723 15.072 106.723 16.502zM112.264 6.843V5.148h3.751V0h2.026v12.674h-2.026V6.843H112.264z" fill="#9bbdd1"/><path d="M130.913 12.233v4.027h8.085v1.693H120.887v-1.693h7.999v-4.027h-5.8V1.43h2.027v3.719h9.659v-3.719h2.027v10.804H130.913zM134.772 6.821h-9.659v3.718h9.659V6.821z" fill="#9bbdd1"/><path d="M151.2 19.759v-6.535c-1.962 0.088-3.751 0.11-5.476 0.132l-0.302-1.782c2.35 0 4.593-0.044 6.813-0.132 2.695-0.109 5.11-0.264 6.792-0.462l0.151 1.65c-1.509 0.198-3.816 0.374-5.951 0.484v6.645H151.2zM147.104 3.454h10.5v1.717h-4.269c0.366 1.848 2.781 3.036 4.851 3.19l-0.841 1.76c-2.048-0.33-4.226-1.54-5.024-2.948 -0.69 1.563-2.803 2.927-5.131 3.345l-0.927-1.694c2.307-0.308 4.657-1.606 5.002-3.652h-4.161V3.454zM149.54 0.484h5.563v1.716h-5.563V0.484zM160.148 20.463V0h2.027v20.463H160.148z" fill="#9bbdd1"/><path d="M180.673 0.924c0 2.663-0.237 5.413-0.647 7.459h3.04v1.694h-18.111V8.383h13.109c0.323-1.54 0.539-4.246 0.539-5.786h-11.276V0.924H180.673zM167.262 20.177v-8.383h2.027v2.508h9.422V11.75h2.026v8.427H167.262zM178.711 15.931h-9.422v2.574h9.422V15.931z" fill="#9bbdd1"/><path d="M184.92 10.892V1.056h2.026v3.301h5.391V1.034h2.026v9.857H184.92zM193.328 20.419c-4.247 0-6.619-1.562-6.619-3.961 0-2.42 2.372-3.982 6.619-3.982 4.313 0 6.663 1.584 6.663 3.982S197.576 20.419 193.328 20.419zM192.337 6.028h-5.391v3.191h5.391V6.028zM188.779 16.458c0 1.408 1.703 2.289 4.549 2.289 2.933 0 4.593-0.858 4.593-2.289 0-1.408-1.66-2.31-4.593-2.31C190.461 14.148 188.779 15.072 188.779 16.458zM199.754 6.909v5.412h-2.027V0h2.027v5.192h2.997v1.717H199.754z" fill="#9bbdd1"/><path d="M214.694 11.728c-1.682-0.528-4.031-2.09-4.959-3.916 -0.668 1.848-2.716 3.74-4.915 4.51l-1.121-1.628c2.565-0.814 4.722-2.816 4.98-5.347h-4.291V3.652h10.953v1.694h-4.55c0.323 2.486 2.76 4.181 4.959 4.753L214.694 11.728zM206.911 20.177v-6.953h13.109v6.953H206.911zM207.084 2.156V0.462h5.434V2.156H207.084zM217.993 14.874h-9.055v3.652h9.055V14.874zM217.993 12.102V0h2.027v12.102H217.993z" fill="#9bbdd1"/><path d="M232.05 7.987h1.94V0.396h1.94v19.1h-1.94V9.682h-1.94c-0.193 3.63-1.639 6.271-4.398 6.271 -2.996 0-4.42-3.103-4.42-7.195 0-4.07 1.424-7.15 4.42-7.15C230.455 1.606 231.878 4.313 232.05 7.987zM227.651 3.366c-1.595 0-2.414 2.223-2.414 5.413s0.819 5.413 2.414 5.413c1.617 0 2.437-2.223 2.437-5.413S229.269 3.366 227.651 3.366zM237.872 20.463V0H239.813v20.463H237.872z" fill="#9bbdd1"/><path d="M257.707 7.723v2.442h8.063v1.673h-18.111v-1.673h8.021V7.723h-5.843V0.814h13.583v1.694h-11.557v3.52h11.708v1.694H257.707zM256.715 20.463c-4.398 0-6.921-1.364-6.921-3.652 0-2.244 2.522-3.631 6.921-3.631s6.921 1.32 6.921 3.631S261.113 20.463 256.715 20.463zM251.885 16.832c0 1.255 1.854 1.959 4.83 1.959 2.997 0 4.852-0.704 4.852-1.959 0-1.254-1.854-1.979-4.852-1.979C253.739 14.853 251.885 15.578 251.885 16.832z" fill="#9bbdd1"/><path d="M280.474 15.271c-1.833 0.241-4.786 0.439-7.33 0.571 -2.286 0.11-4.398 0.154-5.994 0.177l-0.323-1.761c1.919 0 4.269-0.021 6.641-0.154 2.824-0.109 5.196-0.264 6.791-0.462L280.474 15.271zM273.401 11.111c-2.953 0-5.217-1.892-5.217-4.664 0-2.816 2.285-4.819 5.217-4.819 2.976 0 5.262 1.893 5.262 4.819C278.663 9.285 276.334 11.111 273.401 11.111zM273.401 3.366c-1.768 0-3.212 1.299-3.212 3.059 0 1.761 1.444 2.948 3.212 2.948 1.747 0 3.256-1.166 3.256-2.948C276.657 4.555 275.213 3.366 273.401 3.366zM283.557 0v20.463h-2.005V0H283.557z" fill="#9bbdd1"/><path d="M286.144 4.709V3.08h11.664v1.629H286.144zM292.072 12.124c-2.781 0-4.636-1.32-4.636-3.279 0-2.002 1.854-3.3 4.636-3.3 2.76 0 4.636 1.298 4.636 3.3C296.708 10.781 294.832 12.124 292.072 12.124zM289.011 20.243v-7.394h2.026v2.003h8.689V12.828h2.005v7.415H289.011zM289.141 1.826V0.176h5.691v1.65H289.141zM292.072 7.107c-1.423 0-2.651 0.682-2.651 1.737 0 1.034 1.25 1.717 2.651 1.717s2.631-0.683 2.631-1.717C294.703 7.789 293.474 7.107 292.072 7.107zM299.727 16.502h-8.689v2.068h8.689V16.502zM301.731 7.481v4.334h-2.005V0h2.005v5.765h2.997v1.717H301.731z" fill="#9bbdd1"/><path d="M318.332 14.412c-2.35 0.594-6.855 0.946-9.702 0.99h-1.875V2.134h2.026v11.486c2.651 0 6.985-0.33 9.293-0.88L318.332 14.412zM321.977 20.463h-2.006V0h2.006V20.463z" fill="#9bbdd1"/><path d="M328.552 13.729c2.63 0 6.316-0.197 8.344-0.66l0.237 1.694c-2.092 0.44-5.541 0.683-9.186 0.704h-2.242V2.156h9.466v1.694h-7.46v9.879H328.552zM340.323 7.987h3.127V9.703h-3.127v10.76h-2.005V0h2.005V7.987z" fill="#9bbdd1"/><path d="M344.29 16.084h2.221v2.289h-2.221V16.084z" fill="#9bbdd1"/><circle cx="4.604" cy="10.231" r="4.604" fill="#9bbdd1"/></svg>';
-  return obj;
-}
-
-
 DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   const instance = this;
-  const back = this.back;
-  const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
   obj.func = async function (req, res, logger) {
@@ -12069,8 +11795,9 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -12079,9 +11806,6 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
 
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { requestSystem, messageSend } = this.mother;
-  const back = this.back;
-  const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res, logger) {
@@ -12116,7 +11840,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
         return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
       }).catch((err) => {
-        logger.error({ text: "Console 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
+        logger.error(err, req).catch((e) => { console.log(e); });
       });
 
       await instance.kakao.sendTalk("designerSelect", name, phone, {
@@ -12129,8 +11853,9 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (designerProposal_submit) : " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -12138,9 +11863,6 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
-  const { equalJson } = this.mother;
-  const back = this.back;
-  const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_policy";
   obj.func = async function (req, res, logger) {
@@ -12158,7 +11880,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       };
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.send(JSON.stringify({
         policy: DataRouter.policy(),
         button: DataRouter.policyButton(),
@@ -12170,9 +11892,6 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
 
 DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
-  const { equalJson } = this.mother;
-  const back = this.back;
-  const work = this.work;
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
   obj.func = async function (req, res, logger) {
@@ -12224,8 +11943,9 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       }
 
     } catch (e) {
-      await logger.error("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -12234,8 +11954,6 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
 
 DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const instance = this;
-  const back = this.back;
-  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
   obj.func = async function (req, res, logger) {
@@ -12289,8 +12007,8 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -12299,10 +12017,6 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 
 DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
-  const back = this.back;
-  const work = this.work;
-  const address = this.address;
-  const { equalJson, requestSystem, messageSend, serviceParsing, sleep } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res, logger) {
@@ -12477,16 +12191,15 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             return sleep(10 * 1000);
           }).then(() => {
             return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { report: 0 }, { headers: { "Content-Type": "application/json" } });
-          }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
-
+          }).catch((err) => {
+            logger.error(err, req).catch((e) => { console.log(e); });
+          });
         }
-
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
-
       }
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -12495,8 +12208,6 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
-  const back = this.back;
-  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res, logger) {
@@ -12512,19 +12223,16 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       }
       const { cliid, name, image } = equalJson(req.body);
       let text, channel;
-
       text = name + " 고객님이 스타일 찾기를 완료하였어요.";
       channel = "#404_curation";
-
       messageSend({ text, channel, voice: false }).catch((e) => {
         console.log(e);
       });
-
       res.send(JSON.stringify({ message: "done" }));
-
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -12532,10 +12240,6 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
 
 DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const instance = this;
-  const back = this.back;
-  const kakao = this.kakao;
-  const address = this.address;
-  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
   obj.func = async function (req, res, logger) {
@@ -12583,8 +12287,9 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -12618,8 +12323,9 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -13185,15 +12891,13 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       }
 
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getTotalMenu) : " + e.message);
-      res.send(JSON.stringify({ message: "error" }));
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
 }
-
-
-//ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.setMembers = async function () {
   const instance = this;

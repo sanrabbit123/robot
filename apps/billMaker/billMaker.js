@@ -8211,7 +8211,6 @@ BillMaker.prototype.taxBill = async function () {
       } catch(e) {
         // 오류가 발생하면 로그를 기록합니다.
         await errorLog(e.message);
-        console.log(e);
       }
     }
 
