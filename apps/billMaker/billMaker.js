@@ -6662,17 +6662,21 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
   }
 
-  const url = "https://iniapi.inicis.com/api/v1/refund"; // 이니시스 환불 API의 URL입니다.
+  const url = "https://iniapi.inicis.com/v2/pg/refund"; // 이니시스 환불 API의 URL입니다.
   const msg = "콘솔로부터 환불 요청"; // 환불 요청 메시지입니다.
   const currency = "WON"; // 통화 단위는 "WON"입니다.
   const sha = "sha512"; // 해시 알고리즘은 sha512를 사용합니다.
   const algorithm = "aes-128-cbc"; // 암호화 알고리즘은 aes-128-cbc를 사용합니다.
   const digest = "base64"; // 암호화 결과를 base64 형식으로 인코딩합니다.
-  const contentType = "application/x-www-form-urlencoded;charset=utf-8"; // 요청의 Content-Type 헤더입니다.
+  const contentType = "application/json"; // 요청의 Content-Type 헤더입니다.
   const hashType = "hex"; // 해시 값을 hex 형식으로 변환합니다.
   const status = /Partial/gi.test(method) ? "부분 환불" : "전체 환불"; // 환불 상태를 설정합니다.
   const now = new Date(); // 현재 날짜와 시간을 저장합니다.
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio; // BillMaker의 설정에서 freeRatio를 가져옵니다.
+  const clientIp = instance.address.officeinfo.ip.outer; // 가맹점 요청 서버 IP
+  const inicisKey = "Zp57ZixWL2v6sppd";
+  const inicisIv = "6CGcDrnQl8jdus==";
+  const mid = "MOIhomeli1";
 
   try {
     let type, paymethod, timestamp;
@@ -6710,6 +6714,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     let oid;
     let tempObj;
     let allCancelPrice;
+    let data;
 
     // 옵션에 selfMongo가 지정되지 않은 경우 false로 설정하고, 지정되었을 경우 true로 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -6903,26 +6908,28 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     // 카드 전체 환불을 처리합니다.
     if (method === "cardEntire") {
 
-      type = "Refund";
+      type = "refund";
       paymethod = "Card";
-      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid).digest(hashType);
-      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, hashData: hash }, { "Content-Type": contentType });
+      data = { tid, msg: "취소" };
+      hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
+      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
       price = originalPrice;
 
     } 
     // 카드 부분 환불을 처리합니다.
     else if (method === "cardPartial") {
 
-      type = "PartialRefund";
+      type = "partialRefund";
       paymethod = "Card";
-      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice).digest(hashType);
-      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, currency, hashData: hash }, { "Content-Type": contentType });
+      data = { tid, msg: "취소", price, confirmPrice, currency, };
+      hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
+      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
 
     } 
     // 가상 계좌 전체 환불을 처리합니다.
     else if (method === "vaccountEntire") {
 
-      type = "Refund";
+      type = "refund";
       paymethod = "Vacct";
       refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
       refundBankCode = BillMaker.returnBankCode(option.bankName);

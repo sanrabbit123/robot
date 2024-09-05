@@ -4326,39 +4326,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   }
                                 }
                               },
-                              {
-                                text: "강제 입금",
-                                eventFunction: async function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  try {
-                                    const [ thisBill ] = await GeneralJs.ajaxJson({
-                                      mode: "read",
-                                      whereQuery: {
-                                        $and: [
-                                          { class: "style" },
-                                          { "links.cliid": cliid },
-                                          { "links.desid": desid },
-                                          { "links.proid": proid },
-                                          { "links.method": method },
-                                        ]
-                                      },
-                                    }, PYTHONHOST + "/generalBill", { equal: true });
-                                    let thisName, thisAmount;
-
-                                    thisName = (thisBill.requests.find((o) => { return o.id === index }).target.name)
-                                    thisAmount = String(Math.floor(thisBill.requests.find((o) => { return o.id === index }).items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)))
-
-                                    await GeneralJs.ajaxJson({ date: new Date(), amount: thisAmount, name: thisName }, S3HOST + ":3000/receiveSms");
-
-                                    await GeneralJs.sleep(500);
-                                    window.alert("입금을 강제로 처리중입니다! 슬랙에서 완료 알림이 뜨면 반드시 새로고침을 해서 확인해주세요!");
-
-                                  } catch (e) {
-                                    console.log(e);
-                                  }
-                                }
-                              },
                             ];
                           }
                           let menuFontSize;

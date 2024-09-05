@@ -87,7 +87,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: [ "카드 결제", "무통장 입금", "무통장 입금" ],
+    button: [ "카드 결제", "가상 계좌", "가상 계좌" ],
     pannel: [
       {
         name: "계좌 이체시",

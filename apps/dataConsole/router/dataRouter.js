@@ -1,3 +1,8 @@
+/**
+ * @file dataRouter.js
+ * @description 이 파일은 Data Console 서버의 라우터를 정의합니다. 
+ */
+
 const Mother = require(`${process.cwd()}/apps/mother.js`);
 const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -8,12 +13,80 @@ const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.
 const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
 const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
 const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
+const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
 const { resolve } = require('path');
 const portoneAPIKey = "dvf4oiydUAucbFMS1EHKYnxptZmJYBRaIstCrKIK9RzXJTMQeaZWET2jGEUQwgvsDy3CchbGSXakklw9";
 const channelKey = "channel-key-cc21b9f2-0c98-44a8-b5af-9cf62ae31f8f"
 const storeId = "store-90e0b405-610c-4964-8d0d-2701de0660b4";
 const MID = "MOIhomeli1";
+const mother = new Mother();
+const back = new BackMaker();
+const host = address.officeinfo.ghost.host;
+const { spawn } = require("child_process");
+const querystring = require("querystring");
+const parser = require("ua-parser-js");
+const address = require(process.cwd() + "/apps/infoObj.js");
+const work = new BackWorker();
+const dir = process.cwd() + "/apps/dataConsole";
+const bill = new BillMaker();
+const patch = new DataPatch();
+const sheets = new GoogleSheet();
+const drive = new GoogleDrive();
+const calendar = new GoogleCalendar();
+const analytics = new GoogleAnalytics();
+const imageReader = new ImageReader(mother, back, address);
+const hangul = new ParsingHangul();
+const bankCode = BillMaker.returnBankCode("", "matrix");
 
+const bar = "============================================================";
+const { errorLog, alertLog, cronLog, aliveLog, emergencyAlarm, expressLog, mysqlQuery, leafParsing, processSystem, linkToString, ghostFileUpload, jsonToString, tempReplaceImage } = mother;
+const { diskReading, aliveMongo, equalJson, dateToString, serviceParsing, stringToDate, requestSystem, db, fileSystem, shellExec, shellLink, messageLog, zeroAddition, objectDeepCopy, messageSend, shell, homeliaisonAnalytics, sleep, stringToLink, autoHypenPhone, autoComma, mongo, mongoconsoleinfo, cryptoString, decryptoHash, ipParsing, uniqueValue, setQueue, binaryRequest, generalFileUpload } = mother;
+const logger = {
+  alert: async (text) => {
+    try {
+      await emergencyAlarm(text);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  log: async (obj, req = { url: "unknown" }) => {
+    try {
+      console.log(bar);
+      console.log(new Date(), "log");
+      console.log("in " + String(req.url));
+      console.log(obj);
+      console.log(bar);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  error: async (obj, req = { url: "unknown" }) => {
+    try {
+      console.log(bar);
+      console.log(new Date(), "error");
+      console.log("in " + String(req.url));
+      console.log(obj);
+      console.log(bar);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  cron: async (text) => {
+    try {
+      await cronLog(text);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  alive: async (text) => {
+    try {
+      await aliveLog(text);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+};
 const cookieParsing = (req) => {
   if (req.headers.cookie === undefined) {
     return null;
@@ -58,30 +131,61 @@ const queryFilter = (str) => {
   return str;
 }
 
-
 class DataRouter {
   constructor (MONGOC, kakaoInstance, humanInstance) {
-    this.mother = new Mother();
-    this.back = new BackMaker();
-    this.work = new BackWorker();
-    this.dir = process.cwd() + "/apps/dataConsole";
-    this.address = require(`${process.cwd()}/apps/infoObj.js`);
-    this.bill = new BillMaker();
-    this.patch = new DataPatch();
-    this.sheets = new GoogleSheet();
-    this.drive = new GoogleDrive();
-    this.calendar = new GoogleCalendar();
-    this.analytics = new GoogleAnalytics();
+    this.mother = mother;
+    this.back = back;
+    this.work = work;
+    this.dir = dir;
+    this.address = address;
+    this.bill = bill;
+    this.patch = patch;
+    this.sheets = sheets;
+    this.drive = drive;
+    this.calendar = calendar;
+    this.analytics = analytics;
+    this.bankCode = bankCode;
+
     this.mongo = MONGOC;
     this.mongolocal = MONGOC;
     this.mongolog = MONGOC;
     this.members = {};
     this.kakao = kakaoInstance;
     this.human = humanInstance;
-    this.bankCode = BillMaker.returnBankCode("", "matrix");
   }
 
   static timeouts = {};
+
+  setRouter () {
+    const instance = this;
+    const express = require("express");
+    const router = express.Router();
+    const mother = this.mother;
+    const back = this.back;
+    const work = this.work;
+    const dir = this.dir;
+    const address = this.address;
+    const bill = this.bill;
+    const patch = this.patch;
+    const sheets = this.sheets;
+    const drive = this.drive;
+    const calendar = this.calendar;
+    const analytics = this.analytics;
+    const bankCode = this.bankCode;
+    const mongo = this.mongo;
+    const mongolocal = this.mongolocal;
+    const mongolog = this.mongolog;
+    const members = this.members;
+    const kakao = this.kakao;
+    const human = this.human;
+
+
+
+
+
+    return router;
+  }
+
 }
 
 DataRouter.prototype.rou_get_Root = function () {
@@ -100,7 +204,7 @@ DataRouter.prototype.rou_get_Root = function () {
       });
       res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -109,25 +213,25 @@ DataRouter.prototype.rou_get_Root = function () {
 
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading, aliveMongo } = this.mother;
   let obj = {};
-  let ipTong;
-  ipTong = [ 1, 127001, 19216801, 192168090, 129918118 ];
-  for (let info in instance.address) {
-    if (instance.address[info].ip.outer.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
-    }
-    if (instance.address[info].ip.inner.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
-    }
-  }
-  ipTong = Array.from(new Set(ipTong));
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
     try {
       let ip, pass;
       let target;
       let aliveMongoResult;
+      let ipTong;
+
+      ipTong = [ 1, 127001, 19216801, 192168090, 129918118 ];
+      for (let info in instance.address) {
+        if (instance.address[info].ip.outer.length > 0) {
+          ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+        }
+        if (instance.address[info].ip.inner.length > 0) {
+          ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+        }
+      }
+      ipTong = Array.from(new Set(ipTong));
 
       ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
@@ -235,7 +339,7 @@ DataRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "text/plain" });
       res.send("error");
     }
@@ -258,7 +362,7 @@ DataRouter.prototype.rou_get_Middle = function () {
       </head><body><div id="totalcontents"></div><script src="/middle/${req.params.id.trim().replace(/\.js/gi, '')}.js"></script>
       </body></html>`);
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "text/plain" });
       res.send("error");
     }
@@ -290,8 +394,9 @@ DataRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set({ "Content-Type": "text/plain" });
+      res.send("error");
     }
   }
   return obj;
@@ -320,8 +425,9 @@ DataRouter.prototype.rou_get_AddressLite = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set({ "Content-Type": "text/plain" });
+      res.send("error");
     }
   }
   return obj;
@@ -339,8 +445,9 @@ DataRouter.prototype.rou_get_Trigger = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
+      res.set({ "Content-Type": "text/plain" });
+      res.send("error");
     }
   }
   return obj;
@@ -348,8 +455,6 @@ DataRouter.prototype.rou_get_Trigger = function () {
 
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
-  const back = this.back;
-  const { equalJson, dateToString, serviceParsing, db, stringToDate, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res, logger) {
@@ -617,8 +722,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         res.send(JSON.stringify(raw_data.toNormal()));
       }
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -998,8 +1102,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         res.send(JSON.stringify(rawJson.toNormal()));
       }
     } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_post_searchDocuments): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
+      logger.error(e, req).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -10902,7 +11005,7 @@ DataRouter.prototype.rou_post_requestRefund = function () {
   const kakao = this.kakao;
   const { equalJson, sleep, requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
-  obj.link = "/requestRefund";
+  obj.link = [ "/requestRefund" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -10972,28 +11075,6 @@ DataRouter.prototype.rou_post_requestRefund = function () {
         project = report.project;
         proid = project.proid;
         designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
-
-        timeConst = 410;
-        map = [
-          {
-            column: "paymentsTotalAmount",
-            position: "process.calculation.payments.totalAmount",
-            pastValue: pastProject.process.calculation.payments.totalAmount,
-            finalValue: project.process.calculation.payments.totalAmount,
-          },
-          {
-            column: "paymentsFirstAmount",
-            position: "process.calculation.payments.first.amount",
-            pastValue: pastProject.process.calculation.payments.first.amount,
-            finalValue: project.process.calculation.payments.first.amount,
-          },
-          {
-            column: "paymentsRemainAmount",
-            position: "process.calculation.payments.remain.amount",
-            pastValue: pastProject.process.calculation.payments.remain.amount,
-            finalValue: project.process.calculation.payments.remain.amount,
-          },
-        ];
 
         kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
           client: client.name,
