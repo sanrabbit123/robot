@@ -6931,18 +6931,22 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       type = "refund";
       paymethod = "Vacct";
-      refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
-      refundBankCode = BillMaker.returnBankCode(option.bankName);
-      refundAcctName = option.accountName;
-      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + refundAcctNum).digest(hashType);
-      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": contentType });
+      data = {
+        tid,
+        msg: "취소",
+        refundAcctNum: (await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest })),
+        refundBankCode: BillMaker.returnBankCode(option.bankName),
+        refundAcctName: option.accountName
+      };
+      hash = crypto.createHash(sha).update(inicisKey + mid + type + timestamp + JSON.stringify(data)).digest(hashType);
+      res = await requestSystem(url, { mid, type, timestamp, clientIp, hashData: hash, data }, { "Content-Type": contentType });
       price = originalPrice;
 
     } 
     // 가상 계좌 부분 환불을 처리합니다.
     else if (method === "vaccountPartial") {
 
-      type = "PartialRefund";
+      type = "partialRefund";
       paymethod = "Vacct";
       refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
       refundBankCode = BillMaker.returnBankCode(option.bankName);
