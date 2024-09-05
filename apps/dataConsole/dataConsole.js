@@ -721,6 +721,7 @@ DataConsole.prototype.connect = async function () {
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
+    const bar = "============================================================";
     const logger = {
       alert: async (text) => {
         try {
