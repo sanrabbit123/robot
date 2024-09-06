@@ -794,29 +794,24 @@ class DataRouter {
           whereQuery = {};
           whereQuery["$and"] = [];
 
-          // 요청 경로에 서버 ID가 문자열로 전달된 경우 처리합니다.
-          if (typeof req.params.id === "string") {
-              // 조회 조건에 3개월 이내의 로그 데이터를 필터링합니다.
-              whereQuery["$and"].push({ date: { $gte: ago } });
+          // 조회 조건에 3개월 이내의 로그 데이터를 필터링합니다.
+          whereQuery["$and"].push({ date: { $gte: ago } });
 
-              // MongoDB에서 조회 조건에 맞는 로그 데이터를 가져옵니다.
-              rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+          // MongoDB에서 조회 조건에 맞는 로그 데이터를 가져옵니다.
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
 
-              // 가져온 로그 데이터를 날짜 순서대로 내림차순 정렬합니다.
-              rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+          // 가져온 로그 데이터를 날짜 순서대로 내림차순 정렬합니다.
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
-              // 로그 데이터를 HTML 형식으로 변환합니다.
-              // 각 로그는 날짜 정보와 내용, 구분선을 포함한 HTML로 변환됩니다.
-              html = "<body>" + rows.map((j) => { 
-                  return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + `<div style="color:green;">` + j.server + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>";
-              }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
+          // 로그 데이터를 HTML 형식으로 변환합니다.
+          // 각 로그는 날짜 정보와 내용, 구분선을 포함한 HTML로 변환됩니다.
+          html = "<body>" + rows.map((j) => { 
+              return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + `<div style="color:green;">` + j.server + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>";
+          }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
 
-              // 변환된 HTML 데이터를 클라이언트에 전송합니다.
-              res.send(html);
-          } else {
-              // 서버 ID가 올바르게 전달되지 않은 경우 빈 응답을 보냅니다.
-              res.send("");
-          }
+          // 변환된 HTML 데이터를 클라이언트에 전송합니다.
+          res.send(html);
+
       } catch (e) {
           // 에러가 발생한 경우 로그를 기록하고 클라이언트에게 에러 메시지를 응답합니다.
           logger.error(e, req).catch((e) => { console.log(e); });
