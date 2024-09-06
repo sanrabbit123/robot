@@ -1,3 +1,11 @@
+// Mother 클래스를 현재 작업 디렉토리에서 가져옵니다.
+const Mother = require(process.cwd() + "/apps/mother.js");
+// 정보 객체를 가져옵니다.
+const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+const mother = new Mother();
+const address = ADDRESS;
+const { errorLog, errorLogSync, emergencyAlarm } = mother;
+
 /**
  * @class KakaoTalk
  * @description 홈리에종에서 KakaoTalk 알림톡을 전송하기 위한 클래스입니다. API 키, 사용자 ID, 발신자 정보 등을 설정하고 관리합니다.
@@ -80,7 +88,7 @@ KakaoTalk.prototype.generateToken = async function () {
     console.log(data);  // 생성된 토큰 데이터를 콘솔에 출력합니다.
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -112,7 +120,7 @@ KakaoTalk.prototype.setAuth = async function () {
     return true;  // 인증이 성공적으로 설정되면 true를 반환합니다.
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 false를 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return false;
   }
 }
@@ -150,7 +158,7 @@ KakaoTalk.prototype.getTemplate = async function () {
     return tong;  // 정리된 템플릿 리스트를 반환합니다.
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -4626,7 +4634,7 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
     return tong;
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -4689,7 +4697,7 @@ KakaoTalk.prototype.templateToBody = async function (method, name, phone, option
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 빈 문자열을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "";
   }
 }
@@ -4738,13 +4746,13 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
         // 알림톡을 전송합니다.
         ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
       } catch (e) {
-        console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
+        errorLogSync(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
         data = null;  // 데이터는 null로 설정합니다.
       }
 
       boo = true;  // 전송 성공 시 boo를 true로 설정합니다.
     } catch (e) {
-      console.log(e);  // 인증 또는 옵션 설정 중 오류 발생 시 로그를 출력합니다.
+      errorLogSync(e);  // 인증 또는 옵션 설정 중 오류 발생 시 로그를 출력합니다.
       boo = false;  // boo를 false로 설정합니다.
     }
 
@@ -4766,7 +4774,7 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     // 최종 전송 결과 데이터를 반환합니다.
     return data;
   } catch (e) {
-    console.log(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
+    errorLogSync(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
 
     // 알림톡 전송 실패 시 SMS로 대체 전송합니다.
     await human.sendSms({
@@ -4868,7 +4876,7 @@ KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
     try {
       ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/friend/send", options));
     } catch (e) {
-      console.log(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
+      errorLogSync(e);  // 전송 중 오류 발생 시 로그를 출력합니다.
       data = null;  // 데이터는 null로 설정합니다.
     }
 
@@ -4883,7 +4891,7 @@ KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
     return boo;
 
   } catch (e) {
-    console.log(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
+    errorLogSync(e);  // 최종적으로 오류가 발생하면 로그를 출력합니다.
     return false;  // 실패 시 false를 반환합니다.
   }
 }
@@ -4967,7 +4975,7 @@ KakaoTalk.prototype.friendsTalk = async function (friends, bodyObject) {
     };
 
   } catch (e) {
-    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    errorLogSync(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
     return null;  // null을 반환합니다.
   }
 }
@@ -5016,7 +5024,7 @@ KakaoTalk.prototype.ObserveRemain = async function () {
     } while (res.data.MMS_CNT < standard);  // 남은 MMS 수가 기준 이상이 될 때까지 반복합니다.
 
   } catch (e) {
-    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    errorLogSync(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
   }
 }
 
@@ -5087,7 +5095,7 @@ KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
     return { store, file: !store ? null : storeName, campaigns };
 
   } catch (e) {
-    console.log(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
+    errorLogSync(e);  // 오류 발생 시 콘솔에 로그를 출력합니다.
     return null;  // 실패 시 null을 반환합니다.
   }
 }
@@ -5367,7 +5375,7 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
     return true;  // 작업이 성공적으로 완료되면 true를 반환합니다.
 
   } catch (e) {
-    console.log(e);
+    errorLogSync(e);
     console.log(e.response);
     emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
     return false;  // 오류 발생 시 false를 반환합니다.
@@ -5537,7 +5545,7 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
   } catch (e) {
     // 오류 발생 시 긴급 알림을 전송하고 콘솔에 오류를 출력합니다.
     emergencyAlarm("KakaoTalk.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
-    console.log(e);
+    errorLogSync(e);
   }
 }
 

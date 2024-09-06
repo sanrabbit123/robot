@@ -5322,53 +5322,35 @@ Mother.prototype.diskReading = function (mode = "check", arr = []) {
 
 /**
  * errorLog 메서드는 주어진 텍스트를 에러 로그로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
+ * @param {string|object} text - 기록할 텍스트 또는 에러 객체
  * @returns {Promise} - 에러 로그 기록 결과를 반환하는 Promise
  * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
  */
 Mother.prototype.errorLog = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
-    if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
-    } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
-    }
-  } else {
-    // text가 문자열이 아닌 경우
-    if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
-    }
-  }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 로그를 기록할 URL을 설정합니다.
-  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/messageLog";
-  // axios 모듈을 가져옵니다.
-  const axios = require("axios");
-  // 로그 컬렉션 이름을 설정합니다.
-  const collection = "errorLog";
-  // 로그를 기록할 채널을 설정합니다.
-  const channel = "#error_log";
-
+  const bar = "============================================================"; // 로그 출력을 위한 구분선
   // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    console.log(bar);
+    console.log(new Date(), "error");
+    console.log(text); // 에러를 콘솔에 출력
+    console.log(bar);
+    resolve(true);
   });
+}
+
+/**
+ * errorLogSync 메서드는 주어진 텍스트를 에러 로그로 프로마이스가 아닌 형식으로 기록합니다.
+ * @param {string|object} text - 기록할 텍스트 또는 에러 객체
+ * @returns {boolean} - 에러 로그 기록 결과를 반환하는 boolean
+ * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
+ */
+Mother.prototype.errorLogSync = function (text) {
+  const bar = "============================================================"; // 로그 출력을 위한 구분선
+  console.log(bar);
+  console.log(new Date(), "error");
+  console.log(text); // 에러를 콘솔에 출력
+  console.log(bar);
+  return true;
 }
 
 /**
@@ -5725,48 +5707,19 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
 
 /**
  * emergencyAlarm 메서드는 주어진 텍스트를 긴급 알람으로 기록합니다.
- * @param {string|object} text - 기록할 텍스트 또는 텍스트를 포함한 객체
+ * @param {string|object} text - 기록할 텍스트 또는 에러 객체
  * @returns {Promise} - 긴급 알람 기록 결과를 반환하는 Promise
  * @throws {Error} - 입력이 유효하지 않은 경우 에러를 던집니다.
  */
 Mother.prototype.emergencyAlarm = function (text) {
-  // text가 객체이고 null이 아닌 경우
-  if (typeof text === "object" && text !== null) {
-    // 객체의 text 속성이 문자열인 경우
-    if (typeof text.text === "string") {
-      text = text.text; // text를 객체의 text 속성 값으로 설정합니다.
-    } else {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
-    }
-  } else {
-    // text가 문자열이 아닌 경우
-    if (typeof text !== "string") {
-      throw new Error("invaild input"); // 유효하지 않은 입력인 경우 에러를 던집니다.
-    }
-  }
-
-  // 현재 작업 디렉토리의 apps/infoObj.js 파일을 가져옵니다.
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  // 긴급 알람을 기록할 URL을 설정합니다.
-  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3003/emergencyAlarm";
-  // axios 모듈을 가져옵니다.
-  const axios = require("axios");
-
+  const bar = "============================================================"; // 로그 출력을 위한 구분선
   // Promise를 반환합니다.
   return new Promise((resolve, reject) => {
-    // axios를 사용하여 POST 요청을 보냅니다.
-    axios.post(recordUrl, { text }, { headers: { "Content-Type": "application/json" } })
-      .then((res) => {
-        // 응답 상태가 200이 아닌 경우 reject 합니다.
-        if (res.status !== 200) {
-          reject(res);
-        } else {
-          resolve(res); // 응답 상태가 200인 경우 resolve 합니다.
-        }
-      })
-      .catch((err) => {
-        reject(err); // 에러가 발생한 경우 reject 합니다.
-      });
+    console.log(bar);
+    console.log(new Date(), "error");
+    console.log(text); // 에러를 콘솔에 출력
+    console.log(bar);
+    resolve(true);
   });
 }
 

@@ -1,3 +1,11 @@
+const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 불러옵니다.
+const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js"); // BackMaker 클래스를 불러옵니다.
+const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`); // ADDRESS 객체를 불러옵니다.
+const mother = new Mother();
+const back = new BackMaker();
+const address = ADDRESS;
+const { errorLog, errorLogSync, emergencyAlarm } = mother;
+
 /**
  * ResourceMaker 클래스는 포트폴리오 ID를 기반으로 다양한 리소스 정보를 생성하고 관리하는 역할을 합니다.
  * 이 클래스는 포트폴리오 정보를 처리하여 관련된 메타데이터를 생성하고,
@@ -14,13 +22,7 @@ class ResourceMaker {
     // p_id가 undefined일 경우 빈 문자열로 초기화합니다.
     if (p_id === undefined) {
       p_id = '';
-    }
-
-    // 필요한 모듈들을 가져옵니다.
-    const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 불러옵니다.
-    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js"); // BackMaker 클래스를 불러옵니다.
-    const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`); // ADDRESS 객체를 불러옵니다.
-    
+    }    
     // Mother 클래스의 인스턴스를 생성하여 클래스의 속성으로 설정합니다.
     this.mother = new Mother();
     
@@ -979,7 +981,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
 
   } catch (e) {
     // 오류가 발생하면 이를 로그에 기록합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1213,7 +1215,7 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
 
   } catch (e) {
     // 예외 발생 시 콘솔에 오류를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   } finally {
     // MongoDB 연결을 종료합니다.
     await MONGOC.close();
@@ -1599,7 +1601,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
 
   } catch (e) {
     // 오류가 발생한 경우, 오류 메시지를 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -1671,7 +1673,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     return { fileList_780, fileList_1500: [], fileList_original, fileList_png: [] };
   } catch (e) {
     // 예외 발생 시, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1820,7 +1822,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
   } catch (e) {
     // 예외 발생 시, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2056,7 +2058,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     return nextPid;
   } catch (e) {
     // 예외 발생 시, 에러를 로그로 출력하고, 데이터베이스에서 생성된 항목을 삭제합니다.
-    console.log(e);
+    errorLogSync(e);
     if (typeof nextPid === "string") {
       await back.mongoDelete(collection, { pid: nextPid }, { selfMongo });
     }
@@ -2360,7 +2362,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
 
   } catch (e) {
     // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   } finally {
     // 작업이 완료되면 MongoDB 연결을 종료합니다.
     await selfMongo.close();
@@ -2670,7 +2672,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
 
   } catch (e) {
     // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 예외가 발생해도 MongoDB 연결을 종료합니다.
     await selfMongo.close();
@@ -3152,7 +3154,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
 
   } catch (e) {
     // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 예외가 발생해도 MongoDB 연결을 종료합니다.
     await selfMongo.close();
@@ -3300,7 +3302,7 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
     return true;
   } catch (e) {
     // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력하고 false를 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return false;
   }
 }
@@ -3327,7 +3329,7 @@ PortfolioFilter.prototype.chmodReload = async function () {
     await shellExec("chmod", ["-R", "777", process.env.HOME + "/samba/list_image"]);
   } catch (e) {
     // 예외가 발생한 경우, 에러 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 

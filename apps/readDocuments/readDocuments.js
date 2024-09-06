@@ -1,3 +1,14 @@
+// 현재 작업 디렉토리의 apps 폴더에서 Mother 클래스 모듈을 로드합니다.
+const Mother = require(process.cwd() + "/apps/mother.js");
+// 현재 작업 디렉토리의 apps/backMaker 폴더에서 BackMaker 클래스 모듈을 로드합니다.
+const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+// 현재 작업 디렉토리의 apps 폴더에서 ADDRESS 객체를 로드합니다.
+const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+const mother = new Mother();
+const back = new BackMaker();
+const address = ADDRESS;
+const { errorLog, emergencyAlarm } = mother;
+
 /**
  * @class ReadDocuments
  * @description 이 클래스는 다양한 문서 파일(.docx, .doc 등)을 읽어 문자열로 변환하고 파일의 메타데이터와 함께 반환하는 기능을 제공합니다.
@@ -19,15 +30,6 @@ const ReadDocuments = function (mother = null, back = null, address = null) {
     this.address = address;
   } else {
     // 만약 주입된 인스턴스나 객체가 없다면, 필요한 모듈들을 로드합니다.
-    
-    // 현재 작업 디렉토리의 apps 폴더에서 Mother 클래스 모듈을 로드합니다.
-    const Mother = require(process.cwd() + "/apps/mother.js");
-    
-    // 현재 작업 디렉토리의 apps/backMaker 폴더에서 BackMaker 클래스 모듈을 로드합니다.
-    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-    
-    // 현재 작업 디렉토리의 apps 폴더에서 ADDRESS 객체를 로드합니다.
-    const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
     
     // 로드한 Mother 클래스의 인스턴스를 생성하여 현재 객체의 mother 속성에 할당합니다.
     this.mother = new Mother();
@@ -126,7 +128,7 @@ ReadDocuments.prototype.readDocx = async function (fileName) {
     
   } catch (e) {
     // 에러 발생 시 에러를 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
     
     // 에러 발생 시 null을 반환합니다.
     return null;
@@ -207,7 +209,7 @@ ReadDocuments.prototype.readDoc = async function (fileName) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -288,7 +290,7 @@ ReadDocuments.prototype.readPptx = async function (fileName) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -390,7 +392,7 @@ ReadDocuments.prototype.readPdf = async function (fileName) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -471,7 +473,7 @@ ReadDocuments.prototype.readHwp = async function (fileName) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -555,7 +557,7 @@ ReadDocuments.prototype.readXlsx = async function (fileName, sheetsName = null) 
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -637,7 +639,7 @@ ReadDocuments.prototype.readTxt = async function (fileName) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
 
     // 예외 발생 시 null을 반환합니다.
     return null;
@@ -692,7 +694,7 @@ ReadDocuments.prototype.readFile = async function (filePath) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력하고, null을 반환합니다.
-    console.log(e);
+    await errorLog(e);
     return null;
   }
 }
@@ -739,7 +741,8 @@ ReadDocuments.prototype.readFiles = async function (fileArr) {
 
   } catch (e) {
     // 예외가 발생하면 에러 내용을 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
+    return [];
   }
 }
 

@@ -1,3 +1,11 @@
+// Mother 클래스를 현재 작업 디렉토리에서 가져옵니다.
+const Mother = require(process.cwd() + "/apps/mother.js");
+// 정보 객체를 가져옵니다.
+const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+const mother = new Mother();
+const address = ADDRESS;
+const { errorLog, errorLogSync, emergencyAlarm } = mother;
+
 /**
  * @class GaroseroArray
  * @extends Array
@@ -202,7 +210,7 @@ ImageReader.prototype.convertImage = async function (obj) {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -296,7 +304,7 @@ ImageReader.prototype.compositeImage = async function (obj) {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -519,7 +527,7 @@ ImageReader.prototype.readImage = async function (filePath, toJson = false) {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -683,7 +691,7 @@ ImageReader.prototype.resizeImage = async function (filePath, width = 1500, heig
     return filePath;
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -739,7 +747,7 @@ ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -937,7 +945,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -977,7 +985,7 @@ ImageReader.prototype.overOfficialImage = async function (targetImage, type = 35
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -1042,7 +1050,7 @@ ImageReader.prototype.createOfficialCanvas = async function (type = 3508, gs = "
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -1131,7 +1139,7 @@ ImageReader.prototype.twoVerticalImages = async function (arr) {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력하고 null을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -1166,7 +1174,7 @@ ImageReader.prototype.queryImage = async function (image) {
     }
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1211,7 +1219,7 @@ ImageReader.prototype.queryImages = async function (imageArr) {
     return totalTong;
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1268,7 +1276,7 @@ ImageReader.prototype.queryDirectory = async function (dir) {
     return result;
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 내용을 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 

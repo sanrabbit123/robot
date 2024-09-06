@@ -572,11 +572,11 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       wordings.mainTitle[0] = "카드 결제가";
       wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
     } else if (completeInfo.method === "bank") {
-      wordings.mainTitle[0] = "가상계좌 발급이";
+      wordings.mainTitle[0] = "계좌 발급이";
       wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
     } else {
-      wordings.mainTitle[0] = "홈리에종 계좌를";
-      wordings.mainTitle[1] = "<b%안내드립니다!%b>";
+      wordings.mainTitle[0] = "계좌 발급이";
+      wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
     }
   }
   titleBox = createNode({

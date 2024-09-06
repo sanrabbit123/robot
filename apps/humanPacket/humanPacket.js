@@ -65,7 +65,7 @@ HumanPacket.prototype.sendSms = async function (obj) {
   // 현재 인스턴스를 참조합니다.
   const instance = this;
   // Mother 객체의 유틸리티 메서드를 구조 분해 할당으로 가져옵니다.
-  const { autoHypenPhone, requestSystem, errorLog, sleep, emergencyAlarm } = this.mother;
+  const { autoHypenPhone, requestSystem, errorLog, sleep, emergencyAlarm, errorLogSync } = this.mother;
   
   // SMS 관련 설정을 구조 분해 할당으로 가져옵니다.
   const { url: { sms }, user, apiKey, sender, senderkey } = this;
@@ -111,7 +111,7 @@ HumanPacket.prototype.sendSms = async function (obj) {
         throw new Error("aligo fail"); // Aligo API 실패 시 예외를 발생시킵니다.
       }
     } catch (e) {
-      console.log(e); // 오류를 콘솔에 기록합니다.
+      errorLogSync(e); // 오류를 콘솔에 기록합니다.
 
       // 2차로 Uplus API를 사용하여 SMS를 전송합니다.
       safeNum = 0;
@@ -127,15 +127,15 @@ HumanPacket.prototype.sendSms = async function (obj) {
       }
       
       // 남은 SMS 전송 횟수를 기록합니다.
-      errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { console.log(err); });
+      errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { errorLogSync(err); });
       finalResult = (res["SVC_RT"] === "0000"); // 성공 여부를 저장합니다.
     }
 
     return finalResult; // 최종 결과를 반환합니다.
   } catch (e) {
     // 긴급 알람을 발생시킵니다.
-    emergencyAlarm("sms error : " + e.message).catch((err) => { console.log(err); });
-    console.log(e); // 오류를 콘솔에 기록합니다.
+    emergencyAlarm("sms error : " + e.message).catch((err) => { errorLogSync(err); });
+    errorLogSync(e); // 오류를 콘솔에 기록합니다.
     return false; // 실패 시 false를 반환합니다.
   }
 }
@@ -157,6 +157,7 @@ HumanPacket.prototype.homeliaisonLogin = async function (id, pwd) {
   
   // moduleDir, webmailHostConst, webmailPort를 구조 분해 할당하여 가져옵니다.
   const { moduleDir, webmailHostConst, webmailPort } = this;
+  const { errorLogSync } = this.mother;
 
   try {
     // 웹메일 호스트 주소를 구성합니다.
@@ -185,7 +186,7 @@ HumanPacket.prototype.homeliaisonLogin = async function (id, pwd) {
     return client;
   } catch (e) {
     // 로그인 과정에서 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -203,7 +204,7 @@ HumanPacket.prototype.listMails = async function (id, pwd) {
 
   // 필요한 값을 this로부터 구조 분해 할당하여 가져옵니다.
   const { webmailPort: port, webmailHostConst: webmail } = this;
-  const { stringToBase64, base64ToString, errorLog, sleep, equalJson } = this.mother;
+  const { stringToBase64, base64ToString, errorLog, sleep, equalJson, errorLogSync } = this.mother;
 
   try {
     // 웹메일 호스트 주소를 설정합니다.
@@ -446,7 +447,7 @@ HumanPacket.prototype.listMails = async function (id, pwd) {
   } catch (e) {
     // 에러가 발생한 경우 로그 기록 및 null 반환
     await errorLog("pop3 error");
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -465,7 +466,7 @@ HumanPacket.prototype.getMails = async function (id, pwd, indexArr = []) {
   const instance = this;
 
   // Mother 객체에서 문자열을 Base64로 변환 및 역변환하는 함수를 가져옵니다.
-  const { stringToBase64, base64ToString } = this.mother;
+  const { stringToBase64, base64ToString, errorLogSync } = this.mother;
 
   try {
     // homeliaisonLogin 메서드를 사용하여 POP3 클라이언트를 초기화하고 로그인합니다.
@@ -619,7 +620,7 @@ HumanPacket.prototype.getMails = async function (id, pwd, indexArr = []) {
     return tong;
   } catch (e) {
     // 오류 발생 시 로그를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 };
 
@@ -636,6 +637,7 @@ HumanPacket.prototype.getMails = async function (id, pwd, indexArr = []) {
 HumanPacket.prototype.mailFilter = async function (id, pwd, from, date) {
   // 현재 HumanPacket 인스턴스를 참조합니다.
   const instance = this;
+  const { errorLogSync } = this.mother;
 
   try {
     // listMails 메서드를 사용하여 주어진 계정의 모든 이메일 리스트를 가져옵니다.
@@ -657,7 +659,7 @@ HumanPacket.prototype.mailFilter = async function (id, pwd, from, date) {
     return await this.getMails(id, pwd, indexArr);
   } catch (e) {
     // 오류 발생 시 콘솔에 로그를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 

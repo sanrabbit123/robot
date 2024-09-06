@@ -1,3 +1,8 @@
+const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 가져옵니다.
+const BackMaker = require(this.dir + "/backMaker.js"); // BackMaker 모듈을 현재 경로에서 다시 불러옵니다.
+const mother = new Mother();
+const { errorLog, emergencyAlarm } = mother;
+
 /**
  * @class BackWorker
  * @description 홈리에종의 핵심 데이터를 관리하고 다양한 보고서 작성, 디자이너 레벨링, 가격 선정 및 추천 작업을 수행하는 클래스입니다.
@@ -8,11 +13,7 @@ class BackWorker {
    * @description BackWorker 클래스의 인스턴스를 초기화합니다. 이 과정에서 여러 경로와 필요한 모듈들을 설정합니다.
    */
   constructor() {
-    this.dir = process.cwd() + "/apps/backMaker"; // 현재 작업 디렉토리의 "apps/backMaker" 경로를 설정합니다.
-    
-    const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 가져옵니다.
-    const BackMaker = require(this.dir + "/backMaker.js"); // BackMaker 모듈을 현재 경로에서 다시 불러옵니다.
-    
+    this.dir = process.cwd() + "/apps/backMaker"; // 현재 작업 디렉토리의 "apps/backMaker" 경로를 설정합니다.    
     this.address = require(process.cwd() + "/apps/infoObj.js"); // 고객 정보를 처리하는 모듈을 가져옵니다.
     this.mother = new Mother(); // Mother 클래스의 인스턴스를 생성하여 `this.mother`에 할당합니다.
     this.back = new BackMaker(); // BackMaker 클래스의 인스턴스를 생성하여 `this.back`에 할당합니다.
@@ -158,7 +159,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
 
   } catch (e) {
     // 에러가 발생하면 이를 로그에 출력합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -473,7 +474,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         await fileSystem(`write`, [target, code]); // 변경된 코드를 파일에 저장합니다.
 
       } catch (e) {
-        console.log(e); // 에러가 발생하면 로그에 출력합니다.
+        errorLog(e).catch((err) => { console.log(err) });
       }
     }
 
@@ -481,7 +482,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     console.log("front desid make"); // 컴파일 완료 로그를 출력합니다.
 
   } catch (e) {
-    console.log(e); // 에러가 발생하면 로그에 출력합니다.
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -649,7 +650,7 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
           return this.toNormal();
         } catch (e) {
           // 오류가 발생하면 콘솔에 로그를 남깁니다.
-          console.log(e);
+          errorLog(e).catch((err) => { console.log(err) });
         }
       }
 
@@ -752,7 +753,7 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
 
         } catch (e) {
           // 오류가 발생하면 콘솔에 로그를 남깁니다.
-          console.log(e);
+          errorLog(e).catch((err) => { console.log(err) });
         }
       }
     }
@@ -776,7 +777,7 @@ BackWorker.prototype.newDesignerToFront = async function (porlid, index, designe
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 남깁니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -1239,7 +1240,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
     };
   } catch (e) {
     // 오류 발생 시, 콘솔에 로그를 남깁니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   } finally {
     // MongoDB 클라이언트를 닫습니다.
     await MONGOC.close();
@@ -1349,7 +1350,7 @@ BackWorker.prototype.designerTendencySync = async function () {
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 로그를 남깁니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -1496,7 +1497,7 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
 
   } catch (e) {
     // 오류가 발생하면 오류 메시지를 콘솔에 출력하고, 오류 객체를 반환합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
     return { error: e.message };
   } finally {
     // MongoDB 연결을 닫습니다. selfMongo나 selfLocalMongo가 없을 때만 닫습니다.
@@ -2094,7 +2095,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
   } catch (e) {
     // 오류가 발생한 경우, 오류 메시지를 콘솔에 출력하고 기본 값으로 초기화된 객체를 반환합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
     return {
       desid: "",
       designer: "",
@@ -2493,7 +2494,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     return selectedResult.slice(0, selectNumber / 2);
 
   } catch (e) {
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
     return []; // 오류 발생 시 빈 배열을 반환합니다.
   }
 }
@@ -2612,7 +2613,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
     // 업데이트된 디자이너 추천 리스트의 개수를 반환합니다.
     return update.length;
   } catch (e) {
-    console.log(e);  // 에러 발생 시 콘솔에 출력합니다.
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2930,6 +2931,7 @@ BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { se
     };
 
   } catch (e) {
+    await errorLog(e);
     return { message: "error : " + e.message };
   } finally {
     if (!selfBoo) {
@@ -2983,103 +2985,107 @@ BackWorker.prototype.realtimePossibleConverting = function (possibleArr, dateMar
   let indexArrReverse;
   let indexArrFinal;
   let dateBoo;
+  try {
+    // 입력된 possibleArr를 복사하여 rawPossibleArr에 저장합니다. 객체의 start와 end 속성만을 유지합니다.
+    rawPossibleArr = possibleArr.map((obj) => { return { start: obj.start, end: obj.end }; });
 
-  // 입력된 possibleArr를 복사하여 rawPossibleArr에 저장합니다. 객체의 start와 end 속성만을 유지합니다.
-  rawPossibleArr = possibleArr.map((obj) => { return { start: obj.start, end: obj.end }; });
-
-  // 가능한 일정 배열을 병합하는 작업을 반복합니다.
-  do {
-    indexArr = []; // 병합할 일정의 인덱스를 저장할 배열을 초기화합니다.
-    
-    // rawPossibleArr 배열을 순회하며 병합 가능한 일정의 인덱스를 찾습니다.
-    for (let i = 0; i < rawPossibleArr.length - 1; i++) {
-      tempDateArr = new Array(dateMargin); // 날짜 간격만큼의 배열을 생성합니다.
+    // 가능한 일정 배열을 병합하는 작업을 반복합니다.
+    do {
+      indexArr = []; // 병합할 일정의 인덱스를 저장할 배열을 초기화합니다.
       
-      // 날짜 간격만큼의 날짜 배열을 생성합니다.
-      for (let j = 0; j < dateMargin; j++) {
-        tempDateArr[j] = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1)); // 종료 날짜를 복사합니다.
-        tempDateArr[j].setDate(tempDateArr[j].getDate() + (j + 1)); // 종료 날짜에 간격을 더합니다.
-        tempDateArr[j] = dateToString(tempDateArr[j]); // 날짜를 문자열로 변환합니다.
-      }
+      // rawPossibleArr 배열을 순회하며 병합 가능한 일정의 인덱스를 찾습니다.
+      for (let i = 0; i < rawPossibleArr.length - 1; i++) {
+        tempDateArr = new Array(dateMargin); // 날짜 간격만큼의 배열을 생성합니다.
+        
+        // 날짜 간격만큼의 날짜 배열을 생성합니다.
+        for (let j = 0; j < dateMargin; j++) {
+          tempDateArr[j] = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1)); // 종료 날짜를 복사합니다.
+          tempDateArr[j].setDate(tempDateArr[j].getDate() + (j + 1)); // 종료 날짜에 간격을 더합니다.
+          tempDateArr[j] = dateToString(tempDateArr[j]); // 날짜를 문자열로 변환합니다.
+        }
 
-      // 다음 일정의 시작 날짜를 가져옵니다.
-      tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
-      
-      // 두 일정이 병합 가능한지 확인하고, 병합 가능한 경우 인덱스를 저장합니다.
-      if (tempDateArr.includes(dateToString(tempDate2))) {
-        indexArr.push(i);
-      }
-    }
-
-    // 병합할 일정이 있는 경우
-    if (indexArr.length > 0) {
-
-      // 병합할 일정의 인덱스 배열을 생성하고, 이를 평탄화합니다.
-      indexArr = indexArr.map((num) => { return [ num, num + 1 ] });
-      indexArrFlat = indexArr.flat();
-
-      // 병합 과정에서 중복된 일정 인덱스를 제거합니다.
-      tempObj = {};
-      for (let a of indexArrFlat) {
-        if (tempObj['a' + String(a)] !== undefined) {
-          tempObj['a' + String(a)] = tempObj['a' + String(a)] + 1;
-        } else {
-          tempObj['a' + String(a)] = 1;
+        // 다음 일정의 시작 날짜를 가져옵니다.
+        tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
+        
+        // 두 일정이 병합 가능한지 확인하고, 병합 가능한 경우 인덱스를 저장합니다.
+        if (tempDateArr.includes(dateToString(tempDate2))) {
+          indexArr.push(i);
         }
       }
 
-      // 중복된 일정의 인덱스를 제거 대상 목록에 추가합니다.
-      removeTargets = [];
-      for (let key in tempObj) {
-        if (tempObj[key] !== 1) {
-          removeTargets.push(Number(key.replace(/[^0-9]/gi, '')));
+      // 병합할 일정이 있는 경우
+      if (indexArr.length > 0) {
+
+        // 병합할 일정의 인덱스 배열을 생성하고, 이를 평탄화합니다.
+        indexArr = indexArr.map((num) => { return [ num, num + 1 ] });
+        indexArrFlat = indexArr.flat();
+
+        // 병합 과정에서 중복된 일정 인덱스를 제거합니다.
+        tempObj = {};
+        for (let a of indexArrFlat) {
+          if (tempObj['a' + String(a)] !== undefined) {
+            tempObj['a' + String(a)] = tempObj['a' + String(a)] + 1;
+          } else {
+            tempObj['a' + String(a)] = 1;
+          }
         }
-      }
 
-      // 병합되지 않은 인덱스를 필터링합니다.
-      indexArrReverse = [];
-      for (let i = 0; i < rawPossibleArr.length; i++) {
-        indexArrReverse.push(i);
-      }
-      indexArrReverse = indexArrReverse.filter((num) => { return !indexArrFlat.includes(num); });
-      indexArrFlat = indexArrFlat.filter((num) => { return !removeTargets.includes(num); })
-
-      // 최종 병합된 인덱스 배열을 생성합니다.
-      indexArrFinal = [];
-      for (let i = 0; i < indexArrFlat.length; i++) {
-        if (i % 2 === 0) {
-          indexArrFinal.push([ indexArrFlat[i], indexArrFlat[i + 1] ]);
+        // 중복된 일정의 인덱스를 제거 대상 목록에 추가합니다.
+        removeTargets = [];
+        for (let key in tempObj) {
+          if (tempObj[key] !== 1) {
+            removeTargets.push(Number(key.replace(/[^0-9]/gi, '')));
+          }
         }
+
+        // 병합되지 않은 인덱스를 필터링합니다.
+        indexArrReverse = [];
+        for (let i = 0; i < rawPossibleArr.length; i++) {
+          indexArrReverse.push(i);
+        }
+        indexArrReverse = indexArrReverse.filter((num) => { return !indexArrFlat.includes(num); });
+        indexArrFlat = indexArrFlat.filter((num) => { return !removeTargets.includes(num); })
+
+        // 최종 병합된 인덱스 배열을 생성합니다.
+        indexArrFinal = [];
+        for (let i = 0; i < indexArrFlat.length; i++) {
+          if (i % 2 === 0) {
+            indexArrFinal.push([ indexArrFlat[i], indexArrFlat[i + 1] ]);
+          }
+        }
+
+        // 병합된 일정의 시작과 종료 날짜를 조정합니다.
+        indexArrFinal = indexArrFinal.map((arr) => {
+          return {
+            start: new Date(JSON.stringify(rawPossibleArr[arr[0]].start).slice(1, -1)),
+            end: new Date(JSON.stringify(rawPossibleArr[arr[1]].end).slice(1, -1))
+          };
+        });
+
+        // 병합되지 않은 일정들을 최종 배열에 추가합니다.
+        for (let index of indexArrReverse) {
+          indexArrFinal.push(equalJson(JSON.stringify(rawPossibleArr[index])));
+        }
+        // 병합된 일정들을 시작 날짜 순으로 정렬합니다.
+        indexArrFinal.sort((a, b) => {
+          return a.start.valueOf() - b.start.valueOf();
+        });
+
+        // 병합된 일정을 rawPossibleArr에 저장하여 반복 작업을 계속합니다.
+        rawPossibleArr = equalJson(JSON.stringify(indexArrFinal));
+
+        dateBoo = true; // 병합 작업이 계속 진행되었음을 표시합니다.
+      } else {
+        dateBoo = false; // 병합할 일정이 없음을 표시합니다.
       }
+    } while (dateBoo); // 병합 작업이 가능할 때까지 반복합니다.
 
-      // 병합된 일정의 시작과 종료 날짜를 조정합니다.
-      indexArrFinal = indexArrFinal.map((arr) => {
-        return {
-          start: new Date(JSON.stringify(rawPossibleArr[arr[0]].start).slice(1, -1)),
-          end: new Date(JSON.stringify(rawPossibleArr[arr[1]].end).slice(1, -1))
-        };
-      });
+    // 최종 병합된 일정을 반환합니다.
+    return rawPossibleArr;
 
-      // 병합되지 않은 일정들을 최종 배열에 추가합니다.
-      for (let index of indexArrReverse) {
-        indexArrFinal.push(equalJson(JSON.stringify(rawPossibleArr[index])));
-      }
-      // 병합된 일정들을 시작 날짜 순으로 정렬합니다.
-      indexArrFinal.sort((a, b) => {
-        return a.start.valueOf() - b.start.valueOf();
-      });
-
-      // 병합된 일정을 rawPossibleArr에 저장하여 반복 작업을 계속합니다.
-      rawPossibleArr = equalJson(JSON.stringify(indexArrFinal));
-
-      dateBoo = true; // 병합 작업이 계속 진행되었음을 표시합니다.
-    } else {
-      dateBoo = false; // 병합할 일정이 없음을 표시합니다.
-    }
-  } while (dateBoo); // 병합 작업이 가능할 때까지 반복합니다.
-
-  // 최종 병합된 일정을 반환합니다.
-  return rawPossibleArr;
+  } catch (e) {
+    errorLog(e).catch((err) => { console.log(err) });
+  }
 }
 
 /**
@@ -3229,6 +3235,7 @@ BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid
     };
 
   } catch (e) {
+    await errorLog(e);
     return { message: "error : " + e.message }; // 오류 메시지 반환
   }
 }
@@ -3857,7 +3864,7 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
 
   } catch (e) {
     // 예외가 발생하면 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    await errorLog(e);
   }
 }
 
@@ -4191,7 +4198,7 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
   } catch (e) {
     // 에러 발생 시 콘솔에 출력합니다.
-    console.log(e);
+    await errorLog(e);
   }
 }
 
@@ -4269,7 +4276,7 @@ BackWorker.prototype.designerLevelMatrixSync = async function (selfMongo) {
 
   } catch (e) {
     // 오류 발생 시 콘솔에 오류를 출력하고 false를 반환합니다.
-    console.log(e);
+    await errorLog(e);
     return false;
   }
 }

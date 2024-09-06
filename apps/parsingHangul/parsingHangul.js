@@ -299,7 +299,7 @@ ParsingHangul.prototype.fixDir = async function (target) {
   // 현재 인스턴스를 instance에 저장하여 나중에 내부 함수에서 참조할 수 있도록 함
   const instance = this;
   // Mother 객체에서 shell, shellLink, treeParsing 메서드를 구조 분해 할당으로 가져옴
-  const { shell, shellLink, treeParsing } = this.mother;
+  const { shell, shellLink, treeParsing, errorLog } = this.mother;
 
   try {
     // boo는 문제가 있는 파일이 있는지 여부를 나타내는 플래그 변수
@@ -409,7 +409,7 @@ ParsingHangul.prototype.fixDir = async function (target) {
     return tree;
 
   } catch (e) {
-    console.log(e); // 오류 발생 시 콘솔에 출력
+    errorLog(e).catch((err) => { console.log(err) }); // 오류 발생 시 콘솔에 출력
   }
 };
 
@@ -455,6 +455,7 @@ ParsingHangul.prototype.numberToHangul = function (number) {
   
   // 현재 인스턴스를 instance에 저장하여 함수 내부에서 참조할 수 있도록 함
   const instance = this;
+  const { errorLogSync } = this.mother;
   
   // 숫자 1~9에 대응하는 한글 문자 배열
   const hangul0 = [ '', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구' ];
@@ -511,7 +512,7 @@ ParsingHangul.prototype.numberToHangul = function (number) {
     return numberArr.join('');
 
   } catch (e) {
-    console.log(e); // 오류 발생 시 콘솔에 출력
+    errorLogSync(e); // 오류 발생 시 콘솔에 출력
     return null; // 오류 발생 시 null 반환
   }
 }

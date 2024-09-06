@@ -1,3 +1,11 @@
+// Mother 클래스를 현재 작업 디렉토리에서 가져옵니다.
+const Mother = require(process.cwd() + "/apps/mother.js");
+// 정보 객체를 가져옵니다.
+const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+const mother = new Mother();
+const address = ADDRESS;
+const { errorLog, errorLogSync, emergencyAlarm } = mother;
+
 /**
  * @class BackMaker
  * @description 이 클래스는 백엔드 관련 작업을 관리하기 위한 도구로, MongoDB 데이터베이스와 관련된 여러 기능을 제공합니다.
@@ -9,13 +17,7 @@ class BackMaker {
    * - Mother 클래스를 인스턴스화하여 이 클래스의 메서드와 속성에 접근할 수 있습니다.
    * - 다양한 디렉토리 경로를 설정합니다.
    */
-  constructor() {
-    // Mother 클래스를 현재 작업 디렉토리에서 가져옵니다.
-    const Mother = require(process.cwd() + "/apps/mother.js");
-    
-    // 정보 객체를 가져옵니다.
-    const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-    
+  constructor() {    
     // Mother 클래스의 인스턴스를 생성하여 mother 속성에 할당합니다.
     this.mother = new Mother();
     
@@ -372,7 +374,7 @@ BackMaker.prototype.getNothingById = async function (nulid) {
 
   } catch (e) {
     // 예외가 발생하면 콘솔에 오류를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -506,7 +508,7 @@ BackMaker.prototype.idFilter = function (button) {
 
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -534,7 +536,7 @@ BackMaker.prototype.setAjaxAuthorization = async function () {
 
   } catch (e) {
     // 예외가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -609,7 +611,7 @@ BackMaker.prototype.setInfoObj = async function (option = { selfMongo: null, get
 
   } catch (e) {
     // 오류가 발생하면, 콘솔에 오류 메시지를 출력하고 false를 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return false;
   }
 }
@@ -674,7 +676,7 @@ BackMaker.prototype.updateInfoObj = async function (option = { selfMongo: null }
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -750,7 +752,7 @@ BackMaker.prototype.setMemberObj = async function (option = { selfMongo: null, g
 
   } catch (e) {
     // 오류가 발생하면, 콘솔에 오류 메시지를 출력하고 false를 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return false;
   }
 }
@@ -815,7 +817,7 @@ BackMaker.prototype.updateMemberObj = async function (option = { selfMongo: null
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -887,7 +889,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -982,7 +984,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
     return clientsArr;
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1055,7 +1057,7 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
     return clientsArr;
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1119,7 +1121,7 @@ BackMaker.prototype.updateClient = async function (queryArr, option = { selfMong
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     
     // 업데이트가 실패했음을 나타내는 "fail"을 반환합니다.
     return "fail";
@@ -1167,7 +1169,7 @@ BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: 
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1304,7 +1306,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
 
   } catch (e) {
     // 오류가 발생하면, 발생한 오류를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1769,7 +1771,7 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
     }
   } catch (e) {
     // 오류 발생 시 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1844,7 +1846,7 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
     return target;
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -1917,7 +1919,7 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
     return target;
   } catch (e) {
     // 오류가 발생하면, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2023,7 +2025,7 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
     return contentsArr;
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2102,7 +2104,7 @@ BackMaker.prototype.getContentsArrAll = async function (option = { withTools: fa
     return projectsArr;
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2167,7 +2169,7 @@ BackMaker.prototype.updateContents = async function (queryArr, option = { selfMo
     return "success";
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력하고 "fail"을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "fail";
   }
 }
@@ -2215,7 +2217,7 @@ BackMaker.prototype.deleteContents = async function (conid, option = { selfMongo
     return "success";
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2290,7 +2292,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
     return dummy.structure.conid;
   } catch (e) {
     // 오류가 발생한 경우 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -2346,7 +2348,7 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
 
     return target; // 조회된 서비스 객체 또는 null을 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2400,7 +2402,7 @@ BackMaker.prototype.getServiceByKey = async function (key, option = { withTools:
 
     return target; // 조회된 서비스 객체 또는 null을 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2499,7 +2501,7 @@ BackMaker.prototype.getServicesByKind = async function (kind, option = { withToo
 
     return servicesArr; // 최종 서비스 배열 객체를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2582,7 +2584,7 @@ BackMaker.prototype.getServicesByQuery = async function (query, option = { withT
 
     return servicesArr; // 최종 서비스 배열 객체를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2649,7 +2651,7 @@ BackMaker.prototype.updateService = async function (queryArr, option = { selfMon
     }
     return "success"; // 성공적으로 완료되었음을 나타내는 "success"를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
     return "fail"; // 실패 시 "fail"을 반환합니다.
   }
 }
@@ -2721,7 +2723,7 @@ BackMaker.prototype.createService = async function (updateQuery, option = { self
 
     return dummy.structure.serid; // 새로 생성된 서비스의 serid를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2759,7 +2761,7 @@ BackMaker.prototype.deleteService = async function (serid, option = { selfMongo:
     }
     return "success"; // 삭제가 성공적으로 완료되면 "success"를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2817,7 +2819,7 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
 
     return target; // 조회된 디자이너 객체 또는 null을 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2905,7 +2907,7 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
 
     return designersArr; // 조회된 디자이너 객체 배열 또는 변환된 객체 배열을 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -2964,7 +2966,7 @@ BackMaker.prototype.getDesignersAll = async function (option = { withTools: fals
 
     return designersArr; // 조회된 디자이너 객체 배열 또는 변환된 객체 배열을 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
   }
 }
 
@@ -3016,7 +3018,7 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
 
     return "success"; // 업데이트가 성공적으로 완료된 경우 "success"를 반환합니다.
   } catch (e) {
-    console.log(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
+    errorLogSync(e); // 오류가 발생한 경우 오류를 로그에 출력합니다.
     return "fail"; // 실패한 경우 "fail"을 반환합니다.
   }
 }
@@ -3069,7 +3071,7 @@ BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo
     return "success";
   } catch (e) {
     // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -3213,7 +3215,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     return dummy.structure.desid;
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 };
 
@@ -3293,7 +3295,7 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
     return target;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 };
 
@@ -3399,7 +3401,7 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
     return projectsArr;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     // 오류가 발생하면 null을 반환합니다.
     return null;
   }
@@ -3485,7 +3487,7 @@ BackMaker.prototype.getProjectsAll = async function (option = { withTools: false
     return projectsArr;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     // 오류가 발생하면 null을 반환합니다.
     return null;
   }
@@ -3705,7 +3707,7 @@ BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { wit
 
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -3773,7 +3775,7 @@ BackMaker.prototype.updateProject = async function (queryArr, option = { selfMon
     return "success";
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
@@ -3826,7 +3828,7 @@ BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo:
     return "success";
   } catch (e) {
     // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -3933,7 +3935,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
     return dummy.structure.proid;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4014,7 +4016,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
     return target;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4152,7 +4154,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
     return aspirantsArr;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4220,7 +4222,7 @@ BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMo
     return "success";
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
@@ -4273,7 +4275,7 @@ BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo
     return "success";
   } catch (e) {
     // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4356,7 +4358,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
     return dummy.structure.aspid;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4428,7 +4430,7 @@ BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery
     }
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -4509,7 +4511,7 @@ BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools
     return target;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     return null;
   }
 }
@@ -4611,7 +4613,7 @@ BackMaker.prototype.getBuildersByQuery = async function (query, option = { withT
     return buildersArr;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     // 오류가 발생하면 빈 배열을 반환합니다.
     return [];
   }
@@ -4681,7 +4683,7 @@ BackMaker.prototype.updateBuilder = async function (queryArr, option = { selfMon
     return "success";
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
@@ -4734,7 +4736,7 @@ BackMaker.prototype.deleteBuilder = async function (buiid, option = { selfMongo:
     return "success";
   } catch (e) {
     // 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 오류가 발생하면 "fail" 문자열을 반환합니다.
     return "fail";
@@ -4820,7 +4822,7 @@ BackMaker.prototype.createBuilder = async function (updateQuery, option = { self
     return dummy.structure.buiid;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
 
     // 오류가 발생하면 null을 반환합니다.
     return null;
@@ -4911,7 +4913,7 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
     }
   } catch (e) {
     // 오류가 발생한 경우, 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -5009,7 +5011,7 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
     return tong;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     // 오류 발생 시 빈 배열을 반환합니다.
     return [];
   }
@@ -5108,7 +5110,7 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
     return tong;
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
     // 오류 발생 시 빈 배열을 반환합니다.
     return [];
   }
@@ -5290,7 +5292,7 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
 
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -5382,7 +5384,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
     return "success";
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력하고, "fail" 문자열을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "fail";
   }
 }
@@ -5466,7 +5468,7 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
     return "success";
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -5914,7 +5916,7 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
     return updateQuery[sortStandard];
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLogSync(e);
   }
 }
 
@@ -5975,7 +5977,7 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { s
     return "success";
   } catch (e) {
     // 작업 중 오류가 발생하면 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "fail";
   }
 }
@@ -6075,7 +6077,7 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { se
     return tong;
   } catch (e) {
     // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return [];
   }
 }
@@ -6199,7 +6201,7 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
     return tong;
   } catch (e) {
     // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return [];
   }
 }
@@ -6278,7 +6280,7 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
     return "success";
   } catch (e) {
     // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "fail";
   }
 }
@@ -6329,7 +6331,7 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
     return "success";
   } catch (e) {
     // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 "fail"을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return "fail";
   }
 }
@@ -6381,7 +6383,7 @@ BackMaker.prototype.mongoListCollections = async function (option = { selfMongo:
     return allCollections;
   } catch (e) {
     // 작업 중 오류가 발생하면, 오류 메시지를 콘솔에 출력하고 빈 배열을 반환합니다.
-    console.log(e);
+    errorLogSync(e);
     return [];
   }
 }

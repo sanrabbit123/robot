@@ -12,6 +12,7 @@ const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
 const mother = new Mother();
 const back = new BackMaker();
 const address = ADDRESS;
+const { errorLog, emergencyAlarm } = mother;
 
 /**
  * BillMaker 클래스는 청구서와 관련된 여러 기능을 수행하는 클래스입니다.
@@ -2021,8 +2022,8 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
 
       } catch (e) {
           // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-          console.log(e);
-      }
+          errorLog(e).catch((err) => { console.log(err) });
+        }
   } else if (typeof collection === "string" && Array.isArray(updateQueryArr) && typeof option === "object") {
       // collection이 문자열이고 updateQueryArr이 배열이며 option이 객체인 경우,
       // 이 경우에는 일반적인 청구서 생성 절차를 따릅니다.
@@ -2098,8 +2099,8 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
 
       } catch (e) {
           // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-          console.log(e);
-      }
+          errorLog(e).catch((err) => { console.log(err) });
+        }
   } else {
       // 입력이 올바르지 않은 경우, 오류를 발생시킵니다.
       throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
@@ -2189,8 +2190,8 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
-  }
+      errorLog(e).catch((err) => { console.log(err) });
+    }
 }
 
 /**
@@ -2307,7 +2308,7 @@ BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: n
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2380,7 +2381,7 @@ BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { sel
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2449,7 +2450,7 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2500,7 +2501,7 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2747,7 +2748,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -2991,7 +2992,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3094,7 +3095,7 @@ BillMaker.prototype.requestEjection = async function (bilid, requestIndex, optio
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3343,7 +3344,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3446,7 +3447,7 @@ BillMaker.prototype.responseEjection = async function (bilid, responseIndex, opt
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3667,7 +3668,7 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3823,7 +3824,7 @@ BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfM
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -3958,7 +3959,7 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
       return "done"; // 성공적으로 완료되었음을 반환합니다.
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   } finally {
       // selfBoo가 false인 경우, MongoDB 연결을 종료합니다.
       if (!selfBoo) {
@@ -4139,7 +4140,7 @@ BillMaker.prototype.passiveSyncAll = async function () {
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   } finally {
       // MongoDB 연결을 종료합니다.
       await MONGOC.close();
@@ -4252,7 +4253,7 @@ BillMaker.prototype.passiveCashReceipt = async function (cliid, goodName, supply
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -4411,7 +4412,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -4618,7 +4619,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
 
   } catch (e) {
       // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -4778,7 +4779,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
     return updatedBill;
 
   } catch (e) {
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -4995,7 +4996,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     return updatedBill;
 
   } catch (e) {
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -5070,7 +5071,7 @@ BillMaker.prototype.designerSelect = async function (proid, desid, option = { se
 
   } catch (e) {
     // 오류가 발생하면 콘솔에 오류를 출력합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -5646,7 +5647,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     // 오류 발생 시 작업 파일을 삭제하고 오류 로그를 기록합니다.
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
     await errorLog("BillMaker.prototype.serviceConverting error : " + e.message);
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -6234,7 +6235,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
   } catch (e) {
       await fileSystem(`remove`, [`${process.cwd()}/temp/${doingSignature}.json`]);
       await errorLog(e.message);
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -6608,7 +6609,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
 
   } catch (e) {
       // 오류가 발생한 경우 콘솔에 출력합니다.
-      console.log(e);
+      errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -7096,7 +7097,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     return resultObj; // 최종 결과 객체를 반환합니다.
 
   } catch (e) {
-    console.log(e); // 오류가 발생했을 경우 콘솔에 출력합니다.
+    errorLog(e).catch((err) => { console.log(err) }); // 오류가 발생했을 경우 콘솔에 출력합니다.
   }
 }
 
@@ -7517,7 +7518,7 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     return resultObj; // 최종 결과 객체를 반환합니다.
 
   } catch (e) {
-    console.log(e); // 오류 발생 시 콘솔에 로그를 남깁니다.
+    await errorLog(e); // 오류 발생 시 콘솔에 로그를 남깁니다.
     return { message: "error : " + e.message }; // 오류 메시지를 반환합니다.
   }
 }
@@ -7729,7 +7730,7 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
 
   } catch (e) {
     // 오류가 발생한 경우 오류 메시지를 콘솔에 출력합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -7837,7 +7838,7 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
 
   } catch (e) {
     // 오류가 발생한 경우, 콘솔에 오류 메시지를 출력합니다.
-    console.log(e);
+    errorLog(e).catch((err) => { console.log(err) });
   }
 }
 
@@ -8237,8 +8238,7 @@ BillMaker.prototype.taxBill = async function () {
     try {
       await MONGOLOCALC.close();
     } catch {}
-    await errorLog(e.message);
-    console.log(e);
+    await errorLog(e);
     return false;
   }
 }
@@ -8587,7 +8587,7 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
   } catch (e) {
     // 오류가 발생하면 긴급 경고 메시지 발송
     await emergencyAlarm("cashReceipt fail : " + e.message + " / " + JSON.stringify(new Date()));
-    console.log(e); // 오류 로그 출력
+    await errorLog(e);
     return false; // 작업 실패 시 false 반환
   }
 }
@@ -8743,7 +8743,7 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
             return (/발급/gi.test(text) && /완료/gi.test(text));
           } catch (e) {
             // 예외 발생 시 에러를 콘솔에 출력.
-            console.log(e);
+            errorLog(e).catch((err) => { console.log(err) });
           }
         }
       }
@@ -8762,7 +8762,7 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
   } catch (e) {
     // 발행 과정 중 에러가 발생할 경우, 비상 알람을 보내고 에러 메시지를 기록.
     await emergencyAlarm("issue cashReceipt fail : " + e.message + " / " + JSON.stringify(new Date()));
-    console.log(e);
+    await errorLog(e);
     return false;
   }
 }

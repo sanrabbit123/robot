@@ -199,7 +199,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
 
   } catch (e) {
     await emergencyAlarm("NaverAPIs.dailyCampaign error : " + e.message); // 긴급 알림 전송
-    console.log(e); // 오류 출력
+    await errorLog(e); // 오류 출력
   }
 }
 
@@ -370,7 +370,7 @@ NaverAPIs.prototype.naverComplex = async function (selfMongo, dayNumber = 3, log
 
   } catch (e) {
     emergencyAlarm("NaverAPIs.naverComplex error : " + e.message).catch((err) => { console.log(err); }); // 긴급 알림 전송
-    console.log(e); // 오류 출력
+    await errorLog(e); // 오류 출력
     return false;
   }
 }
@@ -382,7 +382,7 @@ NaverAPIs.prototype.naverComplex = async function (selfMongo, dayNumber = 3, log
  */
 NaverAPIs.prototype.mapVersionCheck = async function () {
   const instance = this; // 현재 인스턴스를 참조하기 위한 변수 설정
-  const { emergencyAlarm } = this.mother; // Mother 클래스의 emergencyAlarm 메서드를 사용하기 위해 가져옴
+  const { emergencyAlarm, errorLog } = this.mother; // Mother 클래스의 emergencyAlarm 메서드를 사용하기 위해 가져옴
   const { chrome, naverMapUrl, naverMapVersion } = this; // 네이버 지도 관련 설정값들을 가져옴
 
   try {
@@ -403,7 +403,7 @@ NaverAPIs.prototype.mapVersionCheck = async function () {
       return true; // 버전이 일치함을 반환
     }
   } catch (e) {
-    console.log(e); // 오류 발생 시 콘솔에 출력
+    await errorLog(e); // 오류 발생 시 콘솔에 출력
     return false; // 오류가 발생한 경우 false를 반환
   }
 }
@@ -417,7 +417,7 @@ NaverAPIs.prototype.mapVersionCheck = async function () {
  */
 NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) {
   const instance = this; // 현재 인스턴스를 참조하기 위한 변수 설정
-  const { equalJson, requestSystem, emergencyAlarm } = this.mother; // Mother 클래스의 메서드들을 사용하기 위해 가져옴
+  const { equalJson, requestSystem, emergencyAlarm, errorLog } = this.mother; // Mother 클래스의 메서드들을 사용하기 위해 가져옴
   const { chrome, naverMapUrl, naverMapSearch, fakeHeaders } = this; // 네이버 지도 관련 설정값들을 가져옴
   const querystring = require("querystring"); // querystring 모듈을 사용하여 쿼리 문자열을 생성
 
@@ -540,7 +540,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
     }
   } catch (e) {
     await emergencyAlarm("NaverAPIs.mapSearch error : " + e.message); // 오류 발생 시 긴급 알림 전송
-    console.log(e); // 오류 내용 콘솔 출력
+    await errorLog(e); // 오류 내용 콘솔 출력
     return null; // 오류 발생 시 null 반환
   }
 }
@@ -554,7 +554,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
  */
 NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false) {
   const instance = this; // 현재 인스턴스를 참조하기 위한 변수 설정
-  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition } = this.mother; // Mother 클래스의 메서드들을 사용하기 위해 가져옴
+  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition, errorLog } = this.mother; // Mother 클래스의 메서드들을 사용하기 위해 가져옴
   const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey } = this; // 네이버 지도 및 네이버 부동산 관련 설정값들을 가져옴
   
   try {
@@ -854,7 +854,7 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
           }
         } catch (e) {
           // 예외 발생 시 에러 로그를 출력하고 null을 반환
-          console.log(e);
+          await errorLog(e);
           return null;
         }
       }
@@ -871,7 +871,7 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
  */
 NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult = null) {
   const instance = this;
-  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition, emergencyAlarm } = this.mother; // Mother 객체에서 필요한 메서드들을 구조 분해 할당
+  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition, emergencyAlarm, errorLog } = this.mother; // Mother 객체에서 필요한 메서드들을 구조 분해 할당
   const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey, complexIdKeyword } = this; // 현재 인스턴스에서 필요한 속성들을 구조 분해 할당
   try {
     let resultObj; // 결과를 저장할 객체 선언
@@ -958,7 +958,7 @@ NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult 
 
   } catch (e) {
     await emergencyAlarm("NaverAPIs.complexModeling error : " + e.message); // 예외 발생 시 알림 전송
-    console.log(e); // 예외 내용을 콘솔에 출력
+    await errorLog(e); // 예외 내용을 콘솔에 출력
     return null; // 오류 발생 시 null 반환
   }
 }
