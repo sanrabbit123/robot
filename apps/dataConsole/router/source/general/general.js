@@ -24135,13 +24135,13 @@ GeneralJs.prototype.greenBar = function () {
     await GeneralJs.ajaxJson({ data: null }, BACKHOST + "/storeServerLog");
     loading.remove();
     setTimeout(() => {
-      GeneralJs.blankHref(BACKHOST + "/tools/log/staticLounge");
+      window.open(BACKHOST + "/tools/log/staticLounge");
     }, 0);
     setTimeout(() => {
-      GeneralJs.blankHref(BACKHOST + "/tools/log/dataConsole")
+      window.open(BACKHOST + "/tools/log/dataConsole")
     }, 1000);
     setTimeout(() => {
-      GeneralJs.blankHref(BACKHOST + "/tools/log/transferLounge")
+      window.open(BACKHOST + "/tools/log/transferLounge")
     }, 3000);
   });
   svg_icon.addEventListener("contextmenu", (e) => {
