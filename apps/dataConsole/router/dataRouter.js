@@ -782,7 +782,7 @@ class DataRouter {
 
           rows = await back.mongoRead(collection, whereQuery, { selfMongo });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-          html = "<body>" + rows.map((j) => { return dateToString(j.date, true) + "\n" + j.contents }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
+          html = "<body>" + rows.map((j) => { return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + "\n" + j.contents }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
   
           res.send(html);
         } else {
