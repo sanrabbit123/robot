@@ -1,5 +1,5 @@
 const Mother = require(process.cwd() + "/apps/mother.js"); // Mother 클래스를 가져옵니다.
-const BackMaker = require(process.cwd()+ "/apps/backMaker.js"); // BackMaker 모듈을 현재 경로에서 다시 불러옵니다.
+const BackMaker = require(process.cwd()+ "/apps/backMaker/backMaker.js"); // BackMaker 모듈을 현재 경로에서 다시 불러옵니다.
 const mother = new Mother();
 const { errorLog, emergencyAlarm } = mother;
 
