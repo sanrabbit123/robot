@@ -2071,27 +2071,17 @@ class StaticRouter {
 
         // Bill 객체의 parsingCashReceipt 메서드를 호출하여 현금 영수증 데이터를 파싱합니다.
         boo = await bill.parsingCashReceipt();
-        if (boo) {
-          // 파싱에 성공한 경우 로그를 기록합니다.
-          logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-        }
 
         // 첫 번째 시도가 실패한 경우 3초 대기 후 재시도합니다.
         if (!boo) {
           await sleep(3000);
           boo = await bill.parsingCashReceipt();
-          if (boo) {
-            logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-          }
         }
 
         // 두 번째 시도가 실패한 경우 3초 대기 후 마지막으로 한 번 더 재시도합니다.
         if (!boo) {
           await sleep(3000);
           boo = await bill.parsingCashReceipt();
-          if (boo) {
-            logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-          }
         }
 
         // 최종적으로 성공 여부를 클라이언트에게 반환합니다.
@@ -2129,18 +2119,11 @@ class StaticRouter {
 
         // bill 객체의 issueCashReceipt 메서드를 호출하여 현금 영수증을 발급합니다.
         boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
-        if (boo) {
-          // 발급에 성공한 경우 로그를 기록합니다.
-          logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-        }
 
         // 발급이 실패한 경우, 성공할 때까지 3초 간격으로 재시도합니다.
         while (!boo) {
           await sleep(3000);
           boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
-          if (boo) {
-            logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-          }
         }
 
         // 최종적으로 성공 여부를 클라이언트에게 반환합니다.
