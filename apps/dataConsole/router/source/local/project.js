@@ -4006,6 +4006,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                               } else {
 
+                                                console.log("this");
+
                                                 kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 

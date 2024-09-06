@@ -7164,6 +7164,8 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
     let calculate; // 계산된 총 금액을 저장합니다.
     let commission; // 수수료를 저장합니다.
     let refreshTotalAmount; // 새로 계산된 총 금액을 저장합니다.
+    let firstResponseIndex; // 첫 번째 응답 항목의 인덱스를 저장합니다.
+    let secondResponseIndex;  // 두 번째 응답 항목의 인덱스를 저장합니다.
 
     // selfMongo 옵션이 지정되지 않은 경우 false로 설정합니다.
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -7228,11 +7230,12 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       return obj.data.MOID === thisRequest.pay[payIndex].oid;
     });
     if (thisData === undefined) {
-      throw new Error("invaild oid data"); // OID 데이터가 유효하지 않으면 오류를 발생시킵니다.
+      // 환불할 지불 금액을 숫자 형식으로 변환합니다.
+      originalPrice = thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0);
+    } else {
+      // 환불할 지불 금액을 숫자 형식으로 변환합니다.
+      originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
     }
-
-    // 원래 지불 금액을 숫자 형식으로 변환합니다.
-    originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
 
     // 옵션에서 percentage를 가져오고, 없으면 100%로 설정합니다.
     if (typeof option.percentage === "number") {

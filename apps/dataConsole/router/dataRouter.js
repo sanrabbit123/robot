@@ -2234,6 +2234,7 @@ class DataRouter {
         let logFound;
         let contractsPure, contractsAmount, contractsPureAmount;
         let calculationPureAmount;
+        let monthArr;
     
         if (req.body.month === undefined) {
           if (req.body.startYear === undefined) {
