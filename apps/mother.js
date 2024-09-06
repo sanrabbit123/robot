@@ -5333,6 +5333,7 @@ Mother.prototype.errorLog = function (text) {
     console.log(bar);
     console.log(new Date(), "error");
     console.log(text); // 에러를 콘솔에 출력
+    console.trace("Trace: ");
     console.log(bar);
     resolve(true);
   });
@@ -5349,6 +5350,7 @@ Mother.prototype.errorLogSync = function (text) {
   console.log(bar);
   console.log(new Date(), "error");
   console.log(text); // 에러를 콘솔에 출력
+  console.trace("Trace: ");
   console.log(bar);
   return true;
 }
@@ -5718,6 +5720,7 @@ Mother.prototype.emergencyAlarm = function (text) {
     console.log(bar);
     console.log(new Date(), "error");
     console.log(text); // 에러를 콘솔에 출력
+    console.trace("Trace: ");
     console.log(bar);
     resolve(true);
   });

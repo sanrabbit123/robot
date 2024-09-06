@@ -110,9 +110,11 @@ DevContext.prototype.launching = async function () {
     // await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, json ]);
 
 
-    
-    
+    const rawLogTargetFolder = process.cwd() + "/temp/logs";
+    const rawLogFolderList = await fileSystem("readFolder", [ rawLogTargetFolder ]);
 
+
+    console.log(rawLogFolderList)
 
 
 
