@@ -3172,37 +3172,40 @@ class StaticRouter {
                   inArr = [];
                   for (let c in tong) {
                       for (let obj of tong[c].out) {
-                          tempObj = {};
-                          console.log(obj);
-                          tempObj.date = stringToDate(obj.TIME); // 통화 날짜 변환
-                          tempObj.to = autoHypenPhone(obj.DST); // 목적지 전화번호 변환
-                          tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, '')); // 통화 시간 변환
-                          if (obj.STATUS === "OK") {
-                              if (tempObj.duration >= successStandardSec) { // 통화 시간에 따라 성공 여부 결정
-                                  tempObj.success = true;
+                          if (typeof obj === "object" && obj !== null && typeof obj.TIME === "string") {
+                              tempObj = {};
+                              tempObj.date = stringToDate(obj.TIME); // 통화 날짜 변환
+                              tempObj.to = autoHypenPhone(obj.DST); // 목적지 전화번호 변환
+                              tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, '')); // 통화 시간 변환
+                              if (obj.STATUS === "OK") {
+                                  if (tempObj.duration >= successStandardSec) { // 통화 시간에 따라 성공 여부 결정
+                                      tempObj.success = true;
+                                  } else {
+                                      tempObj.success = false;
+                                  }
                               } else {
                                   tempObj.success = false;
                               }
-                          } else {
-                              tempObj.success = false;
+                              outArr.push(tempObj);
                           }
-                          outArr.push(tempObj);
                       }
                       for (let obj of tong[c].in) {
-                          tempObj = {};
-                          tempObj.date = stringToDate(obj.TIME); // 통화 날짜 변환
-                          tempObj.from = autoHypenPhone(obj.SRC); // 출발지 전화번호 변환
-                          tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, '')); // 통화 시간 변환
-                          if (obj.STATUS === "OK") {
-                              if (tempObj.duration >= successStandardSec) { // 통화 시간에 따라 성공 여부 결정
-                                  tempObj.success = true;
+                          if (typeof obj === "object" && obj !== null && typeof obj.TIME === "string") {
+                              tempObj = {};
+                              tempObj.date = stringToDate(obj.TIME); // 통화 날짜 변환
+                              tempObj.from = autoHypenPhone(obj.SRC); // 출발지 전화번호 변환
+                              tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, '')); // 통화 시간 변환
+                              if (obj.STATUS === "OK") {
+                                  if (tempObj.duration >= successStandardSec) { // 통화 시간에 따라 성공 여부 결정
+                                      tempObj.success = true;
+                                  } else {
+                                      tempObj.success = false;
+                                  }
                               } else {
                                   tempObj.success = false;
                               }
-                          } else {
-                              tempObj.success = false;
+                              inArr.push(tempObj);
                           }
-                          inArr.push(tempObj);
                       }
                   }
 
