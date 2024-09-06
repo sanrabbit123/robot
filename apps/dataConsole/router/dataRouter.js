@@ -757,12 +757,12 @@ class DataRouter {
 
 
     /**
-     * @route GET /tools/log/:id
+     * @route GET /tools/log
      * @description 서버 로그를 HTML 형식으로 반환하는 라우터입니다. 요청된 서버 ID에 따라 최근 3개월 이내의 로그를 MongoDB에서 조회하여 HTML로 변환하여 응답합니다.
      * @param {object} req - 클라이언트 요청 객체. params에 서버 ID가 포함되어야 합니다.
      * @param {object} res - 서버 응답 객체. 로그를 HTML 형식으로 반환합니다.
      */
-    router.get([ "/tools/log/:id" ], async function (req, res) {
+    router.get([ "/tools/log" ], async function (req, res) {
       // 응답 헤더에 HTML 형식과 CORS 설정을 추가합니다.
       res.set({
           "Content-Type": "text/html",
@@ -796,9 +796,6 @@ class DataRouter {
 
           // 요청 경로에 서버 ID가 문자열로 전달된 경우 처리합니다.
           if (typeof req.params.id === "string") {
-              // 조회 조건에 서버 ID를 추가합니다.
-              whereQuery["$and"].push({ server: req.params.id });
-
               // 조회 조건에 3개월 이내의 로그 데이터를 필터링합니다.
               whereQuery["$and"].push({ date: { $gte: ago } });
 
@@ -811,7 +808,7 @@ class DataRouter {
               // 로그 데이터를 HTML 형식으로 변환합니다.
               // 각 로그는 날짜 정보와 내용, 구분선을 포함한 HTML로 변환됩니다.
               html = "<body>" + rows.map((j) => { 
-                  return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>";
+                  return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + `<div style="color:green;">` + j.server + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>";
               }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
 
               // 변환된 HTML 데이터를 클라이언트에 전송합니다.
