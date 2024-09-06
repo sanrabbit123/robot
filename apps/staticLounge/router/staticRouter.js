@@ -3308,8 +3308,8 @@ class StaticRouter {
                   }
 
                   return true;
-
               } catch (e) {
+                  mother.errorLogSync(e);
                   return false;
               }
           }

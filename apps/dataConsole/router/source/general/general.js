@@ -24130,8 +24130,13 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
   }
-  svg_icon.addEventListener("click", function (e) {
-    GeneralJs.blankHref(SECONDHOST + "/code");
+  svg_icon.addEventListener("click", async function (e) {
+    const loading = instance.grayLoading();
+    await GeneralJs.ajaxJson({ data: null }, BACKHOST + "/storeServerLog");
+    loading.remove();
+    GeneralJs.blankHref(BACKHOST + "/tools/log/staticLounge");
+    GeneralJs.blankHref(BACKHOST + "/tools/log/dataConsole");
+    GeneralJs.blankHref(BACKHOST + "/tools/log/transferLounge");
   });
   svg_icon.addEventListener("contextmenu", (e) => {
     e.preventDefault();
