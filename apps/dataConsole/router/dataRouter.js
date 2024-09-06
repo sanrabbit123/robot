@@ -763,6 +763,7 @@ class DataRouter {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       try {
+        const bar = "============================================================"; // 로그 출력을 위한 구분선
         const collection = "serverLog";
         const selfMongo = instance.mongo;
         let rows;
@@ -782,7 +783,7 @@ class DataRouter {
 
           rows = await back.mongoRead(collection, whereQuery, { selfMongo });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-          html = "<body>" + rows.map((j) => { return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + "\n" + j.contents }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
+          html = "<body>" + rows.map((j) => { return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + j.contents + `<div style="color:gray;">` + bar + "</div>" }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
   
           res.send(html);
         } else {
