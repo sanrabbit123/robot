@@ -755,44 +755,76 @@ class DataRouter {
       }
     });
 
+
+    /**
+     * @route GET /tools/log/:id
+     * @description 서버 로그를 HTML 형식으로 반환하는 라우터입니다. 요청된 서버 ID에 따라 최근 3개월 이내의 로그를 MongoDB에서 조회하여 HTML로 변환하여 응답합니다.
+     * @param {object} req - 클라이언트 요청 객체. params에 서버 ID가 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 로그를 HTML 형식으로 반환합니다.
+     */
     router.get([ "/tools/log/:id" ], async function (req, res) {
+      // 응답 헤더에 HTML 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "text/html",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        const bar = "============================================================"; // 로그 출력을 위한 구분선
-        const collection = "serverLog";
-        const selfMongo = instance.mongo;
-        let rows;
-        let html;
-        let whereQuery;
-        let ago;
+          // 로그 출력을 위한 구분선을 정의합니다.
+          const bar = "============================================================";
 
-        ago = new Date();
-        ago.setMonth(ago.getMonth() - 3);
+          // 로그를 조회할 MongoDB 컬렉션 이름을 정의합니다.
+          const collection = "serverLog";
 
-        whereQuery = {};
-        whereQuery["$and"] = [];
+          // MongoDB 인스턴스를 가져옵니다.
+          const selfMongo = instance.mongo;
 
-        if (typeof req.params.id === "string") {
-          whereQuery["$and"].push({ server: req.params.id });
-          whereQuery["$and"].push({ date: { $gte: ago } })
+          let rows;  // 로그 데이터를 저장할 배열
+          let html;  // HTML 형식으로 변환된 로그 데이터를 저장할 변수
+          let whereQuery;  // MongoDB에서 사용할 조회 조건을 저장할 변수
+          let ago;  // 3개월 전의 날짜를 저장할 변수
 
-          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-          html = "<body>" + rows.map((j) => { return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>" }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
-  
-          res.send(html);
-        } else {
-          res.send("");
-        }
+          // 현재 날짜에서 3개월 전으로 설정합니다.
+          ago = new Date();
+          ago.setMonth(ago.getMonth() - 3);
+
+          // 조회 조건을 초기화합니다.
+          whereQuery = {};
+          whereQuery["$and"] = [];
+
+          // 요청 경로에 서버 ID가 문자열로 전달된 경우 처리합니다.
+          if (typeof req.params.id === "string") {
+              // 조회 조건에 서버 ID를 추가합니다.
+              whereQuery["$and"].push({ server: req.params.id });
+
+              // 조회 조건에 3개월 이내의 로그 데이터를 필터링합니다.
+              whereQuery["$and"].push({ date: { $gte: ago } });
+
+              // MongoDB에서 조회 조건에 맞는 로그 데이터를 가져옵니다.
+              rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+
+              // 가져온 로그 데이터를 날짜 순서대로 내림차순 정렬합니다.
+              rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
+              // 로그 데이터를 HTML 형식으로 변환합니다.
+              // 각 로그는 날짜 정보와 내용, 구분선을 포함한 HTML로 변환됩니다.
+              html = "<body>" + rows.map((j) => { 
+                  return `<div style="color:red;">` + dateToString(j.date, true) + "</div>" + j.contents + `<div style="color:blue;">` + bar + "</div>";
+              }).join("\n\n\n").replace(/\n/gi, "<br>") + "</body>";
+
+              // 변환된 HTML 데이터를 클라이언트에 전송합니다.
+              res.send(html);
+          } else {
+              // 서버 ID가 올바르게 전달되지 않은 경우 빈 응답을 보냅니다.
+              res.send("");
+          }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 기록하고 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
 
@@ -2122,637 +2154,1060 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /getClientReport
+     * @description 클라이언트 보고서를 생성하여 반환하는 라우터입니다. 보고서는 클라이언트, 제안서, 계약 등의 다양한 지표를 포함하며, 월별 데이터를 기반으로 생성됩니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 시작 연도/월, 종료 연도/월 등이 포함될 수 있습니다.
+     * @param {object} res - 서버 응답 객체. 생성된 보고서 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/getClientReport" ], async function (req, res) {
       try {
+        // instance에서 back(데이터 처리), address(서버 주소), port(포트 번호)를 가져옵니다.
         const back = instance.back;
         const address = instance.address;
         const port = 3000;
+
+        /**
+         * @function getDateMatrix
+         * @description 주어진 기간 동안의 날짜 매트릭스를 생성하는 함수입니다. 월별로 시작일과 종료일을 계산하여 배열로 반환합니다.
+         * @param {number} length - 기간을 설정하는 파라미터로, 몇 개월의 데이터를 가져올지 설정합니다. 기본값은 6개월입니다.
+         * @returns {Promise<Array<any>>} - 월별로 시작일, 종료일, 다음 월의 첫째 날로 구성된 날짜 매트릭스 배열을 반환합니다.
+         */
         const getDateMatrix = async (length = 6) => {
+          // 내부적으로 날짜 매트릭스를 3중 배열로 구성합니다.
           const tripleMatrixByDate = (length = 6) => {
-            const matrixCalendar = (year, month) => {
-              let matrix, weekArr;
-              let leftDates;
-              let weeks;
-              let weekLeft;
-              let first, last;
-              let firstDate, lastDate;
-              let firstDay;
-              let weekLength;
-              let firstWeekLength, middleWeekLength, fianlWeekLength;
-        
-              first = new Date(year, month - 1, 0);
-              last = new Date(year, month, 0);
-        
-              firstDate = first.getDate();
-              firstDay = first.getDay();
-              lastDate = last.getDate();
-        
-              leftDates = lastDate - (7 - firstDay)
-              weeks = Math.floor(leftDates / 7)
-              weekLeft = leftDates % 7
-        
-              firstWeekLength = lastDate - weekLeft - (weeks * 7)
-              middleWeekLength = weeks;
-              fianlWeekLength = weekLeft;
-        
-              matrix = [];
-              weekArr = [];
-              for (let i = 0; i < firstWeekLength; i++) {
-                weekArr.push(i + 1)
-              }
-              matrix.push(objectDeepCopy(weekArr));
-              
-              for (let i = 0; i < middleWeekLength; i++) {
-                weekArr = [];
-                for (let j = 0; j < 7; j++) {
-                  weekArr.push(matrix[0][matrix[0].length - 1] + 1 + j + (i * 7));
-                }
-                matrix.push(objectDeepCopy(weekArr));
-              }
-        
-              weekArr = [];
-              for (let i = 0; i < fianlWeekLength; i++) {
-                weekArr.unshift(lastDate - i);
-              }
-              if (weekArr.length !== 0) {
-                matrix.push(objectDeepCopy(weekArr));
-              }
-              return matrix;
-            }
-        
-            const today = new Date();
-            let copiedDate;
-            let year, month;
-            let motherMatrix;
-            
-            motherMatrix = [];
-            for (let i = 0; i < length; i++) {
-              copiedDate = new Date(JSON.stringify(today).slice(1, -1));
-              copiedDate.setMonth(copiedDate.getMonth() - i);
-              year = copiedDate.getFullYear();
-              month = copiedDate.getMonth() + 1;
-              motherMatrix.push(objectDeepCopy(matrixCalendar(year, month)));
-            }
-        
-            return motherMatrix;
-          }
-          try {
-            const today = new Date();
-            const dateMatrix = tripleMatrixByDate(length);
-              
-            let year, month;
-            let day0, day1, day2;
-            let dateString0, dateString1;
-            let resultArr, middleResultArr, resultFactorArr;
-        
-            resultArr = [];
-            for (let j = 0; j < dateMatrix.length; j++) {
-        
-              year = today.getFullYear();
-              month = today.getMonth() + 1 - j;
-        
-              year = today.getFullYear() + Math.floor(month / 12) + ((month % 12) === 0 ? -1 : 0);
-              month = (month % 12) > 0 ? (month % 12) : 12 + (month % 12);
-        
-              middleResultArr = [];
-              for (let i = 0; i < dateMatrix[j].length; i++) {
-                resultFactorArr = [];
-        
-                day0 = dateMatrix[j][i][0];
-                resultFactorArr.push(new Date(year, month - 1, day0));
-        
-                day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];
-                resultFactorArr.push(new Date(year, month - 1, day1));
-        
-                if (i !== dateMatrix[j].length - 1) {
-                  day2 = dateMatrix[j][i + 1][0];
-                  resultFactorArr.push(new Date(year, month - 1, day2));
-                } else {
-                  day2 = 1;
-                  if (month === 12) {
-                    resultFactorArr.push(new Date(year + 1, 0, day2));
-                  } else {
-                    resultFactorArr.push(new Date(year, month, day2));
+              // 각 연도와 월을 기준으로 날짜를 주별로 나눈 2차원 배열을 생성하는 함수입니다.
+              const matrixCalendar = (year, month) => {
+                  let matrix, weekArr;
+                  let leftDates;
+                  let weeks;
+                  let weekLeft;
+                  let first, last;
+                  let firstDate, lastDate;
+                  let firstDay;
+                  let weekLength;
+                  let firstWeekLength, middleWeekLength, finalWeekLength;
+
+                  // 해당 월의 첫째 날과 마지막 날을 구합니다.
+                  first = new Date(year, month - 1, 0);
+                  last = new Date(year, month, 0);
+
+                  firstDate = first.getDate();  // 첫째 날의 날짜
+                  firstDay = first.getDay();    // 첫째 날의 요일
+                  lastDate = last.getDate();    // 마지막 날의 날짜
+
+                  // 첫째 주에서 남은 날짜 계산
+                  leftDates = lastDate - (7 - firstDay);
+                  weeks = Math.floor(leftDates / 7);  // 남은 주의 개수
+                  weekLeft = leftDates % 7;  // 마지막 주에 남은 날짜
+
+                  // 각 주의 날짜 수를 설정
+                  firstWeekLength = lastDate - weekLeft - (weeks * 7);
+                  middleWeekLength = weeks;
+                  finalWeekLength = weekLeft;
+
+                  // 주별 배열 생성
+                  matrix = [];
+                  weekArr = [];
+                  for (let i = 0; i < firstWeekLength; i++) {
+                      weekArr.push(i + 1);
                   }
-                }
-                middleResultArr.push(resultFactorArr);
+                  matrix.push(objectDeepCopy(weekArr));
+
+                  // 중간 주 배열 생성
+                  for (let i = 0; i < middleWeekLength; i++) {
+                      weekArr = [];
+                      for (let j = 0; j < 7; j++) {
+                          weekArr.push(matrix[0][matrix[0].length - 1] + 1 + j + (i * 7));
+                      }
+                      matrix.push(objectDeepCopy(weekArr));
+                  }
+
+                  // 마지막 주 배열 생성
+                  weekArr = [];
+                  for (let i = 0; i < finalWeekLength; i++) {
+                      weekArr.unshift(lastDate - i);
+                  }
+                  if (weekArr.length !== 0) {
+                      matrix.push(objectDeepCopy(weekArr));
+                  }
+                  return matrix;
+              };
+
+              // 오늘 날짜를 기준으로 length 만큼 과거의 날짜 매트릭스를 생성합니다.
+              const today = new Date();
+              let copiedDate;
+              let year, month;
+              let motherMatrix = [];
+
+              for (let i = 0; i < length; i++) {
+                  copiedDate = new Date(JSON.stringify(today).slice(1, -1));
+                  copiedDate.setMonth(copiedDate.getMonth() - i);
+                  year = copiedDate.getFullYear();
+                  month = copiedDate.getMonth() + 1;
+                  motherMatrix.push(objectDeepCopy(matrixCalendar(year, month)));
               }
-              resultArr.push(middleResultArr);
-            }
-        
-            return resultArr;
+
+              return motherMatrix;
+          };
+          try {
+              // 주어진 기간 동안의 날짜 매트릭스를 반환합니다.
+              const today = new Date();
+              const dateMatrix = tripleMatrixByDate(length);
+
+              let year, month;
+              let day0, day1, day2;
+              let resultArr = [];
+              let middleResultArr, resultFactorArr;
+
+              // 각 월에 대해 날짜 매트릭스를 생성합니다.
+              for (let j = 0; j < dateMatrix.length; j++) {
+                  year = today.getFullYear();
+                  month = today.getMonth() + 1 - j;
+
+                  year = today.getFullYear() + Math.floor(month / 12) + ((month % 12) === 0 ? -1 : 0);
+                  month = (month % 12) > 0 ? (month % 12) : 12 + (month % 12);
+
+                  middleResultArr = [];
+                  for (let i = 0; i < dateMatrix[j].length; i++) {
+                      resultFactorArr = [];
+
+                      day0 = dateMatrix[j][i][0];  // 첫째 날
+                      resultFactorArr.push(new Date(year, month - 1, day0));
+
+                      day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];  // 마지막 날
+                      resultFactorArr.push(new Date(year, month - 1, day1));
+
+                      // 다음 주의 첫째 날을 추가
+                      if (i !== dateMatrix[j].length - 1) {
+                          day2 = dateMatrix[j][i + 1][0];
+                          resultFactorArr.push(new Date(year, month - 1, day2));
+                      } else {
+                          day2 = 1;
+                          if (month === 12) {
+                              resultFactorArr.push(new Date(year + 1, 0, day2));
+                          } else {
+                              resultFactorArr.push(new Date(year, month, day2));
+                          }
+                      }
+                      middleResultArr.push(resultFactorArr);
+                  }
+                  resultArr.push(middleResultArr);
+              }
+
+              return resultArr;
           } catch (e) {
-            console.log(e);
-            return [];
+              console.log(e);
+              return [];
           }
-        }
+        };
+
+        /**
+         * 현재 날짜(today)를 가져옵니다.
+         * @const {Date} today - 현재 시스템 날짜를 저장하는 변수
+         */
         const today = new Date();
-        const proposalStandardDate = new Date(2021, 8, 1);
-        const proposalStandardDateValue = proposalStandardDate.valueOf();
+
+        /**
+         * 제안서 기준일(proposalStandardDate)을 2021년 9월 1일로 설정합니다.
+         * @const {Date} proposalStandardDate - 제안서 관련 기준일로, 이 날짜 이후의 데이터만 처리합니다.
+         */
+        const proposalStandardDate = new Date(2021, 8, 1); // 8은 9월을 의미합니다.
+
+        /**
+         * proposalStandardDate의 밀리초 값을 저장합니다.
+         * @const {number} proposalStandardDateValue - 제안서 기준일을 밀리초 값으로 변환한 값
+         */
+        const proposalStandardDateValue = proposalStandardDate.valueOf(); // 날짜를 숫자(밀리초)로 변환
+
+        /**
+         * 날짜 매트릭스를 저장하는 변수입니다.
+         * @let {Array} dateMatrix - 주어진 기간의 날짜 매트릭스를 저장하는 배열
+         */
         let dateMatrix;
+
+        /**
+         * 클라이언트, 제안서, 계약, 프로세스 데이터를 저장하는 변수를 정의합니다.
+         * @let {Array} clients, proposals, contracts, process - 각각 클라이언트, 제안서, 계약, 프로세스 데이터를 저장할 변수들
+         */
         let searchQuery, clients, proposals, contracts, process;
+
+        /**
+         * 프로세스 관련 데이터를 저장할 변수를 정의합니다.
+         * @let {Array} processTong - 프로세스 데이터를 저장하는 배열
+         */
         let processTong;
+
+        /**
+         * 클라이언트 ID 배열을 저장하는 변수를 정의합니다.
+         * @let {Array} cliidArr, cliidArr_raw - 클라이언트 ID 배열 및 원본 배열을 저장할 변수들
+         */
         let cliidArr, cliidArr_raw;
+
+        /**
+         * 최종 결과를 저장할 배열을 정의합니다.
+         * @let {Array} resultArr - 결과 데이터를 저장할 배열
+         */
         let resultArr;
+
+        /**
+         * 각종 임시 데이터를 저장하는 변수를 정의합니다.
+         * @let {Object} obj - 임시 데이터를 저장할 객체
+         */
         let obj;
+
+        /**
+         * 검색 여부를 결정하는 플래그 변수를 정의합니다.
+         * @let {boolean} searchBoo - 검색이 필요한지 여부를 결정하는 플래그
+         */
         let searchBoo;
+
+        /**
+         * 복수 프로세스를 처리하는 데이터를 정의합니다.
+         * @let {Array} processTong_refined, processTong_past, processTong_double - 복수 프로세스를 처리하는 배열들
+         */
         let processTong_refined, processTong_past, processTong_double;
-        let doubleObject;
-        let doubleClient;
+
+        /**
+         * 중복 객체를 처리하는 변수를 정의합니다.
+         * @let {Object} doubleObject, doubleClient - 중복 객체 및 클라이언트 정보를 저장하는 객체
+         */
+        let doubleObject, doubleClient;
+
+        /**
+         * 최종 길이를 저장하는 변수를 정의합니다.
+         * @let {number} finalLength - 최종 길이를 저장하는 변수
+         */
         let finalLength;
+
+        /**
+         * 프로세스의 숫자를 저장하는 변수를 정의합니다.
+         * @let {number} processNumber - 프로세스의 수를 저장하는 변수
+         */
         let processNumber;
+
+        /**
+         * 과거 데이터를 처리하는 변수를 정의합니다.
+         * @let {Array} pastTong - 과거 데이터를 저장하는 배열
+         */
         let pastTong;
+
+        /**
+         * 제안서 데이터를 저장하는 배열을 정의합니다.
+         * @let {Array} proposalsTong - 제안서 데이터를 저장하는 배열
+         */
         let proposalsTong;
+
+        /**
+         * 클라이언트 ID와 프로젝트 ID 임시 배열을 정의합니다.
+         * @let {Array} cliidTempArr, proidTempArr - 각각 클라이언트 ID 및 프로젝트 ID 임시 배열
+         */
         let cliidTempArr, proidTempArr;
-        let motherClients, motherProjects, motherProjects_raw;
-        let motherClientHistories;
+
+        /**
+         * Mother 클래스에서 가져온 클라이언트, 프로젝트, 히스토리 데이터를 저장하는 변수를 정의합니다.
+         * @let {Array} motherClients, motherProjects, motherProjects_raw, motherClientHistories - 각각 클라이언트, 프로젝트, 히스토리 데이터를 저장하는 배열들
+         */
+        let motherClients, motherProjects, motherProjects_raw, motherClientHistories;
+
+        /**
+         * 프로젝트 히스토리를 저장하는 변수를 정의합니다.
+         * @let {Array} histories - 히스토리 데이터를 저장하는 배열
+         */
         let histories;
+
+        /**
+         * 복사된 매트릭스를 저장하는 변수를 정의합니다.
+         * @let {Array} copiedMatrix - 복사된 날짜 매트릭스를 저장하는 배열
+         */
         let copiedMatrix;
+
+        /**
+         * 월 데이터를 저장하는 객체를 정의합니다.
+         * @let {Object} monthObject - 월별 데이터를 저장하는 객체
+         */
         let monthObject;
+
+        /**
+         * 또다시 복사된 매트릭스를 저장하는 변수를 정의합니다.
+         * @let {Array} copiedCopiedMatrix - 또다시 복사된 매트릭스를 저장하는 배열
+         */
         let copiedCopiedMatrix;
+
+        /**
+         * 연도와 월을 저장하는 배열을 정의합니다.
+         * @let {Array} yearMonthArr - 연도와 월 데이터를 저장하는 배열
+         */
         let yearMonthArr;
-        let logRes;
-        let logFound;
+
+        /**
+         * 로그 데이터를 저장하는 변수를 정의합니다.
+         * @let {Object} logRes, logFound - 로그 결과 및 검색된 로그 데이터를 저장하는 객체들
+         */
+        let logRes, logFound;
+
+        /**
+         * 계약 데이터를 처리하는 변수를 정의합니다.
+         * @let {Array} contractsPure, contractsAmount, contractsPureAmount - 각각 순수 계약 데이터, 계약 금액, 순수 계약 금액을 저장하는 배열들
+         */
         let contractsPure, contractsAmount, contractsPureAmount;
+
+        /**
+         * 계산된 순수 금액을 저장하는 변수를 정의합니다.
+         * @let {number} calculationPureAmount - 계산된 순수 금액을 저장하는 변수
+         */
         let calculationPureAmount;
+
+        /**
+         * 월별 데이터를 저장하는 배열을 정의합니다.
+         * @let {Array} monthArr - 월별 데이터를 저장하는 배열
+         */
         let monthArr;
-    
+
+        /**
+         * 요청 본문에서 month가 정의되지 않은 경우 처리하는 조건문입니다.
+         * @if - month가 정의되지 않았다면 기본값으로 8개월을 설정하고, 검색 여부 플래그(searchBoo)를 false로 설정합니다.
+         */
         if (req.body.month === undefined) {
-          if (req.body.startYear === undefined) {
-            req.body.month = 8;
-            searchBoo = false;
-          } else {
-            let { startYear, startMonth, endYear, endMonth } = req.body;
-            startYear = Number(startYear);
-            startMonth = Number(startMonth.replace(/^0/, ''));
-            endYear = Number(endYear);
-            endMonth = Number(endMonth.replace(/^0/, ''));
-            req.body.month = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((startYear * 12) + startMonth) + 1;
-            req.body.endMonth = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((endYear * 12) + endMonth);
-            searchBoo = true;
-          }
+            if (req.body.startYear === undefined) {
+                req.body.month = 8;  // 기본값으로 8개월을 설정
+                searchBoo = false;  // 검색 여부 플래그를 false로 설정
+            } else {
+                /**
+                 * 시작 연도와 월, 종료 연도와 월이 정의된 경우, 주어진 기간 동안의 보고서를 생성합니다.
+                 * 시작 연도/월과 종료 연도/월을 기반으로 전체 기간을 월 단위로 계산하여 저장합니다.
+                 */
+                let { startYear, startMonth, endYear, endMonth } = req.body;
+                startYear = Number(startYear);  // 시작 연도를 숫자로 변환
+                startMonth = Number(startMonth.replace(/^0/, ''));  // 시작 월에서 앞의 0을 제거하고 숫자로 변환
+                endYear = Number(endYear);  // 종료 연도를 숫자로 변환
+                endMonth = Number(endMonth.replace(/^0/, ''));  // 종료 월에서 앞의 0을 제거하고 숫자로 변환
+
+                /**
+                 * 현재 날짜에서 시작 연도/월을 뺀 후 전체 기간을 월 단위로 계산하여 month에 저장합니다.
+                 * @example 오늘이 2024년 9월이라면, 2022년 1월부터 현재까지의 월 수를 계산하여 저장합니다.
+                 */
+                req.body.month = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((startYear * 12) + startMonth) + 1;
+
+                /**
+                 * 종료 연도/월에서 현재 날짜를 뺀 후 종료 기간을 월 단위로 계산하여 endMonth에 저장합니다.
+                 */
+                req.body.endMonth = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((endYear * 12) + endMonth);
+
+                searchBoo = true;  // 검색 여부 플래그를 true로 설정
+            }
         } else {
-          searchBoo = false;
+            searchBoo = false;  // month가 정의된 경우 검색 여부 플래그를 false로 설정
         }
     
+        /**
+         * 검색 플래그가 false일 때, 요청 본문에 포함된 월(month)을 기준으로 날짜 매트릭스를 가져옵니다.
+         * @if - searchBoo가 false일 때의 조건문
+         */
         if (!searchBoo) {
+          /**
+           * @function getDateMatrix
+           * @description 요청된 기간 동안의 날짜 매트릭스를 생성합니다. 
+           * req.body.month에 정의된 기간만큼의 매트릭스를 반환합니다.
+           * @param {number} req.body.month - 요청 본문에서 가져온 월(month) 값을 인자로 넘깁니다.
+           */
           dateMatrix = await getDateMatrix(Number(req.body.month));
         } else {
+          /**
+           * 검색 플래그가 true일 경우, 요청된 월(month)을 기준으로 매트릭스를 가져오고,
+           * endMonth 값에 해당하는 기간을 제외한 나머지를 처리합니다.
+           * @else - searchBoo가 true일 때의 조건문
+           */
           dateMatrix = await getDateMatrix(Number(req.body.month));
+
+          /**
+           * @for - endMonth의 값만큼 날짜 매트릭스를 앞에서부터 제거하여 범위를 조정합니다.
+           * @param {number} i - endMonth만큼 반복하면서 dateMatrix에서 해당 월을 제거합니다.
+           */
           for (let i = 0; i < req.body.endMonth; i++) {
-            dateMatrix.shift();
+              dateMatrix.shift();  // endMonth에 해당하는 기간을 제거
           }
         }
-    
+
+        /**
+        * @function equalJson
+        * @description Mother 클래스의 equalJson 메서드를 사용하여 dateMatrix를 깊은 복사(deepcopy)합니다.
+        * 이는 JSON.parse와 JSON.stringify를 사용하여 복사하는 방법을 개선한 버전으로, Date 객체와 같은 특수 객체를 보존합니다.
+        * @param {string} JSON.stringify(dateMatrix) - dateMatrix를 문자열로 변환한 후 equalJson으로 깊은 복사합니다.
+        * @returns {Array} - 깊은 복사가 완료된 배열을 반환합니다.
+        */
         copiedMatrix = equalJson(JSON.stringify(dateMatrix));
-        copiedMatrix = copiedMatrix.flat().flat();
+
+        /**
+        * 깊은 복사된 매트릭스를 1차원 배열로 변환하여 정렬할 수 있게 합니다.
+        * @function Array.prototype.flat
+        * @description 복사된 매트릭스를 1차원 배열로 변환합니다.
+        */
+        copiedMatrix = copiedMatrix.flat().flat();  // 2중 배열을 1차원 배열로 변환
+
+        /**
+        * @function Array.prototype.sort
+        * @description 매트릭스 안의 날짜를 오름차순으로 정렬합니다.
+        * Date 객체의 valueOf()를 사용하여 밀리초 단위로 날짜를 비교합니다.
+        * @param {function} (a, b) - 두 날짜를 비교하여 오름차순으로 정렬
+        */
         copiedMatrix.sort((a, b) => {
-          return a.valueOf() - b.valueOf();
+          return a.valueOf() - b.valueOf();  // 날짜를 오름차순으로 정렬
         });
     
+        /**
+         * @description MongoDB에서 클라이언트 데이터를 조회하여 요청 기간 내에 있는 클라이언트를 가져옵니다.
+         * 조건은 클라이언트의 요청(request)의 타임라인(timeline)이 주어진 날짜 범위 내에 있어야 합니다.
+         * @param {object} copiedMatrix - 날짜 매트릭스를 담고 있는 배열. 시작과 끝 날짜로 클라이언트의 타임라인을 필터링합니다.
+         */
         motherClients = (await back.getClientsByQuery({
+          // $and 조건으로 두 가지 조건을 모두 만족하는 데이터를 조회합니다.
           $and: [
-            {
-              requests: {
-                $elemMatch: {
-                  "request.timeline": { $gte: copiedMatrix[0] }
-                }
+              {
+                  // 클라이언트 요청(request)의 타임라인이 copiedMatrix의 첫 번째 날짜보다 크거나 같은 경우를 필터링합니다.
+                  requests: {
+                      $elemMatch: {
+                          "request.timeline": { $gte: copiedMatrix[0] }  // 시작 날짜 이상
+                      }
+                  }
+              },
+              {
+                  // 클라이언트 요청(request)의 타임라인이 copiedMatrix의 마지막 날짜보다 작거나 같은 경우를 필터링합니다.
+                  requests: {
+                      $elemMatch: {
+                          "request.timeline": { $lte: copiedMatrix[copiedMatrix.length - 1] }  // 종료 날짜 이하
+                      }
+                  }
               }
-            },
-            {
-              requests: {
-                $elemMatch: {
-                  "request.timeline": { $lte: copiedMatrix[copiedMatrix.length - 1] }
-                }
-              }
-            }
           ]
-        }, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let o = arr[0].toNormal(); o.cliid = arr.cliid; o.analytics = arr[1].toNormal(); return o; });
-        motherClientHistories = await back.mongoPick("clientHistory", [ {
-          $or: motherClients.map((o) => { return { cliid: o.cliid } }),
-        }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: instance.mongolocal });
+        }, { selfMongo: instance.mongo, withTools: true }))  // MongoDB 인스턴스와 추가 도구 옵션을 설정합니다.
+        .getRequestsTong()  // 고객의 상담 문의(requests) 데이터를 가져옵니다.
+        .map((arr) => { 
+          let o = arr[0].toNormal();  // 요청 데이터의 첫 번째 항목을 일반 객체로 변환합니다.
+          o.cliid = arr.cliid;  // 클라이언트 ID를 추가합니다.
+          o.analytics = arr[1].toNormal();  // 두 번째 항목(분석 데이터)을 일반 객체로 변환합니다.
+          return o;  // 변환된 객체를 반환합니다.
+        });
+
+        /**
+        * @description 클라이언트의 히스토리 데이터를 조회하여 해당 클라이언트의 이력을 가져옵니다.
+        * @param {Array} motherClients - 필터링된 클라이언트 리스트에서 cliid를 기준으로 히스토리를 조회합니다.
+        */
+        motherClientHistories = await back.mongoPick("clientHistory", [ 
+          {
+              // 클라이언트 ID를 기준으로 OR 조건으로 히스토리 데이터를 조회합니다.
+              $or: motherClients.map((o) => { return { cliid: o.cliid } }),  // 클라이언트 ID 배열을 생성
+          }, 
+          { cliid: 1, manager: 1, curation: 1 }  // 반환할 필드들 (cliid, manager, curation)
+        ], { selfMongo: instance.mongolocal });  // 로컬 MongoDB 인스턴스를 사용합니다.
+
+        /**
+        * @description 클라이언트의 프로젝트 데이터를 조회하여 주어진 기간 내에 해당하는 프로젝트를 필터링합니다.
+        * 계약 날짜가 copiedMatrix의 첫 번째 날짜보다 크거나 같은 프로젝트를 가져옵니다.
+        * @param {Array} motherClients - 조회된 클라이언트 데이터를 바탕으로 해당 클라이언트의 프로젝트 데이터를 필터링합니다.
+        */
         motherProjects_raw = (await back.getProjectsByQuery({
-          $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
-            {
-              "process.contract.first.date": {
-                $gte: copiedMatrix[0]
+          // OR 조건으로 클라이언트의 프로젝트 데이터 또는 계약 날짜를 기준으로 필터링합니다.
+          $or: motherClients.map((o) => { return { cliid: o.cliid } })  // 클라이언트 ID에 해당하는 프로젝트를 가져옵니다.
+          .concat([
+              {
+                  // 계약 첫 날짜가 copiedMatrix의 첫 번째 날짜 이상인 프로젝트를 가져옵니다.
+                  "process.contract.first.date": { $gte: copiedMatrix[0] }  // 시작 날짜 이상
               }
-            }
           ]),
-        }, { selfMongo: instance.mongo })).toNormal();
-        motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
-    
+        }, { selfMongo: instance.mongo }))  // MongoDB 인스턴스 설정
+        .toNormal();  // 프로젝트 데이터를 일반 객체로 변환합니다.
+
+        /**
+        * @description 필터링된 프로젝트 데이터에서 계약 첫 날짜가 2000년 1월 1일 이후인 프로젝트만 필터링하여 가져옵니다.
+        * @param {Array} motherProjects_raw - 필터링된 프로젝트 데이터
+        * @returns {Array} motherProjects - 계약 첫 날짜가 2000년 1월 1일 이후인 프로젝트 데이터
+        */
+        motherProjects = motherProjects_raw.filter((obj) => {  
+          return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf();  // 계약 첫 날짜가 2000년 이후인 프로젝트 필터링
+        });
+        
+        /**
+         * @description yearMonthArr 배열에 연도와 월을 저장하고, resultArr 배열에 결과 데이터를 저장하기 위해 초기화합니다.
+         * yearMonthArr는 연도와 월을 기반으로 데이터를 정렬하는 데 사용됩니다.
+         * resultArr는 최종 결과 데이터를 저장합니다.
+         */
         yearMonthArr = [];
         resultArr = [];
+
+        /**
+         * @description dateMatrix의 각 매트릭스에 대해 데이터를 처리합니다. 
+         * monthObject 객체에 연도와 월을 저장하고, monthArr에 각 데이터를 추가합니다.
+         * @param {Array} dateMatrix - 날짜 매트릭스 배열
+         */
         for (let matrix of dateMatrix) {
-    
-          copiedCopiedMatrix = equalJson(JSON.stringify(matrix));
-          copiedCopiedMatrix = copiedCopiedMatrix.flat();
-          copiedCopiedMatrix.sort((a, b) => {
-            return b.valueOf() - a.valueOf();
-          });
-    
-          monthObject = {
-            year: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getFullYear(),
-            month: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getMonth() + 1,
-          };
-          yearMonthArr.push((monthObject.year * 100) + monthObject.month);
-    
-          monthArr = [];
-          for (let arr of matrix) {
-    
-            obj = {};
-    
-            obj.cliid = {};
-            obj.proid = {};
-    
-            obj.startDay = `${zeroAddition(arr[0].getFullYear())}-${zeroAddition(arr[0].getMonth() + 1)}-${zeroAddition(arr[0].getDate())}`;
-            obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
-    
-            //client
-            clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= arr[0].valueOf() && obj.timeline.valueOf() < arr[2].valueOf() });
-            obj.client = clients.length;
-            obj.cliid.client = clients.map((obj) => { return obj.cliid; });
-            obj.proid.client = [];
-    
-            //proposal
-            if (arr[0].valueOf() > proposalStandardDateValue) {
-              cliidArr_raw = clients.map((obj) => { return obj.cliid; });
-              cliidArr_raw = Array.from(new Set(cliidArr_raw));
-              process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-              histories = process
-              obj.proposal = histories.length;
-              obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
-              obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
-            } else {
-              cliidArr_raw = clients.map((obj) => { return obj.cliid; });
-              cliidArr_raw = Array.from(new Set(cliidArr_raw));
-              process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-              obj.proposal = process.length;
-              obj.cliid.proposal = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
-              obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
-            }
-    
-            //recommend
-            if (arr[0].valueOf() > proposalStandardDateValue) {
-              obj.recommend = 0;
-              obj.cliid.recommend = [];
-              obj.proid.recommend = [];
-            } else {
-              obj.recommend = 0;
-              obj.cliid.recommend = [];
-              obj.proid.recommend = [];
-            }
-    
-            //contract
-            contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= arr[0].valueOf() && obj.process.contract.first.date.valueOf() < arr[2].valueOf() });
-            obj.contract = contracts.length;
-            obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
-            obj.proid.contract = contracts.map((obj) => { return obj.proid });
-    
-            //contract pure
-            contractsPure = contracts.filter((c) => { return !/드[랍롭]/gi.test(c.process.status) });
-            obj.contractsPure = contractsPure.length;
-            obj.cliid.contractsPure = [ ...new Set(contractsPure.map((obj) => { return obj.cliid; })) ];
-            obj.proid.contractsPure = contractsPure.map((obj) => { return obj.proid });
-    
-            //contract amount
-            contractsAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.consumer });
-            obj.contractsAmount = contractsAmount.reduce((acc, curr) => { return acc + curr }, 0);
-    
-            //contract amount pure
-            contractsPureAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.supply });
-            obj.contractsPureAmount = contractsPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
-    
-            //calculation subtract
-            calculationPureAmount = contractsPure.map((c) => { return c.process.calculation.payments.totalAmount });
-            obj.contractAmountSubtract = obj.contractsPureAmount - calculationPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
-    
-            //process start
-            cliidArr_raw = clients.filter((obj) => { return !/드[롭랍]/gi.test(obj.analytics.response.status) }).map((obj) => { return obj.cliid; });
-            cliidArr_raw = Array.from(new Set(cliidArr_raw));
-            process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) }).filter((obj) => {
-              return obj.desid.trim() !== '';
+
+            /**
+             * @description 날짜 매트릭스를 깊은 복사하여 처리합니다. equalJson은 Mother 클래스의 메서드로, 깊은 복사 및 Date 객체를 보존하는 업그레이드된 JSON.parse/JSON.stringify 방식입니다.
+             * @param {string} JSON.stringify(matrix) - matrix를 문자열로 변환 후 equalJson으로 깊은 복사합니다.
+             */
+            copiedCopiedMatrix = equalJson(JSON.stringify(matrix));
+            
+            /**
+             * @description 깊은 복사된 날짜 매트릭스를 평탄화하여 1차원 배열로 변환합니다.
+             * @function Array.prototype.flat - 2차원 배열을 1차원으로 변환합니다.
+             */
+            copiedCopiedMatrix = copiedCopiedMatrix.flat();
+
+            /**
+             * @description 날짜 매트릭스를 오름차순으로 정렬합니다.
+             * @param {function} (a, b) - 날짜를 비교하여 오름차순으로 정렬합니다.
+             */
+            copiedCopiedMatrix.sort((a, b) => {
+                return a.valueOf() - b.valueOf();
             });
-            obj.process = process.length;
-            obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
-            obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
-    
-            monthArr.push(obj);
-          }
-          monthObject.data = equalJson(JSON.stringify(monthArr));
-    
-          monthObject.contractsPure = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPure }, 0);
-          monthObject.contractsAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsAmount }, 0);
-          monthObject.contractsPureAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPureAmount }, 0);
-          monthObject.contractAmountSubtract = monthObject.data.reduce((acc, curr) => { return acc + curr.contractAmountSubtract }, 0);
-    
-          resultArr.push(monthObject);
+
+            /**
+             * @description 중간 날짜를 기준으로 연도와 월을 저장하는 monthObject 객체를 생성합니다.
+             * @param {number} Math.round(copiedCopiedMatrix.length / 2) - 매트릭스 배열의 중간 인덱스를 사용하여 연도와 월을 계산합니다.
+             */
+            monthObject = {
+                year: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getFullYear(),
+                month: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getMonth() + 1,
+            };
+
+            /**
+             * @description yearMonthArr 배열에 year와 month를 결합하여 연도와 월을 저장합니다.
+             * @example yearMonthArr.push(202309) - 2023년 9월을 저장하는 예시입니다.
+             */
+            yearMonthArr.push((monthObject.year * 100) + monthObject.month);
+
+            monthArr = [];
+            
+            /**
+             * @description 매트릭스 내 각 배열(arr)에 대해 데이터를 처리하고 obj 객체에 클라이언트 및 프로젝트 데이터를 추가합니다.
+             */
+            for (let arr of matrix) {
+
+                /**
+                 * @description obj 객체에 클라이언트 ID(cliId)와 프로젝트 ID(proId) 데이터를 추가할 준비를 합니다.
+                 */
+                obj = {};
+                obj.cliid = {};
+                obj.proid = {};
+
+                /**
+                 * @description obj 객체에 시작일과 종료일을 저장합니다. zeroAddition 함수는 0을 추가하여 날짜 형식을 유지합니다.
+                 */
+                obj.startDay = `${zeroAddition(arr[0].getFullYear())}-${zeroAddition(arr[0].getMonth() + 1)}-${zeroAddition(arr[0].getDate())}`;
+                obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
+
+                /**
+                 * @description 클라이언트 데이터를 필터링하여 obj 객체에 클라이언트 수와 관련 데이터를 추가합니다.
+                 * 타임라인이 시작일과 종료일 사이에 있는 클라이언트만 필터링합니다.
+                 */
+                clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= arr[0].valueOf() && obj.timeline.valueOf() < arr[2].valueOf() });
+                obj.client = clients.length;
+                obj.cliid.client = clients.map((obj) => { return obj.cliid; });
+                obj.proid.client = [];
+
+                /**
+                 * @description 제안서 데이터를 처리하여 obj 객체에 제안서 수와 관련 데이터를 추가합니다.
+                 * proposalStandardDateValue 기준으로 제안서 데이터를 처리합니다.
+                 */
+                if (arr[0].valueOf() > proposalStandardDateValue) {
+                    cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+                    cliidArr_raw = Array.from(new Set(cliidArr_raw));  // 중복 제거
+                    process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+                    histories = process;
+                    obj.proposal = histories.length;
+                    obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
+                    obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
+                } else {
+                    cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+                    cliidArr_raw = Array.from(new Set(cliidArr_raw));
+                    process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+                    obj.proposal = process.length;
+                    obj.cliid.proposal = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
+                    obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
+                }
+
+                /**
+                 * @description 추천 데이터를 처리하여 obj 객체에 추천 수를 추가합니다.
+                 * 추천 데이터는 proposalStandardDateValue 이후와 그 이전에 따라 0으로 설정됩니다.
+                 */
+                if (arr[0].valueOf() > proposalStandardDateValue) {
+                    obj.recommend = 0;
+                    obj.cliid.recommend = [];
+                    obj.proid.recommend = [];
+                } else {
+                    obj.recommend = 0;
+                    obj.cliid.recommend = [];
+                    obj.proid.recommend = [];
+                }
+
+                /**
+                 * @description 계약 데이터를 필터링하여 obj 객체에 계약 수와 관련 데이터를 추가합니다.
+                 * 계약 날짜가 매트릭스의 시작일과 종료일 사이에 있는 계약만 필터링합니다.
+                 */
+                contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= arr[0].valueOf() && obj.process.contract.first.date.valueOf() < arr[2].valueOf() });
+                obj.contract = contracts.length;
+                obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
+                obj.proid.contract = contracts.map((obj) => { return obj.proid });
+
+                /**
+                 * @description 드랍되지 않은 순수 계약 데이터를 필터링하여 obj 객체에 추가합니다.
+                 */
+                contractsPure = contracts.filter((c) => { return !/드[랍롭]/gi.test(c.process.status) });
+                obj.contractsPure = contractsPure.length;
+                obj.cliid.contractsPure = [ ...new Set(contractsPure.map((obj) => { return obj.cliid; })) ];
+                obj.proid.contractsPure = contractsPure.map((obj) => { return obj.proid });
+
+                /**
+                 * @description 소비자 금액을 계산하여 obj 객체에 추가합니다.
+                 */
+                contractsAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.consumer });
+                obj.contractsAmount = contractsAmount.reduce((acc, curr) => { return acc + curr }, 0);
+
+                /**
+                 * @description 공급자 금액을 계산하여 obj 객체에 추가합니다.
+                 */
+                contractsPureAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.supply });
+                obj.contractsPureAmount = contractsPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
+
+                /**
+                 * @description 계약 금액에서 순수 금액을 빼서 계산 차액을 구합니다.
+                 */
+                calculationPureAmount = contractsPure.map((c) => { return c.process.calculation.payments.totalAmount });
+                obj.contractAmountSubtract = obj.contractsPureAmount - calculationPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
+
+                /**
+                 * @description 클라이언트 응답 상태가 '드랍'이 아닌 클라이언트를 필터링하여 프로세스 데이터를 처리합니다.
+                 */
+                cliidArr_raw = clients.filter((obj) => { return !/드[롭랍]/gi.test(obj.analytics.response.status) }).map((obj) => { return obj.cliid; });
+                cliidArr_raw = Array.from(new Set(cliidArr_raw));
+                process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) }).filter((obj) => {
+                    return obj.desid.trim() !== '';
+                });
+                obj.process = process.length;
+                obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
+                obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
+
+                // 월별 데이터를 monthArr 배열에 추가합니다.
+                monthArr.push(obj);
+            }
+
+            /**
+             * @description monthArr 데이터를 JSON으로 직렬화한 후 deep copy하여 monthObject에 저장합니다.
+             * @param {string} JSON.stringify(monthArr) - monthArr 배열을 문자열로 변환 후 equalJson으로 복사합니다.
+             */
+            monthObject.data = equalJson(JSON.stringify(monthArr));
+
+            /**
+             * 월별 데이터를 집계하여 monthObject에 추가합니다.
+             */
+            monthObject.contractsPure = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPure }, 0);
+            monthObject.contractsAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsAmount }, 0);
+            monthObject.contractsPureAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPureAmount }, 0);
+            monthObject.contractAmountSubtract = monthObject.data.reduce((acc, curr) => { return acc + curr.contractAmountSubtract }, 0);
+
+            // 최종 결과를 resultArr 배열에 추가합니다.
+            resultArr.push(monthObject);
         }
-    
+
+        /**
+         * @description yearMonthArr 배열을 정렬합니다.
+         */
         yearMonthArr.sort();
-    
+
+        /**
+         * @description 외부 시스템에 로그 데이터를 요청하여 MAU, 광고 클라이언트, 차지 등의 데이터를 조회합니다.
+         */
         logRes = await requestSystem("https://" + address.testinfo.host + ":" + String(3000) + "/getClientReport", {
-          fromYear: Math.floor(yearMonthArr[0] / 100),
-          fromMonth: yearMonthArr[0] % 100,
-          toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
-          toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
+            fromYear: Math.floor(yearMonthArr[0] / 100),
+            fromMonth: yearMonthArr[0] % 100,
+            toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
+            toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
         }, {
-          headers: {
-            "Content-Type": "application/json"
-          }
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
-    
+
+        /**
+         * @description 로그 데이터에서 연도와 월에 해당하는 데이터를 찾아서 obj 객체에 추가합니다.
+         */
         for (let obj of resultArr) {
-          logFound = logRes.data.find((obj2) => {
-            return obj2.year === obj.year && obj2.month === obj.month
-          });
-          if (logFound === undefined) {
-            obj.mau = 0;
-            obj.adClients = 0;
-            obj.charge = 0;
-          } else {
-            obj.mau = logFound.mau
-            obj.adClients = logFound.adClients
-            obj.charge = logFound.charge
-          }
+            logFound = logRes.data.find((obj2) => {
+                return obj2.year === obj.year && obj2.month === obj.month;
+            });
+            if (logFound === undefined) {
+                obj.mau = 0;
+                obj.adClients = 0;
+                obj.charge = 0;
+            } else {
+                obj.mau = logFound.mau;
+                obj.adClients = logFound.adClients;
+                obj.charge = logFound.charge;
+            }
         }
-    
+
+        // 결과 데이터를 JSON 형식으로 응답합니다.
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify(resultArr));
+
       } catch (e) {
+        // 에러가 발생한 경우 로그를 남기고 클라이언트에 에러 메시지를 보냅니다.
         logger.error(e, req).catch((e) => { console.log(e); });
+
+        // 응답 헤더에 JSON 타입을 설정합니다.
         res.set("Content-Type", "application/json");
+
+        // 에러 메시지를 클라이언트에 JSON 형식으로 보냅니다.
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /extractAnalytics
+     * @description 클라이언트의 분석 데이터를 추출하는 라우터입니다. 기본 모드에서 클라이언트, 추천, 계약 정보를 날짜별로 분석하여 반환합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 분석 모드, 시작 날짜, 종료 날짜 등의 데이터가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 추출된 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/extractAnalytics" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        if (req.body.mode === undefined) {
-          throw new Error("invalid post");
-        }
-        const selfMongo = instance.mongo;
-        const selfLocalMongo = instance.mongolocal;
-        const { mode } = equalJson(req.body);
-        let collection;
-        let fromDate, toDate;
-        let whereQuery;
-        let rows;
-        let motherClients;
-        let clients;
-        let cliidArr_raw;
-        let process;
-        let histories;
-        let motherClientHistories;
-        let motherProjects_raw;
-        let motherProjects;
-        let obj;
-        let contracts;
-        let matrix;
-        let fromDateCopied;
-        let tomorrow;
-    
-        if (mode === "basic") {
-    
-          if (req.body.fromDate === undefined || req.body.toDate === undefined) {
-            throw new Error("invalid post 2");
+          // 요청 본문에 모드가 정의되지 않은 경우 에러를 발생시킵니다.
+          if (req.body.mode === undefined) {
+              throw new Error("invalid post");
           }
-    
-          ({ fromDate, toDate } = equalJson(req.body));
-    
-          fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
-          fromDateCopied = new Date(JSON.stringify(fromDate).slice(1, -1));
-          toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
-          toDate.setDate(toDate.getDate() + 1);
-    
-          motherClients = (await back.getClientsByQuery({
-            $and: [
-              {
-                requests: {
-                  $elemMatch: {
-                    "request.timeline": { $gte: fromDate }
-                  }
-                }
-              },
-              {
-                requests: {
-                  $elemMatch: {
-                    "request.timeline": { $lt: toDate }
-                  }
-                }
+
+          // MongoDB 인스턴스와 로컬 MongoDB 인스턴스를 가져옵니다.
+          const selfMongo = instance.mongo;
+          const selfLocalMongo = instance.mongolocal;
+
+          // 요청 본문에서 mode 값을 equalJson으로 깊은 복사하여 가져옵니다.
+          const { mode } = equalJson(req.body);
+
+          let collection;
+          let fromDate, toDate;
+          let whereQuery;
+          let rows;  // 최종 데이터를 저장할 배열
+          let motherClients;  // 클라이언트 데이터
+          let clients;
+          let cliidArr_raw;
+          let process;
+          let histories;
+          let motherClientHistories;  // 클라이언트 히스토리
+          let motherProjects_raw;
+          let motherProjects;  // 프로젝트 데이터
+          let obj;  // 결과 객체
+          let contracts;
+          let matrix;  // 날짜 매트릭스를 저장할 배열
+          let fromDateCopied;
+          let tomorrow;
+
+          /**
+           * @description 기본 모드에서 데이터를 처리합니다. 시작 날짜와 종료 날짜가 정의되지 않으면 에러를 발생시킵니다.
+           */
+          if (mode === "basic") {
+
+              // 시작 날짜 또는 종료 날짜가 정의되지 않은 경우 에러를 발생시킵니다.
+              if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+                  throw new Error("invalid post 2");
               }
-            ]
-          }, { selfMongo, withTools: true })).getRequestsTong().map((arr) => { let o = arr[0].toNormal(); o.cliid = arr.cliid; o.analytics = arr[1].toNormal(); return o; });
-          motherClientHistories = await back.mongoPick("clientHistory", [ {
-            $or: motherClients.map((o) => { return { cliid: o.cliid } }),
-          }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: selfLocalMongo });
-          motherProjects_raw = (await back.getProjectsByQuery({
-            $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
-              {
-                "process.contract.first.date": {
-                  $gte: fromDate
-                }
+
+              // 요청 본문에서 fromDate와 toDate 값을 equalJson으로 깊은 복사하여 가져옵니다.
+              ({ fromDate, toDate } = equalJson(req.body));
+
+              // 시작 날짜와 종료 날짜를 자정으로 설정합니다.
+              fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+              fromDateCopied = new Date(JSON.stringify(fromDate).slice(1, -1));
+              toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+              toDate.setDate(toDate.getDate() + 1);  // 종료 날짜는 하루 더해줍니다.
+
+              // 주어진 날짜 범위 내에서 클라이언트 데이터를 필터링합니다.
+              motherClients = (await back.getClientsByQuery({
+                  $and: [
+                      {
+                          requests: {
+                              $elemMatch: {
+                                  "request.timeline": { $gte: fromDate }
+                              }
+                          }
+                      },
+                      {
+                          requests: {
+                              $elemMatch: {
+                                  "request.timeline": { $lt: toDate }
+                              }
+                          }
+                      }
+                  ]
+              }, { selfMongo, withTools: true })).getRequestsTong().map((arr) => { 
+                  let o = arr[0].toNormal();  // 클라이언트 요청 데이터를 일반 객체로 변환합니다.
+                  o.cliid = arr.cliid;  // 클라이언트 ID를 추가합니다.
+                  o.analytics = arr[1].toNormal();  // 분석 데이터를 일반 객체로 변환합니다.
+                  return o;
+              });
+
+              // 클라이언트 히스토리 데이터를 가져옵니다.
+              motherClientHistories = await back.mongoPick("clientHistory", [ {
+                  $or: motherClients.map((o) => { return { cliid: o.cliid } }),
+              }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: selfLocalMongo });
+
+              // 프로젝트 데이터를 가져옵니다.
+              motherProjects_raw = (await back.getProjectsByQuery({
+                  $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
+                      {
+                          "process.contract.first.date": { $gte: fromDate }
+                      }
+                  ]),
+              }, { selfMongo })).toNormal();
+
+              // 프로젝트 중 계약 날짜가 2000년 이후인 데이터만 필터링합니다.
+              motherProjects = motherProjects_raw.filter((obj) => {  
+                  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf(); 
+              });
+
+              // 날짜 매트릭스를 생성합니다.
+              matrix = [];
+              while (fromDateCopied.valueOf() < toDate.valueOf()) {
+                  tomorrow = new Date(JSON.stringify(fromDateCopied).slice(1, -1));
+                  tomorrow.setDate(tomorrow.getDate() + 1);  // 다음 날로 설정
+                  matrix.push([
+                      new Date(JSON.stringify(fromDateCopied).slice(1, -1)),  // 시작 날짜
+                      tomorrow,  // 종료 날짜
+                  ]);
+                  fromDateCopied.setDate(fromDateCopied.getDate() + 1);  // 날짜를 하루씩 더합니다.
               }
-            ]),
-          }, { selfMongo })).toNormal();
-          motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
-    
-          matrix = [];
-          while (fromDateCopied.valueOf() < toDate.valueOf()) {
-            tomorrow = new Date(JSON.stringify(fromDateCopied).slice(1, -1));
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            matrix.push([
-              new Date(JSON.stringify(fromDateCopied).slice(1, -1)),
-              tomorrow,
-            ]);
-            fromDateCopied.setDate(fromDateCopied.getDate() + 1);
+
+              // 최종 데이터를 저장할 rows 배열을 초기화합니다.
+              rows = [];
+
+              // 날짜 매트릭스를 순회하며 각 날짜에 대한 데이터를 처리합니다.
+              for (let [ fromDate, toDate ] of matrix) {
+                  obj = { fromDate, toDate };  // 결과 객체에 시작일과 종료일을 추가합니다.
+
+                  // 클라이언트 데이터를 필터링하여 obj에 클라이언트 수를 추가합니다.
+                  clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
+                  obj.client = clients.length;
+
+                  // 추천 데이터를 필터링하여 obj에 추천 수를 추가합니다.
+                  histories = motherClientHistories.map((obj) => { 
+                      return obj.curation.analytics.send.filter((o) => { 
+                          return /designerProposal/gi.test(o.page) && (o.date.valueOf() >= fromDate && o.date.valueOf() < toDate); 
+                      });
+                  }).flat();
+                  obj.recommend = histories.length;
+
+                  // 계약 데이터를 필터링하여 obj에 계약 수를 추가합니다.
+                  contracts = motherProjects.filter((obj) => { 
+                      return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate; 
+                  });
+                  obj.contract = contracts.length;
+
+                  // 처리된 데이터를 rows 배열에 추가합니다.
+                  rows.push(obj);
+              }
+
+              // 최종 데이터를 JSON 형식으로 응답합니다.
+              res.send(JSON.stringify(rows));
+
+          } else {
+              throw new Error("invalid mode");
           }
-    
-          rows = [];
-    
-          for (let [ fromDate, toDate ] of matrix) {
-    
-            obj = { fromDate, toDate };
-    
-            //client
-            clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
-            obj.client = clients.length;
-    
-            //recommend
-            histories = motherClientHistories.map((obj) => { return obj.curation.analytics.send.filter((o) => { return /designerProposal/gi.test(o.page) && (o.date.valueOf() >= fromDate && o.date.valueOf() < toDate) }) }).flat();
-            obj.recommend = histories.length;
-    
-            //contract
-            contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate });
-            obj.contract = contracts.length;
-    
-            rows.push(obj);
-          }
-    
-          //end
-          res.send(JSON.stringify(rows));
-    
-        } else {
-          throw new Error("invalid mode");
-        }
-    
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /getProjectReport
+     * @description 프로젝트 보고서를 생성하여 반환하는 라우터입니다. 서비스 모드와 디자이너 모드를 지원하며, 시작 날짜와 종료 날짜를 기준으로 데이터를 필터링하여 클라이언트 및 프로젝트 정보를 반환합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 보고서 모드(mode), 시작 날짜(start), 종료 날짜(end)가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 생성된 프로젝트 보고서 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/getProjectReport" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식으로 설정합니다.
       res.set("Content-Type", "application/json");
+
       try {
-        const { mode, start, end } = equalJson(req.body);
-        let clients, clients2;
-        let projects, projects2;
-        let serviceArr;
-        let designers;
-        let designerArr;
-        let tempClient;
-        let requestNumber;
-    
-        if (mode === "service") {
-    
-          serviceArr = new Array(4);
-    
-          projects = await back.getProjectsByQuery({
-            $and: [
-              {
-                "process.contract.first.date": { $gte: start }
-              },
-              {
-                "process.contract.first.date": { $lt: end }
-              },
-              {
-                "desid": { $regex: "^d" }
+          // 요청 본문에서 mode, start, end 값을 equalJson으로 깊은 복사하여 가져옵니다.
+          const { mode, start, end } = equalJson(req.body);
+
+          let clients, clients2;
+          let projects, projects2;
+          let serviceArr;  // 서비스 배열
+          let designers;
+          let designerArr;
+          let tempClient;  // 임시 클라이언트 객체
+          let requestNumber;  // 요청 번호
+
+          /**
+           * @description 서비스 모드일 경우 프로젝트 및 클라이언트 데이터를 필터링하여 서비스별 데이터를 반환합니다.
+           * 프로젝트 데이터는 계약 날짜와 디자이너 ID를 기준으로 필터링됩니다.
+           */
+          if (mode === "service") {
+
+              // 서비스 배열을 초기화합니다. 4개의 서비스로 구분됩니다.
+              serviceArr = new Array(4);
+
+              // 프로젝트 데이터를 필터링하여 가져옵니다.
+              projects = await back.getProjectsByQuery({
+                  $and: [
+                      {
+                          // 계약 시작일이 요청된 시작 날짜 이후인 프로젝트
+                          "process.contract.first.date": { $gte: start }
+                      },
+                      {
+                          // 계약 시작일이 요청된 종료 날짜 이전인 프로젝트
+                          "process.contract.first.date": { $lt: end }
+                      },
+                      {
+                          // 디자이너 ID가 "d"로 시작하는 프로젝트만 필터링
+                          "desid": { $regex: "^d" }
+                      }
+                  ]
+              }, { selfMongo: instance.mongo });
+
+              // 필터링된 프로젝트에 해당하는 클라이언트를 가져옵니다.
+              clients = await back.getClientsByQuery({
+                  $or: [
+                      ...projects.toNormal().map((obj) => { return { cliid: obj.cliid } }),
+                  ]
+              }, { selfMongo: instance.mongo });
+
+              // 각 서비스 유형에 맞게 프로젝트 데이터를 필터링하여 저장합니다.
+              serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+              serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+              serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+              serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
+
+              // 각 서비스 배열의 클라이언트 이름을 가져와서 객체에 추가합니다.
+              for (let arr of serviceArr) {
+                  for (let obj of arr) {
+                      obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
+                  }
               }
-            ]
-          }, { selfMongo: instance.mongo });
-    
-          clients = await back.getClientsByQuery({
-            $or: [
-              ...projects.toNormal().map((obj) => { return { cliid: obj.cliid } }),
-            ]
-          }, { selfMongo: instance.mongo });
-    
-          serviceArr[0] = projects.filter((obj) => { return /1/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-          serviceArr[1] = projects.filter((obj) => { return /2/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-          serviceArr[2] = projects.filter((obj) => { return /3/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-          serviceArr[3] = projects.filter((obj) => { return /4/gi.test(obj.service.serid.split('_')[1]) }).map((obj) => { return { proid: obj.proid, cliid: obj.cliid } });
-    
-          for (let arr of serviceArr) {
-            for (let obj of arr) {
-              obj.name = clients.toNormal().find((c) => { return c.cliid === obj.cliid }).name;
-            }
-          }
-    
-          res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
-    
-        } else if (mode === "designer") {
-    
-          designers = await back.getDesignersByQuery({}, { selfMongo: instance.mongo });
-          projects = await back.getProjectsByQuery({}, { selfMongo: instance.mongo });
-          if (projects.length === 0) {
-            clients = [];
+
+              // 결과 데이터를 JSON 형식으로 반환합니다.
+              res.send(JSON.stringify({ start, end, numbers: { client: clients.length, project: projects.length }, serviceArr }));
+
+          /**
+           * @description 디자이너 모드일 경우 디자이너와 프로젝트 데이터를 필터링하여 각 디자이너별로 보고서를 생성합니다.
+           */
+          } else if (mode === "designer") {
+
+              // 디자이너 데이터를 가져옵니다.
+              designers = await back.getDesignersByQuery({}, { selfMongo: instance.mongo });
+
+              // 프로젝트 데이터를 가져옵니다.
+              projects = await back.getProjectsByQuery({}, { selfMongo: instance.mongo });
+
+              // 프로젝트 데이터가 없을 경우 클라이언트 데이터를 빈 배열로 설정합니다.
+              if (projects.length === 0) {
+                  clients = [];
+              } else {
+                  // 프로젝트에 해당하는 클라이언트를 가져옵니다.
+                  clients = (await back.getClientsByQuery({
+                      $or: projects.toNormal().map((p) => { return { cliid: p.cliid } })
+                  })).toNormal();
+              }
+
+              // 각 프로젝트에 대해 클라이언트 데이터를 매칭하고 요청 번호를 계산합니다.
+              for (let p of projects) {
+                  tempClient = clients.find((c) => { return p.cliid === c.cliid });
+                  if (tempClient === undefined) {
+                      tempClient = await back.getClientById(p.cliid, { selfMongo: instance.mongo, toNormal: true });
+                  }
+                  requestNumber = 0;
+                  for (let i = 0; i < tempClient.requests.length; i++) {
+                      if (tempClient.requests[i].request.timeline.valueOf() < p.proposal.date.valueOf()) {
+                          requestNumber = i;
+                          break;
+                      }
+                  }
+                  p.name = tempClient.name;
+                  p.pyeong = tempClient.requests[requestNumber].request.space.pyeong;
+              }
+
+              // 디자이너 배열을 생성하여 각 디자이너에 대한 프로젝트 데이터를 매칭합니다.
+              designerArr = designers.toNormal().map((obj) => { return { desid: obj.desid, designer: obj.designer } });
+              for (let obj of designerArr) {
+
+                  // 제안서 데이터를 필터링하여 디자이너의 제안서 정보를 추가합니다.
+                  obj.proposal = projects.filter((p) => {
+                      return (p.proposal.detail.findIndex((z) => { return z.desid === obj.desid }) !== -1 && p.proposal.date.valueOf() >= start.valueOf() && p.proposal.date.valueOf() < end.valueOf());
+                  }).map((p) => {
+                      const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
+                      let amount, thisFee;
+                      if (thisProposal === undefined) {
+                          amount = 0;
+                      } else {
+                          thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
+                          if (thisFee !== -1) {
+                              amount = thisProposal.fee.toNormal()[thisFee].amount;
+                          } else {
+                              amount = 0;
+                          }
+                      }
+                      return { proid: p.proid, status: (p.desid !== '' ? p.process.status.value : "드랍"), service: serviceParsing(p.service.toNormal()), date: p.proposal.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
+                  });
+
+                  // 프로세스 데이터를 필터링하여 디자이너의 진행 상태 정보를 추가합니다.
+                  obj.process = projects.filter((p) => {
+                      return (p.desid === obj.desid && p.process.contract.first.date.valueOf() >= start.valueOf() && p.process.contract.first.date.valueOf() < end.valueOf());
+                  }).map((p) => {
+                      const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
+                      let amount, thisFee;
+                      if (thisProposal === undefined) {
+                          amount = 0;
+                      } else {
+                          thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
+                          if (thisFee !== -1) {
+                              amount = thisProposal.fee.toNormal()[thisFee].amount;
+                          } else {
+                              amount = 0;
+                          }
+                      }
+                      return { proid: p.proid, status: p.process.status.value, service: serviceParsing(p.service.toNormal()), date: p.process.contract.first.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
+                  });
+
+                  // 계산된 금액을 필터링하여 첫 번째 결제 정보를 추가합니다.
+                  obj.first = projects.filter((p) => {
+                      return (p.desid === obj.desid && p.process.calculation.payments.first.date.valueOf() >= start.valueOf() && p.process.calculation.payments.first.date.valueOf() < end.valueOf());
+                  }).map((p) => {
+                      return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.first.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.first.amount - p.process.calculation.payments.first.refund };
+                  });
+
+                  // 계산된 금액을 필터링하여 남은 결제 정보를 추가합니다.
+                  obj.remain = projects.filter((p) => {
+                      return (p.desid === obj.desid && p.process.calculation.payments.remain.date.valueOf() >= start.valueOf() && p.process.calculation.payments.remain.date.valueOf() < end.valueOf());
+                  }).map((p) => {
+                      return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.remain.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.remain.amount - p.process.calculation.payments.remain.refund };
+                  });
+
+              }
+
+              // 결과 데이터를 JSON 형식으로 반환합니다.
+              res.send(JSON.stringify({ start, end, designers: designerArr }));
+
           } else {
-            clients = (await back.getClientsByQuery({
-              $or: projects.toNormal().map((p) => { return { cliid: p.cliid } })
-            })).toNormal();
+              throw new Error("invalid mode");  // 유효하지 않은 모드일 경우 에러를 발생시킵니다.
           }
-          for (let p of projects) {
-            tempClient = clients.find((c) => { return p.cliid === c.cliid });
-            if (tempClient === undefined) {
-              tempClient = await back.getClientById(p.cliid, { selfMongo: instance.mongo, toNormal: true });
-            }
-            requestNumber = 0;
-            for (let i = 0; i < tempClient.requests.length; i++) {
-              if (tempClient.requests[i].request.timeline.valueOf() < p.proposal.date.valueOf()) {
-                requestNumber = i;
-                break;
-              }
-            }
-            p.name = tempClient.name;
-            p.pyeong = tempClient.requests[requestNumber].request.space.pyeong;
-          }
-    
-          designerArr = designers.toNormal().map((obj) => { return { desid: obj.desid, designer: obj.designer } });
-          for (let obj of designerArr) {
-    
-            // proposal
-            obj.proposal = projects.filter((p) => {
-              return (p.proposal.detail.findIndex((z) => { return z.desid === obj.desid }) !== -1 && p.proposal.date.valueOf() >= start.valueOf() && p.proposal.date.valueOf() < end.valueOf());
-            }).map((p) => {
-              const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
-              let amount, thisFee;
-              if (thisProposal === undefined) {
-                amount = 0;
-              } else {
-                thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
-                if (thisFee !== -1) {
-                  amount = thisProposal.fee.toNormal()[thisFee].amount;
-                } else {
-                  amount = 0;
-                }
-              }
-              return { proid: p.proid, status: (p.desid !== '' ? p.process.status.value : "드랍"), service: serviceParsing(p.service.toNormal()), date: p.proposal.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
-            });
-    
-            // process
-            obj.process = projects.filter((p) => {
-              return (p.desid === obj.desid && p.process.contract.first.date.valueOf() >= start.valueOf() && p.process.contract.first.date.valueOf() < end.valueOf());
-            }).map((p) => {
-              const thisProposal = p.proposal.detail.find((d) => { return d.desid === obj.desid });
-              let amount, thisFee;
-              if (thisProposal === undefined) {
-                amount = 0;
-              } else {
-                thisFee = thisProposal.fee.toNormal().findIndex((k) => { return k.method === (p.service.online ? "online" : "offline"); });
-                if (thisFee !== -1) {
-                  amount = thisProposal.fee.toNormal()[thisFee].amount;
-                } else {
-                  amount = 0;
-                }
-              }
-              return { proid: p.proid, status: p.process.status.value, service: serviceParsing(p.service.toNormal()), date: p.process.contract.first.date, name: p.name, pyeong: p.pyeong, amount, per: Math.floor((amount / p.pyeong) / 1000) * 1000 };
-            });
-    
-            // calculation first
-            obj.first = projects.filter((p) => {
-              return (p.desid === obj.desid && p.process.calculation.payments.first.date.valueOf() >= start.valueOf() && p.process.calculation.payments.first.date.valueOf() < end.valueOf());
-            }).map((p) => {
-              return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.first.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.first.amount - p.process.calculation.payments.first.refund };
-            });
-    
-            // calculation remain
-            obj.remain = projects.filter((p) => {
-              return (p.desid === obj.desid && p.process.calculation.payments.remain.date.valueOf() >= start.valueOf() && p.process.calculation.payments.remain.date.valueOf() < end.valueOf());
-            }).map((p) => {
-              return { proid: p.proid, service: serviceParsing(p.service.toNormal()), date: p.process.calculation.payments.remain.date, name: p.name, pyeong: p.pyeong, amount: p.process.calculation.payments.remain.amount - p.process.calculation.payments.remain.refund };
-            });
-    
-          }
-    
-          res.send(JSON.stringify({ start, end, designers: designerArr }));
-    
-        } else {
-          throw new Error("invaild mode");
-        }
-    
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -2796,387 +3251,505 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /getDesignerReport
+     * @description 특정 디자이너에 대한 프로젝트, 클라이언트, 콘텐츠, 가격 정보를 반환하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 desid(디자이너 ID)가 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 프로젝트, 클라이언트, 콘텐츠 배열, 가격 정보를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/getDesignerReport" ], async function (req, res) {
       try {
-        if (req.body.desid === undefined) {
-          throw new Error("must be desid");
-        }
-        const { desid } = req.body;
-        const selfMongo = instance.mongo;
-        let projects;
-        let whereQuery;
-        let cliidArr_raw, cliidArr;
-        let clients;
-        let requests, boo;
-        let contentsArr;
-        let price;
-    
-        res.set("Content-Type", "application/json");
-    
-        whereQuery = {
-          $or: [
-            { desid },
-            { "proposal.detail": { $elemMatch: { desid } } }
-          ]
-        };
-    
-        projects = await back.getProjectsByQuery(whereQuery, { selfMongo });
-        if (projects.length > 0) {
-    
-          cliidArr_raw = [];
-          for (let p of projects) {
-            cliidArr_raw.push(p.cliid);
+          // 요청 본문에 desid(디자이너 ID)가 없는 경우 에러를 발생시킵니다.
+          if (req.body.desid === undefined) {
+              throw new Error("must be desid");
           }
-          cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
-          whereQuery = { $or: [] };
-          for (let obj of cliidArr) {
-            whereQuery["$or"].push(obj);
-          }
-          clients = (await back.getClientsByQuery(whereQuery, { selfMongo })).toNormal();
-    
-          for (let project of projects) {
-            for (let client of clients) {
-              if (project.cliid === client.cliid) {
-                project.name = client.name;
-                requests = client.requests;
-                boo = false;
-                for (let { request } of requests) {
-                  if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
-                    boo = true;
-                    project.pyeong = request.space.pyeong;
-                  }
-                }
-                if (!boo) {
-                  project.pyeong = requests[0].request.space.pyeong;
-                }
-              }
-            }
-          }
-    
-        } else {
-          clients = [];
-        }
-    
-        contentsArr = await back.getContentsArrByQuery({ desid }, { selfMongo });
-        for (let c of contentsArr) {
-          for (let client of clients) {
-            if (c.cliid === client.cliid) {
-              c.name = client.name;
-            }
-          }
-        }
-    
-        price = await back.mongoRead("designerPrice", {}, { selfMongo: instance.mongolocal });
-    
-        res.send(JSON.stringify({ projects, clients, contentsArr, price }));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        let historyObj, responseArr;
-        let resultObj;
-        let method;
-        let temp, tempArr;
-    
-        responseArr = [];
-    
-        if (req.url === "/getClientHistory") {
-    
-          historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
-          if (historyObj === null) {
-            await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-            historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
-          }
-    
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
-    
-          if (req.body.rawMode !== undefined) {
-            responseArr = historyObj;
-          }
-    
-        } else if (req.url === "/getProjectHistory") {
-    
-          historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
-          if (historyObj === null) {
-            await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-            historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
-          }
-    
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.designer === undefined ? '' : historyObj.designer.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.client === undefined ? '' : historyObj.client.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.photo === undefined ? '' : historyObj.photo.replace(/\=/g, '').replace(/\&/g, ",")));
-    
-          if (req.body.rawMode !== undefined) {
-            responseArr = historyObj;
-          }
-    
-        } else if (req.url === "/getHistoryProperty") {
-          if (equalJson(req.body.idArr).length > 0) {
-            const { method, property, idArr } = equalJson(req.body);
-            responseArr = await back.getHistoryProperty(method, property, idArr, { selfMongo: instance.mongolocal });
-          } else {
-            responseArr = [];
-          }
-        } else if (req.url === "/getHistoryTotal") {
-          if (equalJson(req.body.idArr).length > 0) {
-            const { method, idArr } = equalJson(req.body);
-            responseArr = await back.getHistoryProperty(method, "$all", idArr, { selfMongo: instance.mongolocal });
-          } else {
-            responseArr = [];
-          }
-        }
-    
-        if (responseArr === null) {
-          responseArr = [];
-        }
-        res.send(JSON.stringify(responseArr));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      const back = instance.back;
-      const members = instance.members;
-      try {
-        const today = new Date();
-        if (req.body.newMode === undefined || req.body.newMode === null || req.body.newMode === 0) {
-          const { id, column, value, email } = equalJson(req.body);
-          const managerInteraction = {
-            designer: {
-              to: "project",
-              toId: "proid",
-              method: "getProjectsByQuery",
-              whereQuery: { desid: id }
-            },
-          };
-          let historyObj;
-          let whereQuery, updateQuery;
-          let thisPerson;
-          let fileTarget;
-          let method, standard;
-          let managerArr;
-          let managerIdArr;
-          let managerToObj;
-          let managerTargetArr;
-          let page, query, dummy, cookies;
-    
-          thisPerson = null;
-          if (email !== null) {
-            for (let member of members) {
-              if (member.email.includes(email)) {
-                thisPerson = member.name;
-                break;
-              }
-            }
-          }
-    
-          whereQuery = {};
-          updateQuery = {};
-    
-          if (/Client/gi.test(req.url)) {
-            method = "client";
-          } else if (/Project/gi.test(req.url)) {
-            method = "project";
-          } else if (/Designer/gi.test(req.url)) {
-            method = "designer";
-          } else if (/Contents/gi.test(req.url)) {
-            method = "contents";
-          } else {
-            if (req.body.method === undefined) {
-              throw new Error("invaild method");
-            } else {
-              method = req.body.method;
-            }
-          }
-    
-          if (/client/gi.test(method)) {
-            standard = "cliid";
-          } else if (/project/gi.test(method)) {
-            standard = "proid";
-          } else if (/designer/gi.test(method)) {
-            standard = "desid";
-          } else if (/contents/gi.test(method)) {
-            standard = "conid";
-          } else {
-            throw new Error("invaild method");
-          }
-    
-          historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
-          if (historyObj === null) {
-            updateQuery = {};
-            updateQuery[standard] = id;
-            if (column === "important") {
-              updateQuery[column] = (Number(value) === 1);
-            } else {
-              if (column !== null) {
-                if (value === "true" || value === "false") {
-                  updateQuery[column] = (value === "true");
-                } else {
-                  updateQuery[column] = value;
-                }
-              }
-            }
-            await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-            historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
-          } else {
-            whereQuery = {};
-            whereQuery[standard] = id;
-            updateQuery = {};
-            if (column === "important") {
-              updateQuery[column] = (Number(value) === 1);
-            } else {
-              if (column !== null) {
-                if (value === "true" || value === "false") {
-                  updateQuery[column] = (value === "true");
-                } else {
-                  updateQuery[column] = value;
-                }
-              }
-            }
-    
-            if (Object.keys(updateQuery).length > 0) {
-              await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-            }
-          }
-    
-          if (column === "manager") {
-            if (managerInteraction[method] !== undefined) {
-              managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
-              managerIdArr = [];
-              for (let obj of managerArr) {
-                managerIdArr.push(obj[managerInteraction[method].toId]);
-              }
-              if (managerIdArr.length !== 0) {
-                managerToObj = await back.getHistoryProperty(managerInteraction[method].to, "manager", managerIdArr, { selfMongo: instance.mongolocal });
-                managerTargetArr = [];
-                for (let i in managerToObj) {
-                  managerTargetArr.push([ i, managerToObj[i] ]);
-                }
-                managerTargetArr = managerTargetArr.filter((a) => { return a[1] === '' || a[1] === '-' || a[1] === "홀딩"; });
-                for (let [ id ] of managerTargetArr) {
-                  whereQuery = {};
-                  whereQuery[managerInteraction[method].toId] = id;
-                  await back.updateHistory(managerInteraction[method].to, [ whereQuery, { manager: value } ], { selfMongo: instance.mongolocal });
-                }
-              }
-            }
-          }
-    
-          if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
-            page = req.body.send.split('_')[0];
-            query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
-            dummy = {
-              page,
-              date: new Date(),
-              mode: query,
-              who: {
-                name: null,
-                email: null,
-              }
-            };
-            if (Array.isArray(historyObj.curation.analytics.send)) {
-              historyObj.curation.analytics.send.push(dummy);
-            } else {
-              historyObj.curation.analytics.send = [ dummy ];
-            }
-            await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
-          }
-    
-        } else {
-          const { id, updateQuery, coreQuery } = equalJson(req.body);
-          let historyObj;
-          let method, standard;
-          let createQuery;
+
+          // 요청 본문에서 desid(디자이너 ID)를 추출합니다.
+          const { desid } = req.body;
+
+          // MongoDB 인스턴스를 가져옵니다.
+          const selfMongo = instance.mongo;
+          
+          // 프로젝트 데이터를 저장할 변수를 초기화합니다.
+          let projects;
+
+          // 쿼리 객체를 정의하여 desid를 기준으로 프로젝트 데이터를 필터링합니다.
           let whereQuery;
-          let collection;
-    
-          if (/Client/gi.test(req.url)) {
-            method = "client";
-          } else if (/Project/gi.test(req.url)) {
-            method = "project";
-          } else if (/Designer/gi.test(req.url)) {
-            method = "designer";
-          } else if (/Contents/gi.test(req.url)) {
-            method = "contents";
+
+          // 클라이언트 ID 배열을 저장할 변수를 정의합니다.
+          let cliidArr_raw, cliidArr;
+
+          // 클라이언트 데이터를 저장할 변수를 정의합니다.
+          let clients;
+
+          // 클라이언트 요청 데이터와 플래그 변수를 정의합니다.
+          let requests, boo;
+
+          // 콘텐츠 데이터를 저장할 배열을 정의합니다.
+          let contentsArr;
+
+          // 가격 데이터를 저장할 변수를 정의합니다.
+          let price;
+
+          // 응답 헤더에 JSON 형식으로 설정합니다.
+          res.set("Content-Type", "application/json");
+
+          /**
+           * @description desid를 기준으로 프로젝트 데이터를 조회하는 쿼리입니다. desid가 포함된 프로젝트 또는 제안서의 세부 사항에서 desid를 포함하는 프로젝트를 조회합니다.
+           */
+          whereQuery = {
+              $or: [
+                  { desid },  // 디자이너 ID가 프로젝트의 desid와 일치하는 경우
+                  { "proposal.detail": { $elemMatch: { desid } } }  // 제안서 세부 사항에서 desid가 일치하는 경우
+              ]
+          };
+
+          // 쿼리를 사용하여 프로젝트 데이터를 MongoDB에서 가져옵니다.
+          projects = await back.getProjectsByQuery(whereQuery, { selfMongo });
+
+          // 프로젝트가 존재하는 경우 클라이언트 데이터를 처리합니다.
+          if (projects.length > 0) {
+
+              // 프로젝트 데이터를 순회하며 클라이언트 ID 배열을 생성합니다.
+              cliidArr_raw = [];
+              for (let p of projects) {
+                  cliidArr_raw.push(p.cliid);
+              }
+
+              // 클라이언트 ID 배열에서 중복을 제거하고 배열 형태로 변환합니다.
+              cliidArr_raw = Array.from(new Set(cliidArr_raw));
+              cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
+
+              // 클라이언트 데이터를 가져오기 위한 whereQuery를 설정합니다.
+              whereQuery = { $or: [] };
+              for (let obj of cliidArr) {
+                  whereQuery["$or"].push(obj);
+              }
+
+              // 쿼리를 사용하여 클라이언트 데이터를 MongoDB에서 가져옵니다.
+              clients = (await back.getClientsByQuery(whereQuery, { selfMongo })).toNormal();
+
+              // 각 프로젝트에 대해 클라이언트 데이터를 매칭합니다.
+              for (let project of projects) {
+                  for (let client of clients) {
+                      if (project.cliid === client.cliid) {
+                          project.name = client.name;  // 클라이언트 이름을 프로젝트에 추가
+                          requests = client.requests;  // 클라이언트 요청 데이터를 가져옵니다.
+                          boo = false;
+
+                          // 클라이언트 요청 데이터를 순회하여 프로젝트 제안서 날짜 이전의 데이터를 찾습니다.
+                          for (let { request } of requests) {
+                              if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                                  boo = true;
+                                  project.pyeong = request.space.pyeong;  // 프로젝트 평수 데이터를 추가합니다.
+                              }
+                          }
+
+                          // 제안서 이전의 데이터가 없는 경우 첫 번째 요청 데이터를 사용합니다.
+                          if (!boo) {
+                              project.pyeong = requests[0].request.space.pyeong;
+                          }
+                      }
+                  }
+              }
+
           } else {
-            if (req.body.method === undefined) {
-              throw new Error("invaild method");
-            } else {
-              method = req.body.method;
-            }
+              // 프로젝트가 없는 경우 빈 클라이언트 배열을 설정합니다.
+              clients = [];
           }
-    
-          if (/client/gi.test(method)) {
-            standard = "cliid";
-            collection = "client";
-          } else if (/project/gi.test(method)) {
-            standard = "proid";
-            collection = "project";
-          } else if (/designer/gi.test(method)) {
-            standard = "desid";
-            collection = "designer";
-          } else if (/contents/gi.test(method)) {
-            standard = "conid";
-            collection = "contents";
-          } else {
-            throw new Error("invaild method");
+
+          // 디자이너 ID에 해당하는 콘텐츠 데이터를 가져옵니다.
+          contentsArr = await back.getContentsArrByQuery({ desid }, { selfMongo });
+
+          // 콘텐츠 데이터를 순회하며 클라이언트 이름을 추가합니다.
+          for (let c of contentsArr) {
+              for (let client of clients) {
+                  if (c.cliid === client.cliid) {
+                      c.name = client.name;
+                  }
+              }
           }
-    
-          whereQuery = {};
-          whereQuery[standard] = id;
-    
-          historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
-          if (historyObj === null) {
-            createQuery = { ...updateQuery };
-            createQuery[standard] = id;
-            await back.createHistory(method, createQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-            historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
-          } else {
-            if (Object.keys(updateQuery).length > 0) {
-              await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-            }
-          }
-    
-          if (typeof coreQuery === "object" && coreQuery !== null) {
-            if (Object.keys(coreQuery).length > 0) {
-              await back.mongoUpdate(collection, [ whereQuery, coreQuery ], { selfMongo: instance.mongo });
-            }
-          }
-    
-        }
-        res.send(JSON.stringify({ message: "success" }));
+
+          // 디자이너 가격 데이터를 MongoDB에서 읽어옵니다.
+          price = await back.mongoRead("designerPrice", {}, { selfMongo: instance.mongolocal });
+
+          // 프로젝트, 클라이언트, 콘텐츠, 가격 데이터를 JSON 형식으로 응답합니다.
+          res.send(JSON.stringify({ projects, clients, contentsArr, price }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
+    });
+    
+    /**
+     * @route POST /getClientHistory, /getProjectHistory, /getHistoryProperty, /getHistoryTotal, /getClientsImportant, /getProjectsImportant, /getClientsManager, /getProjectsManager, /getClientsIssue, /getProjectsIssue
+     * @description 클라이언트 및 프로젝트 히스토리 데이터를 처리하고 반환하는 라우터입니다. 요청 URL에 따라 각기 다른 히스토리 데이터를 반환합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 ID, rawMode, idArr 등의 데이터가 포함될 수 있습니다.
+     * @param {object} res - 서버 응답 객체. 히스토리 데이터를 JSON 형식으로 반환합니다.
+     */
+    router.post([
+      "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", 
+      "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", 
+      "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue"
+    ], async function (req, res) {
+        // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
+        res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+
+        try {
+            // 히스토리 객체와 응답 배열을 초기화합니다.
+            let historyObj, responseArr;
+            let resultObj;
+            let method;
+            let temp, tempArr;
+
+            responseArr = [];
+
+            /**
+             * @description 요청 URL이 "/getClientHistory"일 경우, 클라이언트 히스토리 데이터를 처리합니다.
+             * 클라이언트 히스토리가 없을 경우 새로 생성한 후 데이터를 반환합니다.
+             */
+            if (req.url === "/getClientHistory") {
+                // 클라이언트 히스토리 데이터를 가져옵니다.
+                historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
+
+                // 클라이언트 히스토리가 없을 경우 새로 생성합니다.
+                if (historyObj === null) {
+                    await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+                    historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
+                }
+
+                // 각 히스토리 필드를 배열에 추가합니다.
+                responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
+
+                // rawMode가 설정된 경우 전체 히스토리 객체를 반환합니다.
+                if (req.body.rawMode !== undefined) {
+                    responseArr = historyObj;
+                }
+
+            /**
+             * @description 요청 URL이 "/getProjectHistory"일 경우, 프로젝트 히스토리 데이터를 처리합니다.
+             * 프로젝트 히스토리가 없을 경우 새로 생성한 후 데이터를 반환합니다.
+             */
+            } else if (req.url === "/getProjectHistory") {
+                // 프로젝트 히스토리 데이터를 가져옵니다.
+                historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
+
+                // 프로젝트 히스토리가 없을 경우 새로 생성합니다.
+                if (historyObj === null) {
+                    await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+                    historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
+                }
+
+                // 각 히스토리 필드를 배열에 추가합니다.
+                responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.designer === undefined ? '' : historyObj.designer.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.client === undefined ? '' : historyObj.client.replace(/\=/g, '').replace(/\&/g, ",")));
+                responseArr.push((historyObj.photo === undefined ? '' : historyObj.photo.replace(/\=/g, '').replace(/\&/g, ",")));
+
+                // rawMode가 설정된 경우 전체 히스토리 객체를 반환합니다.
+                if (req.body.rawMode !== undefined) {
+                    responseArr = historyObj;
+                }
+
+            /**
+             * @description 요청 URL이 "/getHistoryProperty"일 경우, 지정된 속성(property)에 대한 히스토리 데이터를 가져옵니다.
+             */
+            } else if (req.url === "/getHistoryProperty") {
+                // 요청된 ID 배열이 비어 있지 않은 경우 히스토리 데이터를 가져옵니다.
+                if (equalJson(req.body.idArr).length > 0) {
+                    const { method, property, idArr } = equalJson(req.body);
+                    responseArr = await back.getHistoryProperty(method, property, idArr, { selfMongo: instance.mongolocal });
+                } else {
+                    responseArr = [];
+                }
+
+            /**
+             * @description 요청 URL이 "/getHistoryTotal"일 경우, 모든 속성("$all")에 대한 히스토리 데이터를 가져옵니다.
+             */
+            } else if (req.url === "/getHistoryTotal") {
+                // 요청된 ID 배열이 비어 있지 않은 경우 히스토리 데이터를 가져옵니다.
+                if (equalJson(req.body.idArr).length > 0) {
+                    const { method, idArr } = equalJson(req.body);
+                    responseArr = await back.getHistoryProperty(method, "$all", idArr, { selfMongo: instance.mongolocal });
+                } else {
+                    responseArr = [];
+                }
+            }
+
+            // 응답 배열이 null인 경우 빈 배열로 설정합니다.
+            if (responseArr === null) {
+                responseArr = [];
+            }
+
+            // 최종 결과를 JSON 형식으로 응답합니다.
+            res.send(JSON.stringify(responseArr));
+
+        } catch (e) {
+            // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 응답합니다.
+            logger.error(e, req).catch((e) => { console.log(e); });
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify({ error: e.message }));
+        }
+    });
+    
+    /**
+     * @route POST /updateHistory, /updateClientHistory, /updateProjectHistory, /updateDesignerHistory
+     * @description 클라이언트, 프로젝트, 디자이너의 히스토리 데이터를 업데이트하는 라우터입니다. 요청된 데이터에 따라 히스토리를 생성하거나 업데이트합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 id, column, value, email, send 등의 데이터가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 성공 여부를 JSON 형식으로 반환합니다.
+     */
+    router.post([
+      "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory"
+    ], async function (req, res) {
+        // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
+        res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+
+        // 백엔드 로직 및 멤버 정보를 인스턴스에서 가져옵니다.
+        const back = instance.back;
+        const members = instance.members;
+
+        try {
+            // 현재 날짜를 가져옵니다.
+            const today = new Date();
+
+            // newMode가 정의되지 않았거나 0일 경우 기본 모드로 처리합니다.
+            if (req.body.newMode === undefined || req.body.newMode === null || req.body.newMode === 0) {
+                // 요청 본문에서 id, column, value, email을 equalJson으로 깊은 복사하여 가져옵니다.
+                const { id, column, value, email } = equalJson(req.body);
+
+                // 관리자 관련 상호작용 정보를 설정합니다.
+                const managerInteraction = {
+                    designer: {
+                        to: "project",
+                        toId: "proid",
+                        method: "getProjectsByQuery",
+                        whereQuery: { desid: id }
+                    },
+                };
+
+                let historyObj;
+                let whereQuery, updateQuery;
+                let thisPerson;
+                let method, standard;
+                let managerArr;
+                let managerIdArr;
+                let managerToObj;
+                let managerTargetArr;
+                let page, query, dummy;
+
+                // 멤버 이메일을 기반으로 현재 사용자의 이름을 찾습니다.
+                thisPerson = null;
+                if (email !== null) {
+                    for (let member of members) {
+                        if (member.email.includes(email)) {
+                            thisPerson = member.name;
+                            break;
+                        }
+                    }
+                }
+
+                // whereQuery 및 updateQuery 객체를 초기화합니다.
+                whereQuery = {};
+                updateQuery = {};
+
+                // 요청 URL을 기반으로 method 값을 설정합니다.
+                if (/Client/gi.test(req.url)) {
+                    method = "client";
+                } else if (/Project/gi.test(req.url)) {
+                    method = "project";
+                } else if (/Designer/gi.test(req.url)) {
+                    method = "designer";
+                } else {
+                    if (req.body.method === undefined) {
+                        throw new Error("invalid method");
+                    } else {
+                        method = req.body.method;
+                    }
+                }
+
+                // method 값에 따라 표준 필드 이름(클라이언트 ID, 프로젝트 ID, 디자이너 ID 등)을 설정합니다.
+                if (/client/gi.test(method)) {
+                    standard = "cliid";
+                } else if (/project/gi.test(method)) {
+                    standard = "proid";
+                } else if (/designer/gi.test(method)) {
+                    standard = "desid";
+                } else {
+                    throw new Error("invalid method");
+                }
+
+                // 히스토리 데이터를 가져옵니다.
+                historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+
+                // 히스토리가 없는 경우 새로 생성합니다.
+                if (historyObj === null) {
+                    updateQuery = {};
+                    updateQuery[standard] = id;
+
+                    // important 열(column)의 값이 숫자인 경우 불리언으로 변환합니다.
+                    if (column === "important") {
+                        updateQuery[column] = (Number(value) === 1);
+                    } else {
+                        // 값이 true 또는 false 문자열인 경우 불리언으로 변환하고, 그 외에는 그대로 값을 설정합니다.
+                        if (value === "true" || value === "false") {
+                            updateQuery[column] = (value === "true");
+                        } else {
+                            updateQuery[column] = value;
+                        }
+                    }
+
+                    // 새로운 히스토리 데이터를 생성합니다.
+                    await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+
+                    // 생성된 히스토리 데이터를 다시 가져옵니다.
+                    historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+                } else {
+                    // whereQuery에 표준 필드를 설정합니다.
+                    whereQuery[standard] = id;
+                    updateQuery = {};
+
+                    // important 열(column)의 값이 숫자인 경우 불리언으로 변환합니다.
+                    if (column === "important") {
+                        updateQuery[column] = (Number(value) === 1);
+                    } else {
+                        if (value === "true" || value === "false") {
+                            updateQuery[column] = (value === "true");
+                        } else {
+                            updateQuery[column] = value;
+                        }
+                    }
+
+                    // 업데이트할 내용이 있는 경우 히스토리 데이터를 업데이트합니다.
+                    if (Object.keys(updateQuery).length > 0) {
+                        await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+                    }
+                }
+
+                // 관리자를 업데이트하는 경우 관련 프로젝트의 관리자를 업데이트합니다.
+                if (column === "manager") {
+                    if (managerInteraction[method] !== undefined) {
+                        // 관련된 프로젝트 데이터를 가져옵니다.
+                        managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
+                        managerIdArr = managerArr.map(obj => obj[managerInteraction[method].toId]);
+
+                        // 관련된 프로젝트의 관리자가 없는 경우 "manager" 필드를 업데이트합니다.
+                        if (managerIdArr.length !== 0) {
+                            managerToObj = await back.getHistoryProperty(managerInteraction[method].to, "manager", managerIdArr, { selfMongo: instance.mongolocal });
+                            managerTargetArr = Object.entries(managerToObj).filter(([_, manager]) => manager === '' || manager === '-' || manager === "홀딩");
+
+                            for (let [id] of managerTargetArr) {
+                                whereQuery = {};
+                                whereQuery[managerInteraction[method].toId] = id;
+                                await back.updateHistory(managerInteraction[method].to, [whereQuery, { manager: value }], { selfMongo: instance.mongolocal });
+                            }
+                        }
+                    }
+                }
+
+                // 요청에 "send"가 포함된 경우 클라이언트 히스토리의 curation 데이터를 업데이트합니다.
+                if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
+                    page = req.body.send.split('_')[0];
+                    query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
+
+                    dummy = {
+                        page,
+                        date: new Date(),
+                        mode: query,
+                        who: {
+                            name: null,
+                            email: null,
+                        }
+                    };
+
+                    if (Array.isArray(historyObj.curation.analytics.send)) {
+                        historyObj.curation.analytics.send.push(dummy);
+                    } else {
+                        historyObj.curation.analytics.send = [dummy];
+                    }
+
+                    await back.updateHistory("client", [{ cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send }], { selfMongo: instance.mongolocal });
+                }
+
+            // newMode가 1인 경우 확장된 업데이트 로직을 처리합니다.
+            } else {
+                const { id, updateQuery, coreQuery } = equalJson(req.body);
+                let historyObj;
+                let method, standard;
+                let createQuery;
+                let whereQuery;
+                let collection;
+
+                // 요청 URL을 기반으로 method와 collection을 설정합니다.
+                if (/Client/gi.test(req.url)) {
+                    method = "client";
+                    standard = "cliid";
+                    collection = "client";
+                } else if (/Project/gi.test(req.url)) {
+                    method = "project";
+                    standard = "proid";
+                    collection = "project";
+                } else if (/Designer/gi.test(req.url)) {
+                    method = "designer";
+                    standard = "desid";
+                    collection = "designer";
+                } else {
+                    throw new Error("invalid method");
+                }
+
+                // whereQuery에 표준 필드를 설정합니다.
+                whereQuery = {};
+                whereQuery[standard] = id;
+
+                // 히스토리 데이터를 가져옵니다.
+                historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+
+                // 히스토리가 없는 경우 새로 생성합니다.
+                if (historyObj === null) {
+                    createQuery = { ...updateQuery };
+                    createQuery[standard] = id;
+                    await back.createHistory(method, createQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+                } else {
+                    // 업데이트할 내용이 있는 경우 히스토리 데이터를 업데이트합니다.
+                    if (Object.keys(updateQuery).length > 0) {
+                        await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+                    }
+                }
+
+                // coreQuery가 정의된 경우 MongoDB의 해당 컬렉션에서 데이터를 업데이트합니다.
+                if (typeof coreQuery === "object" && coreQuery !== null) {
+                    if (Object.keys(coreQuery).length > 0) {
+                        await back.mongoUpdate(collection, [whereQuery, coreQuery], { selfMongo: instance.mongo });
+                    }
+                }
+            }
+
+            // 요청이 성공적으로 처리된 경우 응답으로 성공 메시지를 반환합니다.
+            res.send(JSON.stringify({ message: "success" }));
+
+        } catch (e) {
+            // 에러가 발생한 경우 에러 로그를 기록하고 클라이언트에게 에러 메시지를 반환합니다.
+            logger.error(e, req).catch((e) => { console.log(e); });
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify({ error: e.message }));
+        }
     });
     
     /**
@@ -3211,209 +3784,351 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /sendSlack
+     * @description 이 라우트는 Slack으로 메시지를 전송하는 API를 정의합니다. 
+     *              클라이언트로부터 메시지와 채널 정보를 받아 해당 채널로 메시지를 전송합니다.
+     *              요청 본문에 필요한 필드가 없을 경우 에러를 발생시킵니다.
+     * @param {object} req - 클라이언트 요청 객체
+     * @param {object} req.body - 요청 본문에서 메시지와 채널 정보를 포함
+     * @param {object} res - 서버 응답 객체
+     */
     router.post([ "/sendSlack" ], async function (req, res) {
+      
+      // 응답 헤더를 설정합니다. JSON 형식의 응답을 설정하고, CORS 설정을 통해 모든 도메인에서의 접근을 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 데이터의 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 정의
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더를 정의
       });
+
       try {
+        // message와 channel이 요청 본문에 없으면 에러를 발생시킵니다.
         if (req.body.message === undefined || req.body.channel === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post"); // 에러 메시지를 출력
         }
+
+        // 요청 본문에서 메시지와 채널 정보를 가져옵니다.
         const { message, channel } = req.body;
-        let text;
-        let voiceBoo;
-        let ip, rawUserAgent;
-    
-        ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
-        rawUserAgent = req.useragent;
-    
-        text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
+
+        let text; // 메시지를 처리한 후 저장할 변수
+        let voiceBoo; // 음성 여부를 처리할 변수
+        let ip, rawUserAgent; // 클라이언트의 IP 주소와 UserAgent를 저장할 변수들
+
+        // 클라이언트의 IP 주소를 헤더에서 가져오거나, 없으면 소켓의 원격 주소를 사용합니다.
+        ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"])
+          .trim() // 앞뒤 공백 제거
+          .replace(/[^0-9\.]/gi, ''); // 숫자와 점 이외의 문자는 제거
+        rawUserAgent = req.useragent; // 클라이언트의 UserAgent 정보를 가져옴
+
+        // 메시지 문자열에서 특정 문자를 다른 문자로 대체합니다.
+        text = message
+          .replace(/__equal__/g, '=') // '__equal__'을 '='로 변경
+          .replace(/__amper__/g, '&') // '__amper__'를 '&'로 변경
+          .replace(/__query__/g, '?') // '__query__'를 '?'로 변경
+          .replace(/__plus__/g, '+'); // '__plus__'를 '+'로 변경
+
+        // 요청 본문에 voice 필드가 있으면 음성 여부를 처리합니다.
         if (req.body.voice !== undefined) {
           if (req.body.voice === null) {
-            voiceBoo = false;
+            voiceBoo = false; // voice 값이 null이면 음성 사용 안함
           } else if (req.body.voice === "false") {
-            voiceBoo = false;
+            voiceBoo = false; // voice 값이 "false"이면 음성 사용 안함
           } else if (req.body.voice === false) {
-            voiceBoo = false;
+            voiceBoo = false; // voice 값이 false(boolean)이면 음성 사용 안함
           } else {
-            voiceBoo = true;
+            voiceBoo = true; // 그 외의 경우는 음성 사용
           }
         } else {
-          voiceBoo = false;
+          voiceBoo = false; // voice 필드가 없으면 음성 사용 안함
         }
-    
+
+        // 채널이 '#error_log'인 경우 에러 로그를 기록합니다.
         if (channel === "#error_log") {
-          await logger.error(text + "\n\n" + "ip: " + String(ip) + "\n\n" + JSON.stringify(rawUserAgent, null, 2));
+          await logger.error(
+            text + "\n\n" + "ip: " + String(ip) + "\n\n" + JSON.stringify(rawUserAgent, null, 2)
+          ); // 에러 메시지에 IP와 UserAgent 정보를 추가하여 에러 로그에 기록
         } else {
-          await messageSend({ text, channel, voice: voiceBoo, target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: false });
+          // 메시지를 보냅니다. target 필드가 있으면 equalJson 메서드를 사용하여 target 값을 가져옵니다.
+          await messageSend({
+            text, // 전송할 메시지 텍스트
+            channel, // 전송할 채널
+            voice: voiceBoo, // 음성 여부
+            target: (req.body.target !== undefined ? equalJson(req.body).target : null), // target이 있으면 equalJson을 사용하여 처리
+            fairy: false, // fairy는 false로 설정
+          });
         }
-    
+
+        // 성공적으로 처리되었으면 클라이언트에 "success" 메시지를 JSON으로 보냅니다.
         res.send(JSON.stringify({ message: "success" }));
-    
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
+        // 에러 발생 시 에러 로그를 기록하고, 클라이언트에 에러 메시지를 응답합니다.
+        logger.error(e, req).catch((e) => {
+          console.log(e); // 에러 로그 기록 실패 시 콘솔에 출력
+        });
+
+        // 에러 발생 시 Content-Type을 JSON으로 설정하고 에러 메시지를 응답합니다.
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.send(JSON.stringify({ error: e.message })); // 에러 메시지를 JSON 형식으로 클라이언트에 전송
       }
     });
     
+    /**
+     * @route POST /sendSheets
+     * @description 클라이언트로부터 스프레드시트 관련 요청을 받아, 구글 스프레드시트에 데이터를 생성하고, 업데이트한 결과를 반환하는 라우터입니다.
+     *              비동기 및 동기 방식으로 요청을 처리하며, 여러 시트 작업도 가능합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에는 sheetName(스프레드시트 이름), parentId(부모 ID), values(업데이트할 데이터)가 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 스프레드시트 생성 및 업데이트 결과를 반환합니다.
+     */
     router.post([ "/sendSheets" ], async function (req, res) {
+      // 응답 헤더에 JSON 타입을 설정합니다.
       res.set("Content-Type", "application/json");
+
+      // instance에서 back, sheets, drive 객체를 가져옵니다. 각각 백엔드 작업, 스프레드시트 작업, 드라이브 접근을 담당합니다.
       const back = instance.back;
       const sheets = instance.sheets;
       const drive = instance.drive;
+
+      // Mother 클래스에서 equalJson, messageSend 메서드를 가져옵니다.
+      // equalJson은 깊은 복사 및 Date 객체를 처리할 때 사용하며, messageSend는 슬랙 채널 등에 메시지를 보낼 때 사용합니다.
       const { equalJson, messageSend } = instance.mother;
+
+      /**
+       * @function asyncFunc
+       * @description 비동기 방식으로 스프레드시트를 생성하고 데이터를 입력한 후 결과를 반환하는 함수입니다.
+       * @param {string} sheetName - 생성할 스프레드시트 이름입니다.
+       * @param {string} parentId - 스프레드시트의 부모 폴더 ID입니다.
+       * @param {object} values - 스프레드시트에 입력할 데이터 값입니다.
+       * @param {string} [tapName] - 탭 이름을 변경할 경우 전달됩니다.
+       * @returns {string} - 스프레드시트 작업 완료 후의 결과 URL 또는 에러 메시지를 반환합니다.
+       */
       const asyncFunc = async (sheetName, parentId, values, tapName) => {
-        let sheetsId, result;
-        try {
-          sheetsId = await sheets.create_newSheets_inPython(sheetName, parentId);
-          if (tapName !== undefined) {
-            await sheets.update_defaultSheetName_inPython(sheetsId, tapName);
-          }
-          values = equalJson(values);
-          await sheets.update_value_inPython(sheetsId, (tapName !== undefined ? tapName : ''), values, [ 0, 0 ]);
-          await sheets.setting_cleanView_inPython(sheetsId);
-          result = await drive.read_webView_inPython(sheetsId);
-          return result;
-        } catch (e) {
-          result = "error";
-          return result;
-        }
-      }
-      try {
-        if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
-          throw new Error("must be sheetName, parentId");
-        }
-        let sheetsId, response, values, sheetsTargets, tempArr, async;
-    
-        if (req.body.multiple === undefined) {
-          async = false;
-          if (req.body.async !== undefined) {
-            async = true;
-          }
-    
-          if (!async) {
-            response = await asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName);
-          } else {
-            asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName).then((link) => {
-              return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
-            }).catch((err) => {
-              console.log(err);
-            });
-            response = "will do";
-          }
-        } else {
-          sheetsTargets = JSON.parse(req.body.values);
-          sheetsId = "";
-          response = "will do";
-          tempArr = [];
-          sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId).then((id) => {
-            sheetsId = id;
-            for (let i = 0; i < sheetsTargets.length; i++) {
-              if (i !== 0) {
-                tempArr.push(sheetsTargets[i].sheets);
+          let sheetsId, result;
+          try {
+              // Python API를 사용해 새로운 스프레드시트를 생성하고 그 ID를 받습니다.
+              sheetsId = await sheets.create_newSheets_inPython(sheetName, parentId);
+
+              // 만약 tapName이 정의되어 있다면 스프레드시트의 기본 탭 이름을 업데이트합니다.
+              if (tapName !== undefined) {
+                  await sheets.update_defaultSheetName_inPython(sheetsId, tapName);
               }
-            }
-            return sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
-          }).then(() => {
-            return sheets.add_newSheet_inPython(sheetsId, tempArr);
-          }).then(() => {
-            return sheets.update_values_inPython(sheetsId, sheetsTargets, [ 0, 0 ]);
-          }).then((arr) => {
-            return sheets.setting_cleanView_inPython(sheetsId);
-          }).then(() => {
-            return drive.read_webView_inPython(sheetsId);
-          }).then((link) => {
-            return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
-          }).catch((err) => {
-            console.log(err);
-          });
-        }
-    
-        res.send(JSON.stringify({ link: response }));
+
+              // equalJson 메서드를 사용하여 values 객체를 깊은 복사하여 처리합니다.
+              // equalJson은 JSON.parse와 달리 Date 객체와 함수 등을 그대로 보존합니다.
+              values = equalJson(values);
+
+              // Python API를 통해 스프레드시트에 데이터를 업데이트합니다.
+              await sheets.update_value_inPython(sheetsId, (tapName !== undefined ? tapName : ''), values, [0, 0]);
+
+              // 스프레드시트의 뷰를 깨끗하게 초기화합니다.
+              await sheets.setting_cleanView_inPython(sheetsId);
+
+              // Python API를 통해 스프레드시트의 웹 뷰 URL을 읽어옵니다.
+              result = await drive.read_webView_inPython(sheetsId);
+
+              // 최종적으로 결과 URL을 반환합니다.
+              return result;
+          } catch (e) {
+              // 에러 발생 시 "error" 문자열을 반환합니다.
+              result = "error";
+              return result;
+          }
+      };
+
+      try {
+          // 필수적인 요청 데이터(sheetName, parentId, values)가 누락되었을 경우 에러를 발생시킵니다.
+          if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
+              throw new Error("must be sheetName, parentId");
+          }
+
+          let sheetsId, response, values, sheetsTargets, tempArr, async;
+
+          // multiple이 undefined인 경우, 단일 스프레드시트 작업으로 간주합니다.
+          if (req.body.multiple === undefined) {
+              async = false;
+
+              // async가 true로 설정된 경우 비동기 작업을 처리합니다.
+              if (req.body.async !== undefined) {
+                  async = true;
+              }
+
+              if (!async) {
+                  // 비동기 작업이 아닌 경우, asyncFunc 함수를 호출하여 동기적으로 스프레드시트 작업을 수행합니다.
+                  response = await asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName);
+              } else {
+                  // 비동기 작업인 경우, asyncFunc 함수를 호출한 후 결과를 슬랙 메시지로 보냅니다.
+                  asyncFunc(req.body.sheetName, req.body.parentId, req.body.values, req.body.tapName).then((link) => {
+                      // messageSend 메서드를 사용하여 슬랙 채널로 작업 결과를 보냅니다.
+                      return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+                  }).catch((err) => {
+                      // 에러가 발생한 경우 콘솔에 에러를 출력합니다.
+                      console.log(err);
+                  });
+
+                  // 비동기 작업이므로 "will do" 응답을 보냅니다.
+                  response = "will do";
+              }
+          } else {
+              // multiple이 설정된 경우 여러 시트 작업을 처리합니다.
+              sheetsTargets = JSON.parse(req.body.values);
+              sheetsId = "";
+              response = "will do";
+              tempArr = [];
+
+              // 새로운 스프레드시트를 생성하고 그 ID를 받습니다.
+              sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId).then((id) => {
+                  sheetsId = id;
+
+                  // 첫 번째 시트를 제외한 나머지 시트들을 tempArr에 저장합니다.
+                  for (let i = 0; i < sheetsTargets.length; i++) {
+                      if (i !== 0) {
+                          tempArr.push(sheetsTargets[i].sheets);
+                      }
+                  }
+
+                  // 첫 번째 시트의 이름을 업데이트합니다.
+                  return sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
+              }).then(() => {
+                  // 나머지 시트들을 추가합니다.
+                  return sheets.add_newSheet_inPython(sheetsId, tempArr);
+              }).then(() => {
+                  // 스프레드시트에 데이터를 업데이트합니다.
+                  return sheets.update_values_inPython(sheetsId, sheetsTargets, [0, 0]);
+              }).then((arr) => {
+                  // 뷰를 깨끗하게 초기화합니다.
+                  return sheets.setting_cleanView_inPython(sheetsId);
+              }).then(() => {
+                  // 웹 뷰 URL을 읽어옵니다.
+                  return drive.read_webView_inPython(sheetsId);
+              }).then((link) => {
+                  // messageSend 메서드를 사용하여 슬랙에 작업 결과를 보냅니다.
+                  return messageSend({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+              }).catch((err) => {
+                  // 에러가 발생한 경우 콘솔에 에러를 출력합니다.
+                  console.log(err);
+              });
+          }
+
+          // 작업 완료 후 응답을 JSON 형식으로 클라이언트에 보냅니다.
+          res.send(JSON.stringify({ link: response }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 남기고 클라이언트에 에러 메시지를 보냅니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+
+          // 응답 헤더에 JSON 타입을 설정합니다.
+          res.set("Content-Type", "application/json");
+
+          // 에러 메시지를 클라이언트에 JSON 형식으로 보냅니다.
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /createProposalDocument
+     * @description 클라이언트로부터 특정 프로젝트(proid)에 대한 제안서 생성 요청을 받아, 제안서를 생성하고 클라이언트에게 링크를 반환하는 라우터입니다.
+     *              타이머 설정을 통해 특정 시간에 제안서를 생성할 수 있으며, 즉시 실행 옵션도 제공합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에는 proid(프로젝트 ID), year, month, date, hour, minute, second 또는 instant(즉시 실행 여부)가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 제안서 생성 후 해당 링크를 반환합니다.
+     */
     router.post([ "/createProposalDocument" ], async function (req, res) {
+      // 응답의 Content-Type을 JSON으로 설정합니다.
       res.set("Content-Type", "application/json");
+
       try {
-    
-        const { proid } = req.body;
-        const proposalLink = "https://" + address.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
-        const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        const cliid = thisProject.cliid;
-        let page, dummy, historyObj;
-        let future, now, delta;
-        let year, month, date, hour, minute, second;
-    
-        if (req.body.retryProposal === undefined) {
-          await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
-        }
-    
-        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (historyObj === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        }
-        page = "designerProposal";
-        dummy = {
-          page,
-          date: new Date(),
-          mode: null,
-          who: {
-            name: null,
-            email: null,
+          // 요청 본문에서 proid(프로젝트 ID)를 추출합니다.
+          const { proid } = req.body;
+
+          // 제안서 링크를 생성합니다. proid를 기반으로 URL이 만들어집니다.
+          const proposalLink = "https://" + address.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
+
+          // proid를 사용해 해당 프로젝트의 정보를 가져옵니다.
+          const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+          // 프로젝트에 연결된 클라이언트 ID를 추출합니다.
+          const cliid = thisProject.cliid;
+
+          let page, dummy, historyObj;
+          let future, now, delta;
+          let year, month, date, hour, minute, second;
+
+          // retryProposal이 없는 경우, 제안서의 날짜를 현재 날짜로 업데이트합니다.
+          if (req.body.retryProposal === undefined) {
+              await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
           }
-        };
-        if (Array.isArray(historyObj.curation.analytics.send)) {
-          historyObj.curation.analytics.send.push(dummy);
-        } else {
-          historyObj.curation.analytics.send = [ dummy ];
-        }
-        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
-    
-        if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
-    
-          year = Number(req.body.year);
-          month = Number(req.body.month);
-          date = Number(req.body.date);
-          hour = Number(req.body.hour);
-          minute = Number(req.body.minute);
-          second = Number(req.body.second);
-          future = new Date(year, month - 1, date, hour, minute, second);
-          now = new Date();
-          delta = future.valueOf() - now.valueOf();
-          setTimeout(async () => {
-            try {
-              await shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]);
-            } catch (e) {
-              console.log(e);
-            }
-          }, delta);
-    
-        } else if (req.body.instant !== undefined) {
-    
-          shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]).catch((err) => { console.log(err); });
-    
-        } else {
-    
-          throw new Error("invaild post");
-    
-        }
-    
-        res.send(JSON.stringify({ link: proposalLink }));
-    
+
+          // 클라이언트의 히스토리 정보를 가져옵니다. 히스토리 데이터가 없으면 생성합니다.
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+          if (historyObj === null) {
+              // 새로운 히스토리를 생성합니다.
+              await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+              historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+          }
+
+          // 제안서 관련 기록을 위한 페이지 정보와 더미 데이터를 설정합니다.
+          page = "designerProposal";
+          dummy = {
+              page,
+              date: new Date(),
+              mode: null,
+              who: {
+                  name: null,
+                  email: null,
+              }
+          };
+
+          // 히스토리 객체에 새로운 제안서 전송 기록을 추가합니다.
+          if (Array.isArray(historyObj.curation.analytics.send)) {
+              historyObj.curation.analytics.send.push(dummy);
+          } else {
+              historyObj.curation.analytics.send = [dummy];
+          }
+
+          // 히스토리 정보를 업데이트합니다.
+          await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+
+          // 클라이언트가 요청한 특정 시간(year, month, date, hour, minute, second)이 모두 정의된 경우
+          if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
+              // 입력된 시간 정보를 Number 형식으로 변환합니다.
+              year = Number(req.body.year);
+              month = Number(req.body.month);
+              date = Number(req.body.date);
+              hour = Number(req.body.hour);
+              minute = Number(req.body.minute);
+              second = Number(req.body.second);
+
+              // 미래의 시간을 설정합니다.
+              future = new Date(year, month - 1, date, hour, minute, second);
+              now = new Date();
+              // 현재 시간과 미래 시간의 차이(delta)를 계산합니다.
+              delta = future.valueOf() - now.valueOf();
+
+              // 지정된 시간 후에 스크립트를 실행하도록 타이머를 설정합니다.
+              setTimeout(async () => {
+                  try {
+                      // node 명령어로 웹 제안서 생성 작업을 실행합니다.
+                      await shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]);
+                  } catch (e) {
+                      // 에러 발생 시 콘솔에 에러를 출력합니다.
+                      console.log(e);
+                  }
+              }, delta);
+          } else if (req.body.instant !== undefined) {
+              // instant가 정의된 경우, 즉시 제안서를 생성하는 작업을 실행합니다.
+              shellExec("node", [ `${process.cwd()}/robot.js`, `webProposal`, proid ]).catch((err) => { console.log(err); });
+          } else {
+              // 유효하지 않은 요청이 들어온 경우 에러를 발생시킵니다.
+              throw new Error("invaild post");
+          }
+
+          // 제안서 링크를 JSON 형식으로 클라이언트에 응답합니다.
+          res.send(JSON.stringify({ link: proposalLink }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그를 기록하고 클라이언트에 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -3463,587 +4178,886 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /proposalReset, /proposalCreate
+     * @description 클라이언트로부터 프로젝트 제안서 리셋 또는 생성 요청을 받아 처리하는 라우터입니다.
+     *              /proposalReset에서는 기존 제안서를 리셋하며, /proposalCreate에서는 클라이언트 또는 프로젝트에 기반한 새로운 제안서를 생성합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에는 cliid(클라이언트 ID) 또는 proid(프로젝트 ID)가 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 작업 완료 메시지를 반환합니다.
+     */
     router.post([ "/proposalReset", "/proposalCreate" ], async function (req, res) {
+      // instance에서 back, work, address 객체를 가져옵니다. 각각 데이터 처리, 작업 실행, 서버 주소 관리 기능을 담당합니다.
       const back = instance.back;
       const work = instance.work;
       const address = instance.address;
+
+      // Mother 클래스에서 requestSystem과 messageSend 메서드를 가져옵니다.
+      // requestSystem은 외부 API 요청을 처리하며, messageSend는 메시지를 전송하는 기능을 수행합니다.
       const { requestSystem, messageSend } = instance.mother;
+
       try {
-        let id, historyObj;
-        let requestObj;
-    
-        if (req.body.proid === undefined) {
-          id = req.body.cliid;
-        }
-        if (req.body.cliid === undefined) {
-          id = req.body.proid;
-        }
-        if (typeof id !== "string") {
-          throw new Error("invaild post");
-        }
-        if (!/^[cp]/.test(id)) {
-          throw new Error("invaild post");
-        }
-    
-        if (req.url === "/proposalReset") {
-          work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).catch((err) => {
-            console.log(err);
-          });
-    
-        } else if (req.url === "/proposalCreate") {
-          if (/^c/.test(id)) {
-            if (typeof req.body.serid === "string") {
-              if (/^s[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(req.body.serid)) {
-    
-                historyObj = await back.getHistoryById("client", id, { selfMongo: instance.mongolocal });
-                if (historyObj !== null && historyObj.curation.image.length > 0) {
-    
-                  requestObj = {
-                    cliid: id,
-                    historyQuery: { "curation.service.serid": [ req.body.serid ] },
-                    coreQuery: {},
-                    mode: "create",
-                    fromConsole: 1,
-                  };
-                  if (req.body.silent !== undefined) {
-                    requestObj.silent = true;
+          let id, historyObj;
+          let requestObj;
+
+          // proid(프로젝트 ID)가 없는 경우, cliid(클라이언트 ID)를 ID로 설정합니다.
+          if (req.body.proid === undefined) {
+              id = req.body.cliid;
+          }
+
+          // cliid가 없는 경우, proid를 ID로 설정합니다.
+          if (req.body.cliid === undefined) {
+              id = req.body.proid;
+          }
+
+          // ID가 문자열 타입이 아닐 경우, 유효하지 않은 요청으로 간주하고 에러를 발생시킵니다.
+          if (typeof id !== "string") {
+              throw new Error("invaild post");
+          }
+
+          // ID가 c 또는 p로 시작하지 않으면 에러를 발생시킵니다. 이는 클라이언트 또는 프로젝트 ID의 형식을 검사합니다.
+          if (!/^[cp]/.test(id)) {
+              throw new Error("invaild post");
+          }
+
+          // 요청이 /proposalReset인 경우, 제안서를 리셋합니다.
+          if (req.url === "/proposalReset") {
+              // work 객체의 proposalReset 메서드를 호출하여 제안서를 리셋합니다.
+              work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).catch((err) => {
+                  console.log(err);
+              });
+
+          // 요청이 /proposalCreate인 경우, 새로운 제안서를 생성합니다.
+          } else if (req.url === "/proposalCreate") {
+              // 클라이언트 ID가 c로 시작하는 경우 처리합니다.
+              if (/^c/.test(id)) {
+                  // serid가 유효한 형식(서비스 ID)을 갖춘 경우 처리합니다.
+                  if (typeof req.body.serid === "string") {
+                      if (/^s[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(req.body.serid)) {
+
+                          // 해당 클라이언트의 히스토리 정보를 가져옵니다.
+                          historyObj = await back.getHistoryById("client", id, { selfMongo: instance.mongolocal });
+
+                          // 히스토리가 존재하고, curation 이미지가 있는 경우 제안서를 생성할 수 있습니다.
+                          if (historyObj !== null && historyObj.curation.image.length > 0) {
+                              
+                              // 요청 객체를 설정합니다.
+                              requestObj = {
+                                  cliid: id, // 클라이언트 ID
+                                  historyQuery: { "curation.service.serid": [req.body.serid] }, // 서비스 ID에 해당하는 히스토리 쿼리
+                                  coreQuery: {}, // 추가 쿼리 설정
+                                  mode: "create", // 모드는 create로 설정합니다.
+                                  fromConsole: 1, // 콘솔에서 요청되었음을 표시합니다.
+                              };
+
+                              // silent(알림 비활성화)가 설정된 경우 이를 요청 객체에 추가합니다.
+                              if (req.body.silent !== undefined) {
+                                  requestObj.silent = true;
+                              }
+
+                              // 스타일 큐레이션 업데이트를 처리하기 위해 외부 API에 요청을 보냅니다.
+                              requestSystem("https://" + address.officeinfo.host + ":3002/styleCuration_updateCalculation", requestObj, { 
+                                  headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } 
+                              }).then(() => {
+                                  // 성공적으로 요청이 완료된 경우 특별한 처리는 없습니다.
+                              }).catch((err) => {
+                                  // 에러가 발생한 경우 에러를 출력합니다.
+                                  console.log(err);
+                              });
+
+                          } else {
+                              // 스타일 체크가 완료되지 않은 경우, 메시지를 슬랙 채널에 전송합니다.
+                              messageSend({ 
+                                  text: id + " 고객님은 스타일 체크를 진행하지 않아 자동으로 제안서를 만들 수 없습니다!", 
+                                  channel: "#403_proposal" 
+                              }).catch((err) => {
+                                  console.log(err);
+                              });
+                          }
+                      }
                   }
-    
-                  requestSystem("https://" + address.officeinfo.host + ":3002/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.officeinfo.host, "Content-Type": "application/json" } }).then(() => {
-                    //pass
-                  }).catch((err) => {
-                    console.log(err);
-                  });
-                } else {
-                  messageSend({ text: id + " 고객님은 스타일 체크를 진행하지 않아 자동으로 제안서를 만들 수 없습니다!", channel: "#403_proposal" }).catch((err) => {
-                    console.log(err);
-                  });
-                }
-    
               }
-            }
           }
-        }
-    
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "will do" }));
+
+          // 응답 헤더에 JSON 형식으로 응답을 설정하고, 작업 완료 메시지를 클라이언트에 전송합니다.
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 남기고, 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /getMembers
+     * @description 멤버 정보를 요청하는 라우터입니다. 특정 타입에 따라 멤버 데이터를 반환합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 type, value, mac 등의 정보가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 요청된 멤버 정보를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/getMembers" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        if (typeof req.body.type !== "string") {
-          throw new Error("must be type");
-        }
-        const membersArr = instance.members;
-        let emailArr = [];
-        let targetMember = null;
-    
-        if (req.body.type === "get") {
-          res.send(JSON.stringify(membersArr));
-        } else if (req.body.type === "boo") {
-          for (let { id, email } of membersArr) {
-            for (let e of email) {
-              emailArr.push({ email: e, id });
-            }
+          // 요청 본문에 type이 문자열이 아닌 경우 에러를 발생시킵니다.
+          if (typeof req.body.type !== "string") {
+              throw new Error("must be type");
           }
-    
-          for (let i = 0; i < emailArr.length; i++) {
-            if (req.body.value === emailArr[i].email) {
-              for (let j = 0; j < membersArr.length; j++) {
-                if (emailArr[i].id === membersArr[j].id) {
-                  targetMember = membersArr[j];
-                }
+
+          // instance에서 멤버 정보를 가져옵니다.
+          const membersArr = instance.members;
+
+          // 이메일 정보를 저장할 배열을 초기화합니다.
+          let emailArr = [];
+
+          // 특정 멤버를 저장할 변수를 초기화합니다.
+          let targetMember = null;
+
+          /**
+           * @description type이 "get"인 경우 모든 멤버 데이터를 응답으로 반환합니다.
+           */
+          if (req.body.type === "get") {
+              res.send(JSON.stringify(membersArr));
+
+          /**
+           * @description type이 "boo"인 경우, 주어진 이메일로 멤버를 찾고, 해당 멤버가 존재하는지 확인합니다.
+           */
+          } else if (req.body.type === "boo") {
+              // 모든 멤버의 이메일과 ID를 emailArr 배열에 저장합니다.
+              for (let { id, email } of membersArr) {
+                  for (let e of email) {
+                      emailArr.push({ email: e, id });
+                  }
               }
-            }
+
+              // emailArr에서 요청된 이메일과 일치하는 멤버를 찾습니다.
+              for (let i = 0; i < emailArr.length; i++) {
+                  if (req.body.value === emailArr[i].email) {
+                      for (let j = 0; j < membersArr.length; j++) {
+                          if (emailArr[i].id === membersArr[j].id) {
+                              targetMember = membersArr[j];
+                          }
+                      }
+                  }
+              }
+
+              // 멤버가 존재하지 않거나 alive 상태가 아닌 경우 null을 응답으로 반환합니다.
+              if (targetMember === undefined || targetMember === null) {
+                  res.send(JSON.stringify({ result: null }));
+              } else {
+                  if (!targetMember.alive) {
+                      res.send(JSON.stringify({ result: null }));
+                  } else {
+                      res.send(JSON.stringify({ result: targetMember }));
+                  }
+              }
+
+          /**
+           * @description type이 "this"인 경우, 요청된 MAC 주소로 멤버를 찾고 해당 멤버 정보를 반환합니다.
+           */
+          } else if (req.body.type === "this") {
+
+              // MAC 배열이 존재하지 않으면 에러를 발생시킵니다.
+              if (req.body.mac === undefined) {
+                  throw new Error("must be mac array");
+              }
+
+              // 요청 본문에서 mac 값을 equalJson으로 깊은 복사하여 가져옵니다.
+              const { mac } = equalJson(req.body);
+
+              // mac이 배열이 아니거나 배열 내 요소가 문자열이 아닌 경우 에러를 발생시킵니다.
+              if (!Array.isArray(mac)) {
+                  throw new Error("invalid post");
+              }
+              if (!mac.every((str) => { return typeof str === "string" })) {
+                  throw new Error("invalid post");
+              }
+
+              // 현재 멤버 ID와 관련된 변수를 정의합니다.
+              let thisMemid, thisMap, thisMember;
+
+              thisMemid = null;
+
+              // officeinfo.map에서 주어진 MAC 주소와 일치하는 멤버 ID를 찾습니다.
+              for (let obj of address.officeinfo.map) {
+                  if (mac.includes(obj.mac) && typeof obj.memid === "string") {
+                      thisMemid = obj.memid;
+                      break;
+                  }
+              }
+
+              // 일치하는 멤버 ID가 있는 경우, 해당 멤버의 정보를 반환합니다.
+              if (thisMemid !== null) {
+                  thisMap = address.officeinfo.map.find((obj) => { return obj.memid === thisMemid; });
+                  thisMember = membersArr.find((obj) => { return obj.id === thisMemid });
+
+                  // memid와 mac 필드를 멤버 객체에 추가합니다.
+                  thisMember.memid = thisMember.id;
+                  thisMember.mac = thisMap.mac;
+
+                  // 멤버 정보를 JSON 형식으로 반환합니다.
+                  res.send(JSON.stringify(thisMember));
+              } else {
+                  // 멤버가 없으면 null을 반환합니다.
+                  res.send(JSON.stringify({ member: null }));
+              }
+
           }
-    
-          if (targetMember === undefined || targetMember === null) {
-            res.send(JSON.stringify({ result: null }));
-          } else {
-            if (!targetMember.alive) {
-              res.send(JSON.stringify({ result: null }));
-            } else {
-              res.send(JSON.stringify({ result: targetMember }));
-            }
-          }
-    
-        } else if (req.body.type === "this") {
-    
-          if (req.body.mac === undefined) {
-            throw new Error("must be mac array");
-          }
-          const { mac } = equalJson(req.body);
-          if (!Array.isArray(mac)) {
-            throw new Error("invaild post");
-          }
-          if (!mac.every((str) => { return typeof str === "string" })) {
-            throw new Error("invaild post");
-          }
-          let thisMemid, thisMap, thisMember;
-    
-          thisMemid = null;
-          for (let obj of address.officeinfo.map) {
-            if (mac.includes(obj.mac) && typeof obj.memid === "string") {
-              thisMemid = obj.memid;
-              break;
-            }
-          }
-    
-          if (thisMemid !== null) {
-            thisMap = address.officeinfo.map.find((obj) => { return obj.memid = thisMemid; })
-            thisMember = membersArr.find((obj) => { return obj.id === thisMemid });
-            thisMember.memid = thisMember.id;
-            thisMember.mac = thisMap.mac;
-    
-            res.send((JSON.stringify(thisMember)));
-          } else {
-            res.send((JSON.stringify({ member: null })));
-          }
-    
-        }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /parsingProposal
+     * @description 특정 클라이언트의 디자이너 큐레이션 데이터를 기반으로 제안서를 파싱하여 반환하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 클라이언트 ID(cliid)와 서비스 ID(serid)가 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 제안서 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/parsingProposal" ], async function (req, res) {
       try {
-        if (req.body.id === undefined || req.body.serid === undefined) {
-          throw new Error("must be cliid, seridNumber");
-        }
-        const selected = await work.designerCuration(req.body.id, 4, [ `s2011_aa0${req.body.serid}s` ], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
-        if (!Array.isArray(selected)) {
-          throw new Error(selected);
-        }
-        res.set("Content-Type", "application/json");
-        if (selected.length === 0) {
-          res.send(JSON.stringify({ result: null }));
-        } else {
-          res.send(JSON.stringify({ result: { proposal: selected } }));
-        }
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/alimTalk" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      try {
-        if (req.body.method === undefined || req.body.name === undefined || req.body.phone === undefined) {
-          throw new Error("must be method, name, phone");
-        }
-        const { method, name, phone } = equalJson(req.body);
-        let option;
-        if (req.body.option === undefined) {
-          option = {};
-        } else {
-          option = equalJson(req.body.option);
-          if (/ADDRESS\[/g.test(option.host)) {
-            if (/\(ghost\)/gi.test(option.host)) {
-              option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].ghost.host;
-            } else {
-              option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].host;
-            }
+          // 요청 본문에서 클라이언트 ID와 서비스 ID가 제공되지 않은 경우 에러를 발생시킵니다.
+          if (req.body.id === undefined || req.body.serid === undefined) {
+              throw new Error("must be cliid, seridNumber");
           }
-        }
-        await instance.kakao.sendTalk(method, name, phone, option);
-    
-        res.send(JSON.stringify({ message: "success" }));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/sendCertification" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      const back = instance.back;
-      const human = instance.human;
-      const kakao = instance.kakao;
-      const address = instance.address;
-      const { equalJson } = instance.mother;
-      try {
-        const { name, phone, certification } = req.body;
-        const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
-    
-        if (address.officeinfo.ip.outer.replace(/[^0-9]/gi, '') === ip.replace(/[^0-9]/gi, '')) {
-    
-          res.send(JSON.stringify({ message: "office" }));
-    
-        } else {
-          logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
-          logger.alert("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
-    
-          human.sendSms({
-            to: phone,
-            body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
-          }).then(() => {
-            return logger.log("인증번호 문자 전송 완료");
-          }).catch((e) => { console.log(e); });
-    
-          kakao.sendTalk("certification", name, phone, {
-            company: "홈리에종",
-            name,
-            certification
-          }).then(() => {
-            return logger.log("인증번호 카카오 전송 완료");
-          }).catch((e) => { console.log(e); });
-    
-          res.send(JSON.stringify({ message: "will do" }));
-        }
-    
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/clientSubmit" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        const back = instance.back;
-        const selfMongo = instance.mongo;
-        const { map } = equalJson(req.body);
-        const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
-        const furnitureArr = [ "재배치", "일부 구매", "전체 구매" ];
-        const contractArr = [ "자가", "전월세" ];
-        const ignorePhone = [ "010-2747-3403" ];
-        const overlapStandardHours = 12;
-        const defaultPyeong = 34;
-        const moveinConst0 = 60;
-        const moveinConst1 = 10;
-        let ifOverlap;
-        let requestObject;
-        let name;
-        let phone;
-        let address0;
-        let address1;
-        let email;
-        let pyeong;
-        let movein;
-        let living;
-        let etc;
-        let future;
-        let expectedStart;
-        let requestArr;
-        let pastRequests;
-        let cliid;
-        let message;
-        let thisClient;
-        let sessionId;
-        let overlapTimeline;
-        let budget;
-        let furniture;
-        let contract;
-    
-        name = map.find((obj) => { return obj.property === "name" });
-        phone = map.find((obj) => { return obj.property === "phone" });
-        address0 = map.find((obj) => { return obj.property === "address0" });
-        address1 = map.find((obj) => { return obj.property === "address1" });
-        email = map.find((obj) => { return obj.property === "email" });
-        pyeong = map.find((obj) => { return obj.property === "pyeong" });
-        movein = map.find((obj) => { return obj.property === "movein" });
-        living = map.find((obj) => { return obj.property === "living" });
-        etc = map.find((obj) => { return obj.property === "etc" });
-        contract = map.find((obj) => { return obj.property === "contract" });
-        sessionId = map.find((obj) => { return obj.property === "sessionId" });
-    
-        if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
-          throw new Error("invaild post");
-        }
-    
-        if (sessionId === undefined) {
-          sessionId = [];
-        } else {
-          sessionId = [ sessionId.value.trim() ];
-        }
-    
-        if (contract === undefined) {
-          contract = { property: "contract", value: contractArr[0] };
-        }
-    
-        name = name.value.trim();
-        phone = phone.value.trim();
-        address0 = address0.value.trim();
-        address1 = address1.value.trim();
-        email = email.value.trim();
-        pyeong = pyeong.value.trim();
-        movein = movein.value.trim();
-        living = living.value.trim();
-        etc = etc.value.trim();
-        contract = contract.value.trim();
-    
-        // budget = budget.value.trim();
-        // furniture = furniture.value.trim();
-    
-        requestObject = {};
-    
-        requestObject["name"] = name.replace(/[^가-힣]/gi, '')
-        requestObject["phone"] = phone.replace(/[^0-9\-]/gi, '');
-        requestObject["email"] = email;
-    
-        requestObject["requests.0.request.space.address"] = String(address0 + " " + address1).trim();
-        requestObject["requests.0.request.family"] = "";
-    
-        // requestObject["requests.0.request.budget"] = budget;
-        // requestObject["requests.0.request.furniture"] = furniture;
-    
-        if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
-          requestObject["requests.0.request.space.pyeong"] = defaultPyeong;
-        } else {
-          requestObject["requests.0.request.space.pyeong"] = Number(pyeong.replace(/[^0-9\.]/gi, ''));
-        }
-    
-        if (/거주중/gi.test(living)) {
-          requestObject["requests.0.request.space.resident.living"] = true;
-          requestObject["requests.0.request.space.resident.expected"] = new Date();
-          future = new Date();
-          future.setDate(future.getDate() + moveinConst0);
-          requestObject["requests.0.analytics.date.space.movein"] = future;
-        } else {
-          requestObject["requests.0.request.space.resident.living"] = false;
-          requestObject["requests.0.request.space.resident.expected"] = stringToDate(movein);
-          future = stringToDate(movein);
-          future.setDate(future.getDate() + moveinConst1);
-          requestObject["requests.0.analytics.date.space.movein"] = future;
-        }
-    
-        expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
-        expectedStart = expectedStart.setDate(expectedStart.getDate() - moveinConst0);
-        if (!requestObject["requests.0.request.space.resident.living"] && expectedStart.valueOf() <= (new Date()).valueOf()) {
-          // requestObject["requests.0.request.space.resident.living"] = true;
-          requestObject["requests.0.request.space.resident.expected"] = new Date();
-          future = new Date();
-          future.setDate(future.getDate() + moveinConst0);
-          requestObject["requests.0.analytics.date.space.movein"] = future;
-        }
-    
-        requestObject["requests.0.request.space.contract"] = contract;
-        requestObject["requests.0.request.space.spec.room"] = 3;
-        requestObject["requests.0.request.space.spec.bathroom"] = 2;
-        requestObject["requests.0.request.space.spec.valcony"] = false;
-    
-        requestObject["requests.0.request.etc.comment"] = etc;
-        if (/from meta instant ads/gi.test(etc)) {
-          requestObject["requests.0.request.etc.channel"] = "메타 인스턴트";
-        } else {
-          requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
-        }
-        requestObject["requests.0.request.timeline"] = new Date();
-    
-        requestObject["requests.0.analytics.session"] = sessionId;
-    
-        message = '';
-        ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
-        if (ifOverlap.length > 0) {
-    
-          cliid = ifOverlap[0].cliid;
-    
-          pastRequests = (ifOverlap[0].toNormal()).requests;
-          overlapTimeline = new Date(JSON.stringify(pastRequests[0].request.timeline).slice(1, -1));
-          overlapTimeline.setHours(overlapTimeline.getHours() + overlapStandardHours);
-    
-          if (overlapTimeline.valueOf() < (new Date()).valueOf()) {
-            requestArr = [];
-            for (let z = 0; z < pastRequests.length; z++) {
-              requestArr.push(pastRequests[z]);
-            }
-            requestArr.unshift(back.returnClientRequest());
-            await back.updateClient([ { cliid }, { "requests": requestArr } ], { selfMongo });
-          }
-    
-          await back.updateClient([ { cliid }, requestObject ], { selfMongo });
-    
-          message += "재문의가 왔습니다!\n";
-    
-        } else {
-    
-          cliid = await back.createClient(requestObject, { selfMongo });
-          await back.createHistory("client", { cliid, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
-          message += "새로운 상담 문의가 왔습니다!\n"
-    
-        }
-    
-        const parsingAddress = async (id, rawString, MONGOC, logger) => {
-          if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
-            throw new Error("invaild input");
-          }
-          const app = new AddressParser();
-          try {
-            let arr;
-            arr = await app.addressInspection([ { id, address: rawString } ]);
-            if (arr.length === 0) {
-              return { result: true, id };
-            } else {
-              const res = await app.getAddress(rawString);
-              if (res === null) {
-                return { result: false, id };
-              } else {
-                const { address: { road } } = res;
-                await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
-                return { result: true, id };
+
+          // 디자이너 큐레이션 데이터를 가져옵니다. work.designerCuration 메서드를 호출하여 해당 클라이언트의 큐레이션 결과를 반환합니다.
+          const selected = await work.designerCuration(
+              req.body.id,        // 클라이언트 ID
+              4,                  // 정해진 고정 값 (디자이너 수, 범위 또는 기타 목적)
+              [ `s2011_aa0${req.body.serid}s` ],  // 서비스 ID 문자열을 기반으로 파싱
+              { 
+                  selfMongo: instance.mongo,     // MongoDB 인스턴스
+                  selfLocalMongo: instance.mongolocal  // 로컬 MongoDB 인스턴스
               }
-            }
-          } catch (e) {
-            logger.error(e, req).catch((e) => { console.log(e); });
+          );
+
+          // 큐레이션 결과가 배열이 아닌 경우, 에러 메시지를 발생시킵니다.
+          if (!Array.isArray(selected)) {
+              throw new Error(selected);
           }
-        }
-        parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-          console.log(err);
-        });
-    
-        back.getCaseProidById(cliid, { selfMongo }).then((clientCase) => {
-          if (clientCase !== null) {
-            const serviceCase = clientCase.caseService();
-            if (serviceCase !== null) {
-              const { serid, xValue } = serviceCase;
-              let whereQuery, updateQuery;
-              whereQuery = { cliid };
-              updateQuery = { "requests.0.analytics.response.service.serid": serid[0].serid, "requests.0.analytics.response.service.xValue": xValue[0].xValue };
-              return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
-            } else {
-              return (new Promise((resolve, reject) => { resolve("fail"); }));
-            }
+
+          // 응답 헤더에 JSON 형식으로 설정합니다.
+          res.set("Content-Type", "application/json");
+
+          // 큐레이션 결과가 비어 있는 경우, null을 반환합니다.
+          if (selected.length === 0) {
+              res.send(JSON.stringify({ result: null }));
           } else {
-            return (new Promise((resolve, reject) => { resolve("fail"); }));
+              // 큐레이션 결과가 있는 경우, 제안서를 반환합니다.
+              res.send(JSON.stringify({ result: { proposal: selected } }));
           }
-        }).then((message) => {
-          logger.log(cliid, "case update " + message);
-        }).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-        });
-    
-        thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
-        message += "\n" + thisClient.toMessage();
-    
-        messageSend({ text: message, channel: "#401_consulting" }).then(() => {
-          return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
-        }).catch((err) => { console.log(err); });
-    
-        res.send(JSON.stringify({ cliid }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /alimTalk
+     * @description 알림톡 메시지를 발송하는 라우터입니다. 발송할 방법(method), 수신자 이름(name), 수신자 전화번호(phone)를 받아 메시지를 발송합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에 method(메시지 발송 방법), name(수신자 이름), phone(수신자 전화번호), option(추가 옵션)이 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 발송 성공 여부를 JSON 형식으로 반환합니다.
+     */
+    router.post([ "/alimTalk" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식 및 CORS(Cross-Origin Resource Sharing) 설정을 추가합니다.
+      res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+      });
+
+      try {
+          // 필수 필드가 제공되지 않으면 에러를 발생시킵니다.
+          if (req.body.method === undefined || req.body.name === undefined || req.body.phone === undefined) {
+              throw new Error("must be method, name, phone");
+          }
+
+          // 요청 본문에서 method, name, phone 필드를 equalJson을 사용해 깊은 복사로 처리합니다.
+          const { method, name, phone } = equalJson(req.body);
+
+          // 추가 옵션을 처리할 변수를 선언합니다.
+          let option;
+
+          /**
+           * @description option 필드가 제공되지 않았을 경우, 빈 객체로 초기화합니다. 제공된 경우는 equalJson을 사용하여 옵션 데이터를 처리합니다.
+           */
+          if (req.body.option === undefined) {
+              option = {};  // 옵션이 없을 경우 기본값으로 빈 객체를 설정
+          } else {
+              // option 필드를 equalJson으로 깊은 복사하여 처리합니다.
+              option = equalJson(req.body.option);
+
+              // option의 host에 "ADDRESS[" 문자열이 포함된 경우, 주소 매핑을 처리합니다.
+              if (/ADDRESS\[/g.test(option.host)) {
+                  // host에 "(ghost)"가 포함된 경우, ghost 서버의 호스트 주소를 가져옵니다.
+                  if (/\(ghost\)/gi.test(option.host)) {
+                      option.host = instance.address[
+                          option.host
+                              .replace(/ADDRESS\[/gi, '')
+                              .replace(/\]/g, '')
+                              .replace(/\([^\(\)]+\)/g, '')
+                      ].ghost.host;
+                  } else {
+                      // 그렇지 않으면 기본 호스트 주소를 가져옵니다.
+                      option.host = instance.address[
+                          option.host
+                              .replace(/ADDRESS\[/gi, '')
+                              .replace(/\]/g, '')
+                              .replace(/\([^\(\)]+\)/g, '')
+                      ].host;
+                  }
+              }
+          }
+
+          /**
+           * @description Kakao 알림톡 메시지를 발송합니다. 메서드는 method, 수신자는 name과 phone, 옵션은 option을 통해 전달됩니다.
+           * @function instance.kakao.sendTalk
+           */
+          await instance.kakao.sendTalk(method, name, phone, option);
+
+          // 발송 성공 메시지를 JSON 형식으로 클라이언트에 전송합니다.
+          res.send(JSON.stringify({ message: "success" }));
+
+      } catch (e) {
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+    
+    /**
+     * @route POST /sendCertification
+     * @description 휴대폰 인증번호를 요청하고, SMS와 카카오톡을 통해 인증번호를 전송하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 수신자 이름(name), 전화번호(phone), 인증번호(certification)가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 인증번호 전송 성공 여부를 JSON 형식으로 반환합니다.
+     */
+    router.post([ "/sendCertification" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식 및 CORS 설정을 추가합니다.
+      res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+
+      // 필요한 객체들을 instance에서 가져옵니다.
+      const back = instance.back;  // 백엔드 관련 처리 로직
+      const human = instance.human;  // 휴대폰 SMS 전송 로직
+      const kakao = instance.kakao;  // 카카오톡 전송 로직
+      const address = instance.address;  // 서버 주소 정보
+      const { equalJson } = instance.mother;  // Mother 클래스의 equalJson 메서드
+
+      try {
+          // 클라이언트 요청에서 name, phone, certification 값을 추출합니다.
+          const { name, phone, certification } = req.body;
+
+          // 요청 헤더에서 IP 주소를 가져옵니다. 클라이언트가 프록시를 사용한 경우 "x-forwarded-for" 헤더를 사용하고, 그렇지 않으면 소켓의 remoteAddress를 사용합니다.
+          const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"])
+              .trim()
+              .replace(/[^0-9\.]/gi, '');  // IP 주소에서 숫자와 '.' 외의 문자는 제거
+
+          /**
+           * @description IP 주소가 회사 외부 IP와 일치하는지 확인합니다.
+           * 내부 IP에서 요청한 경우 "office" 메시지를 반환하고, 외부에서 요청한 경우 인증번호를 전송합니다.
+           */
+          if (address.officeinfo.ip.outer.replace(/[^0-9]/gi, '') === ip.replace(/[^0-9]/gi, '')) {
+              // 회사 내부 IP에서 요청한 경우 "office" 메시지를 반환합니다.
+              res.send(JSON.stringify({ message: "office" }));
+
+          } else {
+              // 인증번호 요청 로그를 기록합니다.
+              logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+              logger.alert("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+
+              /**
+               * @description SMS 전송
+               * human.sendSms 메서드를 사용해 수신자의 휴대폰 번호로 SMS 메시지를 전송합니다.
+               */
+              human.sendSms({
+                  to: phone,  // 수신자의 전화번호
+                  body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
+              }).then(() => {
+                  // SMS 전송 성공 로그를 기록합니다.
+                  return logger.log("인증번호 문자 전송 완료");
+              }).catch((e) => { console.log(e); });
+
+              /**
+               * @description 카카오톡 알림톡 전송
+               * kakao.sendTalk 메서드를 사용해 수신자에게 카카오톡 메시지를 전송합니다.
+               */
+              kakao.sendTalk("certification", name, phone, {
+                  company: "홈리에종",  // 발신 회사명
+                  name,  // 수신자 이름
+                  certification  // 인증번호
+              }).then(() => {
+                  // 카카오톡 전송 성공 로그를 기록합니다.
+                  return logger.log("인증번호 카카오 전송 완료");
+              }).catch((e) => { console.log(e); });
+
+              // 작업 성공 메시지를 반환합니다.
+              res.send(JSON.stringify({ message: "will do" }));
+          }
+
+      } catch (e) {
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+    
+    /**
+     * @route POST /clientSubmit
+     * @description 클라이언트 상담 요청을 처리하여 새로운 클라이언트를 생성하거나, 중복된 클라이언트의 경우 요청을 업데이트하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 클라이언트 정보가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 처리 결과를 JSON 형식으로 반환합니다.
+     */
+    router.post([ "/clientSubmit" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 반환하고, CORS 설정으로 모든 도메인에 대해 접근 허용
+      res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+
+      try {
+          // 필요한 인스턴스와 함수 로드
+          const back = instance.back;  // 백엔드 데이터 처리 모듈
+          const selfMongo = instance.mongo;  // 메인 MongoDB 인스턴스
+          const { map } = equalJson(req.body);  // 요청 본문을 equalJson으로 안전하게 파싱
+
+          // 예산, 가구, 계약 종류, 중복 감지 기준 시간 등의 기본값을 설정
+          const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상' ];
+          const furnitureArr = [ "재배치", "일부 구매", "전체 구매" ];
+          const contractArr = [ "자가", "전월세" ];
+          const ignorePhone = [ "010-2747-3403" ];  // 특정 번호는 무시
+          const overlapStandardHours = 12;  // 중복 요청을 감지하는 기준 시간 (12시간)
+          const defaultPyeong = 34;  // 기본 평수
+          const moveinConst0 = 60;  // 입주 기준일 (60일)
+          const moveinConst1 = 10;  // 예상 입주 기준일 (10일)
+
+          let ifOverlap;  // 중복 여부 확인 변수
+          let requestObject;  // 요청 객체 초기화
+          let name, phone, address0, address1, email, pyeong, movein, living, etc, future;
+          let contract, sessionId;
+          let requestArr, pastRequests, cliid, message, thisClient, overlapTimeline, budget, furniture, expectedStart;
+
+          // 맵에서 클라이언트 정보를 추출
+          name = map.find((obj) => { return obj.property === "name" });
+          phone = map.find((obj) => { return obj.property === "phone" });
+          address0 = map.find((obj) => { return obj.property === "address0" });
+          address1 = map.find((obj) => { return obj.property === "address1" });
+          email = map.find((obj) => { return obj.property === "email" });
+          pyeong = map.find((obj) => { return obj.property === "pyeong" });
+          movein = map.find((obj) => { return obj.property === "movein" });
+          living = map.find((obj) => { return obj.property === "living" });
+          etc = map.find((obj) => { return obj.property === "etc" });
+          contract = map.find((obj) => { return obj.property === "contract" });
+          sessionId = map.find((obj) => { return obj.property === "sessionId" });
+
+          // 필수 필드가 누락되었는지 확인
+          if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
+              throw new Error("invaild post");
+          }
+
+          // 세션 ID 설정
+          if (sessionId === undefined) {
+              sessionId = [];
+          } else {
+              sessionId = [ sessionId.value.trim() ];
+          }
+
+          // 계약이 설정되지 않았을 경우 기본값으로 설정
+          if (contract === undefined) {
+              contract = { property: "contract", value: contractArr[0] };
+          }
+
+          // 입력받은 정보를 정리하고 불필요한 문자를 제거
+          name = name.value.trim();
+          phone = phone.value.trim();
+          address0 = address0.value.trim();
+          address1 = address1.value.trim();
+          email = email.value.trim();
+          pyeong = pyeong.value.trim();
+          movein = movein.value.trim();
+          living = living.value.trim();
+          etc = etc.value.trim();
+          contract = contract.value.trim();
+
+          // 클라이언트 요청 객체 생성
+          requestObject = {};
+          requestObject["name"] = name.replace(/[^가-힣]/gi, '');  // 이름에서 한글만 남김
+          requestObject["phone"] = phone.replace(/[^0-9\-]/gi, '');  // 전화번호에서 숫자와 하이픈만 남김
+          requestObject["email"] = email;
+          requestObject["requests.0.request.space.address"] = String(address0 + " " + address1).trim();  // 주소 결합
+
+          // 평수 값이 숫자가 아니거나 0일 경우 기본 평수를 사용
+          if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
+              requestObject["requests.0.request.space.pyeong"] = defaultPyeong;
+          } else {
+              requestObject["requests.0.request.space.pyeong"] = Number(pyeong.replace(/[^0-9\.]/gi, ''));
+          }
+
+          // 거주 여부에 따라 입주일 계산
+          if (/거주중/gi.test(living)) {
+              requestObject["requests.0.request.space.resident.living"] = true;  // 거주 중이면 true
+              requestObject["requests.0.request.space.resident.expected"] = new Date();  // 현재 날짜
+              future = new Date();
+              future.setDate(future.getDate() + moveinConst0);  // 입주일은 현재로부터 60일 후로 설정
+              requestObject["requests.0.analytics.date.space.movein"] = future;
+          } else {
+              requestObject["requests.0.request.space.resident.living"] = false;
+              requestObject["requests.0.request.space.resident.expected"] = stringToDate(movein);  // 입주 날짜를 직접 설정
+              future = stringToDate(movein);
+              future.setDate(future.getDate() + moveinConst1);  // 입주일은 10일 후로 설정
+              requestObject["requests.0.analytics.date.space.movein"] = future;
+          }
+
+          // 예상 입주 시작일 계산
+          expectedStart = new Date(future.getFullYear(), future.getMonth(), future.getDate(), future.getHours(), future.getMinutes(), future.getSeconds());
+          expectedStart = expectedStart.setDate(expectedStart.getDate() - moveinConst0);  // 입주일로부터 60일 전
+
+          // 입주일이 현재 날짜보다 이전이면 거주 중으로 설정
+          if (!requestObject["requests.0.request.space.resident.living"] && expectedStart.valueOf() <= (new Date()).valueOf()) {
+              requestObject["requests.0.request.space.resident.expected"] = new Date();
+              future = new Date();
+              future.setDate(future.getDate() + moveinConst0);
+              requestObject["requests.0.analytics.date.space.movein"] = future;
+          }
+
+          // 계약 종류, 기타 사항 설정
+          requestObject["requests.0.request.space.contract"] = contract;
+          requestObject["requests.0.request.space.spec.room"] = 3;
+          requestObject["requests.0.request.space.spec.bathroom"] = 2;
+          requestObject["requests.0.request.space.spec.valcony"] = false;
+          requestObject["requests.0.request.etc.comment"] = etc;
+
+          // 특정 문자열이 포함된 경우 채널을 설정
+          if (/from meta instant ads/gi.test(etc)) {
+              requestObject["requests.0.request.etc.channel"] = "메타 인스턴트";
+          } else {
+              requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
+          }
+
+          // 요청 시간을 현재 시간으로 설정
+          requestObject["requests.0.request.timeline"] = new Date();
+
+          // 세션 ID 추가
+          requestObject["requests.0.analytics.session"] = sessionId;
+
+          // 중복된 클라이언트인지 확인하는 로직
+          message = '';
+          ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
+          if (ifOverlap.length > 0) {
+              // 중복된 클라이언트가 있을 경우 요청을 업데이트
+              cliid = ifOverlap[0].cliid;
+              pastRequests = (ifOverlap[0].toNormal()).requests;
+              overlapTimeline = new Date(JSON.stringify(pastRequests[0].request.timeline).slice(1, -1));
+              overlapTimeline.setHours(overlapTimeline.getHours() + overlapStandardHours);
+
+              // 중복 요청 시간이 지나면 새로운 요청을 추가
+              if (overlapTimeline.valueOf() < (new Date()).valueOf()) {
+                  requestArr = [];
+                  for (let z = 0; z < pastRequests.length; z++) {
+                      requestArr.push(pastRequests[z]);
+                  }
+                  requestArr.unshift(back.returnClientRequest());
+                  await back.updateClient([ { cliid }, { "requests": requestArr } ], { selfMongo });
+              }
+
+              // 기존 클라이언트 요청을 업데이트
+              await back.updateClient([ { cliid }, requestObject ], { selfMongo });
+              message += "재문의가 왔습니다!\n";
+
+          } else {
+              // 새로운 클라이언트를 생성
+              cliid = await back.createClient(requestObject, { selfMongo });
+              await back.createHistory("client", { cliid, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
+              message += "새로운 상담 문의가 왔습니다!\n";
+          }
+
+          /**
+           * @function parsingAddress
+           * @description 주소를 파싱하고 결과에 따라 클라이언트 주소를 업데이트하는 함수입니다.
+           * @param {string} id - 클라이언트 ID
+           * @param {string} rawString - 파싱할 주소 문자열
+           * @param {object} MONGOC - MongoDB 인스턴스
+           * @param {object} logger - 로그 기록 객체
+           * @returns {Promise<object>} - 주소 파싱 결과를 반환하는 Promise 객체
+           */
+          const parsingAddress = async (id, rawString, MONGOC, logger) => {
+            // id와 rawString이 문자열이 아니거나 MONGOC가 정의되지 않은 경우 에러 발생
+            if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
+                throw new Error("invaild input");  // 잘못된 입력에 대한 에러 처리
+            }
+
+            // AddressParser 인스턴스 생성
+            const app = new AddressParser();
+
+            try {
+                let arr;
+                // 주소 검사 함수 호출, 검사 결과 배열을 반환
+                arr = await app.addressInspection([{ id, address: rawString }]);
+                
+                // 주소 검사 결과가 비어 있을 경우, 유효한 주소로 간주하고 true 반환
+                if (arr.length === 0) {
+                    return { result: true, id };  // 주소 검사가 성공적일 경우
+                } else {
+                    // 주소 정보를 얻기 위해 다시 getAddress 호출
+                    const res = await app.getAddress(rawString);
+                    
+                    // getAddress가 null을 반환하면 잘못된 주소로 간주하고 false 반환
+                    if (res === null) {
+                        return { result: false, id };  // 주소를 찾지 못한 경우
+                    } else {
+                        // 주소가 유효하면 도로명 주소를 추출하고, 클라이언트 정보 업데이트
+                        const { address: { road } } = res;
+                        
+                        // MongoDB에서 클라이언트의 주소를 업데이트
+                        await back.updateClient([{ cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) }], { selfMongo: MONGOC });
+                        
+                        // 업데이트 성공 시 true 반환
+                        return { result: true, id };  // 주소 업데이트 완료
+                    }
+                }
+            } catch (e) {
+                // 에러 발생 시 로그 기록
+                logger.error(e, req).catch((e) => { console.log(e); });
+            }
+          };
+
+          // 파싱된 주소 업데이트를 비동기적으로 수행
+          parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).catch((err) => {
+              // 에러 발생 시 로그 기록 및 콘솔 출력
+              logger.error(err, req).catch((e) => { console.log(e); });
+              console.log(err);  // 에러 내용을 콘솔에 출력
+          });
+
+          /**
+           * 클라이언트 ID를 기반으로 케이스를 조회하고, 해당 클라이언트의 서비스 정보를 업데이트하는 함수입니다.
+           * 
+           * @param {string} cliid - 클라이언트 ID
+           * @param {object} selfMongo - MongoDB 인스턴스
+           */
+          back.getCaseProidById(cliid, { selfMongo }).then((clientCase) => {
+            // 클라이언트 케이스가 존재하는지 확인합니다.
+            if (clientCase !== null) {
+                // caseService 메서드를 호출하여 서비스 정보를 가져옵니다.
+                const serviceCase = clientCase.caseService();
+
+                // 서비스 정보가 존재하는 경우 처리합니다.
+                if (serviceCase !== null) {
+                    // 서비스 ID(serid)와 추가 정보(xValue)를 추출합니다.
+                    const { serid, xValue } = serviceCase;
+                    let whereQuery, updateQuery;
+
+                    // 업데이트를 위한 쿼리 작성
+                    whereQuery = { cliid };  // 클라이언트 ID를 기반으로 쿼리
+                    updateQuery = {
+                        "requests.0.analytics.response.service.serid": serid[0].serid,  // 첫 번째 serid를 사용
+                        "requests.0.analytics.response.service.xValue": xValue[0].xValue  // 첫 번째 xValue 사용
+                    };
+
+                    // 클라이언트 정보를 업데이트
+                    return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+                } else {
+                    // 서비스 정보가 없을 경우 "fail"을 반환하는 Promise
+                    return new Promise((resolve, reject) => {
+                        resolve("fail");
+                    });
+                }
+            } else {
+                // 클라이언트 케이스가 없을 경우 "fail"을 반환하는 Promise
+                return new Promise((resolve, reject) => {
+                    resolve("fail");
+                });
+            }
+          })
+          // 업데이트가 완료된 후 메시지를 기록
+          .then((message) => {
+            // 업데이트 결과를 로깅합니다.
+            logger.log(cliid, "case update " + message);
+          })
+          // 에러가 발생할 경우 이를 로그로 남깁니다.
+          .catch((err) => {
+            logger.error(err, req).catch((e) => { console.log(e); });
+          });
+
+          // 클라이언트 정보를 로드하고, 메시지 작성 후 알림 발송
+          thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
+          message += "\n" + thisClient.toMessage();
+          messageSend({ text: message, channel: "#401_consulting" }).then(() => {
+              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
+          }).catch((err) => { console.log(err); });
+
+          // 응답으로 생성된 cliid 반환
+          res.send(JSON.stringify({ cliid }));
+      } catch (e) {
+          // 에러 처리
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+    
+    /**
+     * @route POST /aspirantSubmit
+     * @description 디자이너 신청자가 파트너십 또는 포트폴리오 제출 요청을 처리하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에 'map'과 'mode' 필수.
+     * @param {object} res - 서버 응답 객체. 성공 시 aspid를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/aspirantSubmit" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답을 보내며 모든 도메인에서 접근 가능하게 함.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
+      // 필요한 인스턴스 선언
       const back = instance.back;
       const address = instance.address;
       const kakao = instance.kakao;
+
       try {
+        // 필수 데이터 확인: 'map'과 'mode' 필수 확인
         if (req.body.map === undefined || req.body.mode === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 필수 파라미터가 없으면 에러 발생
         }
+
+        /**
+         * @description 디자이너 파트너십 신청 및 포트폴리오 제출을 처리하는 부분으로, 제출된 데이터를 기반으로 MongoDB에서 업데이트하거나 새롭게 데이터를 생성합니다.
+         */
+
+        // MongoDB 인스턴스 선언 (디자이너 신청자 정보를 저장하는 곳)
         const selfMongo = instance.mongo;
+
+        // 요청으로 전달받은 'map'과 'mode'를 파싱하여 사용
         const { map, mode } = equalJson(req.body);
-        let name;
-        let phone;
-        let email;
-        let address0;
-        let address1;
-        let business;
-        let company;
-        let numbers;
-        let start;
-        let representative;
-        let bankname;
-        let banknumber;
-        let bankto;
-        let homepage;
-        let sns;
-        let sessionId;
-        let whereQuery, updateQuery;
-        let aspid;
-        let message;
-        let rows;
-        let thisAspirant;
-        let careerDetail, schoolDetail;
-        let gender;
-        let birth;
-        let birth_y, birth_m, birth_d;
-        let etc;
-        let ceoName, ceoId;
-    
+
+        // 변수 선언 (디자이너 정보 및 파트너십 신청 관련 정보 저장)
+        let name;  // 디자이너 이름
+        let phone;  // 디자이너 연락처
+        let email;  // 이메일
+        let address0;  // 주소 (기본)
+        let address1;  // 주소 (상세)
+        let business;  // 사업자 구분 (개인, 법인 등)
+        let company;  // 회사 이름
+        let numbers;  // 사업자 등록 번호
+        let start;  // 회사 설립일
+        let representative;  // 대표자 이름
+        let bankname;  // 은행명
+        let banknumber;  // 계좌번호
+        let bankto;  // 예금주
+        let homepage;  // 홈페이지 URL
+        let sns;  // SNS URL
+        let sessionId;  // 세션 ID
+        let whereQuery, updateQuery;  // MongoDB에서 사용할 쿼리
+        let aspid;  // 신청자 ID
+        let message;  // Slack 채널에 보낼 메시지
+        let rows;  // DB에서 조회된 결과 저장
+        let thisAspirant;  // 현재 신청자 정보
+        let careerDetail, schoolDetail;  // 경력 및 학력 정보
+        let gender;  // 성별
+        let birth;  // 생년월일
+        let birth_y, birth_m, birth_d;  // 생년월일 세부 정보 (년도, 월, 일)
+        let etc;  // 기타 정보
+        let ceoName, ceoId;  // CEO의 이름과 Slack ID
+
+        // CEO 정보를 가져옴 (CEO 역할을 가진 멤버를 조회하여 이름과 Slack ID를 가져옴)
         ceoName = instance.members.find((o) => { return o.roles.includes("CEO") }).name;
         ceoId = instance.members.find((o) => { return o.roles.includes("CEO") }).slack.id;
     
         if (mode === "general") {
     
+          // name 속성을 가진 객체를 찾아 변수 name에 할당합니다. map은 클라이언트에서 보내진 데이터 배열입니다.
           name = map.find((obj) => { return obj.property === "name" });
+
+          // phone 속성을 가진 객체를 찾아 변수 phone에 할당합니다. 이는 신청자의 전화번호를 나타냅니다.
           phone = map.find((obj) => { return obj.property === "phone" });
+
+          // gender 속성을 가진 객체를 찾아 변수 gender에 할당합니다. 이는 신청자의 성별을 나타냅니다.
           gender = map.find((obj) => { return obj.property === "gender" });
+
+          // birth_y 속성을 가진 객체를 찾아 변수 birth_y에 할당합니다. 이는 신청자의 출생 연도를 나타냅니다.
           birth_y = map.find((obj) => { return obj.property === "birth_y" });
+
+          // birth_m 속성을 가진 객체를 찾아 변수 birth_m에 할당합니다. 이는 신청자의 출생 월을 나타냅니다.
           birth_m = map.find((obj) => { return obj.property === "birth_m" });
+
+          // birth_d 속성을 가진 객체를 찾아 변수 birth_d에 할당합니다. 이는 신청자의 출생 일을 나타냅니다.
           birth_d = map.find((obj) => { return obj.property === "birth_d" });
+
+          // email 속성을 가진 객체를 찾아 변수 email에 할당합니다. 이는 신청자의 이메일 주소를 나타냅니다.
           email = map.find((obj) => { return obj.property === "email" });
+
+          // address0 속성을 가진 객체를 찾아 변수 address0에 할당합니다. 이는 신청자의 기본 주소를 나타냅니다.
           address0 = map.find((obj) => { return obj.property === "address0" });
+
+          // address1 속성을 가진 객체를 찾아 변수 address1에 할당합니다. 이는 신청자의 상세 주소를 나타냅니다.
           address1 = map.find((obj) => { return obj.property === "address1" });
+
+          // business 속성을 가진 객체를 찾아 변수 business에 할당합니다. 이는 신청자의 사업 형태(개인, 법인 등)를 나타냅니다.
           business = map.find((obj) => { return obj.property === "business" });
+
+          // company 속성을 가진 객체를 찾아 변수 company에 할당합니다. 이는 신청자의 회사명을 나타냅니다.
           company = map.find((obj) => { return obj.property === "company" });
+
+          // numbers 속성을 가진 객체를 찾아 변수 numbers에 할당합니다. 이는 신청자의 사업자 등록번호를 나타냅니다.
           numbers = map.find((obj) => { return obj.property === "numbers" });
+
+          // start 속성을 가진 객체를 찾아 변수 start에 할당합니다. 이는 신청자의 회사 설립일을 나타냅니다.
           start = map.find((obj) => { return obj.property === "start" });
+
+          // representative 속성을 가진 객체를 찾아 변수 representative에 할당합니다. 이는 회사의 대표자 이름을 나타냅니다.
           representative = map.find((obj) => { return obj.property === "representative" });
+
+          // bankname 속성을 가진 객체를 찾아 변수 bankname에 할당합니다. 이는 신청자의 은행명을 나타냅니다.
           bankname = map.find((obj) => { return obj.property === "bankname" });
+
+          // banknumber 속성을 가진 객체를 찾아 변수 banknumber에 할당합니다. 이는 신청자의 계좌번호를 나타냅니다.
           banknumber = map.find((obj) => { return obj.property === "banknumber" });
+
+          // bankto 속성을 가진 객체를 찾아 변수 bankto에 할당합니다. 이는 계좌의 예금주 이름을 나타냅니다.
           bankto = map.find((obj) => { return obj.property === "bankto" });
+
+          // careerDetail 속성을 가진 객체를 찾아 변수 careerDetail에 할당합니다. 이는 신청자의 경력 정보를 나타냅니다.
           careerDetail = map.find((obj) => { return obj.property === "careerdetail" });
+
+          // schoolDetail 속성을 가진 객체를 찾아 변수 schoolDetail에 할당합니다. 이는 신청자의 학력 정보를 나타냅니다.
           schoolDetail = map.find((obj) => { return obj.property === "schooldetail" });
+
+          // homepage 속성을 가진 객체를 찾아 변수 homepage에 할당합니다. 이는 신청자의 홈페이지 URL을 나타냅니다.
           homepage = map.find((obj) => { return obj.property === "homepage" });
+
+          // sns 속성을 가진 객체를 찾아 변수 sns에 할당합니다. 이는 신청자의 SNS URL을 나타냅니다.
           sns = map.find((obj) => { return obj.property === "sns" });
-          etc = map.find((obj) => { return obj.property === "etc" });
-          sessionId = map.find((obj) => { return obj.property === "sessionId" });
-    
-          if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
-            throw new Error("invalid map post");
-          }
-    
-          if (sessionId === undefined) {
-            sessionId = [];
-          } else {
-            sessionId = [ sessionId.value.trim() ];
-          }
-    
+
+          // etc 속성을 가진 객체를 찾아 변수 etc에 할당합니다. 이는 기타 정보를 나타냅니다. undefined일 경우 빈 문자열을 할당합니다.
+          etc = map.find((obj) => { return obj.property === "etc" }) || "";
+
+          // sessionId 속성을 가진 객체를 찾아 변수 sessionId에 할당합니다. 세션 ID가 없으면 빈 배열로 초기화합니다.
+          sessionId = map.find((obj) => { return obj.property === "sessionId" }) || [];
+          sessionId = [sessionId.value.trim()];
+
+          // 신청자 이름, 연락처, 주소 등의 문자열을 트리밍하여 정리
           name = name.value.trim();
           phone = phone.value.trim();
           address0 = address0.value.trim();
@@ -4051,27 +5065,51 @@ class DataRouter {
           email = email.value.trim();
           gender = gender.value.trim();
           birth_y = birth_y.value.trim();
+
+          // 출생 연도가 1000보다 작으면 1900년대로 설정하여 출생 연도를 보정합니다.
           if (Number(birth_y) < 1000) {
             birth_y = "19" + birth_y;
           }
+
+          // 출생 월과 일도 각각 트리밍하여 정리
           birth_m = birth_m.value.trim();
           birth_d = birth_d.value.trim();
+
+          // 출생 연도, 월, 일 정보를 기반으로 Date 객체를 생성하여 birth 변수에 할당합니다.
           birth = new Date(Number(birth_y), Number(birth_m) - 1, Number(birth_d));
           etc = etc === undefined ? "" : etc.value.trim();
     
+          // updateQuery 객체 생성. 이는 클라이언트가 제출한 정보를 업데이트하기 위한 객체입니다.
           updateQuery = {};
-    
-          updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
+
+          // 신청자의 이름에서 한글만 추출하여 업데이트합니다.
+          updateQuery["designer"] = name.replace(/[^가-힣]/gi, '');
+
+          // 전화번호에서 숫자와 '-'만 남겨 저장합니다.
           updateQuery["phone"] = phone.replace(/[^0-9\-]/gi, '');
+
+          // 성별을 업데이트합니다.
           updateQuery["gender"] = gender;
+
+          // 이메일 주소를 업데이트합니다.
           updateQuery["email"] = email;
+
+          // 주소를 두 개의 문자열(address0, address1)을 합쳐서 저장합니다.
           updateQuery["address"] = address0 + " " + address1;
+
+          // 출생일 정보를 업데이트합니다. birth는 Date 객체입니다.
           updateQuery["birth"] = birth;
-    
+
+          // 파트너십 신청 날짜를 현재 날짜로 설정합니다.
           updateQuery["submit.partnership.date"] = new Date();
+
+          // 파트너십 신청 상태를 true로 설정하여 신청 완료를 표시합니다.
           updateQuery["submit.partnership.boo"] = true;
+
+          // 신청 출처를 빈 문자열로 설정합니다.
           updateQuery["submit.comeFrom"] = "";
-    
+
+          // 사업자가 개인사업자인지 법인사업자인지를 확인하고 이에 따라 분류를 설정합니다.
           if (/개인/gi.test(business.value.trim())) {
             if (/일반/gi.test(business.value.trim())) {
               updateQuery["information.company.classification"] = "개인사업자(일반)";
@@ -4087,52 +5125,84 @@ class DataRouter {
           } else {
             updateQuery["information.company.classification"] = "프리랜서";
           }
+
+          // 회사 이름을 업데이트합니다.
           updateQuery["information.company.name"] = company.value.trim();
+
+          // 사업자 등록번호를 업데이트합니다.
           updateQuery["information.company.businessNumber"] = numbers.value.trim();
+
+          // 회사 설립일을 문자열에서 날짜로 변환하여 업데이트합니다.
           updateQuery["information.company.start"] = stringToDate(start.value.trim());
+
+          // 회사 대표자의 이름을 업데이트합니다.
           updateQuery["information.company.representative"] = representative.value.trim();
-    
+
+          // 은행명, 계좌번호, 예금주를 업데이트합니다.
           updateQuery["information.account.bank"] = bankname.value.trim();
           updateQuery["information.account.number"] = banknumber.value.trim();
           updateQuery["information.account.to"] = bankto.value.trim();
+
+          // 기타 정보를 빈 문자열로 초기화합니다.
           updateQuery["information.account.etc"] = "";
-    
+
+          // 경력과 학력 정보를 JSON 형태로 변환하여 저장합니다.
           updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
           updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
+
+          // 자기 소개에 해당하는 정보를 저장합니다.
           updateQuery["information.career.about"] = etc;
-    
+
+          // 웹사이트, SNS, 클라우드 관련 채널을 배열로 초기화합니다.
           updateQuery["information.channel.web"] = [];
           updateQuery["information.channel.sns"] = [];
           updateQuery["information.channel.cloud"] = [];
-    
+
+          // 홈페이지 URL이 http로 시작하면 이를 웹 채널에 추가합니다.
           if (/^http/gi.test(homepage.value.trim())) {
             updateQuery["information.channel.web"].push(stringToLink(homepage.value.trim()));
           }
+
+          // SNS URL이 http로 시작하면 이를 SNS 채널에 추가합니다.
           if (/^http/gi.test(sns.value.trim())) {
             updateQuery["information.channel.sns"].push(stringToLink(sns.value.trim()));
           }
-    
+
+          // 미팅 상태를 "검토중"으로 설정합니다.
           updateQuery["meeting.status"] = "검토중";
+
+          // 미팅 날짜를 기본값으로 설정합니다. 1800년으로 설정된 것은 미팅 예정이 없는 상태를 나타냅니다.
           updateQuery["meeting.date"] = new Date(1800, 0, 1);
+
+          // 최초 요청 날짜를 현재로 설정합니다.
           updateQuery["submit.firstRequest.date"] = new Date();
+
+          // 최초 요청 방식을 파트너십으로 설정합니다.
           updateQuery["submit.firstRequest.method"] = "partnership";
-    
+
+          // 응답 담당자를 CEO로 설정합니다.
           updateQuery["response.manager"] = ceoName;
+
+          // 응답 상태를 검토중으로 설정합니다.
           updateQuery["response.first.status"] = "검토중";
-    
+
+          // 전화번호로 이미 존재하는 신청자가 있는지 확인합니다.
           rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
           message = '';
-    
+
+          // 신규 신청자일 경우 신청자 데이터를 생성하고 메시지를 생성합니다.
           if (rows.length === 0) {
             aspid = await back.createAspirant(updateQuery, { selfMongo });
             message += "새로운 디자이너 파트너십 신청이 왔습니다!\n";
           } else {
-            [ thisAspirant ] = rows.toNormal();
+            // 기존 신청자일 경우 신청 데이터를 업데이트하고 메시지를 갱신합니다.
+            [thisAspirant] = rows.toNormal();
             aspid = thisAspirant.aspid;
-            await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
+            await back.updateAspirant([{ aspid }, updateQuery], { selfMongo });
             message += "재문의 파트너십 신청이 왔습니다!\n";
           }
-    
+
+          // 메시지에 신청자 정보를 추가합니다.
           message += "문의일 : " + dateToString(new Date()) + "\n";
           message += "성함 : " + updateQuery.designer + "\n";
           message += "연락처 : " + updateQuery.phone + "\n";
@@ -4152,10 +5222,12 @@ class DataRouter {
           message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
           message += "자기 소개 : " + etc + "\n";
           message += "세션 아이디 : " + sessionId.join(", ");
-    
+
+          // 메시지를 슬랙 채널에 전송합니다.
           await messageSend({ text: message, channel: "#301_apply", voice: false });
           await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다!", channel: "#301_apply", voice: true });
-    
+
+          // 카카오톡 알림톡을 전송합니다.
           kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
             client: updateQuery.designer,
             host: address.frontinfo.host,
@@ -4164,74 +5236,137 @@ class DataRouter {
           }).catch((err) => {
             console.log(err);
           });
-    
+
+          // 신청자 ID를 응답으로 전송합니다.
           res.send(JSON.stringify({ aspid }));
     
         } else if (mode === "portfolio") {
     
-          name = map.find((obj) => { return obj.property === "name" });
-          phone = map.find((obj) => { return obj.property === "phone" });
-          careerDetail = map.find((obj) => { return obj.property === "careerdetail" });
-          schoolDetail = map.find((obj) => { return obj.property === "schooldetail" });
-          etc = map.find((obj) => { return obj.property === "etc" });
-    
-          name = name.value.trim();
-          phone = phone.value.trim();
-          etc = etc === undefined ? "" : etc.value.trim();
-    
-          updateQuery = {};
-          updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
-    
+          /**
+           * @description 디자이너 신청자의 정보를 업데이트하고 추가 포트폴리오 전송을 처리하는 라우터
+           * @route POST /aspirantSubmit
+           * @param {Object} req - 클라이언트 요청 객체 (포함된 정보: name, phone, careerDetail, schoolDetail, etc)
+           * @param {Object} res - 서버 응답 객체
+           */
+
+          name = map.find((obj) => { return obj.property === "name" }); // 신청자의 이름 정보를 요청 데이터에서 찾습니다.
+          phone = map.find((obj) => { return obj.property === "phone" }); // 신청자의 전화번호를 요청 데이터에서 찾습니다.
+          careerDetail = map.find((obj) => { return obj.property === "careerdetail" }); // 신청자의 경력 정보를 요청 데이터에서 찾습니다.
+          schoolDetail = map.find((obj) => { return obj.property === "schooldetail" }); // 신청자의 학력 정보를 요청 데이터에서 찾습니다.
+          etc = map.find((obj) => { return obj.property === "etc" }); // 신청자의 추가 정보를 요청 데이터에서 찾습니다.
+
+          name = name.value.trim(); // 이름 값에서 공백을 제거합니다.
+          phone = phone.value.trim(); // 전화번호 값에서 공백을 제거합니다.
+          etc = etc === undefined ? "" : etc.value.trim(); // etc가 없는 경우 빈 문자열로 설정하고, 있으면 공백을 제거합니다.
+
+          updateQuery = {}; // 신청자의 정보를 업데이트할 객체를 생성합니다.
+          updateQuery["designer"] = name.replace(/[^가-힣]/gi, ''); // 이름에서 한글만 남기고 저장합니다.
+
+          /**
+           * 경력 및 학력 정보를 JSON 형식으로 변환하여 저장합니다.
+           * 이때, 제공된 정보는 `equalJson` 메서드를 통해 깊은 복사를 수행하며,
+           * Date 객체와 같은 복잡한 데이터를 보존합니다.
+           */
           updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
           updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
-          updateQuery["information.career.about"] = etc;
-    
-          updateQuery["response.portfolio.plus.request"] = new Date();
-          updateQuery["response.manager"] = ceoName;
-          updateQuery["response.first.status"] = "검토중";
-          updateQuery["meeting.status"] = "검토중";
-    
+          updateQuery["information.career.about"] = etc; // 자기 소개 내용을 저장합니다.
+
+          updateQuery["response.portfolio.plus.request"] = new Date(); // 포트폴리오 요청 날짜를 현재로 설정합니다.
+          updateQuery["response.manager"] = ceoName; // 신청 처리 담당자를 CEO로 설정합니다.
+          updateQuery["response.first.status"] = "검토중"; // 첫 번째 응답 상태를 검토중으로 설정합니다.
+          updateQuery["meeting.status"] = "검토중"; // 미팅 상태를 검토중으로 설정합니다.
+
+          /**
+           * 전화번호를 기준으로 기존 신청자가 있는지 데이터베이스에서 조회합니다.
+           * 전화번호에서 숫자와 '-'만 남깁니다.
+           */
           rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
           if (rows.length === 0) {
-            throw new Error("invalid phone number");
+            throw new Error("invalid phone number"); // 신청자가 없는 경우 오류를 발생시킵니다.
           } else {
-            [ thisAspirant ] = rows.toNormal();
-            aspid = thisAspirant.aspid;
+            [thisAspirant] = rows.toNormal(); // 기존 신청자를 가져옵니다.
+            aspid = thisAspirant.aspid; // 신청자의 고유 ID를 가져옵니다.
           }
-    
-          await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
-          await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님이 추가 포트폴리오를 전송하였습니다!", channel: "#301_apply", voice: true });
-          await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님의 추가 포트폴리오 검토를 부탁드리겠습니다!", channel: "#301_apply", voice: false });
-    
+
+          /**
+           * 신청자 정보를 업데이트합니다.
+           * 기존의 신청자 정보에 새로 받은 포트폴리오 정보를 반영합니다.
+           */
+          await back.updateAspirant([{ aspid }, updateQuery], { selfMongo });
+
+          /**
+           * 슬랙에 메시지를 전송하여 신청자의 추가 포트폴리오 제출 사실을 알립니다.
+           */
+          await messageSend({
+            text: thisAspirant.designer + " 디자이너 신청자님이 추가 포트폴리오를 전송하였습니다!",
+            channel: "#301_apply",
+            voice: true
+          });
+          await messageSend({
+            text: thisAspirant.designer + " 디자이너 신청자님의 추가 포트폴리오 검토를 부탁드리겠습니다!",
+            channel: "#301_apply",
+            voice: false
+          });
+
+          /**
+           * 5초 후에 카카오톡 알림톡을 전송하여 신청자에게 포트폴리오 전송 완료를 알립니다.
+           */
           sleep(5000).then(() => {
             return kakao.sendTalk("aspirantPortfolio", name, phone, {
               client: name,
               host: address.frontinfo.host,
               path: "aspportfolio",
               aspid: aspid,
-            })
+            });
           }).catch((err) => {
-            console.log(err);
+            console.log(err); // 에러 발생 시 콘솔에 로그를 남깁니다.
           });
-    
+
+          // 최종적으로 신청자의 ID를 응답으로 반환합니다.
           res.send(JSON.stringify({ aspid }));
-    
+          
         } else if (mode === "setting") {
     
+          /**
+           * @description 디자이너 신청자의 설정을 업데이트하고 알림톡을 전송하는 라우터
+           * @route POST /aspirantSubmit
+           * @param {Object} req - 클라이언트 요청 객체 (포함된 정보: name, aspid, type, phone)
+           * @param {Object} res - 서버 응답 객체
+           */
+
+          // 요청 데이터에서 이름(name), 신청자 ID(aspid), 타입(type), 전화번호(phone)를 추출합니다.
           const { name, aspid, type, phone } = map;
-    
+
+          // 신청자 ID를 기준으로 데이터베이스에서 해당 신청자를 찾기 위한 whereQuery를 생성합니다.
           whereQuery = { aspid };
+
+          // 업데이트할 데이터를 저장할 객체를 생성합니다. 포트폴리오에 추가된 사진의 업로드 시간을 현재 시간으로 설정합니다.
           updateQuery = {};
           updateQuery["response.portfolio.plus.photo"] = new Date();
-    
-          await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+
+          /**
+           * 신청자 정보를 업데이트합니다.
+           * `updateAspirant` 메서드를 사용해 신청자 정보를 업데이트하고,
+           * 'response.portfolio.plus.photo' 항목에 새로운 날짜를 추가합니다.
+           */
+          await back.updateAspirant([whereQuery, updateQuery], { selfMongo });
+
+          /**
+           * 신청자에게 카카오톡 알림톡을 전송합니다.
+           * 신청자의 이름(name)과 전화번호(phone)를 사용하여 알림톡을 전송하며,
+           * 신청자의 고유 ID(aspid)를 포함한 설정 확인 경로를 알림톡 메시지로 보냅니다.
+           */
           await kakao.sendTalk("aspirantSettingConfirm", name, phone, {
-            client: name,
-            host: address.frontinfo.host,
-            path: "aspsetting",
-            aspid: aspid,
+            client: name, // 신청자의 이름을 'client'로 전송합니다.
+            host: address.frontinfo.host, // 호스트 정보를 알림에 포함시킵니다.
+            path: "aspsetting", // 알림톡에서 설정 경로를 지정합니다.
+            aspid: aspid, // 신청자의 고유 ID를 전달합니다.
           });
-    
+
+          /**
+           * 최종적으로 신청자의 ID(aspid)를 응답으로 반환합니다.
+           * 이를 통해 클라이언트는 신청자의 고유 ID를 확인할 수 있습니다.
+           */
           res.send(JSON.stringify({ aspid }));
     
         } else {
@@ -4239,66 +5374,112 @@ class DataRouter {
         }
     
       } catch (e) {
+        // 오류 발생 시 로그에 기록하고 클라이언트에 오류 메시지를 응답
         logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.set("Content-Type", "application/json"); // 오류 응답도 JSON 형식으로 설정
+        res.send(JSON.stringify({ error: e.message })); // 오류 메시지 반환
       }
     });
     
+    /**
+     * @route POST /aspirantDocuments
+     * @description 디자이너 신청자가 행정 서류를 업로드했을 때 처리하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에 aspid가 필수로 포함되어야 합니다.
+     * @param {object} res - 서버 응답 객체. 성공 시 메시지 'done'을 JSON 형식으로 반환합니다.
+     */
+
     router.post([ "/aspirantDocuments" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답을 보내며 모든 도메인에서 접근 가능하게 함.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
+      // 필요한 인스턴스 선언
       const back = instance.back;
       const address = instance.address;
       const kakao = instance.kakao;
+
       try {
+        // 필수 데이터 aspid가 없을 경우 예외 처리
         if (req.body.aspid === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 필수 파라미터가 없으면 에러 발생
         }
+
+        // MongoDB 인스턴스와 요청에서 aspid 추출
         const selfMongo = instance.mongo;
         const { aspid } = equalJson(req.body);
+
+        // 신청자 정보 조회
         const [ aspirant ] = await back.getAspirantsByQuery({ aspid }, { selfMongo });
+
         let whereQuery, updateQuery;
-    
+
+        // 신청자 정보 업데이트 쿼리 작성: 서류 제출 날짜와 상태 업데이트
         whereQuery = { aspid };
         updateQuery = {};
-        updateQuery["submit.documents.date"] = new Date();
-        updateQuery["submit.documents.boo"] = true;
-    
+        updateQuery["submit.documents.date"] = new Date();  // 서류 제출 날짜를 현재 시간으로 설정
+        updateQuery["submit.documents.boo"] = true;  // 서류 제출 상태를 true로 설정
+
+        // 신청자 정보를 업데이트
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+
+        // 신청자에게 카카오톡 알림 전송
         await kakao.sendTalk("aspirantNoticeComplete", aspirant.designer, aspirant.phone, {
-          client: aspirant.designer,
-          host: address.frontinfo.host,
-          path: "asppayment",
-          aspid: aspid,
+          client: aspirant.designer,  // 신청자 이름
+          host: address.frontinfo.host,  // 호스트 주소
+          path: "asppayment",  // 알림에서 열릴 페이지 경로
+          aspid: aspid,  // 신청자 ID
         });
-    
-        await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 행정 서류를 업로드하셨습니다!", channel: "#301_apply", voice: true });
-    
+
+        // 신청서류 업로드 완료 메시지를 슬랙 채널에 전송
+        await messageSend({
+          text: aspirant.designer + " 디자이너 신청자님이 행정 서류를 업로드하셨습니다!",
+          channel: "#301_apply",  // 알림이 전송될 채널
+          voice: true,  // 음성 알림 여부
+        });
+
+        // 최종 응답 전송: 'done' 메시지를 JSON 형식으로 반환
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
+        // 에러 발생 시 로그로 기록하고 클라이언트에 에러 메시지 전송
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /aspirantPayment
+     * @description 디자이너 신청자의 결제 처리 및 관련 알림을 처리하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. aspid, mode, status 필수.
+     * @param {object} res - 서버 응답 객체. 결제 완료 후 JSON 형태로 응답.
+     */
     router.post([ "/aspirantPayment" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답을 보내며 모든 도메인에서 접근 가능하게 함.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
+      // 필요한 인스턴스 및 외부 모듈 선언
       const back = instance.back;
       const address = instance.address;
       const kakao = instance.kakao;
+
+      /**
+       * @function paidCompleteFunc
+       * @description 결제 완료 후 신청자에게 알림을 보내고 관련 설정을 업데이트하는 함수
+       * @param {object} aspirant - 신청자 정보 객체
+       * @param {object} logger - 로그 객체
+       */
       const paidCompleteFunc = async (aspirant, logger) => {
         try {
+          // 2초 대기 후 신청자 정보로 알림 전송
           await sleep(2000);
           await requestSystem("https://" + address.secondinfo.host + ":3003/noticeAspirantConsole", {
             mode: "send",
@@ -4309,6 +5490,7 @@ class DataRouter {
           }, {
             headers: { "Content-Type": "application/json" },
           });
+          // 추가 0.5초 대기 후 다른 알림 전송
           await sleep(500);
           await requestSystem("https://" + address.secondinfo.host + ":3003/noticeAspirantCommon", {
             aspid: aspirant.aspid,
@@ -4318,37 +5500,52 @@ class DataRouter {
             headers: { "Content-Type": "application/json" },
           });
         } catch (e) {
-          console.log(e);
+          console.log(e);  // 에러 발생 시 콘솔에 출력
         }
-      }
+      };
+
       try {
+        // 필수 데이터가 없을 경우 에러 처리
         if (req.body.aspid === undefined || req.body.mode === undefined || req.body.status === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 필수 파라미터가 없을 경우 예외 처리
         }
+
+        // MongoDB 인스턴스와 요청에서 필요한 데이터 추출
         const selfMongo = instance.mongo;
         const { aspid, mode, status } = equalJson(req.body);
+        
+        // 신청자 정보 가져오기
         const [ aspirant ] = await back.getAspirantsByQuery({ aspid }, { selfMongo });
+
         let whereQuery, updateQuery;
-        let paidComplete;
-    
-        paidComplete = false;
-    
+        let paidComplete = false;  // 결제 완료 여부 초기화
+
+        // 결제 모드가 'card'일 때 처리
         if (mode === "card") {
           whereQuery = { aspid };
           updateQuery = {};
-          updateQuery["submit.registration.date"] = new Date();
-          updateQuery["submit.registration.boo"] = true;
-          updateQuery["meeting.status"] = "등록 완료";
-          updateQuery["meeting.common.status"] = "미팅 조율";
-    
+          updateQuery["submit.registration.date"] = new Date();  // 등록 날짜 설정
+          updateQuery["submit.registration.boo"] = true;  // 등록 상태를 true로 설정
+          updateQuery["meeting.status"] = "등록 완료";  // 미팅 상태 업데이트
+          updateQuery["meeting.common.status"] = "미팅 조율";  // 미팅 조율 상태로 설정
+
+          // 신청자 정보를 업데이트
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-          await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
-          await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
-          paidComplete = true;
-    
-        } else if (mode === "vbank") {
-          if (status === "ready") {
-    
+
+          // 결제 완료 알림 전송
+          await messageSend({
+            text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!",
+            channel: "#301_apply",  // 알림 채널
+            voice: true,  // 음성 알림 여부
+          });
+          await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, {
+            client: aspirant.designer  // 카카오톡 알림 전송
+          });
+          paidComplete = true;  // 결제 완료 상태로 변경
+
+        } else if (mode === "vbank") {  // 결제 모드가 'vbank'일 때 처리
+          if (/ready/gi.test(status)) {
+            // 가상계좌 생성 단계에서는 신청자에게 가상계좌 정보를 전송
             const { data } = equalJson(req.body);
             await kakao.sendTalk("designerAccount", aspirant.designer, aspirant.phone, {
               designer: aspirant.designer,
@@ -4356,37 +5553,49 @@ class DataRouter {
               bankName: data.vbank_name,
               account: data.vbank_num,
               to: data.vbank_holder,
-              amount: (data.paid_amount === undefined || Number.isNaN(Number(data.paid_amount))) ? data.amount : data.paid_amount,
+              amount: (data.paid_amount === undefined || Number.isNaN(Number(data.paid_amount))) ? data.amount : data.paid_amount,  // 결제 금액 처리
             });
-            paidComplete = false;
-    
-          } else if (status === "paid") {
-    
+            paidComplete = false;  // 결제 완료 상태는 아님
+
+          } else if (/paid/gi.test(status)) {
+            // 무통장 입금 완료 시 상태 업데이트
             whereQuery = { aspid };
             updateQuery = {};
-            updateQuery["submit.registration.date"] = new Date();
-            updateQuery["submit.registration.boo"] = true;
-            updateQuery["meeting.status"] = "등록 완료";
-            updateQuery["meeting.common.status"] = "미팅 조율";
-    
+            updateQuery["submit.registration.date"] = new Date();  // 등록 날짜 업데이트
+            updateQuery["submit.registration.boo"] = true;  // 등록 상태 true로 설정
+            updateQuery["meeting.status"] = "등록 완료";  // 미팅 상태 업데이트
+            updateQuery["meeting.common.status"] = "미팅 조율";  // 미팅 조율 상태로 설정
+
+            // 신청자 정보를 업데이트
             await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-            await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
-            await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
-            paidComplete = true;
-    
+            
+            // 무통장 입금 완료 알림 전송
+            await messageSend({
+              text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!",
+              channel: "#301_apply",  // 알림 채널
+              voice: true,  // 음성 알림 여부
+            });
+            await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, {
+              client: aspirant.designer  // 카카오톡 알림 전송
+            });
+            paidComplete = true;  // 결제 완료 상태로 변경
           }
         } else {
-          throw new Error("invalid mode");
+          throw new Error("invalid mode");  // 유효하지 않은 결제 모드 처리
         }
-    
+
+        // 결제가 완료되었으면 추가 처리 진행
         if (paidComplete) {
           paidCompleteFunc(aspirant, logger).catch((err) => {
+            // 에러 발생 시 로그 기록
             logger.error(err, req).catch((e) => { console.log(e); });
           });
         }
-    
+
+        // 최종 응답 전송
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
+        // 에러가 발생할 경우 이를 로그로 기록하고 클라이언트에 에러 응답 전송
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -4466,7 +5675,14 @@ class DataRouter {
       }
     });
     
+    /**
+     * @description 웹훅을 통해 결제 정보를 처리하는 라우터입니다. 결제 완료 시 클라이언트 정보와 프로젝트 상태를 업데이트하며, 결제 영수증 정보를 전송합니다.
+     * @route POST /webHookPayment
+     * @param {Object} req - 클라이언트의 결제 정보를 담은 요청 객체.
+     * @param {Object} res - 서버 응답 객체.
+     */
     router.post([ "/webHookPayment" ], async function (req, res) {
+      // 응답의 Content-Type을 JSON으로 설정.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -4474,247 +5690,370 @@ class DataRouter {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       try {
+        // MongoDB 인스턴스 가져오기.
         const selfMongo = instance.mongo;
-        const impId = req.body.imp_uid;
-        const oid = req.body.merchant_uid;
-        const mid = address.officeinfo.inicis.mid;
-        const status = req.body.status;
+
+        // 요청에서 결제 관련 정보 추출.
+        const impId = req.body.imp_uid; // 결제 ID
+        const oid = req.body.merchant_uid; // 상점 주문 ID
+        const mid = address.officeinfo.inicis.mid; // 결제 MID (Merchant ID)
+        const status = req.body.status; // 결제 상태
     
+        // 결제 상태가 문자열인지 확인.
         if (typeof status === "string") {
+          // 결제 상태가 'paid'라면 결제 성공 처리.
           if (/paid/gi.test(status) || /Paid/gi.test(status)) {
+            // 결제 아이디가 존재하고 tx_id가 없는 경우 처리.
             if (req.body.imp_uid !== undefined && req.body.tx_id === undefined) {
               if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
     
+                /**
+                 * @description Iamport API를 통해 결제 정보를 가져와 청구서를 업데이트하는 코드입니다. 결제 정보와 프로젝트 상태를 확인 후, 관련 청구서를 업데이트하고 전송합니다.
+                 * @param {string} impId - Iamport에서 제공된 결제 UID.
+                 * @param {string} oid - 상점 주문 ID.
+                 * @param {string} mid - 상점 ID (Merchant ID).
+                 * @param {string} status - 결제 상태.
+                 */
                 const bill = new BillMaker();
-                const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-                  imp_key: address.officeinfo.import.key,
-                  imp_secret: address.officeinfo.import.secret
-                }, { headers: { "Content-Type": "application/json" } }));
+
+                // Iamport API를 사용하여 액세스 토큰을 요청.
+                const { data: { response: { access_token: accessToken } } } = 
+                  (await requestSystem("https://api.iamport.kr/users/getToken", {
+                    imp_key: address.officeinfo.import.key,
+                    imp_secret: address.officeinfo.import.secret
+                  }, { headers: { "Content-Type": "application/json" } }));
+
+                // 결제 ID로 Iamport API에서 결제 데이터를 가져옴.
                 const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
                   method: "get",
                   headers: { "Authorization": accessToken }
                 });
+
+                // 결제 정보에서 필요한 데이터 추출.
                 const { buyer_tel, paid_at } = paymentData;
                 const today = new Date();
+
+                // 결제 데이터를 로깅.
                 logger.alert(JSON.stringify(paymentData, null, 2)).catch((e) => { console.log(e); });
+
+                // 청구서 데이터 변환.
                 const convertingData = {
-                  goodName: paymentData.name,
-                  goodsName: paymentData.name,
-                  resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
-                  resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
-                  tid: paymentData.pg_tid,
-                  payMethod: "CARD",
-                  applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-                  mid: mid,
-                  MOID: oid,
-                  TotPrice: String(paymentData.amount),
-                  buyerName: paymentData.buyer_name,
-                  CARD_BankCode: paymentData.card_code,
-                  CARD_Num: paymentData.card_number,
-                  CARD_ApplPrice: String(paymentData.amount),
-                  CARD_Code: paymentData.card_code,
-                  vactBankName: paymentData.card_name,
-                  payDevice: "MOBILE",
-                  P_FN_NM: paymentData.card_name,
+                  goodName: paymentData.name, // 상품명.
+                  goodsName: paymentData.name, // 상품명.
+                  resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"), // 결제 성공 여부.
+                  resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)), // 결제 결과 메시지.
+                  tid: paymentData.pg_tid, // PG사에서 제공한 거래 ID.
+                  payMethod: "CARD", // 결제 수단.
+                  applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 일시.
+                  mid: mid, // 상점 MID.
+                  MOID: oid, // 상점 주문 ID.
+                  TotPrice: String(paymentData.amount), // 총 결제 금액.
+                  buyerName: paymentData.buyer_name, // 구매자 이름.
+                  CARD_BankCode: paymentData.card_code, // 카드 코드.
+                  CARD_Num: paymentData.card_number, // 카드 번호.
+                  CARD_ApplPrice: String(paymentData.amount), // 결제 금액.
+                  CARD_Code: paymentData.card_code, // 카드 코드.
+                  vactBankName: paymentData.card_name, // 카드사 이름.
+                  payDevice: "MOBILE", // 결제 디바이스.
+                  P_FN_NM: paymentData.card_name // 카드사 이름.
                 };
+
+                // 클라이언트 정보를 전화번호로 조회.
                 const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
                 let requestNumber, projects;
+
+                // 클라이언트가 존재할 경우, 프로젝트 정보를 가져옴.
                 if (clients.length > 0) {
                   const [ client ] = clients;
+
+                  // 결제 항목이 잔금인지 여부에 따라 프로젝트를 필터링.
                   if (/잔금/gi.test(paymentData.name)) {
-                    projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+                    projects = (await back.getProjectsByQuery({ 
+                      $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] 
+                    }, { selfMongo })).toNormal().filter((p) => p.desid.trim() !== "");
                   } else {
-                    projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
+                    projects = (await back.getProjectsByQuery({
+                      $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ]
+                    }, { selfMongo })).toNormal();
                   }
+
+                  // 프로젝트가 존재할 경우, 결제 금액에 가장 근접한 프로젝트를 선택.
                   if (projects.length > 0) {
-                    projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
+                    projects.sort((a, b) => {
+                      return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - 
+                            Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount);
+                    });
+
                     const [ project ] = projects;
                     let bills;
-                    bills = await bill.getBillsByQuery({ $and: [
-                        { "links.proid": project.proid },
-                        { "links.cliid": client.cliid },
-                        { "links.method": project.service.online ? "online" : "offline" }
+
+                    // 프로젝트에 해당하는 청구서를 조회.
+                    bills = await bill.getBillsByQuery({
+                      $and: [
+                        { "links.proid": project.proid }, // 프로젝트 ID.
+                        { "links.cliid": client.cliid }, // 클라이언트 ID.
+                        { "links.method": project.service.online ? "online" : "offline" } // 결제 방식.
                       ]
                     });
+
+                    // 청구서가 존재하지 않으면 다시 조회.
                     if (bills.length === 0) {
-                      bills = await bill.getBillsByQuery({ $and: [
-                          { "links.proid": project.proid },
-                          { "links.cliid": client.cliid },
+                      bills = await bill.getBillsByQuery({
+                        $and: [
+                          { "links.proid": project.proid }, // 프로젝트 ID.
+                          { "links.cliid": client.cliid } // 클라이언트 ID.
                         ]
                       });
                     }
+
+                    // 청구서가 존재하면 해당 청구서를 업데이트.
                     if (bills.length > 0) {
                       const [ thisBill ] = bills;
                       requestNumber = 0;
+
+                      // 청구서에서 요청 항목을 확인.
                       for (let i = 0; i < thisBill.requests.length; i++) {
                         if (convertingData.goodName === thisBill.requests[i].name) {
                           requestNumber = i;
                           break;
                         }
                       }
+
+                      // 청구서 업데이트를 위한 API 요청.
                       await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
-                        bilid: thisBill.bilid,
-                        requestNumber,
-                        data: convertingData
+                        bilid: thisBill.bilid, // 청구서 ID.
+                        requestNumber, // 요청 번호.
+                        data: convertingData // 변환된 결제 데이터.
                       }, { headers: { "Content-Type": "application/json" } });
+
                     } else {
+                      // 청구서를 찾을 수 없는 경우 오류 처리.
                       throw new Error("cannot find bills (from links.proid and links.cliid)");
                     }
                   }
                 }
     
               } else if (/dreg_/g.test(oid)) {
-                const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-                  imp_key: address.officeinfo.import.key,
-                  imp_secret: address.officeinfo.import.secret
-                }, { headers: { "Content-Type": "application/json" } }));
+
+                /**
+                 * @description Iamport API를 통해 결제 정보를 가져오고, 지원자 결제 상태를 업데이트하는 코드입니다.
+                 * @param {string} impId - Iamport에서 제공된 결제 UID.
+                 * @param {string} oid - 주문 ID. 이 값에서 지원자 ID를 추출.
+                 * @param {string} aspid - 지원자 ID.
+                 */
+                const { data: { response: { access_token: accessToken } } } = 
+                  // Iamport API를 사용해 액세스 토큰을 요청. 이 토큰은 결제 정보 요청 시 사용됨.
+                  (await requestSystem("https://api.iamport.kr/users/getToken", {
+                    imp_key: address.officeinfo.import.key, // Iamport API 키.
+                    imp_secret: address.officeinfo.import.secret // Iamport API 시크릿.
+                  }, { headers: { "Content-Type": "application/json" } }));
+
+                // 결제 UID로 Iamport API를 호출해 결제 데이터를 가져옴.
                 const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
                   method: "get",
-                  headers: { "Authorization": accessToken }
+                  headers: { "Authorization": accessToken } // 액세스 토큰을 사용해 결제 데이터를 요청.
                 });
+
+                // oid를 "_"로 분리하여 지원자 ID(asid)를 추출.
                 const [ oidConst, aspid0, aspid1 ] = oid.split("_");
-                const aspid = aspid0 + "_" + aspid1;
-    
+                const aspid = aspid0 + "_" + aspid1; // 지원자 ID 조합.
+
+                // 결제 수단이 카드일 경우.
                 if (paymentData.pay_method === "card") {
+                  // 카드 결제 완료 후, 지원자의 결제 상태를 업데이트하기 위한 API 호출.
                   await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                    aspid,
-                    mode: "card",
-                    status: "paid"
+                    aspid, // 지원자 ID.
+                    mode: "card", // 결제 방식: 카드.
+                    status: "paid" // 결제 상태: 완료.
                   }, { headers: { "Content-Type": "application/json" } });
+
                 } else {
+                  // 가상계좌 입금일 경우.
                   await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                    aspid,
-                    mode: "vbank",
-                    status: "paid"
+                    aspid, // 지원자 ID.
+                    mode: "vbank", // 결제 방식: 가상계좌.
+                    status: "paid" // 결제 상태: 완료.
                   }, { headers: { "Content-Type": "application/json" } });
                 }
               }
+
             } else {
               if (req.body.payment_id !== undefined) {
                 
-                const oid = req.body.payment_id;
-                const bill = new BillMaker();
-                const url = "https://api.portone.io";
-                const today = new Date();
+                /**
+                 * @description PortOne API를 사용해 결제 정보를 가져오고, 결제 데이터 처리 후 고객 및 프로젝트 정보에 따라 결제를 기록하는 함수입니다.
+                 * @param {string} oid - 주문 ID.
+                 */
+                const oid = req.body.payment_id; // 클라이언트로부터 받은 주문 ID.
+                const bill = new BillMaker(); // BillMaker 인스턴스 생성.
+                const url = "https://api.portone.io"; // PortOne API URL.
+                const today = new Date(); // 현재 날짜를 저장.
                 let config, accessToken, accessTokenResponse;
-                let getPaymentInfoResponse;
-                let getPaymentInfoConfig;
-                let paymentData;
-                let convertingData;
-                let buyer_tel;
-                let responseFromPG;
-                let tempMatrix;
-    
+                let getPaymentInfoResponse; // 결제 정보 응답 데이터.
+                let getPaymentInfoConfig; // 결제 정보 요청 설정.
+                let paymentData; // 결제 데이터.
+                let convertingData; // 변환된 결제 데이터.
+                let buyer_tel; // 구매자 전화번호.
+                let responseFromPG; // PG사 응답 데이터.
+                let tempMatrix; // 임시 매트릭스 데이터.
+
+                // 요청 설정 구성.
                 config = { headers: { "Content-Type": "application/json" } };
-      
+
+                // PortOne API를 사용해 액세스 토큰을 요청.
                 accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
-                accessToken = accessTokenResponse.data.accessToken;
-                config.headers["Authorization"] = "Bearer " + accessToken;
-            
+                accessToken = accessTokenResponse.data.accessToken; // 토큰 값 저장.
+                config.headers["Authorization"] = "Bearer " + accessToken; // 요청에 액세스 토큰 추가.
+
+                // 결제 정보 요청 설정 복사 및 메서드 정의.
                 getPaymentInfoConfig = objectDeepCopy(config);
                 getPaymentInfoConfig.method = "get";
-            
+
+                // 주문 ID를 기반으로 결제 정보를 요청.
                 getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
-                paymentData = getPaymentInfoResponse.data;
+                paymentData = getPaymentInfoResponse.data; // 결제 데이터를 저장.
+
                 try {
+                  // PG사로부터 받은 응답 데이터를 파싱하여 저장.
                   responseFromPG = JSON.parse(paymentData.pgResponse);
                 } catch {
                   try {
+                    // 만약 JSON 파싱에 실패할 경우, 문자열을 매트릭스로 변환하여 key-value 쌍으로 저장.
                     tempMatrix = paymentData.pgResponse.split("&").map((str) => { return str.split("=") });
                     responseFromPG = {};
-                    for (let [ key, value ] of tempMatrix) {
-                      responseFromPG[key] = value;
+                    for (let [key, value] of tempMatrix) {
+                      responseFromPG[key] = value; // 매트릭스를 객체 형태로 변환.
                     }
                   } catch {
-                    responseFromPG = {};
+                    responseFromPG = {}; // 실패 시 빈 객체로 설정.
                   }
                 }
     
-                buyer_tel = autoHypenPhone(paymentData.customer.phoneNumber);
+                // 사용자 핸드폰 번호 하이픈 추가
+                buyer_tel = autoHypenPhone(paymentData.customer.phoneNumber); // 결제 고객의 전화번호를 하이픈 형식으로 변환.
+
+                // 결제 수단이 카드인 경우 처리.
                 if (/card/gi.test(paymentData.method.type)) {
+                  // 카드 결제 관련 데이터를 변환하여 `convertingData` 객체에 저장.
                   convertingData = {
-                    goodName: paymentData.orderName,
-                    goodsName: paymentData.orderName,
-                    resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
-                    resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
-                    tid: paymentData.pgTxId,
-                    payMethod: "CARD",
-                    applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-                    mid: mid,
-                    MOID: paymentData.id,
-                    TotPrice: String(paymentData.amount.total),
-                    buyerName: paymentData.customer.name,
-                    CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
-                    CARD_Num: paymentData.method.card.number,
-                    CARD_ApplPrice: String(paymentData.amount.total),
-                    CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
-                    vactBankName: paymentData.method.card.name,
-                    payDevice: "MOBILE",
-                    P_FN_NM: paymentData.method.card.name,
+                    goodName: paymentData.orderName, // 상품명.
+                    goodsName: paymentData.orderName, // 상품명.
+                    resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"), // 결제 성공 여부에 따라 결과 코드 설정.
+                    resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"), // 결제 상태에 따른 메시지 설정.
+                    tid: paymentData.pgTxId, // 결제 트랜잭션 ID.
+                    payMethod: "CARD", // 결제 방식은 카드로 설정.
+                    applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 승인 날짜 및 시간 정보.
+                    mid: mid, // 상점 ID.
+                    MOID: paymentData.id, // 주문 ID.
+                    TotPrice: String(paymentData.amount.total), // 총 결제 금액.
+                    buyerName: paymentData.customer.name, // 구매자 이름.
+                    CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE, // 카드 발급사 코드.
+                    CARD_Num: paymentData.method.card.number, // 카드 번호.
+                    CARD_ApplPrice: String(paymentData.amount.total), // 카드 결제 금액.
+                    CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE, // 카드 구매 코드.
+                    vactBankName: paymentData.method.card.name, // 카드 발급사 이름.
+                    payDevice: "MOBILE", // 결제 기기.
+                    P_FN_NM: paymentData.method.card.name, // 카드 발급사 이름.
                   };
                 } else {
+                  // 카드 이외의 결제 수단인 경우 처리.
                   convertingData = {
-                    goodName: paymentData.orderName,
-                    goodsName: paymentData.orderName,
-                    resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
-                    resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
-                    tid: paymentData.pgTxId,
-                    payMethod: paymentData.method.type,
-                    applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-                    mid: mid,
-                    MOID: paymentData.id,
-                    TotPrice: String(paymentData.amount.total),
-                    buyerName: paymentData.customer.name,
-                    vactBankName: paymentData.method.bank,
-                    payDevice: "MOBILE",
-                    P_FN_NM: paymentData.method.bank,
-                    CARD_BankCode: paymentData.method.bank,
+                    goodName: paymentData.orderName, // 상품명.
+                    goodsName: paymentData.orderName, // 상품명.
+                    resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"), // 결제 성공 여부에 따른 결과 코드.
+                    resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"), // 결제 상태에 따른 메시지.
+                    tid: paymentData.pgTxId, // 결제 트랜잭션 ID.
+                    payMethod: paymentData.method.type, // 결제 방식.
+                    applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 승인 날짜 및 시간.
+                    mid: mid, // 상점 ID.
+                    MOID: paymentData.id, // 주문 ID.
+                    TotPrice: String(paymentData.amount.total), // 총 결제 금액.
+                    buyerName: paymentData.customer.name, // 구매자 이름.
+                    vactBankName: paymentData.method.bank, // 은행 이름 (무통장입금 등).
+                    payDevice: "MOBILE", // 결제 기기.
+                    P_FN_NM: paymentData.method.bank, // 은행 이름.
+                    CARD_BankCode: paymentData.method.bank, // 결제 은행 코드.
                   };
                 }
     
+                // 고객 정보를 전화번호로 조회
                 const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
                 let requestNumber, projects;
                 if (clients.length > 0) {
-                  const [ client ] = clients;
+                  const [ client ] = clients; // 조회된 고객 중 첫 번째 고객 선택
+
+                  // 잔금 결제인지 확인
                   if (/잔금/gi.test(paymentData.orderName)) {
-                    projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+                    // '잔금' 결제일 경우, 특정 조건에 맞는 프로젝트들 필터링
+                    projects = (await back.getProjectsByQuery({
+                      $and: [
+                        { cliid: client.cliid },
+                        { "process.status": { $regex: "^[대진]" } } // '대진' 상태인 프로젝트만 선택
+                      ]
+                    }, { selfMongo }))
+                    .toNormal()
+                    .filter((p) => { return p.desid.trim() !== "" }); // 디자이너가 배정된 프로젝트만 선택
                   } else {
-                    projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { "process.status": { $regex: "^[대진]" } } ] }, { selfMongo })).toNormal();
+                    // 잔금 결제가 아닐 경우에도 동일한 조건으로 프로젝트 조회
+                    projects = (await back.getProjectsByQuery({
+                      $and: [
+                        { cliid: client.cliid },
+                        { "process.status": { $regex: "^[대진]" } } // '대진' 상태인 프로젝트만 선택
+                      ]
+                    }, { selfMongo })).toNormal();
                   }
-    
+
+                  // 프로젝트가 있는 경우
                   if (projects.length > 0) {
-                    projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
-                    const [ project ] = projects;
+                    // 결제 금액 차이에 따라 프로젝트를 정렬 (가장 가까운 금액 차이를 우선 선택)
+                    projects.sort((a, b) => {
+                      return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) 
+                            - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount);
+                    });
+
+                    const [ project ] = projects; // 첫 번째 프로젝트 선택
                     let bills;
-                    bills = await bill.getBillsByQuery({ $and: [
-                        { "links.proid": project.proid },
-                        { "links.cliid": client.cliid },
-                        { "links.method": project.service.online ? "online" : "offline" }
+
+                    // 프로젝트와 연관된 청구서 조회
+                    bills = await bill.getBillsByQuery({
+                      $and: [
+                        { "links.proid": project.proid }, // 프로젝트 ID
+                        { "links.cliid": client.cliid },  // 고객 ID
+                        { "links.method": project.service.online ? "online" : "offline" } // 온라인/오프라인 여부
                       ]
                     });
+
+                    // 청구서가 없을 경우, 프로젝트 ID와 고객 ID로 다시 조회
                     if (bills.length === 0) {
-                      bills = await bill.getBillsByQuery({ $and: [
+                      bills = await bill.getBillsByQuery({
+                        $and: [
                           { "links.proid": project.proid },
-                          { "links.cliid": client.cliid },
+                          { "links.cliid": client.cliid }
                         ]
                       });
                     }
+
+                    // 청구서가 존재하는 경우
                     if (bills.length > 0) {
-                      const [ thisBill ] = bills;
+                      const [ thisBill ] = bills; // 첫 번째 청구서 선택
                       requestNumber = 0;
+
+                      // 요청 이름과 일치하는 청구서 요청 항목 찾기
                       for (let i = 0; i < thisBill.requests.length; i++) {
                         if (convertingData.goodName === thisBill.requests[i].name) {
                           requestNumber = i;
                           break;
                         }
                       }
-    
+
+                      // Ghost Client Bill API를 호출하여 청구서 데이터 업데이트
                       await requestSystem("https://" + address.officeinfo.host + ":3002/ghostClientBill", {
-                        bilid: thisBill.bilid,
-                        requestNumber,
-                        data: convertingData
+                        bilid: thisBill.bilid, // 청구서 ID
+                        requestNumber, // 청구서 요청 번호
+                        data: convertingData // 변환된 결제 데이터
                       }, { headers: { "Content-Type": "application/json" } });
                     } else {
+                      // 청구서를 찾지 못한 경우 오류 처리
                       throw new Error("cannot find bills (from links.proid and links.cliid)");
                     }
                   }
@@ -4733,243 +6072,431 @@ class DataRouter {
       }
     });
     
+    /**
+     * @description Google 웹훅을 처리하는 라우터입니다. MongoDB에 데이터를 업데이트하거나 읽는 등의 작업을 수행합니다.
+     * @route POST /webHookGoogle
+     * @param {Object} req - 클라이언트 요청 객체. 'who', 'where', 'mode', 'collection', 'queries' 등이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체.
+     */
     router.post([ "/webHookGoogle" ], async function (req, res) {
-      const back = instance.back;
-      const { mongo, mongoconsoleinfo, requestSystem, messageLog } = instance.mother;
+      // MongoDB 및 기타 인스턴스를 가져옵니다.
+      const back = instance.back;  // 백엔드 MongoDB 인스턴스를 가져옴.
+      const { mongo, mongoconsoleinfo, requestSystem, messageLog } = instance.mother;  // Mother에서 필요한 메서드와 변수를 가져옴.
+      
+      // 보안 키값 설정 (이 키값을 통해 적절한 요청인지 확인함).
       const uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+      
+      // 작업 대상 컬렉션 목록. 이 컬렉션만 업데이트/읽기 등의 작업을 허용.
       const coreTargets = [ "designer", "project", "contents", "service" ];
+
       try {
-        let boo;
-        res.set({ "Content-Type": "application/json" });
-        if (req.body.who === "uragen" && req.body.where === "homeliaison" && req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle) {
-          if (req.body.mode === "read" || req.body.mode === "update" || req.body.mode === "create") {
-            if (req.body.collection === undefined || req.body.collection === null) {
-              res.send(JSON.stringify({ "message": "error" }));
-            } else {
-              if (typeof req.body.collection !== "string") {
-                res.send(JSON.stringify({ "message": "error" }));
-              } else {
-                if (Array.isArray(req.body.queries)) {
-                  boo = true;
-                  for (let obj of req.body.queries) {
-                    if (typeof obj !== "object") {
-                      boo = false;
-                    } else {
-                      if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
-                        boo = false;
-                      } else {
-                        if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
-                          boo = false;
-                        } else {
-                          boo = true;
-                        }
-                      }
-                    }
-                  }
-                  if (boo) {
-                    if (coreTargets.includes(req.body.collection)) {
-                      for (let { whereQuery, updateQuery } of req.body.queries) {
-                        await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-                        console.log(whereQuery, updateQuery);
-                      }
-                    } else {
-                      const selfMongo = new mongo(mongoconsoleinfo);
-                      await selfMongo.connect();
-                      for (let { whereQuery, updateQuery } of req.body.queries) {
-                        await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
-                      }
-                      await selfMongo.close();
-                    }
-                    messageLog("시트로부터의 업데이트 감지 : " + req.body.collection).catch((e) => { console.log(e); });
-                    res.send(JSON.stringify({ "message": "ok" }));
+          let boo;  // 유효성 검사 플래그.
+          // 응답의 Content-Type을 JSON으로 설정합니다.
+          res.set({ "Content-Type": "application/json" });
+          
+          // 요청이 유효한지 확인 (who, where, 키값 검증).
+          if (req.body.who === "uragen" && req.body.where === "homeliaison" && req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle) {
+              
+              // 모드가 'read', 'update', 'create'인지 확인합니다.
+              if (req.body.mode === "read" || req.body.mode === "update" || req.body.mode === "create") {
+                  
+                  // collection 값이 undefined 또는 null인지 확인하고 에러 처리.
+                  if (req.body.collection === undefined || req.body.collection === null) {
+                      res.send(JSON.stringify({ "message": "error" }));
+                  
+                  // collection이 문자열인지 확인.
                   } else {
-                    res.send(JSON.stringify({ "message": "error" }));
+                      if (typeof req.body.collection !== "string") {
+                          res.send(JSON.stringify({ "message": "error" }));
+                      
+                      // queries가 배열인지 확인.
+                      } else {
+                          if (Array.isArray(req.body.queries)) {
+                              boo = true;
+                              
+                              // 배열 안의 각 객체의 유효성 검사 (whereQuery, updateQuery가 모두 존재하고 객체인지 확인).
+                              for (let obj of req.body.queries) {
+                                  if (typeof obj !== "object") {
+                                      boo = false;
+                                  } else {
+                                      if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
+                                          boo = false;
+                                      } else {
+                                          if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
+                                              boo = false;
+                                          } else {
+                                              boo = true;
+                                          }
+                                      }
+                                  }
+                              }
+                              
+                              // 유효성 검사를 통과했을 경우.
+                              if (boo) {
+                                  // coreTargets 목록에 해당하는 컬렉션이라면 instance.mongo를 사용하여 업데이트 수행.
+                                  if (coreTargets.includes(req.body.collection)) {
+                                      for (let { whereQuery, updateQuery } of req.body.queries) {
+                                          await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+                                          console.log(whereQuery, updateQuery);  // 로그에 업데이트된 쿼리를 출력.
+                                      }
+                                  
+                                  // coreTargets 외의 컬렉션에 대해서는 mongoconsoleinfo를 이용하여 MongoDB 연결.
+                                  } else {
+                                      const selfMongo = new mongo(mongoconsoleinfo);  // MongoDB 연결을 위한 새로운 인스턴스 생성.
+                                      await selfMongo.connect();  // 데이터베이스 연결.
+                                      
+                                      for (let { whereQuery, updateQuery } of req.body.queries) {
+                                          await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                                      }
+                                      
+                                      await selfMongo.close();  // 데이터베이스 연결 종료.
+                                  }
+
+                                  // 업데이트 성공 메시지를 로그에 기록하고, 성공 응답 전송.
+                                  messageLog("시트로부터의 업데이트 감지 : " + req.body.collection).catch((e) => { console.log(e); });
+                                  res.send(JSON.stringify({ "message": "ok" }));
+                              
+                              } else {
+                                  // 유효성 검사 실패 시 에러 메시지 전송.
+                                  res.send(JSON.stringify({ "message": "error" }));
+                              }
+                          } else {
+                              // queries가 배열이 아닌 경우 에러 메시지 전송.
+                              res.send(JSON.stringify({ "message": "error" }));
+                          }
+                      }
                   }
-                } else {
+              } else {
+                  // 모드가 'read', 'update', 'create'가 아닌 경우 에러 메시지 전송.
                   res.send(JSON.stringify({ "message": "error" }));
-                }
               }
-            }
           } else {
-            res.send(JSON.stringify({ "message": "error" }));
+              // 유효하지 않은 요청의 경우 에러 메시지 전송.
+              res.send(JSON.stringify({ "message": "error" }));
           }
-        } else {
-          res.send(JSON.stringify({ "message": "error" }));
-        }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류 발생 시 에러를 기록하고 에러 메시지 응답.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /generalMongo
+     * @description MongoDB 데이터베이스에 대한 일반적인 CRUD 작업을 수행하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 작업 모드(mode), 데이터베이스(db), 컬렉션 이름(collection) 등이 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 요청된 CRUD 작업의 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/generalMongo" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식 및 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        if (req.body.mode === undefined) {
-          throw new Error("must be mode => [ create, read, update, delete ]");
-        }
-        if (req.body.collection === undefined) {
-          throw new Error("must be collection name");
-        }
-        if (req.body.db === undefined) {
-          throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
-        }
-        const { mode, db, collection } = req.body;
-        let selfMongo, result;
-        let whereQuery, updateQuery;
-        let ip, device, logObject;
-        let updateQueries;
-        let order;
-    
-        if (db === "core" || db === "back" || db === "mongo") {
-          selfMongo = instance.mongo;
-        } else if (db === "sub" || db === "local" || db === "console") {
-          selfMongo = instance.mongolocal;
-        } else {
-          throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
-        }
-    
-        if (mode === "read") {
-          if (req.body.whereQuery === undefined) {
-            throw new Error("must be whereQuery");
+          // mode가 정의되지 않은 경우 에러를 발생시킵니다.
+          if (req.body.mode === undefined) {
+              throw new Error("must be mode => [ create, read, update, delete ]");
           }
-          whereQuery = equalJson(req.body.whereQuery);
-          result = await back.mongoRead(collection, whereQuery, { selfMongo });
-        } else if (mode === "update") {
-          if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
-            throw new Error("must be whereQuery and updateQuery");
+
+          // collection이 정의되지 않은 경우 에러를 발생시킵니다.
+          if (req.body.collection === undefined) {
+              throw new Error("must be collection name");
           }
-          whereQuery = equalJson(req.body.whereQuery);
-          updateQuery = equalJson(req.body.updateQuery);
-          result = await back.mongoRead(collection, whereQuery, { selfMongo });
-          if (result.length !== 0) {
-            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+          // db가 정의되지 않은 경우 에러를 발생시킵니다.
+          if (req.body.db === undefined) {
+              throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
           }
-          result = { message: "done" };
-        } else if (mode === "create") {
-          if (req.body.updateQuery === undefined) {
-            throw new Error("must be updateQuery");
+
+          // 요청 본문에서 mode, db, collection 값을 추출합니다.
+          const { mode, db, collection } = req.body;
+
+          // MongoDB 인스턴스를 저장할 변수를 선언합니다.
+          let selfMongo, result;
+
+          // 데이터베이스 선택에 따라 적절한 Mongo 인스턴스를 설정합니다.
+          if (db === "core" || db === "back" || db === "mongo") {
+              selfMongo = instance.mongo;  // 기본 데이터베이스
+          } else if (db === "sub" || db === "local" || db === "console") {
+              selfMongo = instance.mongolocal;  // 로컬 데이터베이스
+          } else {
+              throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
           }
-          updateQuery = equalJson(req.body.updateQuery);
-          await back.mongoCreate(collection, updateQuery, { selfMongo });
-          result = { message: "done" };
-        } else if (mode === "delete") {
-          if (req.body.whereQuery === undefined) {
-            throw new Error("must be whereQuery");
+
+          /**
+           * @description 요청된 mode가 "read"일 경우 데이터 조회를 처리합니다.
+           */
+          if (mode === "read") {
+              // whereQuery가 정의되지 않은 경우 에러를 발생시킵니다.
+              if (req.body.whereQuery === undefined) {
+                  throw new Error("must be whereQuery");
+              }
+
+              // whereQuery를 equalJson을 사용해 깊은 복사로 처리합니다.
+              whereQuery = equalJson(req.body.whereQuery);
+
+              // 데이터를 조회하는 함수 호출
+              result = await back.mongoRead(collection, whereQuery, { selfMongo });
+
+          /**
+           * @description 요청된 mode가 "update"일 경우 데이터를 수정합니다.
+           */
+          } else if (mode === "update") {
+              // whereQuery 또는 updateQuery가 정의되지 않은 경우 에러를 발생시킵니다.
+              if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+                  throw new Error("must be whereQuery and updateQuery");
+              }
+
+              // whereQuery 및 updateQuery를 equalJson을 사용해 깊은 복사로 처리합니다.
+              whereQuery = equalJson(req.body.whereQuery);
+              updateQuery = equalJson(req.body.updateQuery);
+
+              // 먼저 데이터를 읽어온 후, 수정 작업을 수행합니다.
+              result = await back.mongoRead(collection, whereQuery, { selfMongo });
+              if (result.length !== 0) {
+                  await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+              }
+
+              // 완료 메시지를 설정합니다.
+              result = { message: "done" };
+
+          /**
+           * @description 요청된 mode가 "create"일 경우 데이터를 생성합니다.
+           */
+          } else if (mode === "create") {
+              // updateQuery가 정의되지 않은 경우 에러를 발생시킵니다.
+              if (req.body.updateQuery === undefined) {
+                  throw new Error("must be updateQuery");
+              }
+
+              // updateQuery를 equalJson을 사용해 깊은 복사로 처리합니다.
+              updateQuery = equalJson(req.body.updateQuery);
+
+              // 데이터를 생성하는 함수 호출
+              await back.mongoCreate(collection, updateQuery, { selfMongo });
+
+              // 완료 메시지를 설정합니다.
+              result = { message: "done" };
+
+          /**
+           * @description 요청된 mode가 "delete"일 경우 데이터를 삭제합니다.
+           */
+          } else if (mode === "delete") {
+              // whereQuery가 정의되지 않은 경우 에러를 발생시킵니다.
+              if (req.body.whereQuery === undefined) {
+                  throw new Error("must be whereQuery");
+              }
+
+              // whereQuery를 equalJson을 사용해 깊은 복사로 처리합니다.
+              whereQuery = equalJson(req.body.whereQuery);
+
+              // 데이터를 삭제하는 함수 호출
+              await back.mongoDelete(collection, whereQuery, { selfMongo });
+
+              // 완료 메시지를 설정합니다.
+              result = { message: "done" };
+
+          } else {
+              // 잘못된 mode가 요청된 경우 에러를 발생시킵니다.
+              throw new Error("must be mode => [ create, read, update, delete ]" + " this mode => " + mode);
           }
-          whereQuery = equalJson(req.body.whereQuery);
-          await back.mongoDelete(collection, whereQuery, { selfMongo });
-          result = { message: "done" };
-        } else {
-          throw new Error("must be mode => [ create, read, update, delete ]" + " this mode => " + mode);
-        }
-    
-        res.send(JSON.stringify(result));
+
+          // 작업이 성공적으로 완료된 경우 결과를 JSON 형식으로 반환합니다.
+          res.send(JSON.stringify(result));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /makeSchedule, /listSchedule, /updateSchedule, /deleteSchedule
+     * @description 일정 관리를 위한 라우터로, 일정 생성, 조회, 수정, 삭제 기능을 처리합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 일정 관련 정보가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 성공 또는 실패 메시지를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/makeSchedule", "/listSchedule", "/updateSchedule", "/deleteSchedule" ], async function (req, res) {
       try {
-        let resultObj;
-        if (req.url === "/makeSchedule") {
-          if (req.body.to === undefined || req.body.title === undefined || req.body.start === undefined) {
-            throw new Error("invaild body");
+          // 결과 객체를 초기화합니다.
+          let resultObj;
+
+          /**
+           * @description 요청 URL이 "/makeSchedule"일 경우, 새로운 일정을 생성합니다.
+           * 요청 본문에 to(수신인), title(제목), start(시작 시간)이 포함되어야 합니다.
+           */
+          if (req.url === "/makeSchedule") {
+              // 필수 필드가 제공되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.to === undefined || req.body.title === undefined || req.body.start === undefined) {
+                  throw new Error("invalid body");
+              }
+
+              // 요청 본문에서 필요한 데이터를 추출합니다.
+              const { to, title } = req.body;
+              const start = new Date(req.body.start.replace(/"/g, ''));  // 시작 시간을 Date 객체로 변환
+              const end = (req.body.end !== undefined) ? new Date(req.body.end.replace(/"/g, '')) : null;  // 종료 시간이 있을 경우 변환
+              const description = (req.body.description !== undefined) ? req.body.description : "";  // 설명이 있을 경우 설정
+
+              // 일정 생성 로직을 호출하여 결과를 저장합니다.
+              resultObj = await calendar.makeSchedule(to, title, description, start, end);
+
+          /**
+           * @description 요청 URL이 "/listSchedule"일 경우, 일정 목록을 조회합니다.
+           * 본문에 from(시작 날짜)이 포함되어야 하며, 검색어가 있을 경우 search 필드를 통해 검색할 수 있습니다.
+           */
+          } else if (req.url === "/listSchedule") {
+              // 필수 필드가 제공되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.from === undefined) {
+                  throw new Error("invalid body");
+              }
+
+              // 요청 본문에서 from(조회 시작일)과 search(검색어)를 추출합니다.
+              const { from } = req.body;
+              const search = (req.body.search !== undefined) ? req.body.search : null;
+
+              // 일정 목록을 조회하는 로직을 호출하여 결과를 저장합니다.
+              resultObj = await calendar.listEvents(from, search);
+
+          /**
+           * @description 요청 URL이 "/updateSchedule"일 경우, 기존 일정을 수정합니다.
+           * 본문에 from(시작 날짜), id(일정 ID), updateQuery(수정할 내용)이 포함되어야 합니다.
+           */
+          } else if (req.url === "/updateSchedule") {
+              // 필수 필드가 제공되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.from === undefined || req.body.id === undefined || req.body.updateQuery === undefined) {
+                  throw new Error("invalid body");
+              }
+
+              // 요청 본문에서 from, id, updateQuery를 추출합니다.
+              const { from, id } = req.body;
+              const updateQuery = equalJson(req.body.updateQuery);  // equalJson을 사용하여 깊은 복사 후 처리
+
+              // 일정 수정 로직을 호출합니다.
+              await calendar.updateSchedule(from, id, updateQuery);
+
+              // 수정 완료 메시지를 설정합니다.
+              resultObj = { "message": "done" };
+
+          /**
+           * @description 요청 URL이 "/deleteSchedule"일 경우, 기존 일정을 삭제합니다.
+           * 본문에 from(시작 날짜), id(일정 ID)가 포함되어야 합니다.
+           */
+          } else {
+              // 필수 필드가 제공되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.from === undefined || req.body.id === undefined) {
+                  throw new Error("invalid body");
+              }
+
+              // 요청 본문에서 from, id를 추출합니다.
+              const { from, id } = req.body;
+
+              // 일정 삭제 로직을 호출합니다.
+              await calendar.deleteSchedule(from, id);
+
+              // 삭제 완료 메시지를 설정합니다.
+              resultObj = { "message": "done" };
           }
-          const { to, title } = req.body;
-          const start = new Date(req.body.start.replace(/"/g, ''));
-          const end = (req.body.end !== undefined) ? new Date(req.body.end.replace(/"/g, '')) : null;
-          const description = (req.body.description !== undefined) ? req.body.description : "";
-          resultObj = await calendar.makeSchedule(to, title, description, start, end);
-        } else if (req.url === "/listSchedule") {
-          if (req.body.from === undefined) {
-            throw new Error("invaild body");
-          }
-          const { from } = req.body;
-          const search = (req.body.search !== undefined) ? req.body.search : null;
-          resultObj = await calendar.listEvents(from, search);
-        } else if (req.url === "/updateSchedule") {
-          if (req.body.from === undefined || req.body.id === undefined || req.body.updateQuery === undefined) {
-            throw new Error("invaild body");
-          }
-          const { from, id } = req.body;
-          const updateQuery = equalJson(req.body.updateQuery);
-          await calendar.updateSchedule(from, id, updateQuery);
-          resultObj = { "message": "done" };
-        } else {
-          if (req.body.from === undefined || req.body.id === undefined) {
-            throw new Error("invaild body");
-          }
-          const { from, id } = req.body;
-          await calendar.deleteSchedule(from, id);
-          resultObj = { "message": "done" };
-        }
-    
-        res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify(resultObj));
+
+          // 응답 헤더에 JSON 형식으로 설정하고, 결과를 반환합니다.
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify(resultObj));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /parsingAddress
+     * @description 주소를 파싱하거나 거리 계산을 수행하는 라우터.
+     *              클라이언트 요청에 따라 주소 검증, 거리 계산, 샘플 데이터를 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체, 주소 정보와 모드 등이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식의 데이터를 반환합니다.
+     */
     router.post([ "/parsingAddress" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식과 CORS를 허용하는 설정
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
+        // 주소 파싱 모듈 및 인스턴스에서 calendar, back 가져오기
         const addressApp = new AddressParser();
         const calendar = instance.calendar;
         const back = instance.back;
+
+        // 요청 바디에서 mode가 정의되지 않았을 경우 오류 처리
         if (req.body.mode === undefined) {
           throw new Error("must be mode => inspection, distance");
         }
-        const { mode } = req.body;
-        let result;
-    
+
+        const { mode } = req.body; // 요청 모드 추출
+        let result; // 결과를 저장할 변수
+
+        // 주소 검증 모드
         if (mode === "inspection") {
+          // addressArr가 요청에 포함되지 않았을 경우 오류 처리
           if (req.body.addressArr === undefined) {
             throw new Error("must be addressArr");
           }
-          const addressArr = equalJson(req.body.addressArr);
-          const liteMode = req.body.liteMode === undefined ? false : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode);
+
+          const addressArr = equalJson(req.body.addressArr); // 요청으로 받은 주소 배열 파싱
+          const liteMode = req.body.liteMode === undefined ? false : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode); // liteMode 설정
+
+          // 주소 배열의 각 요소에서 id와 address가 있는지 확인, 없을 경우 오류 처리
           for (let obj of addressArr) {
             if (obj.id === undefined || obj.address === undefined) {
-              throw new Error("invaild address array => [ { id, address }... ]");
+              throw new Error("invalid address array => [ { id, address }... ]");
             }
+
+            // 주소 검증 함수 호출, 결과 저장
             result = await addressApp.addressInspection(addressArr, liteMode);
           }
-        } else if (mode === "distance") {
+        }
+        // 거리 계산 모드
+        else if (mode === "distance") {
+          // 요청 바디에 from 또는 to가 없을 경우 오류 처리
           if (req.body.from === undefined || req.body.to === undefined) {
             throw new Error("must be from, to");
           }
-          const { from, to } = req.body;
+
+          const { from, to } = req.body; // 출발지와 목적지 추출
+          // 거리 계산 함수 호출, MongoDB 정보를 전달하여 결과 계산
           result = await addressApp.getTravelExpenses(from, to, { selfMongo: instance.mongolocal });
-        } else if (mode === "sample" || mode === "samples") {
+        }
+        // 샘플 데이터 모드
+        else if (mode === "sample" || mode === "samples") {
+          // 디자이너 가격 기준 정보를 MongoDB에서 읽어옴
           const priceStandard = await back.mongoRead(`designerPrice`, { key: 33 }, { selfMongo: instance.mongolocal });
-          const { travel: { unit, consulting } } = priceStandard[0];
+          const { travel: { unit, consulting } } = priceStandard[0]; // 이동 및 컨설팅 단가 정보 추출
+
           let travelSamples_min, temp, amount, tong;
-          travelSamples_min = await fileSystem(`readJson`, [ addressApp.samples.travelMin ]);
+          travelSamples_min = await fileSystem(`readJson`, [ addressApp.samples.travelMin ]); // 최소 여행 샘플 읽기
+
+          // 각 샘플에 대해 비용 계산 및 문자열 변환
           for (let obj of travelSamples_min) {
-            temp = (unit.meters * obj.distance * 2) + (unit.seconds * obj.time * 2);
-            amount = (Math.round(temp / 1000) * 1000) + (consulting.hours * consulting.labor);
+            temp = (unit.meters * obj.distance * 2) + (unit.seconds * obj.time * 2); // 거리와 시간 기반 비용 계산
+            amount = (Math.round(temp / 1000) * 1000) + (consulting.hours * consulting.labor); // 컨설팅 비용 추가
             obj.amount = amount;
-            obj.amountString = autoComma(amount) + '원';
+            obj.amountString = autoComma(amount) + '원'; // 금액에 쉼표 추가
           }
-          tong = { standard: {  unit, consulting } };
+
+          tong = { standard: { unit, consulting } }; // 표준 정보 저장
+
+          // 각 디자이너에 대한 샘플 데이터를 tong 객체에 저장
           for (let obj of travelSamples_min) {
             if (tong[obj.desid] === undefined) {
               tong[obj.desid] = {};
@@ -4980,6 +6507,8 @@ class DataRouter {
             tong[obj.desid].desid = obj.desid;
             tong[obj.desid].address = obj.from;
           }
+
+          // 디자이너 리스트 생성
           tong.designers = [];
           for (let i in tong) {
             if (i !== "designers" && i !== "standard") {
@@ -4987,43 +6516,78 @@ class DataRouter {
               delete tong[i];
             }
           }
-          result = tong;
+
+          result = tong; // 최종 결과를 tong 객체에 저장
         }
-    
+
+        // 결과를 클라이언트에 JSON 형식으로 응답
         res.send(JSON.stringify(result));
       } catch (e) {
+        // 오류 발생 시 로깅 및 오류 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /realtimeClient
+     * @description 실시간 고객 데이터를 처리하는 라우터. 고객 정보 조회, 업데이트, 표준 시간 조회, 매니저 조회 등을 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체, method 및 날짜/업데이트 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식의 데이터를 반환합니다.
+     */
     router.post([ "/realtimeClient" ], async function (req, res) {
       try {
+        // 요청 바디에 method 속성이 없으면 에러를 발생시킴
         if (!req.body.hasOwnProperty("method")) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");
         }
-        const selfMongo = instance.mongolocal;
-        const { method } = req.body;
-        const members = instance.members;
-        const emptyCliid = "c0000_aa00s";
+
+        const selfMongo = instance.mongolocal; // 로컬 MongoDB 인스턴스
+        const { method } = req.body; // 클라이언트로부터 받은 method 값을 추출
+        const members = instance.members; // 멤버 리스트를 가져옴
+        const emptyCliid = "c0000_aa00s"; // 비어있는 고객 ID를 나타내는 기본 값
+
+        /**
+         * 숫자가 한 자리일 경우 0을 추가하여 두 자리로 반환하는 함수
+         * @param {Number} num - 숫자 값
+         * @returns {String} 두 자리 문자열로 반환된 숫자
+         */
         const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+
+        /**
+         * Date 객체를 특정 형식의 키 값으로 변환하는 함수
+         * @param {Date} date - 날짜 객체
+         * @returns {Number} 연월일 형식의 숫자 (예: 20230925)
+         * @throws {Error} date가 Date 객체가 아닌 경우 오류 발생
+         */
         const dateToKey = function (date) {
           if (!(date instanceof Date)) {
             throw new Error("input => Date: date");
           }
           return Number(String(date.getFullYear()) + zeroAddition(date.getMonth() + 1) + zeroAddition(date.getDate()));
         }
+
+        /**
+         * 새로운 데이터 모델을 반환하는 함수
+         * @param {Date} date - 기준 날짜
+         * @param {Array} standard - 표준 시간 배열
+         * @param {Array} clientSide - 고객 측 배열
+         * @param {Array} manager - 매니저 배열
+         * @returns {Object} 새로운 데이터 모델 (key, year, month, standard, clientSide, caution, manager, matrix)
+         */
         const returnModel = function (date, standard, clientSide, manager) {
           if (!(date instanceof Date) || !Array.isArray(standard) || !Array.isArray(manager)) {
             throw new Error("input => Date: date, Array: standard, Array: manager");
           }
           let key, caution, matrix;
-          key = dateToKey(date);
-          caution = (new Array(standard.length)).fill(null, 0);
-          matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
+          key = dateToKey(date); // 날짜를 키로 변환
+          caution = (new Array(standard.length)).fill(null, 0); // caution 배열을 null 값으로 초기화
+          matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); }); // 매니저별로 null 값을 가진 2차원 배열 생성
           return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, clientSide, caution, manager, matrix };
         }
+
+        // Array를 상속한 SearchArray 클래스, find 메서드를 이용하여 고객 ID를 찾음
         class SearchArray extends Array {
           find(q) {
             let target = null;
@@ -5036,134 +6600,80 @@ class DataRouter {
             return target;
           }
         }
+
+        // 미리 정의된 매니저 ID 배열
         const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
-        const managerMain = [ 3, 4 ];
-        const clientSide = [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          0,
-          0,
-          0,
-        ];
+        const managerMain = [ 3, 4 ]; // 주 매니저 인덱스
+        const clientSide = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]; // 고객 측 설정 배열
+
+        // 각 시간대를 정의한 표준 배열
         const standard = [
-          [
-            [ 11, 0 ],
-            [ 11, 30 ]
-          ],
-          [
-            [ 11, 30 ],
-            [ 12, 0 ]
-          ],
-          [
-            [ 13, 30 ],
-            [ 14, 0 ]
-          ],
-          [
-            [ 14, 0 ],
-            [ 14, 30 ]
-          ],
-          [
-            [ 14, 30 ],
-            [ 15, 0 ]
-          ],
-          [
-            [ 15, 0 ],
-            [ 15, 30 ]
-          ],
-          [
-            [ 15, 30 ],
-            [ 16, 0 ]
-          ],
-          [
-            [ 16, 0 ],
-            [ 16, 30 ]
-          ],
-          [
-            [ 16, 30 ],
-            [ 17, 0 ]
-          ],
-          [
-            [ 17, 0 ],
-            [ 17, 30 ]
-          ],
-          [
-            [ 17, 30 ],
-            [ 18, 0 ]
-          ],
-          [
-            [ 18, 0 ],
-            [ 18, 30 ]
-          ],
-          [
-            [ 18, 30 ],
-            [ 19, 0 ]
-          ],
-          [
-            [ 19, 0 ],
-            [ 19, 30 ]
-          ],
-          [
-            [ 19, 30 ],
-            [ 20, 0 ]
-          ],
+          [ [11, 0], [11, 30] ], [ [11, 30], [12, 0] ], [ [13, 30], [14, 0] ],
+          [ [14, 0], [14, 30] ], [ [14, 30], [15, 0] ], [ [15, 0], [15, 30] ],
+          [ [15, 30], [16, 0] ], [ [16, 0], [16, 30] ], [ [16, 30], [17, 0] ],
+          [ [17, 0], [17, 30] ], [ [17, 30], [18, 0] ], [ [18, 0], [18, 30] ],
+          [ [18, 30], [19, 0] ], [ [19, 0], [19, 30] ], [ [19, 30], [20, 0] ],
         ];
-        const listKey = 99999999;
-        const collection = "realtimeClient";
+
+        const listKey = 99999999; // 리스트에 사용할 고정 키
+        const collection = "realtimeClient"; // MongoDB 컬렉션명
         let result, rows, cliidArr, clients;
-        let updateIdIndex;
-        let tempDate;
+        let updateIdIndex, tempDate;
         let boo, boo2, thisObj;
-        let bookList;
-        let tempRows, tempRow;
+        let bookList, tempRows, tempRow;
         let memberIndex;
     
         if (method === "get") {
+
+          // 날짜 정보가 요청 객체에 없으면 오류를 발생시킴
           if (req.body.date === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invalid post");
           }
+
+          // equalJson을 통해 요청 데이터에서 date 값을 추출하여 Date 객체를 깊은 복사함
           const { date } = equalJson(req.body);
+
+          // MongoDB에서 해당 날짜에 대응하는 데이터를 조회함
           rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
+
+          // 만약 데이터가 존재하지 않는다면 새로운 모델을 생성하여 DB에 저장하고, 그렇지 않으면 조회된 데이터를 사용함
           if (rows.length === 0) {
             result = returnModel(date, standard, clientSide, manager);
             await back.mongoCreate(collection, result, { selfMongo });
           } else {
             result = rows[0];
           }
-    
+
+          // 표준 시간대 배열을 변환하여 시작과 종료 시간을 문자열 형식으로 변환함
           result.standard = result.standard.map((arr) => {
             const [ from, to ] = arr;
             const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
             return (arrToString(from) + "  ~  " + arrToString(to));
           });
-    
+
+          // 요청 객체에 매니저 정보가 없다면 기본적으로 매니저 메인 배열(managerMain)만 처리함
           if (req.body.member === undefined) {
-    
+            
+            // 매니저 메인 배열의 각 번호에 대응하는 매트릭스 배열을 변환하여 반환함
             result.matrix = result.matrix.map((arr) => {
-              let tong;
-              tong = [];
+              let tong = [];
               for (let number of managerMain) {
                 tong.push(arr[number]);
               }
               return tong;
             });
-    
+
           } else {
-    
+
+            // 매니저 ID 배열에서 요청된 매니저를 찾아 해당 매니저의 인덱스를 가져옴
             memberIndex = manager.findIndex((i) => { return i === req.body.member; });
+            
+            // 매니저가 없으면 기본적으로 0으로 설정
             if (memberIndex === undefined) {
               memberIndex = 0;
             }
-    
+
+            // caution 배열을 검사하여 특정 클라이언트 ID가 있는지 확인 후, matrix 배열에 채움
             for (let i = 0; i < result.caution.length; i++) {
               if (typeof result.caution[i] === "string") {
                 if (!result.matrix[i].includes(result.caution[i])) {
@@ -5171,35 +6681,41 @@ class DataRouter {
                 }
               }
             }
-    
+
+            // 선택된 매니저에 대해 매트릭스 배열을 처리함
             result.matrix = result.matrix.map((arr) => {
-              let tong;
-              tong = [];
+              let tong = [];
               tong.push(arr[memberIndex]);
               return tong;
             });
-    
           }
-    
+
+          // 매트릭스 배열에서 null이 아닌 값을 찾아 반환하고, null일 경우 'emptyCliid'를 반환함
           result.matrix = result.matrix.map((arr) => {
-            let r;
-            r = arr.find((z) => { return z !== null });
+            let r = arr.find((z) => { return z !== null });
             if (r !== undefined && r !== null) {
               return r;
             } else {
               return emptyCliid;
             }
           });
+
+          // 매트릭스에서 'emptyCliid'가 아닌 값을 필터링하여 클라이언트 ID 배열을 생성
           cliidArr = result.matrix.filter((i) => { return i !== emptyCliid; });
+
+          // 각 클라이언트 ID를 MongoDB에서 검색하기 위한 형식으로 변환
           cliidArr = cliidArr.map((id) => { return { cliid: id }; });
+
+          // 클라이언트 ID 배열이 비어 있지 않으면 MongoDB에서 해당 클라이언트를 조회하고, 비어 있으면 빈 배열로 처리함
           if (cliidArr.length !== 0) {
             clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo, withTools: true });
           } else {
             clients = new SearchArray();
           }
+
+          // 매트릭스 배열을 클라이언트의 이름과 ID로 변환하여 반환함. 클라이언트가 없으면 "미정"으로 표시
           result.matrix = result.matrix.map((id) => {
-            let client;
-            client = clients.search(id);
+            let client = clients.search(id);
             if (client !== undefined && client !== null) {
               return { name: client.name, cliid: client.cliid };
             } else {
@@ -5210,29 +6726,43 @@ class DataRouter {
         } else if (method === "update") {
     
           if (req.body.date === undefined || req.body.update === undefined) {
-            throw new Error("invaild post");
+            // 요청 객체에 date와 update가 없을 경우 오류 발생
+            throw new Error("invalid post");
           }
+          
+          // equalJson을 사용하여 요청 데이터에서 date와 update를 추출
           let { date, update } = equalJson(req.body);
           update = equalJson(update);
+          
+          // update 객체에 cliid(클라이언트 ID)와 index가 없을 경우 오류 발생
           if (update.cliid === undefined || update.index === undefined) {
-            throw new Error("invaild update object");
+            throw new Error("invalid update object");
           }
-    
+          
           const { cliid, index } = update;
+          // 매니저가 지정되지 않은 경우 null로 설정
           let member = (update.member !== undefined ? update.member : null);
-    
+          
+          // MongoDB에서 listKey에 해당하는 예약 정보를 조회함
           tempRows = await back.mongoRead(collection, { key: listKey }, { selfMongo });
           if (tempRows.length === 0) {
-            throw new Error("invaild db");
+            // listKey에 해당하는 정보가 없을 경우 오류 발생
+            throw new Error("invalid db");
           }
+          
           bookList = tempRows[0];
+          
+          // member가 null인 경우 예약 정보에서 해당 클라이언트를 제거
           if (member === null) {
             if (bookList.book[cliid] !== undefined) {
+              // 클라이언트 ID가 존재할 경우 MongoDB에서 해당 날짜에 해당하는 예약 정보를 조회
               tempRows = await back.mongoRead(collection, { key: bookList.book[cliid] }, { selfMongo });
               if (tempRows.length === 0) {
-                throw new Error("invaild db");
+                throw new Error("invalid db");
               }
               tempRow = tempRows[0];
+              
+              // caution 배열에서 해당 클라이언트를 null로 설정
               tempRow.caution = tempRow.caution.map((id) => {
                 if (id === cliid) {
                   return null;
@@ -5240,6 +6770,8 @@ class DataRouter {
                   return id;
                 }
               });
+              
+              // matrix 배열에서도 클라이언트 ID를 null로 변경
               tempRow.matrix = tempRow.matrix.map((arr) => {
                 if (arr.includes(cliid)) {
                   return arr.map((id) => {
@@ -5253,14 +6785,19 @@ class DataRouter {
                   return arr;
                 }
               });
+              
+              // 업데이트된 caution 및 matrix 배열을 MongoDB에 저장
               await back.mongoUpdate(collection, [ { key: bookList.book[cliid] }, { caution: tempRow.caution, matrix: tempRow.matrix } ], { selfMongo });
             }
           }
-    
+          
+          // 해당 날짜의 예약 정보를 MongoDB에서 조회
           rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
           if (rows.length !== 0) {
             result = rows[0];
+          
             if (member !== null) {
+              // 매니저가 지정된 경우 매니저의 인덱스를 찾고 matrix 배열을 업데이트
               updateIdIndex = result.manager.findIndex((m) => { return m === member; });
               if (updateIdIndex !== undefined && updateIdIndex !== null) {
                 if (updateIdIndex >= 0) {
@@ -5269,297 +6806,411 @@ class DataRouter {
                 }
               }
             } else {
+              // 클라이언트가 예약을 요청한 경우
               if (update.name === undefined) {
-                throw new Error("invaild post");
+                throw new Error("invalid post");
               }
-    
+              
+              // 표준 시간대 정보를 변환하여 읽기 쉽게 만듦
               result.standard = result.standard.map((arr) => {
                 const [ from, to ] = arr;
                 const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
                 return (arrToString(from) + " ~ " + arrToString(to));
               });
-    
+              
+              // 예약 알림을 메시지로 전송
               await messageSend({ text: `${update.name}(${cliid}) 고객님이 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일 ${result.standard[index]}에 응대 예약을 하셨습니다! 담당자 지정을 부탁드리겠습니다!`, channel: "#400_customer" });
+              
+              // caution 배열에 클라이언트 ID를 추가하고 MongoDB에 저장
               result.caution[index] = cliid;
               await back.mongoUpdate(collection, [ { key: dateToKey(date) }, { caution: result.caution } ], { selfMongo });
             }
+          
+            // 예약 정보를 갱신하여 저장
             bookList.book[cliid] = dateToKey(date);
             await back.mongoUpdate(collection, [ { key: listKey }, { book: bookList.book } ], { selfMongo });
-    
+          
           } else {
-            throw new Error("invaild db");
+            // DB에서 해당 날짜의 예약 정보를 찾을 수 없을 경우 오류 발생
+            throw new Error("invalid db");
           }
+          
+          // 성공 메시지를 반환
           result = { message: "done" };
-    
+          
         } else if (method === "standard") {
+
+          // 표준 시간대 배열을 문자열로 변환하여 반환
           result = standard.map((arr) => {
-            const [ from, to ] = arr;
-            const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
+            const [from, to] = arr; // 시간 범위를 from과 to로 나눔
+            // 시간을 "hh:mm" 형식의 문자열로 변환
+            const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); };
+            // from과 to 시간을 "hh:mm ~ hh:mm" 형식으로 반환
             return (arrToString(from) + "  ~  " + arrToString(to));
           });
+
         } else if (method === "range") {
     
           if (req.body.year === undefined || req.body.month === undefined) {
+            // 요청에서 year(연도)와 month(월)이 누락된 경우 오류를 발생시킴
             throw new Error("invaild post");
           }
-          const year = Number(req.body.year);
-          const month = Number(req.body.month);
-          const today = new Date();
+          
+          const year = Number(req.body.year); // 요청에서 year 값을 숫자로 변환하여 할당
+          const month = Number(req.body.month); // 요청에서 month 값을 숫자로 변환하여 할당
+          const today = new Date(); // 현재 날짜를 today 변수에 저장
+          
+          // 데이터베이스에서 해당 연도와 월에 해당하는 데이터를 검색
           rows = await back.mongoRead(collection, { $and: [ { year }, { month } ] }, { selfMongo });
+          
+          // 결과를 저장할 빈 배열 생성
           result = [];
+          
+          // 해당 월의 날짜를 순회하며 각 날짜의 예약 가능 여부를 확인
           for (let i = 0; i < 31; i++) {
-            tempDate = new Date(year, month - 1, i + 1, standard.flat(2)[standard.flat(2).length - 2], standard.flat(2)[standard.flat(2).length - 1]);
+            // 각 날짜의 마지막 시간으로 tempDate를 설정
+            tempDate = new Date(
+              year, month - 1, i + 1, 
+              standard.flat(2)[standard.flat(2).length - 2], 
+              standard.flat(2)[standard.flat(2).length - 1]
+            );
+          
+            // 날짜가 해당 월에 속하는지 확인
             if (tempDate.getMonth() + 1 === month) {
-    
+              
+              // 해당 날짜가 주말이거나 오늘보다 이전의 날짜이면 예약 불가능으로 처리
               if (tempDate.getDay() === 0 || tempDate.getDay() === 6 || today.valueOf() > tempDate.valueOf()) {
                 result.push(false);
               } else {
+                // boo 변수를 false로 초기화하여 예약 가능 여부를 판단
                 boo = false;
+          
+                // 데이터베이스에서 조회된 결과에서 해당 날짜의 키가 존재하는지 확인
                 for (let r of rows) {
                   if (r.key === dateToKey(tempDate)) {
-                    thisObj = r;
-                    boo = true;
+                    thisObj = r; // 해당 날짜의 객체를 thisObj에 저장
+                    boo = true;  // 예약 가능 상태를 true로 설정
                   }
                 }
+          
+                // 해당 날짜의 예약 가능 여부를 matrix에서 확인하여 result에 추가
                 if (boo) {
                   boo2 = false;
+                  // managerMain 배열에 있는 관리자의 예약 가능 상태를 확인
                   for (let number of managerMain) {
+                    // matrix에서 해당 관리자의 예약 상태가 비어있는지 확인
                     boo2 = thisObj.matrix[number].includes(null);
                     if (boo2) {
-                      break;
+                      break; // 예약 가능하면 반복 종료
                     }
                   }
-                  result.push(boo2);
+                  result.push(boo2); // 예약 가능 여부를 결과 배열에 추가
                 } else {
-                  result.push(true);
+                  result.push(true); // 예약 가능한 상태로 기본값 설정
                 }
               }
             }
           }
     
         } else if (method === "manager") {
+
           result = manager;
+
         } else if (method === "list") {
+
+          // 데이터베이스에서 주어진 listKey 값으로 데이터를 조회
           tempRows = await back.mongoRead(collection, { key: listKey }, { selfMongo });
+
+          // 조회 결과가 없는 경우 오류 발생
           if (tempRows.length === 0) {
-            throw new Error("invaild db");
+            throw new Error("invaild db");  // 데이터베이스에 해당 키로 조회된 데이터가 없으면 'invaild db' 오류를 발생시킴
           }
-          const { book } = tempRows[0];
-          result = book;
+
+          // 조회된 데이터에서 'book' 키의 값을 추출
+          const { book } = tempRows[0];  // 조회된 결과(tempRows) 배열에서 첫 번째 항목의 book 객체를 추출
+
+          // book 객체를 result에 저장하여 결과로 반환 준비
+          result = book;  // 최종적으로 반환할 결과로 book 객체를 result에 할당
+
         }
-    
+
+        // 결과를 클라이언트에 JSON 형식으로 응답
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(result));
       } catch (e) {
+        // 오류 발생 시 로깅 및 오류 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /realtimeDesigner
+     * @description 디자이너의 실시간 상태를 관리하는 라우터. 'get', 'all', 'sync', 'update' 모드를 지원하여 디자이너의 상태 조회, 전체 디자이너 조회, 동기화, 업데이트 등의 작업을 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체, mode, desid, proid, updateQuery 등의 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식으로 처리 결과를 반환합니다.
+     * @throws {Error} 요청 데이터가 유효하지 않거나 데이터베이스 작업 중 오류가 발생한 경우 이를 처리합니다.
+     */
     router.post([ "/realtimeDesigner" ], async function (req, res) {
+      // 응답 헤더 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 데이터의 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
       });
+
       try {
+        // mode가 문자열 타입인지 확인
         if (typeof req.body.mode !== "string") {
-          throw new Error("invaild post");
+          throw new Error("invaild post");  // 유효하지 않은 요청인 경우 예외 처리
         }
+
+        // mode 값이 예상한 값 중 하나인지 확인
         if (![ "get", "all", "sync", "update" ].includes(req.body.mode)) {
-          throw new Error("invaild post");
+          throw new Error("invaild post");  // 유효하지 않은 mode인 경우 예외 처리
         }
-        const { mode } = req.body;
-        const collection = "realtimeDesigner";
-        let rows;
-        let desid, proid;
-        let result;
-        let response;
-    
+
+        const { mode } = req.body;  // mode 값을 추출
+        const collection = "realtimeDesigner";  // MongoDB 컬렉션명 정의
+        let rows;  // 조회된 결과를 저장할 변수
+        let desid, proid;  // 디자이너 ID, 프로젝트 ID를 저장할 변수
+        let result;  // 최종 응답 데이터를 저장할 변수
+        let response;  // 작업 결과를 저장할 변수
+
+        // mode가 'get'인 경우, 특정 디자이너 정보 조회
         if (mode === "get") {
-    
           if (req.body.desid === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invaild post");  // desid가 없는 경우 예외 처리
           }
-          desid = req.body.desid;
-          rows = await back.mongoRead(collection, { desid }, { selfMongo: instance.mongolocal });
+          desid = req.body.desid;  // desid를 요청 객체에서 추출
+          rows = await back.mongoRead(collection, { desid }, { selfMongo: instance.mongolocal });  // MongoDB에서 desid로 데이터 조회
           if (rows.length > 0) {
-            result = rows[0];
+            result = rows[0];  // 데이터가 있으면 첫 번째 결과를 반환
           } else {
-            result = {};
+            result = {};  // 데이터가 없으면 빈 객체 반환
           }
-    
+
+        // mode가 'all'인 경우, 모든 디자이너 정보 간략 조회
         } else if (mode === "all") {
-    
-          rows = await back.mongoPick(collection, [ {}, { desid: 1, possible: 1 } ], { selfMongo: instance.mongolocal });
+          rows = await back.mongoPick(collection, [ {}, { desid: 1, possible: 1 } ], { selfMongo: instance.mongolocal });  // 모든 디자이너의 desid와 possible 필드만 선택
           result = {
-            data: rows
+            data: rows  // 조회 결과를 data 필드에 담아 반환
           };
-    
+
+        // mode가 'sync'인 경우, 특정 프로젝트와 디자이너 동기화 작업
         } else if (mode === "sync") {
-    
           if (req.body.proid === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invaild post");  // proid가 없는 경우 예외 처리
           }
-          proid = req.body.proid;
-          response = await work.realtimeDesignerSync(proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+          proid = req.body.proid;  // proid를 요청 객체에서 추출
+          response = await work.realtimeDesignerSync(proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });  // 디자이너와 프로젝트 동기화 작업 수행
           if (response.message === "success") {
-            result = { message: "success" };
+            result = { message: "success" };  // 동기화가 성공한 경우 성공 메시지 반환
           } else {
-            throw new Error(JSON.stringify(response));
+            throw new Error(JSON.stringify(response));  // 동기화 실패 시 오류 처리
           }
-    
+
+        // mode가 'update'인 경우, 디자이너 정보 업데이트
         } else if (mode === "update") {
-    
           if (req.body.desid === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invaild post");  // desid가 없는 경우 예외 처리
           }
           if (req.body.updateQuery === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invaild post");  // updateQuery가 없는 경우 예외 처리
           }
-          const { desid, updateQuery } = equalJson(req.body);
-          await back.mongoUpdate(collection, [ { desid }, updateQuery ], { selfMongo: instance.mongolocal });
-          result = { message: "done" };
-    
+          const { desid, updateQuery } = equalJson(req.body);  // 요청 데이터에서 desid와 updateQuery를 추출
+          await back.mongoUpdate(collection, [ { desid }, updateQuery ], { selfMongo: instance.mongolocal });  // MongoDB에서 desid에 해당하는 데이터 업데이트
+          result = { message: "done" };  // 업데이트 완료 메시지 반환
         }
-    
+
+        // 최종 결과를 JSON 형식으로 클라이언트에 응답
         res.send(JSON.stringify(result));
       } catch (e) {
+        // 오류가 발생한 경우 로그에 기록하고, 클라이언트에 오류 메시지를 응답
         logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.set("Content-Type", "application/json");  // 응답의 Content-Type을 JSON으로 설정
+        res.send(JSON.stringify({ error: e.message }));  // 오류 메시지를 JSON 형식으로 응답
       }
     });
     
+    /**
+     * @route POST /designerFee
+     * @description 디자이너의 수수료를 계산하고 반환하는 라우터입니다. 프로젝트나 디자이너 정보에 따라 수수료 정보를 조회하고 계산하여 클라이언트에게 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체, matrix, frontMode 등의 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식으로 수수료 계산 결과를 반환합니다.
+     * @throws {Error} 필수 요청 데이터가 누락되었거나 잘못된 형식일 경우 예외가 발생합니다.
+     */
     router.post([ "/designerFee" ], async function (req, res) {
       try {
+        // MongoDB 옵션 설정
         const option = { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal };
+
+        // 요청에 matrix가 포함되지 않은 경우 예외 발생
         if (req.body.matrix === undefined) {
           throw new Error("must be matrix");
         }
+
+        // 클라이언트 요청에서 matrix를 equalJson을 사용하여 깊은 복사로 처리
         const matrix = equalJson(req.body.matrix);
-        const dateMargin = 10;
-        let resultObj, temp;
-        let project, thisProposal;
-        let designerRealtime;
-    
+
+        const dateMargin = 10; // 날짜 마진 설정
+        let resultObj, temp; // 결과 저장 객체와 임시 변수를 선언
+        let project, thisProposal; // 프로젝트와 제안을 저장할 변수
+        let designerRealtime; // 디자이너 실시간 상태를 저장할 변수
+
+        // 요청에 frontMode가 1이면 옵션에 frontMode를 추가
         if (req.body.frontMode === 1 || req.body.frontMode === '1') {
           option.frontMode = 1;
         }
-    
+
+        // matrix가 배열이 아니면 예외 발생
         if (!Array.isArray(matrix)) {
           throw new Error("invaild post");
         }
-    
+
+        // matrix가 프로젝트 ID 문자열 배열인 경우
         if (matrix.every((a) => { return typeof a === "string" && /^p/.test(a); })) {
-          resultObj = {};
+          resultObj = {};  // 결과 객체 생성
           for (let proid of matrix) {
+            // 각 프로젝트에 대한 디자이너 수수료를 계산하여 저장
             resultObj[proid] = await work.getDesignerFee(proid, option);
           }
+
+        // matrix가 각 요소가 5개의 값을 가진 배열인 경우
         } else if (matrix.every((a) => { return Array.isArray(a) && a.length === 5; })) {
-          resultObj = [];
+          resultObj = [];  // 결과 배열 생성
           for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
+            // 디자이너 수수료 정보를 가져옴
             temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
             temp.detail.discount = {
-              online: 0,
-              offline: 0,
+              online: 0, // 온라인 할인 기본값 설정
+              offline: 0, // 오프라인 할인 기본값 설정
             };
+
+            // proid가 있는 경우 프로젝트에 대한 추가 정보를 가져옴
             if (proid !== null && proid !== undefined) {
               project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-              thisProposal = project.selectProposal(desid);
+              thisProposal = project.selectProposal(desid);  // 디자이너에 대한 제안 정보 선택
               if (thisProposal !== null) {
+                // 각 제안서에 대한 할인 정보를 추가
                 for (let { method, discount } of thisProposal.fee) {
                   if (/^off/gi.test(method)) {
-                    temp.detail.discount.offline = discount;
+                    temp.detail.discount.offline = discount;  // 오프라인 할인 정보 적용
                   } else {
-                    temp.detail.discount.online = discount;
+                    temp.detail.discount.online = discount;  // 온라인 할인 정보 적용
                   }
                 }
               }
+              // 실시간 디자이너 상태 확인
               designerRealtime = await work.realtimeDesignerMatch(desid, proid, option);
             } else {
+              // proid가 없는 경우 디자이너 실시간 상태를 다른 정보로 확인
               designerRealtime = await work.realtimeDesignerMatch(desid, cliid, serid, xValue, option);
             }
-    
+
+            // 실시간 상태가 불가능할 경우 메시지 추가
             if (!designerRealtime.result) {
               temp.comment = (req.body.frontMode === 1 || req.body.frontMode === '1') ? "일정 불가능" : "Unable schedule";
-              temp.detail.travel.number = 0;
+              temp.detail.travel.number = 0;  // 이동 횟수를 0으로 설정
             }
-    
-            temp.detail.travel.limit = 5;
-    
-            resultObj.push(temp);
+
+            temp.detail.travel.limit = 5;  // 이동 가능 한도를 5로 설정
+
+            resultObj.push(temp);  // 결과 배열에 추가
           }
+
+        // matrix가 위 두 조건에 해당하지 않는 경우 예외 발생
         } else {
           throw new Error("invaild matrix");
         }
-    
+
+        // 응답 헤더 설정 후 결과 반환
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(resultObj));
+
       } catch (e) {
+        // 오류가 발생한 경우 오류 메시지를 로그에 기록하고 클라이언트에 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /inicisPayment
+     * @description 이니시스 결제 처리를 위한 라우터입니다. 결제 스크립트 생성, 디크립션, 모바일 카드 결제 처리, 가상계좌 처리 등의 기능을 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체, mode, cliid, desid, proid, method 등의 정보를 포함합니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식으로 결제 결과를 반환합니다.
+     * @throws {Error} 잘못된 요청이나 처리 중 오류가 발생한 경우 예외를 발생시킵니다.
+     */
     router.post([ "/inicisPayment" ], async function (req, res) {
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더를 설정
       });
+
       try {
-        const password = "homeliaison";
-        const now = new Date();
-        const kakao = instance.kakao;
-    
+        const password = "homeliaison"; // 고정된 암호 설정
+        const now = new Date(); // 현재 날짜 및 시간을 저장
+        const kakao = instance.kakao; // Kakao 알림 기능 설정
+
+        // 'script' 모드 처리
         if (req.body.mode === "script") {
-          const { cliid, kind, desid, proid, method, device, bilid } = req.body;
-          const oidConst = "homeliaisonBill_";
-          const version = "1.0";
-          const gopaymethod = req.body.gopaymethod;
-          const mid = instance.address.officeinfo.inicis.mid;
-          const signkey = instance.address.officeinfo.inicis.signkey;
-          const timestamp = String(now.valueOf());
-          const oid = oidConst + timestamp;
-          const price = Math.round(Number(req.body.price));
-          const signature = crypto.createHash("sha256").update(`oid=${oid}&price=${String(price)}&timestamp=${timestamp}`).digest("hex");
-          const mKey = crypto.createHash("sha256").update(signkey).digest("hex");
-          const currency = "WON";
-          const goodname = req.body.name;
-          const buyername = req.body.buyerName;
-          const buyertel = req.body.buyerPhone;
-          const buyeremail = req.body.buyerEmail;
-          let returnUrl, closeUrl;
-          let pluginScript, formValue, acceptmethod;
-          let future;
+          const { cliid, kind, desid, proid, method, device, bilid } = req.body; // 요청에서 필요한 정보를 추출
+          const oidConst = "homeliaisonBill_"; // 고유 결제 ID의 기본 상수 값
+          const version = "1.0"; // 이니시스 결제 스크립트의 버전
+          const gopaymethod = req.body.gopaymethod; // 결제 방식(Card, VBank 등)
+          const mid = instance.address.officeinfo.inicis.mid; // 이니시스 MID 값
+          const signkey = instance.address.officeinfo.inicis.signkey; // 이니시스 서명 키
+          const timestamp = String(now.valueOf()); // 현재 타임스탬프를 생성
+          const oid = oidConst + timestamp; // 고유 결제 ID 생성
+          const price = Math.round(Number(req.body.price)); // 결제 가격을 정수로 변환
+          const signature = crypto.createHash("sha256").update(`oid=${oid}&price=${String(price)}&timestamp=${timestamp}`).digest("hex"); // 결제 서명을 생성
+          const mKey = crypto.createHash("sha256").update(signkey).digest("hex"); // 서명 키 해시 생성
+          const currency = "WON"; // 결제 통화 설정
+          const goodname = req.body.name; // 상품명 설정
+          const buyername = req.body.buyerName; // 구매자 이름 설정
+          const buyertel = req.body.buyerPhone; // 구매자 전화번호 설정
+          const buyeremail = req.body.buyerEmail; // 구매자 이메일 설정
+          let returnUrl, closeUrl; // 리턴 URL과 결제 종료 URL을 저장할 변수
+          let pluginScript, formValue, acceptmethod; // 결제 스크립트 및 결제 폼 정보를 저장할 변수
+          let future; // 가상 계좌 사용 시 사용할 미래 날짜
     
           if ((new RegExp(address.frontinfo.host, "gi")).test(req.body.currentPage)) {
-            returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
-            closeUrl = req.body.currentPage + "/tools/trigger.html";
+            // 현재 페이지의 주소가 frontinfo의 호스트와 일치하는지 확인
+            returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([kind, desid, proid, method]).join(',');
+            // 리턴 URL 설정 (결제 완료 후 돌아갈 페이지)
+            closeUrl = req.body.currentPage + "/tools/trigger.html"; // 종료 URL 설정
           } else {
-            returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
-            closeUrl = req.body.currentPage + "/tools/trigger";
+            returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([kind, desid, proid, method]).join(',');
+            closeUrl = req.body.currentPage + "/tools/trigger"; // 종료 URL 설정 (현재 페이지가 다를 경우)
           }
-    
+          
           if (gopaymethod === "Card") {
-            pluginScript = '';
+            // 결제 방식이 카드일 경우
+            pluginScript = ''; // 결제 스크립트 초기화
             pluginScript += (await requestSystem("https://cdn.iamport.kr/v1/iamport.js")).data;
+            // 아임포트 결제 스크립트를 가져와서 추가
             formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+            // 결제에 필요한 정보를 포함한 폼 값 생성
           } else if (gopaymethod !== "Account") {
+            // 결제 방식이 가상 계좌(Account)가 아닐 경우
             pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
+            // 이니시스 결제 스크립트를 가져와서 추가
             if (gopaymethod === "VBank") {
-              acceptmethod = "va_receipt";
+              // 가상 계좌 방식일 경우
+              acceptmethod = "va_receipt"; // 가상 계좌 수신 모드 설정
             } else {
-              acceptmethod = "below1000";
+              acceptmethod = "below1000"; // 기타 결제 방식 처리
             }
             formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
+            // 결제에 필요한 정보를 포함한 폼 값 생성 (acceptmethod 포함)
           } else {
-    
+            // 결제 방식이 계좌 이체(Account)일 경우
             await requestSystem("https://" + instance.address.officeinfo.host + ":3002/accountTimeSet", {
               bilid,
               requestNumber: Number(req.body.requestNumber),
@@ -5583,199 +7234,353 @@ class DataRouter {
             }, {
               headers: { "Content-Type": "application/json" }
             });
-    
-            future = new Date();
-            future.setDate(future.getDate() + 7);
-    
+            // accountTimeSet API에 결제 정보를 전송하여 가상 계좌를 설정
+            future = new Date(); // 현재 날짜 및 시간을 가져옴
+            future.setDate(future.getDate() + 7); // 가상 계좌 만료일을 7일 후로 설정
+          
             pluginScript = await cryptoString(password, JSON.stringify({
               goodName: goodname,
               goodsName: goodname,
-              resultCode: "0000",
-              resultMsg: "성공적으로 처리 하였습니다.",
-              tid: "realAccount",
-              payMethod: "ACCOUNT",
-              applDate: dateToString(new Date(), true).replace(/[^0-9]/gi, ''),
+              resultCode: "0000", // 결제 성공 코드
+              resultMsg: "성공적으로 처리 하였습니다.", // 결제 성공 메시지
+              tid: "realAccount", // 거래 ID 설정
+              payMethod: "ACCOUNT", // 결제 방식 설정
+              applDate: dateToString(new Date(), true).replace(/[^0-9]/gi, ''), // 결제 날짜 설정
               mid,
-              MOID: oid,
-              TotPrice: String(price),
-              buyerName: buyername,
-              CARD_Code: "",
-              vactBankName: "기업",
-              VACT_Num: "049-085567-04-022",
-              VACT_Name: "(주)홈리에종",
-              VACT_Date: dateToString(future).replace(/[^0-9]/gi, ''),
-              payDevice: "",
-              P_FN_NM: "realAccount",
-              REAL_Account: "true"
+              MOID: oid, // 결제 ID 설정
+              TotPrice: String(price), // 총 결제 금액 설정
+              buyerName: buyername, // 구매자 이름 설정
+              CARD_Code: "", // 카드 코드 (계좌에서는 빈 값)
+              vactBankName: "기업", // 계좌 은행 이름 설정
+              VACT_Num: "049-085567-04-022", // 계좌 번호 설정
+              VACT_Name: "(주)홈리에종", // 계좌 소유자 설정
+              VACT_Date: dateToString(future).replace(/[^0-9]/gi, ''), // 계좌 만료일 설정
+              payDevice: "", // 결제 기기 정보 (비워둠)
+              P_FN_NM: "realAccount", // 결제 처리 결과
+              REAL_Account: "true" // 실제 계좌 사용 여부 설정
             }));
-            formValue = {};
-    
+            formValue = {}; // 계좌의 경우 폼 값이 필요하지 않음
           }
     
           res.send(JSON.stringify({ pluginScript, formValue }));
     
         } else if (req.body.mode === "decrypto") {
     
+          // 'decrypto' 모드로 암호화된 데이터를 복호화하는 코드
           let result = await decryptoHash(password, req.body.hash.trim());
+          // 클라이언트에서 전달받은 hash 값을 decryptoHash 메서드를 통해 복호화함
+
           try {
-            result = JSON.parse(result);
+            result = JSON.parse(result); // 복호화된 결과를 JSON 형식으로 파싱            
             res.send(JSON.stringify(result));
-          } catch (e) {
+            // 복호화 및 JSON 파싱이 성공했을 경우 결과를 JSON 형식으로 클라이언트에 응답
+            
+          } catch (e) { // 만약 복호화된 데이터가 JSON 형식이 아니거나 파싱 중 오류가 발생한 경우 예외 처리
+            mother.errorLogSync(e);
             res.send(JSON.stringify({ result }));
+            // 복호화는 성공했으나 파싱 중 오류가 발생했을 경우, 원본 복호화된 결과를 그대로 응답
           }
     
         } else if (req.body.mode === "mobileCard") {
     
+          // 클라이언트로부터 전달된 요청(req.body)에서 'mid', 'oid', 'impId' 값을 추출합니다.
+          // 'mid'는 상점 아이디, 'oid'는 주문 번호, 'impId'는 아임포트 결제 식별자입니다.
           const { mid, oid, impId } = req.body;
-          const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-            imp_key: address.officeinfo.import.key,
-            imp_secret: address.officeinfo.import.secret
-          }, { headers: { "Content-Type": "application/json" } }));
-          const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
-            method: "get",
-            headers: { "Authorization": accessToken }
-          });
+
+          /**
+           * @description 아임포트 API로부터 액세스 토큰을 받아오는 요청입니다.
+           * imp_key와 imp_secret을 사용하여 토큰을 요청하고, 반환된 토큰을 사용하여 이후 결제 정보를 가져옵니다.
+           * @see https://api.iamport.kr/users/getToken
+           */
+          const { data: { response: { access_token: accessToken } } } = await requestSystem(
+            "https://api.iamport.kr/users/getToken",
+            {
+              imp_key: address.officeinfo.import.key, // 아임포트에서 발급받은 API 키
+              imp_secret: address.officeinfo.import.secret, // 아임포트에서 발급받은 API 시크릿
+            },
+            {
+              headers: { "Content-Type": "application/json" }, // JSON 형식의 요청 헤더 설정
+            }
+          );
+
+          /**
+           * @description 아임포트 API에서 특정 결제(impId)에 대한 정보를 가져오는 요청입니다.
+           * @param {string} impId - 아임포트 결제 식별자입니다.
+           * @param {string} accessToken - 앞서 발급받은 액세스 토큰입니다.
+           * @see https://api.iamport.kr/payments/{impId}
+           */
+          const { data: { response: paymentData } } = await requestSystem(
+            "https://api.iamport.kr/payments/" + impId,
+            {},
+            {
+              method: "get", // GET 요청을 통해 결제 정보 조회
+              headers: { "Authorization": accessToken }, // 액세스 토큰을 헤더에 포함하여 인증 처리
+            }
+          );
+
+          // 현재 날짜와 시간을 가져옵니다. 이후 결제 승인 날짜(applDate) 값으로 사용됩니다.
           const today = new Date();
-          const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+
+          /**
+           * @function zeroAddition
+           * @description 숫자가 한 자리일 경우 앞에 0을 붙여 두 자리로 만듭니다.
+           * @param {number} num - 0을 추가할 숫자
+           * @returns {string} 두 자리 숫자로 변환된 문자열
+           */
+          const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+
+          /**
+           * @description 결제 정보 및 상태를 클라이언트에 반환하기 위해 데이터를 가공한 객체입니다.
+           * @param {Object} paymentData - 아임포트에서 받아온 결제 정보입니다.
+           */
           const convertingData = {
-            goodName: paymentData.name,
-            goodsName: paymentData.name,
-            resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "0000" : "4000"),
-            resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "paid") ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
-            tid: paymentData.pg_tid,
-            payMethod: "CARD",
-            applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-            mid: mid,
-            MOID: oid,
-            TotPrice: String(paymentData.amount),
-            buyerName: paymentData.buyer_name,
-            CARD_BankCode: paymentData.card_code,
-            CARD_Num: paymentData.card_number,
-            CARD_ApplPrice: String(paymentData.amount),
-            CARD_Code: paymentData.card_code,
-            vactBankName: paymentData.card_name,
-            payDevice: "MOBILE",
-            P_FN_NM: paymentData.card_name,
-            "__ignorethis__": 1,
+            goodName: paymentData.name, // 상품명
+            goodsName: paymentData.name, // 상품명 (복수형으로도 설정)
+            resultCode: paymentData.status.trim() === "paid" ? "0000" : "4000", // 결제 성공 여부에 따른 결과 코드 ('0000'은 성공, '4000'은 실패)
+            resultMsg: paymentData.status.trim() === "paid" ? "성공적으로 처리하였습니다." : `결제 실패 : ${String(paymentData.fail_reason)}`, // 결제 성공 또는 실패 메시지
+            tid: paymentData.pg_tid, // 결제 거래 식별자 (TID)
+            payMethod: "CARD", // 결제 방식은 카드로 고정
+            applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 승인 날짜 (YYYYMMDDHHmmss 형식)
+            mid: mid, // 상점 아이디
+            MOID: oid, // 주문 번호
+            TotPrice: String(paymentData.amount), // 결제 금액 (총 금액)
+            buyerName: paymentData.buyer_name, // 구매자 이름
+            CARD_BankCode: paymentData.card_code, // 카드 발급사 코드
+            CARD_Num: paymentData.card_number, // 카드 번호
+            CARD_ApplPrice: String(paymentData.amount), // 결제 승인 금액
+            CARD_Code: paymentData.card_code, // 카드 발급사 코드 (중복 설정)
+            vactBankName: paymentData.card_name, // 카드 발급사 이름
+            payDevice: "MOBILE", // 결제가 모바일 기기에서 발생한 것으로 설정
+            P_FN_NM: paymentData.card_name, // 카드 발급사 이름
+            "__ignorethis__": 1, // 테스트나 디버깅 용도로 무시할 필드
           };
-    
+
+          /**
+           * @description 결제 상태에 따라 클라이언트로 결과를 전송합니다.
+           * @param {Object} convertingData - 가공된 결제 정보입니다.
+           */
           if (paymentData.status.trim() === "paid") {
-            res.send(JSON.stringify({ convertingData }));
+            res.send(JSON.stringify({ convertingData })); // 결제가 성공했을 때의 응답
           } else {
-            res.send(JSON.stringify({ convertingData: { error: "error" } }));
+            res.send(JSON.stringify({ convertingData: { error: "error" } })); // 결제가 실패했을 때의 응답
           }
     
         } else if (req.body.mode === "v2") {
     
+          // 클라이언트로부터 전달된 요청(req.body)에서 'mid'와 'oid' 값을 추출합니다.
+          // 'mid'는 상점 아이디, 'oid'는 주문 번호입니다.
           const { mid, oid } = req.body;
+
+          // PortOne API의 기본 URL을 설정합니다.
           const url = "https://api.portone.io";
+
+          // PortOne API 호출을 위한 설정 값들을 선언합니다.
           let config, accessToken, accessTokenResponse;
           let getPaymentInfoResponse;
           let getPaymentInfoConfig;
           let paymentData;
           let responseFromPG;
           let tempMatrix;
-      
+
+          // config 객체를 선언하고, Content-Type을 JSON으로 설정합니다.
           config = { headers: { "Content-Type": "application/json" } };
-      
-          accessTokenResponse = await requestSystem(url + "/login/api-secret", { apiSecret: portoneAPIKey }, config);
+
+          /**
+           * @description PortOne API로부터 액세스 토큰을 발급받기 위한 요청입니다.
+           * apiSecret 값을 사용하여 토큰을 요청하고, 반환된 액세스 토큰을 이후 결제 정보를 조회하는 데 사용합니다.
+           * @see https://api.portone.io/login/api-secret
+           */
+          accessTokenResponse = await requestSystem(
+            url + "/login/api-secret", 
+            { apiSecret: portoneAPIKey }, 
+            config
+          );
+
+          // 발급받은 액세스 토큰을 저장합니다.
           accessToken = accessTokenResponse.data.accessToken;
+
+          // Authorization 헤더에 액세스 토큰을 추가하여 API 호출 시 인증 처리가 되도록 설정합니다.
           config.headers["Authorization"] = "Bearer " + accessToken;
-      
+
+          /**
+           * @description 결제 정보를 조회하기 위한 설정을 복사하여 새로운 객체로 만듭니다.
+           * config 객체를 깊은 복사(deep copy)하여 재사용합니다.
+           */
           getPaymentInfoConfig = objectDeepCopy(config);
+
+          // 결제 정보를 가져오기 위해 HTTP GET 메서드를 사용합니다.
           getPaymentInfoConfig.method = "get";
-      
-          getPaymentInfoResponse = await requestSystem(url + "/payments/" + oid, { storeId }, getPaymentInfoConfig);
+
+          /**
+           * @description PortOne API를 사용하여 특정 결제 정보(oid)를 조회합니다.
+           * @param {string} oid - 주문 번호입니다.
+           * @see https://api.portone.io/payments/{oid}
+           */
+          getPaymentInfoResponse = await requestSystem(
+            url + "/payments/" + oid, 
+            { storeId }, 
+            getPaymentInfoConfig
+          );
+
+          // API로부터 받은 결제 정보를 paymentData에 저장합니다.
           paymentData = getPaymentInfoResponse.data;
+
           try {
+            // pgResponse는 JSON 형식이므로, 이를 파싱하여 사용합니다.
             responseFromPG = JSON.parse(paymentData.pgResponse);
           } catch {
             try {
-              tempMatrix = paymentData.pgResponse.split("&").map((str) => { return str.split("=") });
+              // 만약 JSON 파싱이 실패하면, pgResponse를 '&'로 나누어 키-값 쌍으로 변환합니다.
+              tempMatrix = paymentData.pgResponse.split("&").map((str) => str.split("="));
+              
+              // 키-값 쌍을 반복문으로 처리하여 객체로 변환합니다.
               responseFromPG = {};
-              for (let [ key, value ] of tempMatrix) {
+              for (let [key, value] of tempMatrix) {
                 responseFromPG[key] = value;
               }
             } catch {
+              // 실패할 경우 빈 객체로 설정합니다.
               responseFromPG = {};
             }
           }
-    
+
+          // 결제 상태가 'PAID'이면 성공 처리하고, 결제 정보를 가공합니다.
           if (paymentData.status.trim() === "PAID") {
             const today = new Date();
+
+            /**
+             * @description 결제 정보를 가공하여 클라이언트에 반환할 객체를 생성합니다.
+             * @param {Object} paymentData - PortOne API로부터 받은 결제 정보입니다.
+             */
             const convertingData = {
-              goodName: paymentData.orderName,
-              goodsName: paymentData.orderName,
-              resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
-              resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
-              tid: paymentData.pgTxId,
-              payMethod: "CARD",
-              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-              mid: mid,
-              MOID: paymentData.id,
-              TotPrice: String(paymentData.amount.total),
-              buyerName: paymentData.customer.name,
-              CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE,
-              CARD_Num: paymentData.method.card.number,
-              CARD_ApplPrice: String(paymentData.amount.total),
-              CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE,
-              vactBankName: paymentData.method.card.name,
-              payDevice: "MOBILE",
-              P_FN_NM: paymentData.method.card.name,
-              "__ignorethis__": 1,
+              goodName: paymentData.orderName, // 상품명
+              goodsName: paymentData.orderName, // 상품명 (복수형)
+              resultCode: "0000", // 결제 성공 코드
+              resultMsg: "성공적으로 처리 하였습니다.", // 결제 성공 메시지
+              tid: paymentData.pgTxId, // 결제 거래 식별자(TID)
+              payMethod: "CARD", // 결제 방식은 카드로 고정
+              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 승인 날짜
+              mid: mid, // 상점 아이디
+              MOID: paymentData.id, // 주문 번호
+              TotPrice: String(paymentData.amount.total), // 총 결제 금액
+              buyerName: paymentData.customer.name, // 구매자 이름
+              CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE, // 카드 발급사 코드
+              CARD_Num: paymentData.method.card.number, // 카드 번호
+              CARD_ApplPrice: String(paymentData.amount.total), // 결제 승인 금액
+              CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE, // 카드 코드
+              vactBankName: paymentData.method.card.name, // 카드 발급사 이름
+              payDevice: "MOBILE", // 결제 기기 (모바일로 설정)
+              P_FN_NM: paymentData.method.card.name, // 카드 발급사 이름
+              "__ignorethis__": 1, // 디버깅이나 테스트 용도로 무시할 필드
             };
+
+            // 가공된 결제 정보를 클라이언트에 JSON 형식으로 전송합니다.
             res.send(JSON.stringify({ convertingData }));
           } else {
+            // 결제가 'PAID'가 아닐 경우, 가상계좌를 발급하는 처리를 진행합니다.
             const today = new Date();
             const expired = new Date();
-            expired.setHours(expired.getHours() + 47);
+            expired.setHours(expired.getHours() + 47); // 가상계좌 만료 시간을 47시간 후로 설정
+
+            /**
+             * @description KakaoTalk 알림 메시지를 발송하는 비동기 함수 호출
+             * @param {string} paymentData.customer.name - 고객 이름
+             * @param {string} paymentData.customer.phoneNumber - 고객의 전화번호
+             * @param {Object} 가상계좌 정보
+             */
             await kakao.sendTalk("virtualAccount", paymentData.customer.name, paymentData.customer.phoneNumber, {
-              client: paymentData.customer.name,
-              goodName: paymentData.orderName,
-              bankName: paymentData.method.bank,
-              account: paymentData.method.accountNumber,
-              to: paymentData.method.remitteeName,
-              amount: autoComma(paymentData.amount.total),
-              date: dateToString(expired, true),
+              client: paymentData.customer.name, // 고객 이름
+              goodName: paymentData.orderName, // 상품명
+              bankName: paymentData.method.bank, // 은행 이름
+              account: paymentData.method.accountNumber, // 계좌 번호
+              to: paymentData.method.remitteeName, // 송금자 이름
+              amount: autoComma(paymentData.amount.total), // 금액
+              date: dateToString(expired, true), // 만료 날짜
             });
+
+            /**
+             * @description 가상계좌 발급 처리 시의 반환 데이터
+             * 결제 방식은 VACCOUNT(가상계좌)이며, 발급된 가상계좌 정보를 클라이언트에 반환합니다.
+             */
             const convertingData = {
-              goodName: paymentData.orderName,
-              goodsName: paymentData.orderName,
-              resultCode: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "0000" : "4000"),
-              resultMsg: ((typeof paymentData.status === "string" && paymentData.status.trim() === "PAID") ? "성공적으로 처리 하였습니다." : "결제 실패"),
-              tid: paymentData.pgTxId,
-              payMethod: "VACCOUNT",
-              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
-              mid: mid,
-              MOID: paymentData.id,
-              raw: paymentData,
-              "__ignorethis__": 1,
+              goodName: paymentData.orderName, // 상품명
+              goodsName: paymentData.orderName, // 상품명 (복수형)
+              resultCode: paymentData.status.trim(), // 결제 상태 코드
+              resultMsg: "가상 계좌 번호 발급", // 가상 계좌 발급 메시지
+              tid: paymentData.pgTxId, // 결제 거래 식별자(TID)
+              payMethod: "VACCOUNT", // 결제 방식은 가상계좌로 설정
+              applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`, // 결제 승인 날짜
+              mid: mid, // 상점 아이디
+              MOID: paymentData.id, // 주문 번호
+              raw: paymentData, // 원본 결제 데이터
+              "__ignorethis__": 1, // 디버깅이나 테스트 용도로 무시할 필드
             };
+
+            // 가상계좌 발급 정보를 클라이언트에 JSON 형식으로 전송합니다.
             res.send(JSON.stringify({ convertingData }));
           }
     
         } else if (req.body.mode === "cashPhone") {
     
+          // 클라이언트로부터 전달된 요청(req.body)에서 phone, hash, bilid, proid, desid, cliid, name을 추출합니다.
+          // equalJson은 JSON을 deep copy하거나 Date 객체를 살리는 JSON.parse 업그레이드 버전 메서드입니다.
           const { phone, hash, bilid, proid, desid, cliid, name } = equalJson(req.body);
+
+          /**
+           * @description decryptoHash 메서드를 사용하여 클라이언트에서 전달받은 hash 값을 복호화합니다.
+           * 이때 trim()을 사용하여 문자열의 양 끝 공백을 제거한 후 복호화합니다.
+           * @param {string} password - 복호화에 사용되는 비밀번호
+           * @param {string} hash - 클라이언트에서 받은 암호화된 데이터
+           * @returns {Object} 복호화된 데이터
+           */
           const data = JSON.parse(await decryptoHash(password, hash.trim()));
-          await requestSystem("https://" + instance.address.officeinfo.host + ":3002/accountTimeUpdate", {
-            whereQuery: {
-              $and: [
-                { bilid },
-                { proid },
-                { "accountInfo.no_oid": data.MOID }
-              ]
+
+          await requestSystem(
+            "https://" + instance.address.officeinfo.host + ":3002/accountTimeUpdate", // 서버로 요청을 보내는 URL
+            {
+              whereQuery: {
+                // MongoDB 쿼리 조건을 설정합니다. $and 연산자를 사용하여 여러 조건을 결합합니다.
+                $and: [
+                  { bilid }, // 빌링 ID가 일치하는 조건
+                  { proid }, // 프로젝트 ID가 일치하는 조건
+                  { "accountInfo.no_oid": data.MOID } // 복호화된 데이터에서 가져온 MOID가 일치하는 조건
+                ]
+              },
+              updateQuery: { phone }, // 업데이트할 필드로 클라이언트의 전화번호를 설정
+              name, // 클라이언트 이름을 전송 (name은 updateQuery와 별도로 포함되어 있음)
+              phone // 클라이언트 전화번호도 전송
             },
-            updateQuery: { phone },
-            name,
-            phone,
-          }, {
-            headers: { "Content-Type": "application/json" }
-          });
-          res.send(JSON.stringify({ message: "done" }));
+            {
+              headers: { "Content-Type": "application/json" } // 요청의 헤더를 JSON 형식으로 설정
+            }
+          );
+
+          // 처리 완료 후 클라이언트에 JSON 형식으로 응답을 전송합니다.
+          res.send(JSON.stringify({ message: "done" })); // 처리 성공 메시지 "done"을 전송
     
         } else {
     
+          /**
+           * @description 모바일 결제 데이터를 변환하기 위한 매핑 객체입니다.
+           * @constant {Object} mobileConverting - 아임포트에서 제공하는 결제 데이터 필드를 클라이언트에서 사용하는 필드로 변환합니다.
+           * @property {string} P_STATUS - 결제 결과 코드(resultCode)와 매핑
+           * @property {string} P_RMESG1 - 결제 결과 메시지(resultMsg)와 매핑
+           * @property {string} P_TID - 결제 거래 ID(tid)와 매핑
+           * @property {string} P_TYPE - 결제 방식(payMethod)와 매핑
+           * @property {string} P_AUTH_DT - 결제 승인 날짜(applDate)와 매핑
+           * @property {string} P_MID - 상점 아이디(mid)와 매핑
+           * @property {string} P_OID - 주문 번호(MOID)와 매핑
+           * @property {string} P_AMT - 총 결제 금액(TotPrice)와 매핑
+           * @property {string} P_UNAME - 구매자 이름(buyerName)과 매핑
+           * @property {string} P_CARD_ISSUER_CODE - 카드 발급사 코드(CARD_BankCode)와 매핑
+           * @property {string} P_CARD_NUM - 카드 번호(CARD_Num)와 매핑
+           * @property {string} P_CARD_APPLPRICE - 결제 승인 금액(CARD_ApplPrice)와 매핑
+           * @property {string} P_FN_CD1 - 카드 코드(CARD_Code)와 매핑
+           * @property {string} P_FN_NM - 카드 발급사 이름(vactBankName)과 매핑
+           * @property {string} P_VACT_NUM - 가상 계좌 번호(VACT_Num)와 매핑
+           * @property {string} P_VACT_NAME - 가상 계좌 소유자 이름(VACT_Name)과 매핑
+           * @property {string} P_VACT_DATE - 가상 계좌 만료일(VACT_Date)과 매핑
+           */
           const mobileConverting = {
             P_STATUS: "resultCode",
             P_RMESG1: "resultMsg",
@@ -5795,92 +7600,147 @@ class DataRouter {
             P_VACT_NAME: "VACT_Name",
             P_VACT_DATE: "VACT_Date",
           };
+
+          // 응답 데이터의 문자셋을 설정합니다. UTF-8로 설정하여 한글 등의 문자를 올바르게 처리합니다.
           const charset = "UTF-8";
+
+          // 응답 데이터의 포맷을 JSON 형식으로 설정합니다.
           const format = "JSON";
+
+          // 현재 시간을 밀리초로 변환하여 타임스탬프로 사용합니다. 주로 결제 요청 시의 시간을 나타냅니다.
           const timestamp = String(now.valueOf());
-          let device;
+
+          let device; // 결제가 모바일 기기인지 데스크탑인지 판단하여 저장하는 변수
           let resultCode, authUrl, netCancelUrl, returnUrl, orderNumber, authToken, mid;
-          let signature;
-          let response, responseData;
-          let target;
-          let targetArr, tong, convertTong;
-          let tempStr, tempArr;
-    
+          let signature; // 결제 요청 시 사용되는 서명 값
+          let response, responseData; // 응답 데이터를 저장할 변수
+          let target; // 처리 대상 데이터를 저장할 임시 변수
+          let targetArr, tong, convertTong; // 처리 과정에서 사용할 배열 및 객체
+          let tempStr, tempArr; // 임시로 문자열과 배열을 저장할 변수
+
+          // P_STATUS가 정의되지 않은 경우 데스크탑 결제 요청으로 처리합니다.
           if (req.body.P_STATUS === undefined) {
-            device = "desktop";
-            resultCode = req.body.resultCode;
-            authUrl = req.body.authUrl;
-            netCancelUrl = req.body.netCancelUrl;
-            returnUrl = req.body.returnUrl;
-            orderNumber = req.body.orderNumber;
-            authToken = req.body.authToken;
-            mid = req.body.mid;
+            device = "desktop"; // 데스크탑 결제
+            resultCode = req.body.resultCode; // 결제 결과 코드
+            authUrl = req.body.authUrl; // 인증 URL
+            netCancelUrl = req.body.netCancelUrl; // 네트워크 취소 URL
+            returnUrl = req.body.returnUrl; // 결제 후 돌아갈 URL
+            orderNumber = req.body.orderNumber; // 주문 번호
+            authToken = req.body.authToken; // 인증 토큰
+            mid = req.body.mid; // 상점 아이디
           } else {
-            device = "mobile";
-            resultCode = (req.body.P_STATUS === "00" ? "0000" : req.body.P_STATUS);
-            authUrl = req.body.P_REQ_URL;
-            netCancelUrl = "";
-            returnUrl = req.body.P_NOTI.split("__split__")[2];
-            orderNumber = "";
-            authToken = req.body.P_TID;
-            mid = req.body.P_NOTI.split("__split__")[1];
+            // P_STATUS가 정의된 경우 모바일 결제 요청으로 처리합니다.
+            device = "mobile"; // 모바일 결제
+            resultCode = (req.body.P_STATUS === "00" ? "0000" : req.body.P_STATUS); // 결제 상태 코드
+            authUrl = req.body.P_REQ_URL; // 모바일 인증 URL
+            netCancelUrl = ""; // 모바일에서는 네트워크 취소 URL이 필요 없습니다.
+            returnUrl = req.body.P_NOTI.split("__split__")[2]; // NOTI 값에서 결제 후 돌아갈 URL을 추출합니다.
+            orderNumber = ""; // 모바일에서는 별도로 주문 번호를 처리하지 않음
+            authToken = req.body.P_TID; // 모바일 인증 토큰
+            mid = req.body.P_NOTI.split("__split__")[1]; // NOTI 값에서 상점 아이디를 추출
           }
-    
+  
           if (device === "desktop") {
+            // 데스크탑에서 결제 요청을 한 경우 처리하는 로직입니다.
+
+            /**
+             * @description SHA256 해시 알고리즘을 사용하여 서명을 생성합니다. 서명은 authToken과 timestamp를 이용하여 만듭니다.
+             * 서명은 결제 요청의 유효성을 확인하는 데 사용됩니다.
+             */
             signature = crypto.createHash("sha256").update(`authToken=${authToken}&timestamp=${timestamp}`).digest("hex");
+
+            // requestSystem을 사용하여 결제 인증 URL에 결제 정보를 요청합니다.
             response = await requestSystem(authUrl, { mid, authToken, timestamp, signature, charset, format });
+
+            /**
+             * @description 응답 데이터를 암호화하여 JSON 형식으로 변환한 후 반환합니다.
+             * cryptoString은 Mother 클래스의 메서드로, 문자열을 암호화하는 역할을 합니다.
+             */
             responseData = await cryptoString(password, JSON.stringify(response.data));
+
+            // 결제 성공 시, 완료 페이지로 리다이렉트합니다.
             if (response.data.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
             } else {
+              // 결제가 실패한 경우 실패 페이지로 리다이렉트합니다.
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
             }
           } else {
+            // 모바일에서 결제 요청을 한 경우 처리하는 로직입니다.
+
             if (resultCode === "0000") {
+              // 결제가 성공했을 때 처리하는 로직입니다.
+
+              // requestSystem을 사용하여 결제 인증 URL에 결제 정보를 요청합니다.
               response = await requestSystem(authUrl, { P_MID: mid, P_TID: authToken });
+
+              // 응답 데이터를 가공하기 위한 준비를 합니다. 결제 데이터를 파싱하고 배열로 변환합니다.
               target = response.data;
-              targetArr = target.split('&').map((q) => { return q.split('='); });
+              targetArr = target.split('&').map((q) => q.split('='));
+
+              /**
+               * @description 특정 키(needs, mode, cliid, desid, proid)들을 결합하여 처리합니다.
+               * 해당 데이터들을 하나의 문자열로 연결하여 처리하기 위해 반복문을 사용합니다.
+               */
               for (let i = 1; i < targetArr.length; i++) {
-                if (targetArr[i][0] === "needs" || targetArr[i][0] === "mode" || targetArr[i][0] === "cliid" || targetArr[i][0] === "desid" || targetArr[i][0] === "proid") {
+                if (["needs", "mode", "cliid", "desid", "proid"].includes(targetArr[i][0])) {
                   tempStr = targetArr[i - 1][targetArr[i - 1].length - 1] + "&" + targetArr[i].join('=');
                   targetArr[i - 1][targetArr[i - 1].length - 1] = tempStr;
                 }
               }
-              targetArr = targetArr.filter((arr) => { return arr[0] !== "needs" && arr[0] !== "mode" && arr[0] !== "cliid" && arr[0] !== "desid" && arr[0] !== "proid" });
+
+              // 필터링을 통해 필요한 데이터만 남기고 불필요한 데이터(needs, mode 등)는 제거합니다.
+              targetArr = targetArr.filter(arr => !["needs", "mode", "cliid", "desid", "proid"].includes(arr[0]));
+
+              // 배열 안에서 여러 항목으로 나뉜 데이터를 다시 결합하여 올바른 형식으로 만듭니다.
               for (let i = 0; i < targetArr.length; i++) {
                 if (targetArr[i].length > 2) {
                   tempArr = JSON.parse(JSON.stringify(targetArr[i]));
                   tempArr.shift();
-                  targetArr[i] = [ targetArr[i][0], tempArr.join('=') ];
+                  targetArr[i] = [targetArr[i][0], tempArr.join('=')];
                 }
               }
+
+              // 파싱된 데이터를 객체 형식으로 변환합니다.
               tong = {};
               for (let arr of targetArr) {
                 tong[arr[0]] = arr[1];
               }
-    
+
+              // 변환된 데이터를 다시 클라이언트에 맞는 형식으로 변환합니다.
               convertTong = {};
               convertTong.goodName = tong.P_NOTI.split("__split__")[0];
               convertTong.goodsName = tong.P_NOTI.split("__split__")[0];
+
+              // mobileConverting 객체를 사용하여 응답 데이터를 변환합니다.
               for (let from in mobileConverting) {
                 if (tong[from] !== undefined) {
                   convertTong[mobileConverting[from]] = tong[from];
                 }
               }
+
+              // 응답 코드가 "00"일 경우 "0000"으로 변환하여 처리합니다.
               if (convertTong.resultCode === "00") {
                 convertTong.resultCode = "0000";
               }
+
+              // 결제 기기를 모바일로 설정합니다.
               convertTong.payDevice = "MOBILE";
               convertTong.P_FN_NM = convertTong.vactBankName;
+
+              // 변환된 데이터를 암호화한 후, JSON 형식으로 반환합니다.
               responseData = await cryptoString(password, JSON.stringify(convertTong));
-    
+
+              // 결제가 성공했을 때, 완료 페이지로 리다이렉트합니다.
               if (convertTong.resultCode === "0000") {
                 res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
               } else {
+                // 결제가 실패했을 때, 실패 페이지로 리다이렉트하며, 오류를 기록합니다.
                 logger.alert("결제 문제 생김 (rou_post_inicisPayment) : " + JSON.stringify(convertTong, null, 2) + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
                 res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
               }
             } else {
+              // 결제가 실패했을 때, 실패 페이지로 리다이렉트하며, 오류를 기록합니다.
               logger.alert("결제 문제 생김 (rou_post_inicisPayment) : " + resultCode + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
             }
@@ -5889,6 +7749,7 @@ class DataRouter {
         }
     
       } catch (e) {
+        // 에러 발생 시 로그를 기록하고 에러 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -6216,99 +8077,174 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /constructInteraction
+     * @description 프로젝트 시공 관련 다양한 작업을 처리하는 라우터입니다. 결제 업데이트, 계약서 전송, 금액 변경, 가상 계좌 동기화 등을 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 다양한 작업 데이터를 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, 작업 처리 결과를 반환합니다.
+     */
     router.post([ "/constructInteraction" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트로 반환합니다.
       res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "text/plain", // 응답의 Content-Type을 plain 텍스트로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더를 설정
       });
-      const back = instance.back;
-      const kakao = instance.kakao;
-      const { equalJson, dateToString, stringToDate, requestSystem, autoComma, messageSend } = instance.mother;
+
+      // instance 객체에서 back, kakao, mother 모듈을 불러옵니다.
+      const back = instance.back; // 백엔드와 관련된 작업을 처리하는 객체
+      const kakao = instance.kakao; // 카카오톡 관련 메시지 전송 기능을 담당하는 객체
+
+      // Mother 클래스에서 여러 유틸리티 메서드를 불러옵니다.
+      const { equalJson, dateToString, stringToDate, requestSystem, autoComma, messageSend } = instance.mother; 
+      // equalJson: JSON 파싱 및 딥 카피를 수행하는 업그레이드된 메서드
+      // dateToString: 날짜 객체를 문자열로 변환하는 메서드
+      // stringToDate: 문자열을 날짜 객체로 변환하는 메서드
+      // requestSystem: 외부 시스템으로 HTTP 요청을 보내는 메서드
+      // autoComma: 숫자에 콤마를 자동으로 추가하는 메서드
+      // messageSend: 메시지를 전송하는 메서드
+
+      /**
+       * @function numberToHangul
+       * @description 숫자를 한글로 변환하는 함수입니다. 예를 들어 123은 '백이십삼'으로 변환됩니다.
+       * @param {number} number - 변환할 정수 값입니다.
+       * @returns {string} 변환된 한글 숫자 문자열입니다.
+       * @throws {Error} 정수가 아닌 값이 입력될 경우 에러를 발생시킵니다.
+       */
       const numberToHangul = (number) => {
+        // 입력된 값이 숫자가 아니면 에러를 발생시킵니다.
         if (typeof number !== "number") {
           throw new Error("input must be integer");
         }
-        const hangul0 = [ '', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구' ];
-        const hangul1 = [ '', '십', '백', '천' ];
-        const hangul2 = [ '', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극' ];
+
+        // 한글 숫자 변환에 사용되는 배열을 정의합니다.
+        const hangul0 = [ '', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구' ]; // 일의 자리 숫자
+        const hangul1 = [ '', '십', '백', '천' ]; // 십, 백, 천의 자리 숫자
+        const hangul2 = [ '', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극' ]; // 만 단위 이후의 자리
+
         try {
           let numberStr, numberArr, hangul3, first;
-    
+
+          // 각 자리에 맞는 한글 표현을 조합하기 위한 배열을 생성합니다.
           hangul3 = [];
           for (let i = 0; i < hangul2.length; i++) {
             for (let j = 0; j < hangul1.length; j++) {
-              hangul3.push(hangul1[j] + hangul2[i]);
+              hangul3.push(hangul1[j] + hangul2[i]); // 십, 백, 천 단위를 각 자리별로 결합
             }
           }
-    
+
+          // 입력된 숫자를 내림 처리하여 정수로 만듭니다.
           number = Math.floor(number);
+
+          // 숫자를 문자열로 변환하여 각 자릿수를 배열로 변환한 후, 배열을 역순으로 바꿉니다.
           numberStr = String(number);
           numberArr = numberStr.split('').reverse();
+
+          // 배열의 각 자릿수를 한글로 변환합니다.
           numberArr = numberArr.map((str, index) => {
             if (str === '0') {
-              return '';
+              return ''; // 0일 경우 빈 문자열로 처리
             } else {
-              return hangul0[Number(str)] + hangul3[index];
+              return hangul0[Number(str)] + hangul3[index]; // 숫자에 해당하는 한글과 자릿수를 결합
             }
           });
-    
+
+          // 자릿수가 반복되는 경우, 중복된 자릿수를 제거합니다.
           for (let i = 1; i < hangul2.length; i++) {
             first = true;
             for (let j = 0; j < numberArr.length; j++) {
               if ((new RegExp(hangul2[i] + '$')).test(numberArr[j])) {
                 if (first) {
-                  first = false;
+                  first = false; // 첫 번째 반복은 유지
                 } else {
-                  numberArr[j] = numberArr[j].slice(0, -1);
+                  numberArr[j] = numberArr[j].slice(0, -1); // 중복된 자릿수를 제거
                 }
               }
             }
           }
+
+          // 배열을 다시 원래 순서로 돌린 후 문자열로 결합합니다.
           numberArr.reverse();
-    
-          return numberArr.join('');
-    
+          return numberArr.join(''); // 변환된 한글 숫자 문자열을 반환
+
         } catch (e) {
+          // 오류가 발생할 경우 콘솔에 로그를 출력하고 null을 반환합니다.
           console.log(e);
           return null;
         }
       }
       try {
+
+        // 클라이언트에서 보낸 요청의 body에서 mode와 proid가 문자열인지 확인합니다.
+        // mode는 작업의 종류를 나타내며, proid는 프로젝트 ID입니다.
         if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
-          throw new Error("invalid post 1");
+          throw new Error("invalid post 1"); // 둘 중 하나라도 문자열이 아니면 오류를 발생시킵니다.
         }
+
+        // mode 값이 사전에 정의된 작업 목록에 포함되어 있는지 확인합니다.
+        // "updatePayments", "inspection", "sendContract" 등 여러 작업 종류 중 하나여야 합니다.
         if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync", "chargeGuide", "changeAmount", "historyUpdate" ].includes(req.body.mode)) {
-          throw new Error("invalid post 2");
+          throw new Error("invalid post 2"); // mode 값이 허용되지 않는 값이면 오류를 발생시킵니다.
         }
+
+        // 요청 본문에서 mode와 proid를 추출합니다.
+        // mode: 작업의 종류, proid: 프로젝트 ID
         const { mode, proid } = req.body;
+
+        // 백엔드에서 프로젝트 정보를 가져옵니다.
+        // back.getProjectById는 주어진 proid를 사용해 프로젝트 데이터를 가져오는 함수입니다.
+        // selfMongo는 MongoDB 인스턴스를 나타냅니다.
         const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+        // 프로젝트 기록(history) 데이터를 가져옵니다.
+        // back.getHistoryById는 프로젝트의 히스토리 정보를 가져오는 함수입니다.
         const projectHistory = await back.getHistoryById("project", proid, { selfMongo: instance.mongolocal });
+
+        // 프로젝트 객체에서 디자인 프로세스 내의 시공 정보(construct)를 추출합니다.
         const { process: { design: { construct } } } = project;
+
+        // 결과(result)와 요약(summary)를 저장할 변수를 선언합니다.
         let result, summary;
-    
+
+        // mode가 "constructOnoff"가 아니고, construct 정보가 없는 경우 오류를 발생시킵니다.
+        // construct가 null이면 프로젝트에 시공 정보가 없다는 의미입니다.
         if (mode !== "constructOnoff" && construct === null) {
-          throw new Error("invaild proid");
+          throw new Error("invalid proid"); // 잘못된 proid로 인해 시공 정보를 찾지 못한 경우 오류를 발생시킵니다.
         }
     
         if (mode === "updatePayments") {
+
+          // first, start, middle, remain, total 값이 요청에서 제공되지 않으면 오류를 발생시킵니다.
           if (req.body.first === undefined || req.body.start === undefined || req.body.middle === undefined || req.body.remain === undefined || req.body.total === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invalid post"); // 필요한 데이터가 누락된 경우 에러를 발생시킵니다.
           }
+
+          // 요청에서 받은 데이터를 equalJson을 통해 딥 카피 및 Date 객체 처리를 수행합니다.
+          // total: 전체 결제 금액, first: 계약금, start: 착수금, middle: 중도금, remain: 잔금
           const { total, first, start, middle, remain } = equalJson(req.body);
+
+          // 각 결제 항목을 저장할 객체를 선언합니다.
           let firstObj, startObj, middleObj, remainObj;
+
+          // MongoDB에서 업데이트할 쿼리 변수를 선언합니다.
           let whereQuery, updateQuery;
-    
+
+          // 첫 번째 결제 항목이 존재하지 않을 경우, 기본 값을 반환하는 메서드를 사용해 초기화합니다.
           if (construct.contract.payments.first === null) {
             firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
-            firstObj = construct.contract.payments.first;
+            firstObj = construct.contract.payments.first; // 이미 존재하는 결제 정보가 있으면 그 값을 사용합니다.
           }
+
+          // firstObj의 결제 금액을 계산합니다. 전체 금액(total)에서 first의 비율에 따라 금액을 산정합니다.
           firstObj.calculation.amount.consumer = Math.round(Math.floor(total * (first.ratio / 100)) / 1000) * 1000;
+          // 부가세(vat)를 계산합니다. 소비자 금액의 1/11로 계산됩니다.
           firstObj.calculation.amount.vat = Math.floor(firstObj.calculation.amount.consumer / 11);
+          // 공급가액(supply)은 소비자 금액에서 부가세를 뺀 값입니다.
           firstObj.calculation.amount.supply = firstObj.calculation.amount.consumer - firstObj.calculation.amount.vat;
-    
+
+          // 착수금(start)의 계산 방식도 위와 동일합니다.
           if (construct.contract.payments.start === null) {
             startObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6317,7 +8253,8 @@ class DataRouter {
           startObj.calculation.amount.consumer = Math.round(Math.floor(total * (start.ratio / 100)) / 1000) * 1000;
           startObj.calculation.amount.vat = Math.floor(startObj.calculation.amount.consumer / 11);
           startObj.calculation.amount.supply = startObj.calculation.amount.consumer - startObj.calculation.amount.vat;
-    
+
+          // 중도금(middle)의 계산도 위와 동일하게 이루어집니다.
           if (construct.contract.payments.middle === null) {
             middleObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6326,7 +8263,8 @@ class DataRouter {
           middleObj.calculation.amount.consumer = Math.round(Math.floor(total * (middle.ratio / 100)) / 1000) * 1000;
           middleObj.calculation.amount.vat = Math.floor(middleObj.calculation.amount.consumer / 11);
           middleObj.calculation.amount.supply = middleObj.calculation.amount.consumer - middleObj.calculation.amount.vat;
-    
+
+          // 잔금(remain)의 계산도 동일하게 수행됩니다.
           if (construct.contract.payments.remain === null) {
             remainObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6335,228 +8273,409 @@ class DataRouter {
           remainObj.calculation.amount.consumer = Math.round(Math.floor(total * (remain.ratio / 100)) / 1000) * 1000;
           remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
           remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
-    
-          whereQuery = { proid };
+
+          // 프로젝트의 결제 정보를 업데이트하기 위한 쿼리를 준비합니다.
+          whereQuery = { proid }; // 프로젝트 ID를 기준으로 업데이트할 대상을 찾습니다.
           updateQuery = {};
           updateQuery["process.design.construct.contract.payments.first"] = firstObj;
           updateQuery["process.design.construct.contract.payments.start"] = startObj;
           updateQuery["process.design.construct.contract.payments.middle"] = middleObj;
           updateQuery["process.design.construct.contract.payments.remain"] = remainObj;
+
+          // MongoDB에 업데이트 쿼리를 실행하여 결제 정보를 저장합니다.
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-    
+
+          // 업데이트된 결제 정보를 결과로 반환합니다.
           result = {
-            message: "success",
+            message: "success", // 성공 메시지
             core: {
-              first: firstObj,
-              start: startObj,
-              middle: middleObj,
-              remain: remainObj,
+              first: firstObj, // 계약금 정보
+              start: startObj, // 착수금 정보
+              middle: middleObj, // 중도금 정보
+              remain: remainObj, // 잔금 정보
             }
           };
     
         } else if (mode === "inspection") {
     
+          /**
+           * @description 결제 내역을 바탕으로 각 결제 항목의 비율과 금액을 계산한 후 요약 정보를 생성하는 로직입니다.
+           * 결제 내역이 모두 존재하지 않는 경우 실패 결과를 반환하며, 모든 항목이 있을 경우 계산하여 요약(summary)을 반환합니다.
+           */
+
+          // 클라이언트의 요청 본문에서 name, address, start, end 데이터를 equalJson으로 파싱하여 추출합니다.
           const { name, address, start, end } = equalJson(req.body);
+
+          // 각 결제 항목의 금액과 비율을 저장할 변수를 선언합니다.
           let firstAmount, firstPercentage;
           let startAmount, startPercentage;
           let middleAmount, middlePercentage;
           let remainAmount, remainPercentage;
-          let totalAmount;
-    
+          let totalAmount; // 전체 금액을 저장할 변수
+
+          // 만약 첫 번째 결제, 착수금, 중도금, 잔금 중 하나라도 null이면 요약 결과를 생성할 수 없으므로 실패를 반환합니다.
           if (construct.contract.payments.first === null || construct.contract.payments.start === null || construct.contract.payments.middle === null || construct.contract.payments.remain === null) {
-            result = { result: false, summary: null };
+            result = { result: false, summary: null }; // 결제 정보가 부족하면 요약 결과를 생성할 수 없음을 반환합니다.
           } else {
-    
+
+            // 각 결제 항목의 소비자 금액을 계산합니다.
+            // Math.floor()를 사용하여 소수점을 내림 처리합니다.
             firstAmount = Math.floor(construct.contract.payments.first.calculation.amount.consumer);
             startAmount = Math.floor(construct.contract.payments.start.calculation.amount.consumer);
             middleAmount = Math.floor(construct.contract.payments.middle.calculation.amount.consumer);
             remainAmount = Math.floor(construct.contract.payments.remain.calculation.amount.consumer);
-    
+
+            // 전체 결제 금액을 계산합니다. 모든 결제 항목의 금액을 더하여 totalAmount에 저장합니다.
             totalAmount = (firstAmount + startAmount + middleAmount + remainAmount);
-    
+
+            // 각 항목의 비율(%)을 계산합니다. 전체 금액 대비 항목별 금액의 비율을 구하고, 반올림하여 백분율로 변환합니다.
             firstPercentage = Math.round((firstAmount / totalAmount) * 100);
             startPercentage = Math.round((startAmount / totalAmount) * 100);
             middlePercentage = Math.round((middleAmount / totalAmount) * 100);
+
+            // 잔금 비율은 전체 100%에서 나머지 금액을 계산합니다.
             remainPercentage = 100 - (firstPercentage + startPercentage + middlePercentage);
-    
+
+            // 각 항목의 비율이 음수가 나오는 경우 오류로 간주하고, 실패 결과를 반환합니다.
             if (firstPercentage < 0 || startPercentage < 0 || middlePercentage < 0 || remainPercentage < 0) {
-              result = { result: false, summary: null };
+              result = { result: false, summary: null }; // 비율 계산 중 오류가 발생하면 실패 결과를 반환합니다.
             } else {
-    
+
+              // 각 결제 항목과 관련된 요약 정보를 생성합니다.
               summary = {
-                total: Math.floor(totalAmount),
-                hangul: numberToHangul(Math.floor(totalAmount)) + '원',
-                name,
-                address,
-                date: { start, end },
+                total: Math.floor(totalAmount), // 전체 금액을 소수점 이하 버림 처리
+                hangul: numberToHangul(Math.floor(totalAmount)) + '원', // 총 금액을 한글로 변환하여 표시
+                name, // 클라이언트 이름
+                address, // 클라이언트 주소
+                date: { start, end }, // 시공 시작일과 종료일
                 first: {
-                  percentage: Math.floor(firstPercentage),
-                  amount: Math.floor(firstAmount),
-                  date: dateToString(projectHistory.construct.payments.first.date),
-                  etc: projectHistory.construct.payments.first.etc
+                  percentage: Math.floor(firstPercentage), // 첫 번째 결제 비율
+                  amount: Math.floor(firstAmount), // 첫 번째 결제 금액
+                  date: dateToString(projectHistory.construct.payments.first.date), // 첫 번째 결제일을 문자열로 변환
+                  etc: projectHistory.construct.payments.first.etc // 기타 정보
                 },
                 start: {
-                  percentage: Math.floor(startPercentage),
-                  amount: Math.floor(startAmount),
-                  date: dateToString(projectHistory.construct.payments.start.date),
-                  etc: projectHistory.construct.payments.start.etc
+                  percentage: Math.floor(startPercentage), // 착수금 비율
+                  amount: Math.floor(startAmount), // 착수금 금액
+                  date: dateToString(projectHistory.construct.payments.start.date), // 착수일을 문자열로 변환
+                  etc: projectHistory.construct.payments.start.etc // 기타 정보
                 },
                 middle: {
-                  percentage: Math.floor(middlePercentage),
-                  amount: Math.floor(middleAmount),
-                  date: dateToString(projectHistory.construct.payments.middle.date),
-                  etc: projectHistory.construct.payments.middle.etc
+                  percentage: Math.floor(middlePercentage), // 중도금 비율
+                  amount: Math.floor(middleAmount), // 중도금 금액
+                  date: dateToString(projectHistory.construct.payments.middle.date), // 중도금 날짜를 문자열로 변환
+                  etc: projectHistory.construct.payments.middle.etc // 기타 정보
                 },
                 remain: {
-                  percentage: Math.floor(remainPercentage),
-                  amount: Math.floor(remainAmount),
-                  date: dateToString(projectHistory.construct.payments.remain.date),
-                  etc: projectHistory.construct.payments.remain.etc
+                  percentage: Math.floor(remainPercentage), // 잔금 비율
+                  amount: Math.floor(remainAmount), // 잔금 금액
+                  date: dateToString(projectHistory.construct.payments.remain.date), // 잔금 날짜를 문자열로 변환
+                  etc: projectHistory.construct.payments.remain.etc // 기타 정보
                 },
-              }
+              };
+
+              // 요약 정보가 성공적으로 생성되면 결과와 요약 정보를 반환합니다.
               result = { result: true, summary };
-    
             }
           }
     
         } else if (mode === "sendContract") {
     
+          /**
+           * @description 클라이언트 요청에서 전달된 요약 정보(summary)를 기반으로 계약서를 생성하고 프로젝트 데이터를 업데이트하는 로직입니다.
+           */
+
+          // 클라이언트 요청(req.body)에서 summary 데이터를 추출합니다. 
+          // equalJson은 데이터를 딥 카피하면서 Date 객체를 포함한 JSON을 적절하게 처리합니다.
           const { summary } = equalJson(req.body);
+
+          // MongoDB에서 프로젝트 데이터를 업데이트하기 위한 쿼리 객체를 선언합니다.
           let whereQuery, updateQuery;
-    
+
+          // whereQuery: 프로젝트 ID(proid)를 기반으로 업데이트할 대상을 지정합니다.
           whereQuery = { proid };
+
+          // updateQuery: 업데이트할 항목을 정의합니다.
+          // "process.design.construct.contract.form.guide" 필드에 현재 날짜를 삽입합니다.
           updateQuery = {};
           updateQuery["process.design.construct.contract.form.guide"] = new Date();
+
+          // back.updateProject 메서드를 사용하여 MongoDB에서 프로젝트 데이터를 업데이트합니다.
+          // selfMongo는 MongoDB 인스턴스를 나타냅니다.
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-    
-          requestSystem("https://" + instance.address.officeinfo.host + ":3002/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+
+          /**
+           * @description requestSystem을 사용하여 외부 시스템에 HTTP POST 요청을 보냅니다. 
+           * 계약서 생성을 요청하는 API로, 요청 본문에 proid와 summary를 포함하여 전송합니다.
+           * @param {string} url - 계약서 생성 API의 URL
+           * @param {Object} data - 전송할 데이터 객체 (proid와 summary를 포함)
+           * @param {Object} options - 요청 헤더 옵션 (Content-type을 JSON으로 설정)
+           */
+          requestSystem("https://" + instance.address.officeinfo.host + ":3002/createConstructContract", 
+            { proid, summary }, // 요청에 포함할 데이터: 프로젝트 ID(proid)와 요약 정보(summary)
+            { headers: { "Content-type": "application/json" } } // 요청 헤더 설정: JSON 형식
+          ).catch((err) => {
+            // 만약 요청 중 오류가 발생하면 오류 메시지를 출력하고 새로운 오류를 발생시킵니다.
             throw new Error(err);
           });
+
+          // 모든 작업이 성공적으로 완료되었을 경우 성공 메시지를 반환합니다.
           result = { message: "success" };
     
         } else if (mode === "constructOnoff") {
+
+          /**
+           * @description 클라이언트 요청에서 받은 액션(action)에 따라 프로젝트의 시공 상태를 업데이트하는 로직입니다.
+           * 액션이 "on"이면 시공 정보를 초기화하고, "off"이면 시공 정보를 제거합니다.
+           */
+
+          // 클라이언트 요청(req.body)에서 action 값을 추출합니다. action은 시공 작업을 켜거나 끄는 역할을 합니다.
           const { action } = req.body;
+
+          // MongoDB에서 프로젝트 데이터를 업데이트하기 위한 쿼리 객체를 선언합니다.
           let whereQuery, updateQuery;
-    
+
+          // whereQuery: 프로젝트 ID(proid)를 기준으로 업데이트할 대상을 지정합니다.
           whereQuery = { proid };
+
+          // updateQuery: 프로젝트의 시공 정보를 업데이트할 객체를 선언합니다.
           updateQuery = {};
-    
+
+          // action 값이 "on"이면 시공 정보를 초기화합니다.
+          // back.returnProjectDummies는 초기화된 시공 정보를 반환하는 메서드입니다.
           if (action === "on") {
             updateQuery["process.design.construct"] = back.returnProjectDummies("process.design.construct");
           } else {
+            // action 값이 "on"이 아니면 시공 정보를 null로 설정하여 제거합니다.
             updateQuery["process.design.construct"] = null;
           }
-    
+
+          // back.updateProject 메서드를 사용하여 MongoDB에서 프로젝트 데이터를 업데이트합니다.
+          // whereQuery는 업데이트할 프로젝트를 지정하며, updateQuery는 업데이트할 필드를 포함합니다.
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+          // 작업이 성공적으로 완료되었을 경우 성공 메시지를 반환합니다.
           result = { message: "success" };
     
         } else if (mode === "amountSync") {
+
+          /**
+           * @description 요청 본문에서 잔금(amount)을 받아서 공급가액(supply), 부가세(vat), 소비자 금액(consumer)을 계산하고, 이를 프로젝트에 업데이트하는 로직입니다.
+           * 만약 잔금 정보가 존재할 경우, MongoDB에 업데이트하고 외부 시스템과 금액을 동기화합니다.
+           */
+
+          // 클라이언트 요청(req.body)에서 amount 값을 추출합니다. 
+          // amountRaw는 문자열로 들어오므로 이를 숫자(Number)로 변환하여 amount에 저장합니다.
           const { amount: amountRaw } = req.body;
-          const amount = Number(amountRaw);
+          const amount = Number(amountRaw); // 문자열을 숫자로 변환
+
+          // MongoDB에서 업데이트할 쿼리 객체와 업데이트할 필드를 선언합니다.
           let whereQuery, updateQuery;
+
+          // 공급가액(supply), 부가세(vat), 소비자 금액(consumer)을 저장할 변수를 선언합니다.
           let supply, vat, consumer;
+
+          // construct.contract.payments.remain이 null이 아닐 경우, 잔금 정보가 존재한다고 판단하여 처리합니다.
           if (construct.contract.payments.remain !== null) {
-    
+
+            // consumer: 잔금의 소비자 금액을 Math.floor로 소수점을 버림 처리하여 저장합니다.
             consumer = Math.floor(amount);
+
+            // 부가세(vat)를 계산합니다. 소비자 금액(consumer)의 1/11로 계산됩니다.
             vat = Math.floor(consumer / 11);
+
+            // 공급가액(supply)는 소비자 금액에서 부가세를 뺀 금액입니다.
             supply = Math.floor(consumer - vat);
-    
+
+            // MongoDB에서 업데이트할 프로젝트 ID를 기준으로 whereQuery를 설정합니다.
             whereQuery = { proid };
+
+            // updateQuery: 프로젝트의 잔금 정보를 업데이트하기 위한 필드들을 설정합니다.
             updateQuery = {};
-    
-            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.supply"] = supply;
-            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.vat"] = vat;
-            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.consumer"] = consumer;
-    
+            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.supply"] = supply; // 공급가액
+            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.vat"] = vat; // 부가세
+            updateQuery["process.design.construct.contract.payments.remain.calculation.amount.consumer"] = consumer; // 소비자 금액
+
+            // back.updateProject 메서드를 사용하여 MongoDB에서 잔금 정보를 업데이트합니다.
             await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-    
-            requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructAmountSync", {
-              proid,
-              cliid: project.cliid,
-              desid: project.desid,
-              method: (project.service.online ? "online" : "offline"),
-              amount: { supply, vat, consumer },
-            }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+
+            /**
+             * @description requestSystem을 사용하여 외부 시스템과 잔금 정보를 동기화합니다.
+             * @param {string} url - 잔금 동기화를 위한 API의 URL
+             * @param {Object} data - 전송할 데이터 객체 (proid, cliid, desid, method, amount를 포함)
+             * @param {Object} options - 요청 헤더 옵션 (Content-type을 JSON으로 설정)
+             */
+            requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructAmountSync", 
+              {
+                proid, // 프로젝트 ID
+                cliid: project.cliid, // 클라이언트 ID
+                desid: project.desid, // 디자이너 ID
+                method: (project.service.online ? "online" : "offline"), // 프로젝트 서비스가 온라인/오프라인인지 여부
+                amount: { supply, vat, consumer } // 공급가액, 부가세, 소비자 금액 정보
+              }, 
+              { headers: { "Content-type": "application/json" } } // 요청 헤더: JSON 형식
+            ).catch((err) => {
+              // 외부 시스템과의 요청 중 오류가 발생하면 오류 메시지를 출력하고 새로운 오류를 발생시킵니다.
               throw new Error(err);
             });
-    
+
           }
-    
+
+          // 작업 완료 후 빈 객체를 결과로 반환합니다.
           result = {};
     
         } else if (mode === "chargeGuide") {
+
+          /**
+           * @description 결제 안내 알림톡을 고객에게 전송하고, MongoDB에 결제 안내 시간을 업데이트하는 로직입니다.
+           * 결제 항목(계약금, 착수금, 중도금, 잔금)에 따라 적절한 알림톡을 전송합니다.
+           */
+
+          // 요청 본문(req.body)에서 method 값을 추출합니다.
+          // equalJson 메서드를 사용하여 딥 카피와 Date 객체를 포함한 JSON 데이터를 처리합니다.
           const { method } = equalJson(req.body);
-          const now = new Date();
+
+          // 현재 시간을 now 변수에 저장합니다.
+          const now = new Date(); 
+
+          // MongoDB에서 고객 정보를 가져옵니다.
+          // 프로젝트의 고객 ID(cliid)를 사용하여 고객 데이터를 조회합니다.
           const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
-          const cliid = client.cliid;
-          const host = instance.address.frontinfo.host;
-          const path = "estimation";
+
+          // 고객 ID와 관련된 데이터를 저장합니다.
+          const cliid = client.cliid; // 클라이언트 ID
+          const host = instance.address.frontinfo.host; // 서버의 호스트 주소
+          const path = "estimation"; // 경로는 "estimation"으로 설정
+          // 필요 항목(needs)은 스타일, 디자이너 ID, 프로젝트 ID, 온라인/오프라인 여부로 구성됩니다.
           const needs = "style," + project.desid + "," + project.proid + "," + (project.service.online ? "online" : "offline");
-          const name = client.name;
-          const phone = client.phone;
+
+          // 고객 이름과 전화번호를 저장합니다.
+          const name = client.name; // 고객 이름
+          const phone = client.phone; // 고객 전화번호
+
+          // MongoDB에서 업데이트할 쿼리 객체를 선언합니다.
           let whereQuery, updateQuery;
-          let target;
+          let target; // 알림톡의 대상(계약금, 착수금 등)을 저장할 변수
+
+          // whereQuery: 프로젝트 ID(proid)를 기준으로 업데이트할 대상을 설정합니다.
           whereQuery = { proid };
+
+          // updateQuery: MongoDB에 업데이트할 필드를 선언합니다.
           updateQuery = {};
+
+          // target: 결제 안내 알림톡의 대상 항목을 초기화합니다.
           target = "";
+
+          // 결제 항목에 따라 알림톡을 전송합니다.
           if (method === "first") {
+            // 계약금에 대한 안내 알림톡을 전송합니다.
             await kakao.sendTalk("constructFirst", name, phone, {
               client: name,
-              amount: autoComma(project.process.design.construct.contract.payments.first.calculation.amount.consumer),
-              host, path, cliid, needs
+              amount: autoComma(project.process.design.construct.contract.payments.first.calculation.amount.consumer), // 계약금 금액을 콤마 형식으로 전송
+              host, 
+              path, 
+              cliid, 
+              needs // 필요한 항목 정보
             });
+            // 계약금 안내 시간이 현재 시간으로 설정됩니다.
             updateQuery["process.design.construct.contract.payments.first.guide"] = now;
-            target = "계약금";
+            target = "계약금"; // 안내 대상은 "계약금"
           } else if (method === "start") {
+            // 착수금에 대한 안내 알림톡을 전송합니다.
             await kakao.sendTalk("constructStart", name, phone, {
               client: name,
-              amount: autoComma(project.process.design.construct.contract.payments.start.calculation.amount.consumer),
-              host, path, cliid, needs
+              amount: autoComma(project.process.design.construct.contract.payments.start.calculation.amount.consumer), // 착수금 금액을 콤마 형식으로 전송
+              host, 
+              path, 
+              cliid, 
+              needs
             });
+            // 착수금 안내 시간이 현재 시간으로 설정됩니다.
             updateQuery["process.design.construct.contract.payments.start.guide"] = now;
-            target = "착수금";
+            target = "착수금"; // 안내 대상은 "착수금"
           } else if (method === "middle") {
+            // 중도금에 대한 안내 알림톡을 전송합니다.
             await kakao.sendTalk("constructMiddle", name, phone, {
               client: name,
-              amount: autoComma(project.process.design.construct.contract.payments.middle.calculation.amount.consumer),
-              host, path, cliid, needs
+              amount: autoComma(project.process.design.construct.contract.payments.middle.calculation.amount.consumer), // 중도금 금액을 콤마 형식으로 전송
+              host, 
+              path, 
+              cliid, 
+              needs
             });
+            // 중도금 안내 시간이 현재 시간으로 설정됩니다.
             updateQuery["process.design.construct.contract.payments.middle.guide"] = now;
-            target = "중도금";
+            target = "중도금"; // 안내 대상은 "중도금"
           } else if (method === "remain") {
+            // 잔금에 대한 안내 알림톡을 전송합니다.
             await kakao.sendTalk("constructRemain", name, phone, {
               client: name,
-              amount: autoComma(project.process.design.construct.contract.payments.remain.calculation.amount.consumer),
-              host, path, cliid, needs
+              amount: autoComma(project.process.design.construct.contract.payments.remain.calculation.amount.consumer), // 잔금 금액을 콤마 형식으로 전송
+              host, 
+              path, 
+              cliid, 
+              needs
             });
+            // 잔금 안내 시간이 현재 시간으로 설정됩니다.
             updateQuery["process.design.construct.contract.payments.remain.guide"] = now;
-            target = "잔금";
+            target = "잔금"; // 안내 대상은 "잔금"
           }
+
+          // MongoDB에 결제 안내 시간을 업데이트합니다.
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
+
+          // 고객에게 알림톡이 전송되었음을 시스템 메시지로 알립니다.
+          // 메시지 채널은 "#400_customer"이며, 음성으로도 전달됩니다.
+          messageSend({ 
+            text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", 
+            channel: "#400_customer", 
+            voice: true // 음성 알림 옵션 활성화
+          }).catch((err) => {
+            // 메시지 전송 중 오류가 발생하면 로그에 오류를 출력합니다.
             console.log(err);
           });
+
+          // 작업 완료 후 결과로 현재 날짜(now)를 포함한 객체를 반환합니다.
           result = { date: dateToString(now), now };
     
         } else if (mode === "changeAmount") {
     
+          /**
+           * @description 클라이언트로부터 받은 결제 금액 정보를 기반으로 각 결제 항목(계약금, 착수금, 중도금, 잔금)을 업데이트하는 로직입니다.
+           * MongoDB에 업데이트한 후, 외부 시스템과 금액을 동기화합니다.
+           */
+
+          // 요청 본문에서 map 값이 없으면 에러를 발생시킵니다.
           if (req.body.map === undefined) {
-            throw new Error("invaild post");
+            throw new Error("invalid post"); // 요청 데이터가 없으면 에러 처리
           }
+
+          // 요청에서 받은 데이터를 equalJson을 통해 처리하여 각 결제 항목을 추출합니다.
+          // equalJson은 딥 카피와 Date 객체를 포함한 JSON 데이터를 적절하게 처리합니다.
           const { map: { first, start, middle, remain } } = equalJson(req.body);
+
+          // 각 결제 항목을 저장할 객체를 선언합니다.
           let firstObj, startObj, middleObj, remainObj;
+
+          // MongoDB에서 업데이트할 쿼리 객체와 필드를 선언합니다.
           let whereQuery, updateQuery;
+
+          // 외부 시스템과 금액 정보를 동기화하기 위한 toPython 객체를 선언합니다.
           let toPython;
-    
+
+          // 첫 번째 결제 항목(first)이 존재하지 않을 경우 기본 값을 반환하는 메서드로 초기화합니다.
           if (construct.contract.payments.first === null) {
             firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
-            firstObj = construct.contract.payments.first;
+            firstObj = construct.contract.payments.first; // 존재하는 데이터가 있으면 해당 데이터를 사용
           }
+
+          // 첫 번째 결제 금액의 소비자 금액(consumer), 부가세(vat), 공급가액(supply)을 계산합니다.
           firstObj.calculation.amount.consumer = first;
           firstObj.calculation.amount.vat = Math.floor(firstObj.calculation.amount.consumer / 11);
           firstObj.calculation.amount.supply = firstObj.calculation.amount.consumer - firstObj.calculation.amount.vat;
-    
+
+          // 착수금(start)도 위와 같은 방식으로 처리합니다.
           if (construct.contract.payments.start === null) {
             startObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6565,7 +8684,8 @@ class DataRouter {
           startObj.calculation.amount.consumer = start;
           startObj.calculation.amount.vat = Math.floor(startObj.calculation.amount.consumer / 11);
           startObj.calculation.amount.supply = startObj.calculation.amount.consumer - startObj.calculation.amount.vat;
-    
+
+          // 중도금(middle)의 금액도 동일한 방식으로 처리됩니다.
           if (construct.contract.payments.middle === null) {
             middleObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6574,7 +8694,8 @@ class DataRouter {
           middleObj.calculation.amount.consumer = middle;
           middleObj.calculation.amount.vat = Math.floor(middleObj.calculation.amount.consumer / 11);
           middleObj.calculation.amount.supply = middleObj.calculation.amount.consumer - middleObj.calculation.amount.vat;
-    
+
+          // 잔금(remain) 항목 역시 같은 방식으로 처리됩니다.
           if (construct.contract.payments.remain === null) {
             remainObj = back.returnProjectDummies("process.design.construct.contract.payments");
           } else {
@@ -6583,12 +8704,13 @@ class DataRouter {
           remainObj.calculation.amount.consumer = remain;
           remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
           remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
-    
+
+          // 외부 시스템과 금액 정보를 동기화하기 위해 toPython 객체에 결제 정보를 담습니다.
           toPython = {
-            proid,
-            cliid: project.cliid,
-            desid: project.desid,
-            method: project.service.online ? "online" : "offline",
+            proid, // 프로젝트 ID
+            cliid: project.cliid, // 클라이언트 ID
+            desid: project.desid, // 디자이너 ID
+            method: project.service.online ? "online" : "offline", // 온라인/오프라인 여부
             first: {
               consumer: firstObj.calculation.amount.consumer,
               vat: firstObj.calculation.amount.vat,
@@ -6610,60 +8732,100 @@ class DataRouter {
               supply: remainObj.calculation.amount.supply,
             },
           };
-    
+
+          // requestSystem을 사용하여 외부 시스템에 금액 정보를 동기화합니다.
           requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructAmountSync", toPython, { headers: { "Content-type": "application/json" } }).catch((err) => {
+            // 요청 중 오류가 발생하면 에러를 발생시킵니다.
             throw new Error(err);
           });
-    
-          whereQuery = { proid };
-          updateQuery = {};
+
+          // MongoDB에서 프로젝트의 결제 정보를 업데이트하기 위한 whereQuery와 updateQuery를 선언합니다.
+          whereQuery = { proid }; // 프로젝트 ID를 기준으로 업데이트 대상을 지정
+          updateQuery = {}; // 업데이트할 항목들을 담을 객체
           updateQuery["process.design.construct.contract.payments.first"] = firstObj;
           updateQuery["process.design.construct.contract.payments.start"] = startObj;
           updateQuery["process.design.construct.contract.payments.middle"] = middleObj;
           updateQuery["process.design.construct.contract.payments.remain"] = remainObj;
+
+          // back.updateProject 메서드를 사용하여 MongoDB에 결제 정보를 업데이트합니다.
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-    
+
+          // 최종적으로 업데이트된 결제 정보를 결과로 반환합니다.
           result = {
-            message: "success",
+            message: "success", // 성공 메시지
             core: {
-              first: firstObj,
-              start: startObj,
-              middle: middleObj,
-              remain: remainObj,
+              first: firstObj, // 업데이트된 계약금 정보
+              start: startObj, // 업데이트된 착수금 정보
+              middle: middleObj, // 업데이트된 중도금 정보
+              remain: remainObj, // 업데이트된 잔금 정보
             }
           };
     
         } else if (mode === "historyUpdate") {
+
+          /**
+           * @description 클라이언트로부터 받은 결제 관련 데이터를 기반으로 프로젝트 히스토리 정보를 업데이트하는 로직입니다.
+           * 결제 항목의 종류(kind), 값(value), 열(column)을 기준으로 MongoDB에서 프로젝트 히스토리를 수정합니다.
+           */
+
+          // 클라이언트 요청(req.body)에서 결제 항목의 종류(kind), 값(value), 열(column)을 추출합니다.
+          // equalJson은 딥 카피와 Date 객체를 포함한 JSON 데이터를 처리하는 업그레이드된 메서드입니다.
           const { kind, value, column } = equalJson(req.body);
+
+          // MongoDB에서 업데이트할 쿼리와 필드를 선언합니다.
           let whereQuery, updateQuery;
+
+          // whereQuery: 프로젝트 ID(proid)를 기준으로 업데이트할 대상을 지정합니다.
           whereQuery = { proid };
+
+          // updateQuery: 결제 항목의 종류(kind)와 열(column)에 따라 값을 설정합니다.
+          // 만약 column이 "date"이면, stringToDate 메서드를 사용하여 문자열을 Date 객체로 변환합니다.
+          // 그렇지 않으면 value 값을 그대로 사용합니다.
           updateQuery = {};
           updateQuery["construct.payments." + kind + "." + column] = (column === "date" ? stringToDate(value) : value);
+
+          // back.updateHistory 메서드를 사용하여 MongoDB에서 프로젝트의 결제 히스토리를 업데이트합니다.
+          // selfMongo는 MongoDB의 인스턴스를 나타냅니다.
           await back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          // 작업 완료 후 결과로 빈 객체를 반환합니다.
           result = {};
+
         } else {
           result = {};
         }
     
         res.send(JSON.stringify(result));
       } catch (e) {
+        // 예외가 발생하면 로깅하고 오류 메시지를 클라이언트에 응답
         logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.set("Content-Type", "application/json"); // 응답의 Content-Type을 JSON으로 설정
+        res.send(JSON.stringify({ error: e.message })); // 에러 메시지를 JSON 형식으로 반환
       }
     });
     
+    /**
+     * @route POST /getOpenGraph
+     * @description 주어진 URL에서 Open Graph 메타 데이터를 가져와 이미지를 반환하는 라우터입니다. URL이 유효하지 않으면 기본 이미지를 추출합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, URL과 mode, target 값을 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, JSON 형식의 결과를 반환합니다.
+     */
     router.post([ "/getOpenGraph" ], async function (req, res) {
+      // 응답 헤더 설정: 응답을 plain text로 반환하고, CORS를 허용합니다.
       res.set({
         "Content-Type": "text/plain",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
+        // 요청된 URL이 문자열이 아닌 경우 오류를 발생시킵니다.
         if (typeof req.body.url !== "string") {
-          throw new Error("invaild post");
+          throw new Error("invalid post");
         }
+
+        // 요청 본문에서 mode 값을 추출하고 URL을 디코딩합니다.
         const mode = req.body.mode;
         let url;
         let result;
@@ -6675,17 +8837,22 @@ class DataRouter {
         let protocol, host;
         let imgMiddleTargets;
         let requestHeaders;
-    
+
+        // 사용자 에이전트를 설정하여 HTTP 요청에 사용할 헤더를 정의합니다.
         requestHeaders = {
           "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
         };
-    
+
         try {
+          // URL 디코딩: 한글이나 공백이 포함된 URL을 처리합니다.
           url = global.decodeURI(req.body.url);
         } catch (e) {
+          // URL 디코딩 중 오류가 발생하면 기본 빈 문자열로 설정합니다.
           logger.error(e, req).catch((e) => { console.log(e); });
           url = "";
         }
+
+        // URL을 문자 단위로 배열로 변환하여 한글이나 공백을 인코딩합니다.
         urlArr = url.split("");
         urlArr = urlArr.map((char) => {
           if (/[가-힣]/i.test(char)) {
@@ -6696,16 +8863,25 @@ class DataRouter {
             return char;
           }
         });
+
+        // 인코딩된 URL을 다시 문자열로 합칩니다.
         url = urlArr.join("");
-    
+
         try {
+          // requestSystem을 통해 URL에서 데이터를 GET 요청으로 가져옵니다.
           resOpen = await requestSystem(url, {}, { method: "get", headers: requestHeaders });
+
+          // Open Graph 메타 태그에서 이미지 정보를 추출합니다.
           targets = [ ...resOpen.data.matchAll(/\<meta[^\>]+property=\"og\:image\"[^\>]+\>/gi) ].map((arr) => { return arr[0] });
         } catch (e) {
+          // 요청 실패 시 이미지 정보는 빈 배열로 설정됩니다.
           targets = [];
         }
-    
+
+        // 이미지 대상(imgTarget)을 초기화합니다.
         imgTarget = null;
+
+        // Open Graph 태그가 없을 경우 HTML 내의 img 태그를 찾아 대체 이미지를 가져옵니다.
         if (targets.length === 0) {
           try {
             resOpen = await requestSystem(url);
@@ -6713,11 +8889,17 @@ class DataRouter {
           } catch (e) {
             imgMiddleTargets = [];
           }
+
+          // .svg 파일을 제외한 이미지 태그를 필터링합니다.
           imgTargets = imgMiddleTargets.filter((str) => { return !/\.svg/gi.test(str) });
+
           if (imgTargets.length > 0) {
+            // src 속성에서 이미지 URL을 추출합니다.
             imgMiddleTarget = [ ...imgTargets[0].matchAll(/src\=\"[^\"]+\"/gi) ];
             if (imgMiddleTarget.length > 0) {
               imgTarget = imgMiddleTarget[0][0].trim().replace(/^src\=\"/gi, '').slice(0, -1);
+              
+              // URL이 상대 경로일 경우, 프로토콜과 호스트를 사용해 절대 경로로 변환합니다.
               if (/^\//.test(imgTarget)) {
                 [ protocol, host ] = url.split('/').filter((str) => { return str.trim() !== '' })
                 if (/^\/\//.test(imgTarget)) {
@@ -6729,15 +8911,18 @@ class DataRouter {
             }
           }
         }
-    
+
+        // Open Graph 태그에서 추출된 이미지가 있을 경우 해당 이미지 URL을 처리합니다.
         middleTarget = [];
         target = null;
         if (targets.length > 0) {
           middleTarget = [ ...targets[targets.length - 1].matchAll(/content\=\"[^\"]+\"/gi) ];
           if (middleTarget.length > 0) {
             target = middleTarget[0][0].trim().replace(/^content\=\"/gi, '').slice(0, -1);
+
+            // URL이 상대 경로일 경우 절대 경로로 변환합니다.
             if (/^\//.test(target)) {
-              [ protocol, host ] = url.split('/').filter((str) => { return str.trim() !== '' })
+              [ protocol, host ] = url.split('/').filter((str) => { return str.trim() !== '' });
               if (/^\/\//.test(target)) {
                 target = protocol + target;
               } else {
@@ -6746,7 +8931,8 @@ class DataRouter {
             }
           }
         }
-    
+
+        // 최종적으로 이미지 URL을 선택하여 결과로 반환합니다.
         if (target === null) {
           if (imgTarget === null) {
             result = { image: null };
@@ -6756,274 +8942,406 @@ class DataRouter {
         } else {
           result = { image: target };
         }
-    
+
+        // 추가적으로 target 값이 요청에 포함된 경우 결과에 추가합니다.
         if (typeof req.body.target === "string") {
           result.target = req.body.target;
         }
-    
+
+        // JSON 형식으로 결과를 클라이언트에 응답합니다.
         res.send(JSON.stringify(result));
       } catch (e) {
+        // 오류가 발생하면 에러 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /generalImpPayment
+     * @description 일반 결제 처리를 위한 라우터입니다. 결제 스크립트 생성, 결제 데이터 저장, 결제 정보 조회 등을 처리합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, mode, oid, oidKey, key 등의 정보를 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, JSON 형식으로 결과를 반환합니다.
+     */
     router.post([ "/generalImpPayment" ], async function (req, res) {
+      // 응답 헤더 설정: 응답을 JSON 형식으로 반환하고, CORS를 허용합니다.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
+        // 요청의 mode가 문자열이 아닌 경우 오류를 발생시킵니다.
         if (typeof req.body.mode !== "string") {
-          throw new Error("invaild post");
+          throw new Error("invalid post");
         }
+
+        // mode 값을 추출합니다. 결제 처리 단계에 따라 mode가 달라집니다.
         const { mode } = req.body;
+
+        // 결제 데이터가 임시로 저장되는 컬렉션 이름을 정의합니다.
         const storeCollection = "impPaymentTempStore";
+
+        // 로컬 MongoDB 인스턴스를 정의합니다.
         const selfMongo = instance.mongolocal;
+
+        // 결제 항목에 따라 OID의 접두어를 정의한 객체입니다.
         const oidConstDictionary = {
           mini: "mini_",
           designerPhoto: "dpho_",
           designerRegistration: "dreg_",
         };
+
+        // 결제 플러그인 스크립트를 저장할 변수를 선언합니다.
         let pluginScript;
-    
+
+        // mode가 "script"일 경우, 결제 스크립트를 가져옵니다.
         if (mode === "script") {
           pluginScript = '';
+          // Iamport 스크립트를 가져와 pluginScript에 추가합니다.
           pluginScript += (await requestSystem("https://cdn.iamport.kr/v1/iamport.js")).data;
+
+          // 플러그인 스크립트와 oidConst 값을 JSON 형식으로 응답합니다.
           res.send(JSON.stringify({ pluginScript, oidConst: oidConstDictionary[req.body.oidKey] }));
-    
+
         } else if (mode === "store") {
-    
+          // mode가 "store"일 경우, 결제 데이터를 저장합니다.
+
+          // equalJson을 사용해 요청 데이터를 파싱하여 data 객체에 저장합니다.
           const data = equalJson(req.body.data);
+
+          // 고유한 키를 생성하여 결제 데이터를 식별합니다.
           const key = "impKey_" + uniqueValue("hex");
+
+          // MongoDB에 결제 데이터를 저장합니다.
           await back.mongoCreate(storeCollection, { key, data: JSON.stringify(data), oid: req.body.oid }, { selfMongo });
-    
+
+          // 생성된 키를 클라이언트에 응답합니다.
           res.send(JSON.stringify({ key }));
-    
+
         } else if (mode === "open") {
-    
+          // mode가 "open"일 경우, 저장된 결제 데이터를 조회합니다.
+
+          // 요청으로부터 키를 추출합니다.
           const key = req.body.key;
+
+          // MongoDB에서 키를 기반으로 저장된 결제 데이터를 조회합니다.
           const rows = await back.mongoRead(storeCollection, { key }, { selfMongo });
+
+          // 조회된 데이터가 없으면 빈 객체를 응답합니다.
           if (rows.length === 0) {
             res.send(JSON.stringify({}));
           } else {
+            // 조회된 데이터를 기반으로 Iamport API에서 결제 정보를 조회합니다.
             const [ { key, data, oid } ] = rows;
+
+            // Iamport API에서 액세스 토큰을 가져옵니다.
             const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
               imp_key: address.officeinfo.import.key,
               imp_secret: address.officeinfo.import.secret,
             }, { headers: { "Content-Type": "application/json" } })).data;
+
+            // 결제 ID(oid)를 사용해 결제 정보를 조회합니다.
             const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
+
+            // 조회된 결제 정보를 JSON 형식으로 클라이언트에 응답합니다.
             res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
           }
-    
+
         } else if (mode === "oid") {
+          // mode가 "oid"일 경우, oid를 기반으로 결제 정보를 조회합니다.
+
+          // Iamport API에서 액세스 토큰을 가져옵니다.
           const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
             imp_key: address.officeinfo.import.key,
             imp_secret: address.officeinfo.import.secret,
           }, { headers: { "Content-Type": "application/json" } })).data;
+
+          // 요청에서 oid 값을 파싱합니다.
           const { oid } = equalJson(req.body);
+
+          // oid를 사용해 Iamport API에서 결제 정보를 조회합니다.
           const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
+
+          // 조회된 결제 정보를 JSON 형식으로 응답합니다.
           res.send(JSON.stringify({ data: { oid }, oid, rsp }));
-    
+
         } else {
-          throw new Error("invaild mode");
+          // mode가 유효하지 않은 경우 오류를 발생시킵니다.
+          throw new Error("invalid mode");
         }
-    
+
       } catch (e) {
+        // 오류가 발생하면 에러 로그를 기록하고 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /designerFeeTable
+     * @description 디자이너의 수수료 테이블 데이터를 가져오는 라우터입니다. 디자이너 ID를 기반으로 MongoDB에서 데이터를 조회하여 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 desid(디자이너 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, JSON 형식으로 디자이너 수수료 데이터를 반환합니다.
+     */
     router.post([ "/designerFeeTable" ], async function (req, res) {
+      // 응답 헤더 설정: 응답을 JSON 형식으로 반환하고, CORS를 허용합니다.
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더를 설정
       });
+
       try {
-        let json;
+        let json; // 디자이너 수수료 데이터를 저장할 변수
+
+        // work.designerFeeTable 메서드를 호출하여 desid(디자이너 ID) 기반으로 수수료 데이터를 가져옵니다.
+        // selfMongo 및 selfLocalMongo는 각각 MongoDB와 로컬 MongoDB를 나타냅니다.
+        // jsonMode는 결과를 JSON 형식으로 반환하도록 지정합니다.
         json = await work.designerFeeTable(req.body.desid, { selfMongo: mongo, selfLocalMongo: mongolocal, jsonMode: true });
+
+        // 수수료 데이터를 클라이언트에 JSON 형식으로 응답합니다.
         res.send(json);
       } catch (e) {
+        // 오류가 발생하면 로그에 기록하고, 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /timeDeltaAlarm
+     * @description 주기적으로 미팅 및 계약 시작 알람을 전송하는 라우터입니다. 첫 미팅과 계약 시작일에 대한 알람을 디자이너와 클라이언트에게 보냅니다.
+     * @param {Object} req - 클라이언트 요청 객체
+     * @param {Object} res - 서버 응답 객체로, JSON 형식으로 처리 결과를 반환합니다.
+     */
     router.post([ "/timeDeltaAlarm" ], async function (req, res) {
+      // 응답 헤더 설정: 응답을 JSON 형식으로 반환하고, CORS를 허용합니다.
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+      /**
+       * @function firstMeetingAlarmFunc
+       * @description 첫 번째 미팅이 다가오면 클라이언트와 디자이너에게 알림을 전송하는 함수입니다. 미팅 1일 전과 7일 전에 알림을 보냅니다.
+       * @param {Object} MONGOC - MongoDB 인스턴스를 나타내며, 데이터베이스에서 프로젝트와 클라이언트 정보를 가져오는 데 사용됩니다.
+       * @param {Object} logger - 로그 기록을 위한 객체로, 작업 완료 시 로그를 기록합니다.
+       */
       const firstMeetingAlarmFunc = async (MONGOC, logger) => {
         try {
+          // MongoDB 인스턴스를 selfMongo로 정의
           const selfMongo = MONGOC;
+          // 현재 날짜를 today로 설정하고 시간은 9시로 고정
           const today = new Date();
+          // 요일을 나타내는 배열 정의 (일 ~ 토)
           const dayConst = [ '일', '월', '화', '수', '목', '금', '토' ];
-          let projects;
-          let clients, client;
-          let clientIndex;
-          let meetingDate;
-          let delta;
-          let todayValue;
-          let rawDelta;
-          let designer;
-    
+          let projects; // 프로젝트 데이터를 저장할 변수
+          let clients, client; // 클라이언트 데이터를 저장할 변수
+          let clientIndex; // 클라이언트 배열에서 클라이언트의 인덱스를 저장할 변수
+          let meetingDate; // 미팅 날짜를 저장할 변수
+          let delta; // 미팅까지 남은 일수를 저장할 변수
+          let todayValue; // 오늘 날짜의 타임스탬프 값을 저장
+          let rawDelta; // 미팅 날짜와의 차이를 초 단위로 저장하는 변수
+          let designer; // 디자이너 정보를 저장할 변수
+
+          // 현재 날짜의 시간을 9시로 설정
           today.setHours(9);
-          todayValue = today.valueOf();
-    
+          todayValue = today.valueOf(); // 오늘 날짜를 밀리초로 변환하여 저장
+
+          // MongoDB에서 특정 조건을 만족하는 프로젝트들을 조회합니다.
           projects = await back.getProjectsByQuery({
             $and: [
-              { "desid": { $regex: "^d" } },
-              { "process.status": { $regex: "^[대진]" } },
-              { "process.contract.meeting.date": { $gt: new Date() } },
+              { "desid": { $regex: "^d" } }, // 디자이너 ID가 'd'로 시작하는 프로젝트
+              { "process.status": { $regex: "^[대진]" } }, // 진행 상태가 '대진'으로 시작하는 프로젝트
+              { "process.contract.meeting.date": { $gt: new Date() } }, // 미팅 날짜가 오늘 이후인 프로젝트
             ]
           }, { selfMongo });
-    
+
+          // 조회된 프로젝트가 있는 경우
           if (projects.length > 0) {
-    
+            // 해당 프로젝트에 포함된 클라이언트들을 조회
             clients = await back.getClientsByQuery({
               $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
             }, { selfMongo });
-    
+
+            // 각 프로젝트마다 클라이언트와 디자이너에게 미팅 알림을 전송
             for (let project of projects) {
+              // 현재 프로젝트와 일치하는 클라이언트를 찾습니다.
               clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
               if (clientIndex !== -1) {
-                meetingDate = project.process.contract.meeting.date;
-                client = clients.toNormal()[clientIndex];
-    
+                meetingDate = project.process.contract.meeting.date; // 미팅 날짜를 설정
+                client = clients.toNormal()[clientIndex]; // 해당 클라이언트 정보를 가져옴
+
+                // 미팅 날짜와 오늘의 차이를 일(day) 단위로 계산
                 rawDelta = (((Math.abs(meetingDate.valueOf() - todayValue) / 1000) / 60) / 60) / 24;
-                delta = Math.floor(rawDelta);
-    
+                delta = Math.floor(rawDelta); // 남은 일수를 정수로 변환
+
+                // 미팅 1일 전 또는 7일 전일 때 알림 전송
                 if (delta === 1 || delta === 7) {
-    
+                  // 디자이너 정보를 가져옴
                   designer = await back.getDesignerById(project.desid, { selfMongo });
-    
+
+                  // 클라이언트에게 미팅 알림톡 전송
                   await kakao.sendTalk("firstMeetingWeekAgo", client.name, client.phone, {
                     client: client.name,
-                    date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                    day: dayConst[meetingDate.getDay()],
-                    hour: String(meetingDate.getHours()),
-                    minute: String(meetingDate.getMinutes()),
-                    host: address.frontinfo.host,
-                    path: "meeting",
-                    proid: project.proid,
+                    date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일", // 미팅 날짜
+                    day: dayConst[meetingDate.getDay()], // 미팅 요일
+                    hour: String(meetingDate.getHours()), // 미팅 시간(시)
+                    minute: String(meetingDate.getMinutes()), // 미팅 시간(분)
+                    host: address.frontinfo.host, // 호스트 정보
+                    path: "meeting", // 경로
+                    proid: project.proid, // 프로젝트 ID
                   });
-    
+
+                  // 디자이너에게 미팅 알림톡 전송
                   await kakao.sendTalk("designerConsoleRequestFirstMeeting", designer.designer, designer.information.phone, {
                     designer: designer.designer,
                     client: client.name,
-                    date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                    day: dayConst[meetingDate.getDay()],
-                    hour: String(meetingDate.getHours()),
-                    minute: String(meetingDate.getMinutes()),
-                    host: address.frontinfo.host,
-                    path: "process",
-                    proid: project.proid,
+                    date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일", // 미팅 날짜
+                    day: dayConst[meetingDate.getDay()], // 미팅 요일
+                    hour: String(meetingDate.getHours()), // 미팅 시간(시)
+                    minute: String(meetingDate.getMinutes()), // 미팅 시간(분)
+                    host: address.frontinfo.host, // 호스트 정보
+                    path: "process", // 경로
+                    proid: project.proid, // 프로젝트 ID
                   });
-    
+
+                  // 슬랙에 메시지를 전송하여 미팅 알림 전송 완료를 알림
                   await messageSend(client.name + " 고객님과 " + designer.designer + " 실장님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
                 }
-    
               }
             }
           }
-    
+
+          // 작업 완료 후 로그에 기록
           await logger.cron("first meeting alarm done");
-    
+
         } catch (e) {
+          // 오류 발생 시 콘솔에 로그 출력
           console.log(e);
         }
       }
+      /**
+       * @function contractStartAlarmFunc
+       * @description 계약 시작일이 도래한 프로젝트에 대해 클라이언트와 디자이너에게 알림을 전송하는 함수입니다. 2일 전부터 계약 시작일을 알립니다.
+       * @param {Object} MONGOC - MongoDB 인스턴스를 나타내며, 데이터베이스에서 프로젝트와 클라이언트 정보를 가져오는 데 사용됩니다.
+       * @param {Object} logger - 로그 기록을 위한 객체로, 작업 완료 시 로그를 기록합니다.
+       */
       const contractStartAlarmFunc = async (MONGOC, logger) => {
         try {
+          // MongoDB 인스턴스를 selfMongo로 정의
           const selfMongo = MONGOC;
+          // 오늘 날짜를 today에 저장하고 시간을 9시로 설정
           const today = new Date();
-          let projects;
-          let clients, client;
-          let clientIndex;
-          let contractDate;
-          let todayValue;
-          let designer;
-          let requestNumber;
-          let ago;
-    
+          let projects; // 프로젝트 데이터를 저장할 변수
+          let clients, client; // 클라이언트 데이터를 저장할 변수
+          let clientIndex; // 클라이언트 배열에서 클라이언트의 인덱스를 저장할 변수
+          let contractDate; // 계약 시작일을 저장할 변수
+          let todayValue; // 오늘 날짜의 타임스탬프 값을 저장
+          let designer; // 디자이너 정보를 저장할 변수
+          let requestNumber; // 클라이언트 요청 중 타임라인에 맞는 요청의 인덱스를 저장할 변수
+          let ago; // 2일 전을 나타내는 날짜를 저장할 변수
+
+          // 오늘 날짜의 시간을 9시로 설정하고 밀리초로 변환해 저장
           today.setHours(9);
           todayValue = today.valueOf();
-    
+
+          // 2일 전 날짜를 설정하고 시간을 7시로 고정
           ago = new Date();
           ago.setHours(7);
           ago.setDate(ago.getDate() - 2);
-    
+
+          // MongoDB에서 특정 조건을 만족하는 프로젝트들을 조회
           projects = await back.getProjectsByQuery({
             $and: [
-              { "desid": { $regex: "^d" } },
-              { "process.status": { $regex: "^[대진완홀]" } },
-              { "process.contract.form.date.from": { $gte: ago } },
-              { "process.remain.date": { $gte: new Date(2000, 0, 1) } },
+              { "desid": { $regex: "^d" } }, // 디자이너 ID가 'd'로 시작하는 프로젝트
+              { "process.status": { $regex: "^[대진완홀]" } }, // 상태가 대진, 완결, 홀딩 중인 프로젝트
+              { "process.contract.form.date.from": { $gte: ago } }, // 계약 시작일이 2일 전 이상인 프로젝트
+              { "process.remain.date": { $gte: new Date(2000, 0, 1) } }, // 잔금이 남아있는 프로젝트
             ]
           }, { selfMongo });
-    
+
+          // 조회된 프로젝트가 있는 경우
           if (projects.length > 0) {
-    
+            // 해당 프로젝트에 포함된 클라이언트들을 조회
             clients = await back.getClientsByQuery({
               $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
             }, { selfMongo });
-    
+
+            // 각 프로젝트마다 클라이언트와 디자이너에게 계약 시작 알림을 전송
             for (let project of projects) {
+              // 현재 프로젝트와 일치하는 클라이언트를 찾음
               clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
               if (clientIndex !== -1) {
-                contractDate = project.process.contract.form.date.from;
-                client = clients.toNormal()[clientIndex];
+                contractDate = project.process.contract.form.date.from; // 계약 시작일을 설정
+                client = clients.toNormal()[clientIndex]; // 해당 클라이언트 정보를 가져옴
                 requestNumber = 0;
+
+                // 클라이언트 요청 중 프로젝트 타임라인과 일치하는 요청 번호를 찾음
                 for (let z = 0; z < client.requests.length; z++) {
                   if (client.requests[z].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
                     requestNumber = z;
                     break;
                   }
                 }
+
+                // 오늘 날짜가 계약 시작일과 일치할 경우 알림을 전송
                 if (dateToString(contractDate) === dateToString(new Date())) {
-    
+                  // 디자이너 정보를 가져옴
                   designer = await back.getDesignerById(project.desid, { selfMongo });
-    
+
+                  // 디자이너에게 계약 시작일 알림톡 전송
                   await kakao.sendTalk("contractStartDesigner", designer.designer, designer.information.phone, {
                     designer: designer.designer,
                     client: client.name,
-                    host: address.frontinfo.host,
-                    proid: project.proid,
+                    host: address.frontinfo.host, // 호스트 정보
+                    proid: project.proid, // 프로젝트 ID
                   });
-    
+
+                  // 슬랙에 메시지를 전송하여 계약 시작일 알림 전송 완료를 알림
                   await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", false);
                 }
               }
             }
           }
-    
+
+          // 작업 완료 후 로그에 기록
           await logger.cron("contract start designer alarm done");
-    
+
         } catch (e) {
+          // 오류 발생 시 콘솔에 로그 출력
           console.log(e);
         }
       }
       try {
-        firstMeetingAlarmFunc(instance.mongo, logger).then(() => {
-          return contractStartAlarmFunc(instance.mongo, logger);
-        }).then(() => {
-          return logger.cron("time delta alarm done : " + JSON.stringify(new Date()));
-        }).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-        });
+        // 첫 번째 미팅 알람 함수를 호출하고, 완료되면 계약 시작 알람 함수를 호출합니다.
+        firstMeetingAlarmFunc(instance.mongo, logger)
+          .then(() => {
+            // 첫 번째 미팅 알람이 완료된 후 계약 시작 알람을 실행합니다.
+            return contractStartAlarmFunc(instance.mongo, logger);
+          })
+          .then(() => {
+            // 모든 작업이 완료되면 현재 시간을 로그에 기록합니다.
+            return logger.cron("time delta alarm done : " + JSON.stringify(new Date()));
+          })
+          .catch((err) => {
+            // 작업 중 오류가 발생하면 에러 로그를 기록하고, 클라이언트에 오류 메시지를 응답합니다.
+            logger.error(err, req).catch((e) => { console.log(e); });
+          });
+
+        // 클라이언트에게 알림 작업이 실행될 것임을 응답합니다.
         res.send(JSON.stringify({ message: "will do" }));
+
       } catch (e) {
+        // try 블록에서 오류가 발생하면 에러 로그를 기록하고, 클라이언트에 오류 메시지를 JSON 형식으로 응답합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -7110,31 +9428,33 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /processConsole
+     * @description 프로젝트, 클라이언트, 디자이너 및 히스토리 데이터를 처리하여 반환하는 라우터입니다. 검색 모드와 초기화 모드를 처리하며, 클라이언트와 프로젝트의 상태를 기반으로 데이터를 필터링합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, mode 및 기타 검색 필터를 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, JSON 형식으로 필터링된 데이터를 반환합니다.
+     */
     router.post([ "/processConsole" ], async function (req, res) {
+      // 응답 헤더를 설정하여 JSON 형식으로 응답하고, CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답의 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더를 설정
       });
+
       try {
+        // MongoDB 인스턴스를 selfMongo로 설정
         const selfMongo = instance.mongolocal;
         const selfCoreMongo = instance.mongo;
-        const { mode } = req.body;
+        const { mode } = req.body; // 요청에서 모드를 추출
         let projects, clients, designers, history;
-        let ago;
-        let preClients;
-        let clientHistory;
-        let proidArr;
+        let preClients, clientHistory, proidArr;
         let secondRes;
-        let values;
-        let designerValue;
-        let preDesigners;
-        let clientValues, designerValues;
-        let finalOr;
-        let searchMode;
-        let clientValue;
-    
+        let values, clientValues, designerValues;
+        let finalOr, searchMode, clientValue, designerValue;
+
+        // NormalArray 클래스 정의: Array의 확장으로, 배열을 일반 배열로 변환하는 메서드를 제공
         class NormalArray extends Array {
           constructor(arr) {
             super();
@@ -7143,51 +9463,46 @@ class DataRouter {
             }
           }
           toNormal() {
-            let arr;
-            arr = [];
+            let arr = [];
             for (let i of this) {
               arr.push(i);
             }
             return arr;
           }
         }
-    
+
+        // 'pre' 모드가 아닌 경우 처리 시작
         if (mode !== "pre") {
           if (mode === "init") {
-    
+            // 'init' 모드: 프로젝트 중 상태가 진행 중이거나 대기 중인 프로젝트를 가져옴
             projects = await back.getProjectsByQuery({
               $and: [
-                {
-                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                },
-                {
-                  "process.status": { $regex: "^[진대]" }
-                }
+                { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } }, // 2000년 이후 계약된 프로젝트
+                { "process.status": { $regex: "^[진대]" } }, // 상태가 '진행', '대기'인 프로젝트
               ]
             }, { selfMongo: selfCoreMongo });
-    
+
           } else if (mode === "search") {
-    
-            const { value } = req.body;
-    
+            // 'search' 모드: 검색어가 주어졌을 때 필터링하여 프로젝트를 가져옴
+            const { value } = req.body; // 검색어 추출
+
+            // 검색어가 빈 문자열이거나 '.'일 경우 모든 프로젝트 가져오기
             if (value === '' || value === '.') {
               projects = await back.getProjectsByQuery({
                 $and: [
-                  {
-                    "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                  },
-                  {
-                    "process.status": { $regex: "^[진대]" }
-                  }
+                  { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+                  { "process.status": { $regex: "^[진대]" } },
                 ]
               }, { selfMongo: selfCoreMongo });
+
             } else {
+              // 검색어에 ','가 포함된 경우 다중 검색어 처리
               if (/\,/gi.test(value)) {
-    
-                values = value.split(",").map((str) => { return str.trim() });
-                clientValues = values.filter((str) => { return /^c\:/i.test(str) && str.length >= 3 });
-                designerValues = values.filter((str) => { return !(/^c\:/i.test(str) && str.length >= 3) });
-    
+                values = value.split(",").map((str) => { return str.trim() }); // 검색어를 ','로 분리 후 트림 처리
+                clientValues = values.filter((str) => { return /^c\:/i.test(str) && str.length >= 3 }); // 'c:'로 시작하는 검색어는 클라이언트 필터
+                designerValues = values.filter((str) => { return !(/^c\:/i.test(str) && str.length >= 3) }); // 나머지는 디자이너 필터
+
+                // 클라이언트와 디자이너를 각각 필터링하여 가져옴
                 if (clientValues.length > 0) {
                   preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return str.split(":")[1].trim() }).map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
                 } else {
@@ -7198,9 +9513,10 @@ class DataRouter {
                 } else {
                   preDesigners = new NormalArray([]);
                 }
-    
-                finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }))
-    
+
+                finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }));
+
+                // 필터링된 클라이언트 및 디자이너 정보로 프로젝트 가져오기
                 if (finalOr.length > 0) {
                   projects = await back.getProjectsByQuery({ $or: finalOr }, { selfMongo: selfCoreMongo });
                   projects = projects.filter((project) => {
@@ -7209,11 +9525,13 @@ class DataRouter {
                 } else {
                   projects = [];
                 }
-    
+
               } else if (/^c\:/i.test(value) && value.length >= 3) {
-    
+                // 'c:'로 시작하는 검색어는 클라이언트 이름으로 필터링
                 clientValue = value.split(":")[1].trim();
                 preClients = await back.getClientsByQuery({ name: { $regex: clientValue } }, { selfMongo: selfCoreMongo });
+
+                // 클라이언트를 기준으로 프로젝트 필터링
                 if (preClients.length === 0) {
                   projects = [];
                 } else {
@@ -7222,10 +9540,13 @@ class DataRouter {
                     return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
                   });
                 }
-    
+
               } else {
+                // 디자이너 이름으로 필터링
                 designerValue = value;
                 preDesigners = await back.getDesignersByQuery({ designer: { $regex: designerValue } }, { selfMongo: selfCoreMongo });
+
+                // 디자이너를 기준으로 프로젝트 필터링
                 if (preDesigners.length === 0) {
                   projects = [];
                 } else {
@@ -7236,90 +9557,76 @@ class DataRouter {
                 }
               }
             }
-    
+
           } else {
-    
+            // 기본 필터링: 진행 중이거나 대기 중인 프로젝트를 필터링
             projects = await back.getProjectsByQuery({
               $and: [
-                {
-                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                },
-                {
-                  "process.status": { $regex: "^[진대]" }
-                }
+                { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+                { "process.status": { $regex: "^[진대]" } }
               ]
             }, { selfMongo: selfCoreMongo });
-    
           }
-    
+
+          // 프로젝트를 첫 계약 날짜에 따라 내림차순으로 정렬
           projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
-    
+
           if (projects.length > 0) {
-    
+            // 필터링된 프로젝트에 포함된 클라이언트와 디자이너 데이터를 가져옴
             clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
             designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
-    
-            history = await back.mongoRead("projectHistory", {
-              $or: projects.toNormal().map((project) => { return { proid: project.proid } })
-            }, { selfMongo });
-    
-            clientHistory = await back.mongoRead("clientHistory", {
-              $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
-            }, { selfMongo });
-    
-            proidArr = projects.toNormal().map((p) => { return p.proid })
+
+            // 프로젝트 히스토리와 클라이언트 히스토리도 가져옴
+            history = await back.mongoRead("projectHistory", { $or: projects.toNormal().map((project) => { return { proid: project.proid } }) }, { selfMongo });
+            clientHistory = await back.mongoRead("clientHistory", { $or: clients.toNormal().map((client) => { return { cliid: client.cliid } }) }, { selfMongo });
+
+            // 추가적인 데이터 요청
+            proidArr = projects.toNormal().map((p) => { return p.proid });
             secondRes = await requestSystem("https://" + address.secondinfo.host + ":3003/getProcessData", { proidArr }, {
               headers: {
                 "Content-Type": "application/json",
                 "origin": address.officeinfo.host
               }
             });
-    
+
+            // 결과를 클라이언트에게 JSON 형식으로 응답
             res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data.rawContents, sendStatus: secondRes.data.sendStatus, sendSchedule: secondRes.data.sendSchedule, sendFile: secondRes.data.sendFile }));
-    
+
           } else {
+            // 필터링된 데이터가 없을 경우 빈 배열로 응답
             res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [], sendStatus: [], sendSchedule: [], sendFile: [] }));
           }
         } else {
-    
+          // 'pre' 모드인 경우, 검색 모드를 확인하고 프로젝트 필터링 처리
           searchMode = (typeof req.body.searchMode === "string" && /^p/.test(req.body.searchMode));
-    
+
           if (searchMode) {
             projects = await back.getProjectsByQuery({
               $and: [
-                {
-                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                },
-                {
-                  "proid": req.body.searchMode
-                }
+                { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+                { "proid": req.body.searchMode }
               ]
             }, { selfMongo: selfCoreMongo });
           } else {
+            // 'careView' 모드 확인
             if (req.body.careView !== undefined && Number(req.body.careView) === 1) {
               projects = await back.getProjectsByQuery({
                 $and: [
-                  {
-                    "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                  },
-                  {
-                    "process.status": { $regex: "^[진]" }
-                  }
+                  { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+                  { "process.status": { $regex: "^[진]" } }
                 ]
               }, { selfMongo: selfCoreMongo });
             } else {
               projects = await back.getProjectsByQuery({
                 $and: [
-                  {
-                    "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-                  },
-                  {
-                    "process.status": { $regex: "^[진대]" }
-                  }
+                  { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+                  { "process.status": { $regex: "^[진대]" } }
                 ]
               }, { selfMongo: selfCoreMongo });
             }
           }
+
+          // 필터링된 프로젝트 응답
           projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
           if (projects.length > 0) {
             clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
@@ -7327,28 +9634,38 @@ class DataRouter {
           } else {
             res.send(JSON.stringify({ projects: [], clients: [] }));
           }
-    
         }
-    
+
       } catch (e) {
+        // 에러 처리: 에러를 로그로 기록하고, 클라이언트에게 JSON 형식으로 오류 메시지를 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /salesClient
+     * @description 클라이언트의 판매 데이터를 조회 및 관리하는 라우터입니다. 초기화, 검색, 업데이트 및 저우선순위 클라이언트 처리 모드를 지원합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 모드와 데이터가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/salesClient" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더를 설정
       });
       try {
+        // 모드가 정의되지 않으면 오류 발생
         if (req.body.mode === undefined) {
           throw new Error("invalid post");
         }
-        const selfMongo = instance.mongolocal;
+
+        // MongoDB 인스턴스 설정
+        const selfMongo = instance.mongo;
         const selfCoreMongo = instance.mongo;
         const collection = "dailySales";
         const { mode } = req.body;
@@ -7372,199 +9689,361 @@ class DataRouter {
         let targetHistories;
         let copiedSend;
     
+        /**
+         * 3개월 전을 기준으로 표준 날짜를 설정합니다.
+         * @let {Date} standard - 기준 날짜를 현재로부터 3개월 전으로 설정.
+         */
         standard = new Date();
         standard.setMonth(standard.getMonth() - monthAgo);
-    
+
+        /**
+         * 결과 객체의 기본 메시지를 "done"으로 설정합니다.
+         * @let {Object} resultObj - 결과 객체에 기본 메시지 설정.
+         */
         resultObj = { message: "done" };
     
         if (mode === "init") {
     
+          /**
+           * 진행 중인 클라이언트를 조회합니다. 요청 데이터의 'analytics.response.status' 필드가 '응' 또는 '장'으로 시작하는 클라이언트만을 필터링합니다.
+           * @const {Array} ongoingClients - 진행 중인 클라이언트 목록.
+           * @const {Object} selfCoreMongo - MongoDB 로컬 인스턴스.
+           */
           ongoingClients = await back.getClientsByQuery({
             requests: {
               $elemMatch: {
                 "analytics.response.status": {
-                  $regex: "^[응장]"
+                  $regex: "^[응장]" // '응' 또는 '장'으로 시작하는 요청 상태만 필터링
                 }
               }
             }
           }, { selfMongo: selfCoreMongo, withTools: true });
-    
-          ongoingClientsRequests = ongoingClients.getRequestsTong();
+
+          /**
+           * 진행 중인 클라이언트들의 요청 데이터를 추출하여 정렬합니다. 최근 날짜 순으로 정렬합니다.
+           * @const {Array} ongoingClientsRequests - 진행 중인 클라이언트 요청 목록.
+           */
+          ongoingClientsRequests = ongoingClients.getRequestsTong(); // 클라이언트의 요청 데이터를 'getRequestsTong()' 메서드로 추출
           ongoingClientsRequests.sort((a, b) => {
-            return a.request.timeline.valueOf() - b.request.timeline.valueOf();
+            return a.request.timeline.valueOf() - b.request.timeline.valueOf(); // 요청의 타임라인을 기준으로 정렬
           });
-    
+
+          /**
+           * 만약 진행 중인 클라이언트 요청이 없을 경우, 기본적인 데이터를 조회합니다. 그렇지 않으면, 첫 번째 요청의 타임라인을 기준으로 데이터를 가져옵니다.
+           * @const {Array} basicRows - 조회된 기본 클라이언트 데이터 목록.
+           */
           if (ongoingClientsRequests.length === 0) {
-            basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+            basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo }); // 기준 날짜보다 최신 데이터를 조회
           } else {
-            basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo });
+            basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo }); // 첫 번째 요청의 타임라인을 기준으로 데이터 조회
           }
-    
+
+          /**
+           * 가져온 기본 클라이언트 데이터를 최신순으로 정렬합니다.
+           */
           basicRows.sort((a, b) => {
-            return b.date.valueOf() - a.date.valueOf();
-          })
-    
+            return b.date.valueOf() - a.date.valueOf(); // 날짜를 기준으로 내림차순 정렬
+          });
+
+          /**
+           * 기본 데이터의 클라이언트 ID 목록을 추출하여 배열로 만듭니다.
+           * @const {Array} pureCliids - 각 클라이언트의 고유 ID 목록.
+           */
           pureCliids = basicRows.map((o) => {
             return o.cliids.map((o2) => {
-              return o2.cliid;
+              return o2.cliid; // 클라이언트 ID를 배열로 추출
             })
-          }).flat();
-    
+          }).flat(); // 중첩 배열을 평탄화하여 단일 배열로 만듦
+
+          /**
+           * 추출된 클라이언트 ID를 기반으로 클라이언트 정보를 MongoDB에서 조회합니다.
+           * @const {Array} clients - 조회된 클라이언트 정보 목록.
+           */
           clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+
+          /**
+           * 클라이언트 히스토리를 조회합니다.
+           * @const {Array} clientHistories - 조회된 클라이언트 히스토리 목록.
+           */
           clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
-    
+
+          /**
+           * 클라이언트 히스토리에서 필요한 필드를 필터링하여 저장합니다.
+           * @const {Array} filteredHistory - 필터링된 클라이언트 히스토리 목록.
+           */
           filteredHistory = [];
           for (let obj of clientHistories) {
             filteredHistory.push({
-              cliid: obj.cliid,
-              manager: obj.manager,
-              curation: obj.curation,
-            })
+              cliid: obj.cliid, // 클라이언트 ID
+              manager: obj.manager, // 담당 관리자
+              curation: obj.curation, // 큐레이션 정보
+            });
           }
-    
+
+          /**
+           * 결과 객체를 생성하여, 조회된 클라이언트, 필터링된 히스토리 및 기본 데이터를 반환합니다.
+           * @const {Object} resultObj - 결과를 담을 객체.
+           */
           resultObj = {
-            clients: clients.toNormal(),
-            histories: filteredHistory,
-            sales: basicRows
+            clients: clients.toNormal(), // 클라이언트 정보를 배열 형태로 반환
+            histories: filteredHistory, // 필터링된 히스토리 반환
+            sales: basicRows // 기본 데이터 반환
           };
     
         } else if (mode === "search") {
     
+          /**
+           * 클라이언트 요청 객체에서 검색 값(value)을 추출합니다.
+           * @const {string} value - 검색어로 사용될 문자열.
+           */
           const { value } = req.body;
+
+          /**
+           * 입력된 값이 빈 문자열이거나 '.'이면 기본 데이터를 조회합니다.
+           */
           if (value.trim() === '' || value.trim() === '.') {
-    
+
+            /**
+             * 진행 중인 클라이언트를 조회합니다. 요청 데이터의 'analytics.response.status' 필드가 '응' 또는 '장'으로 시작하는 클라이언트만을 필터링합니다.
+             * @const {Array} ongoingClients - 진행 중인 클라이언트 목록.
+             */
             ongoingClients = await back.getClientsByQuery({
               requests: {
                 $elemMatch: {
                   "analytics.response.status": {
-                    $regex: "^[응장]"
+                    $regex: "^[응장]" // '응' 또는 '장'으로 시작하는 요청 상태만 필터링
                   }
                 }
               }
             }, { selfMongo: selfCoreMongo, withTools: true });
-    
-            ongoingClientsRequests = ongoingClients.getRequestsTong();
+
+            /**
+             * 진행 중인 클라이언트들의 요청 데이터를 추출하여 정렬합니다. 최근 날짜 순으로 정렬합니다.
+             * @const {Array} ongoingClientsRequests - 진행 중인 클라이언트 요청 목록.
+             */
+            ongoingClientsRequests = ongoingClients.getRequestsTong(); // 클라이언트의 요청 데이터를 'getRequestsTong()' 메서드로 추출
             ongoingClientsRequests.sort((a, b) => {
-              return a.request.timeline.valueOf() - b.request.timeline.valueOf();
+              return a.request.timeline.valueOf() - b.request.timeline.valueOf(); // 요청의 타임라인을 기준으로 정렬
             });
-    
+
+            /**
+             * 만약 진행 중인 클라이언트 요청이 없을 경우, 기본적인 데이터를 조회합니다. 그렇지 않으면, 첫 번째 요청의 타임라인을 기준으로 데이터를 가져옵니다.
+             * @const {Array} basicRows - 조회된 기본 클라이언트 데이터 목록.
+             */
             if (ongoingClientsRequests.length === 0) {
-              basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+              basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo }); // 기준 날짜보다 최신 데이터를 조회
             } else {
-              basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo });
+              basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo }); // 첫 번째 요청의 타임라인을 기준으로 데이터 조회
             }
-    
+
+            /**
+             * 가져온 기본 클라이언트 데이터를 최신순으로 정렬합니다.
+             */
+            basicRows.sort((a, b) => {
+              return b.date.valueOf() - a.date.valueOf(); // 날짜를 기준으로 내림차순 정렬
+            });
+
+            /**
+             * 기본 데이터의 클라이언트 ID 목록을 추출하여 배열로 만듭니다.
+             * @const {Array} pureCliids - 각 클라이언트의 고유 ID 목록.
+             */
             pureCliids = basicRows.map((o) => {
               return o.cliids.map((o2) => {
-                return o2.cliid;
+                return o2.cliid; // 클라이언트 ID를 배열로 추출
               })
-            }).flat();
-    
+            }).flat(); // 중첩 배열을 평탄화하여 단일 배열로 만듦
+
+            /**
+             * 추출된 클라이언트 ID를 기반으로 클라이언트 정보를 MongoDB에서 조회합니다.
+             * @const {Array} clients - 조회된 클라이언트 정보 목록.
+             */
             clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+
+            /**
+             * 클라이언트 히스토리를 조회합니다.
+             * @const {Array} clientHistories - 조회된 클라이언트 히스토리 목록.
+             */
             clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
-    
+
+            /**
+             * 클라이언트 히스토리에서 필요한 필드를 필터링하여 저장합니다.
+             * @const {Array} filteredHistory - 필터링된 클라이언트 히스토리 목록.
+             */
             filteredHistory = [];
             for (let obj of clientHistories) {
               filteredHistory.push({
-                cliid: obj.cliid,
-                manager: obj.manager,
-                curation: obj.curation,
-              })
+                cliid: obj.cliid, // 클라이언트 ID
+                manager: obj.manager, // 담당 관리자
+                curation: obj.curation, // 큐레이션 정보
+              });
             }
-    
+
+            /**
+             * 결과 객체를 생성하여, 조회된 클라이언트, 필터링된 히스토리 및 기본 데이터를 반환합니다.
+             * @const {Object} resultObj - 결과를 담을 객체.
+             */
             resultObj = {
-              clients: clients.toNormal(),
-              histories: filteredHistory,
-              sales: basicRows
+              clients: clients.toNormal(), // 클라이언트 정보를 배열 형태로 반환
+              histories: filteredHistory, // 필터링된 히스토리 반환
+              sales: basicRows // 기본 데이터 반환
             };
-    
+
           } else {
-    
+
+            /**
+             * 입력된 검색 값(value)을 기준으로 클라이언트 이름이 포함된 클라이언트를 조회합니다.
+             * @const {Array} ongoingClients - 검색된 클라이언트 목록.
+             */
             ongoingClients = await back.getClientsByQuery({
-              name: { $regex: value }
+              name: { $regex: value } // 입력된 value 값으로 클라이언트 검색
             }, { selfMongo: selfCoreMongo });
+
+            /**
+             * 검색된 클라이언트 목록에서 각 클라이언트의 ID를 추출하여 배열로 만듭니다.
+             * @const {Array} ongoingClientsCliids - 검색된 클라이언트의 ID 목록.
+             */
             ongoingClientsCliids = ongoingClients.toNormal().map((c) => { return c.cliid });
-    
+
+            /**
+             * 클라이언트 ID 목록을 기반으로 쿼리 조건을 만듭니다.
+             * @const {Array} orQuery - MongoDB 쿼리 조건을 위한 배열.
+             */
             orQuery = [];
             for (let cliid of ongoingClientsCliids) {
               orQuery.push({
                 cliids: {
-                  $elemMatch: { cliid }
+                  $elemMatch: { cliid } // 해당 클라이언트 ID가 일치하는 데이터를 찾기 위한 조건
                 }
-              })
+              });
             }
-    
+
+            /**
+             * 만약 조건에 맞는 클라이언트가 없으면, 빈 데이터를 반환합니다.
+             */
             if (orQuery.length === 0) {
               basicRows = [];
               resultObj = {
-                clients: [],
-                histories: [],
-                sales: basicRows
+                clients: [], // 빈 클라이언트 목록
+                histories: [], // 빈 히스토리 목록
+                sales: basicRows // 빈 판매 데이터 목록
               };
             } else {
+              /**
+               * 조건에 맞는 클라이언트의 판매 데이터를 조회합니다.
+               * @const {Array} basicRows - 조회된 기본 판매 데이터 목록.
+               */
               basicRows = await back.mongoRead(collection, { $or: orQuery }, { selfMongo });
-    
+
+              /**
+               * 조회된 데이터 중 필요한 클라이언트 ID만 남기고 새로운 데이터를 만듭니다.
+               * @const {Array} newBasicRows - 필터링된 새로운 판매 데이터 목록.
+               */
               newBasicRows = [];
               for (let obj of basicRows) {
                 copiedObj = equalJson(JSON.stringify(obj));
                 copiedObj.cliids = copiedObj.cliids.filter((o) => {
-                  return ongoingClientsCliids.includes(o.cliid);
-                })
-                newBasicRows.push(copiedObj);
+                  return ongoingClientsCliids.includes(o.cliid); // 진행 중인 클라이언트 ID만 남기기
+                });
+                newBasicRows.push(copiedObj); // 새로운 데이터를 배열에 추가
               }
-    
+
+              /**
+               * 새로운 판매 데이터에서 클라이언트 ID 목록을 추출합니다.
+               * @const {Array} pureCliids - 클라이언트 ID 목록.
+               */
               pureCliids = newBasicRows.map((o) => {
                 return o.cliids.map((o2) => {
                   return o2.cliid;
-                })
+                });
               }).flat();
-    
+
+              /**
+               * 만약 클라이언트 ID가 없으면, 빈 히스토리 데이터를 반환합니다.
+               */
               if (pureCliids.length === 0) {
                 filteredHistory = [];
               } else {
+                /**
+                 * 클라이언트 ID를 기반으로 클라이언트 히스토리를 조회하고, 필요한 필드를 필터링합니다.
+                 * @const {Array} clientHistories - 조회된 클라이언트 히스토리 목록.
+                 */
                 clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
                 filteredHistory = [];
                 for (let obj of clientHistories) {
                   filteredHistory.push({
-                    cliid: obj.cliid,
-                    manager: obj.manager,
-                    curation: obj.curation,
-                  })
+                    cliid: obj.cliid, // 클라이언트 ID
+                    manager: obj.manager, // 담당 관리자
+                    curation: obj.curation, // 큐레이션 정보
+                  });
                 }
               }
-    
+
+              /**
+               * 결과 객체를 생성하여, 조회된 클라이언트, 필터링된 히스토리 및 새로운 데이터를 반환합니다.
+               * @const {Object} resultObj - 결과를 담을 객체.
+               */
               resultObj = {
-                clients: ongoingClients.toNormal(),
-                histories: filteredHistory,
-                sales: newBasicRows
+                clients: ongoingClients.toNormal(), // 검색된 클라이언트 정보
+                histories: filteredHistory, // 필터링된 히스토리 정보
+                sales: newBasicRows // 필터링된 판매 데이터
               };
-    
             }
-    
           }
     
         } else if (mode === "update") {
     
+          /**
+           * 요청 본문(req.body)을 equalJson 메서드를 사용하여 whereQuery와 updateQuery로 변환합니다.
+           * equalJson 메서드는 딥 카피와 JSON.parse의 업그레이드 버전입니다. 이를 통해 전달된 데이터를 안전하게 복사 및 변환합니다.
+           * @const {Object} whereQuery - MongoDB 쿼리 조건.
+           * @const {Object} updateQuery - MongoDB 업데이트 쿼리.
+           */
           ({ whereQuery, updateQuery } = equalJson(req.body));
+
+          /**
+           * 백엔드의 mongoUpdate 메서드를 사용하여, MongoDB에서 해당 컬렉션을 업데이트합니다.
+           * @param {string} collection - 업데이트할 MongoDB 컬렉션 이름 ("dailySales").
+           * @param {Array} [whereQuery, updateQuery] - MongoDB의 쿼리 조건과 업데이트 조건을 배열로 전달.
+           * @param {Object} selfMongo - 로컬 MongoDB 인스턴스.
+           */
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+          /**
+           * 업데이트가 완료되면, 클라이언트에게 성공 메시지를 담은 JSON 객체를 반환합니다.
+           * @const {Object} resultObj - 응답 객체로, 메시지를 포함하여 업데이트 완료 상태를 반환합니다.
+           */
           resultObj = { message: "done" };
     
         } else if (mode === "lowLow") {
+
+          /**
+           * 클라이언트 요청 본문에서 cliid가 문자열로 전달된 경우, 해당 cliid에 대한 타겟 클라이언트를 조회하고 알림톡을 전송합니다.
+           * 또한, 클라이언트의 히스토리를 업데이트합니다.
+           * @param {string} req.body.cliid - 조회할 클라이언트 ID.
+           */
           if (typeof req.body.cliid === "string") {
-    
+
+            // MongoDB에서 해당 cliid를 가진 클라이언트를 조회합니다.
             targetClients = await back.getClientsByQuery({ cliid: req.body.cliid }, { selfMongo: selfCoreMongo });
+
+            // 해당 클라이언트의 히스토리 데이터를 조회합니다.
             targetHistories = await back.mongoRead("clientHistory", { cliid: req.body.cliid }, { selfMongo });
-    
+
+            // 조회된 각 클라이언트에게 알림톡을 전송합니다.
             for (let client of targetClients) {
               await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
+
+              // 알림톡 전송 후, 고객 채널에 메시지를 전송합니다.
               await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#400_customer", voice: false });
             }
-    
+
+            // 클라이언트 히스토리 데이터를 업데이트합니다.
             for (let history of targetHistories) {
-    
-              whereQuery = { cliid: history.cliid };
+
+              whereQuery = { cliid: history.cliid };  // 업데이트할 클라이언트 ID에 대한 조건을 설정합니다.
               updateQuery = {};
-    
+
+              // 클라이언트 히스토리에서 curation.analytics.send 배열에 새로운 데이터를 추가하고 정렬합니다.
               copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
               copiedSend.push({
                 page: "lowLowPush",
@@ -7574,45 +10053,51 @@ class DataRouter {
                   name: null,
                   email: null,
                 }
-              })
-              copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
-    
+              });
+              copiedSend.sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
               updateQuery["curation.analytics.send"] = copiedSend;
-    
-              await back.mongoUpdate("clientHistory", [ whereQuery, updateQuery ], { selfMongo });
+
+              // MongoDB에 히스토리 업데이트를 반영합니다.
+              await back.mongoUpdate("clientHistory", [whereQuery, updateQuery], { selfMongo });
             }
-    
-            resultObj = copiedSend;
-    
+
+            resultObj = copiedSend;  // 클라이언트에게 업데이트된 히스토리 데이터를 반환합니다.
+
           } else {
-    
+            // cliid가 제공되지 않은 경우, 하루 전 데이터를 기준으로 타겟 클라이언트를 조회하고 알림톡을 전송합니다.
+
             ago = new Date();
-            ago.setDate(ago.getDate() - 1);
-    
+            ago.setDate(ago.getDate() - 1);  // 하루 전 날짜 설정
+
+            // MongoDB에서 하루 전 데이터를 조회합니다.
             basicRows = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
+
             if (basicRows.length === 0) {
-              resultObj = { message: "fail" };
+              resultObj = { message: "fail" };  // 조회된 데이터가 없으면 실패 메시지를 반환
             } else {
               targetCliids = basicRows[0].cliids;
-              targetCliids = targetCliids.filter((obj) => {
-                return obj.priority === 0 && obj.target === 0;
-              });
+
+              // 타겟 우선순위와 목표가 설정되지 않은 클라이언트만 필터링합니다.
+              targetCliids = targetCliids.filter(obj => obj.priority === 0 && obj.target === 0);
+
               if (targetCliids.length === 0) {
-                resultObj = { message: "done" };
+                resultObj = { message: "done" };  // 필터링된 클라이언트가 없으면 완료 메시지를 반환
               } else {
-                targetClients = await back.getClientsByQuery({ $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo: selfCoreMongo });
-                targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
-    
+                // 필터링된 클라이언트들에 대해 MongoDB에서 클라이언트를 조회하고 알림톡을 전송합니다.
+                targetClients = await back.getClientsByQuery({ $or: targetCliids.map(obj => ({ cliid: obj.cliid })) }, { selfMongo: selfCoreMongo });
+
+                targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map(obj => ({ cliid: obj.cliid })) }, { selfMongo });
+
                 for (let client of targetClients) {
                   await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
                   await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#400_customer", voice: false });
                 }
-    
+
                 for (let history of targetHistories) {
-    
                   whereQuery = { cliid: history.cliid };
                   updateQuery = {};
-    
+
                   copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
                   copiedSend.push({
                     page: "lowLowPush",
@@ -7622,187 +10107,235 @@ class DataRouter {
                       name: null,
                       email: null,
                     }
-                  })
-                  copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
-    
+                  });
+                  copiedSend.sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
                   updateQuery["curation.analytics.send"] = copiedSend;
-                  await back.mongoUpdate("clientHistory", [ whereQuery, updateQuery ], { selfMongo });
+                  await back.mongoUpdate("clientHistory", [whereQuery, updateQuery], { selfMongo });
                 }
-    
-                resultObj = { message: "done" };
+
+                resultObj = { message: "done" };  // 완료 메시지를 반환
               }
             }
-    
           }
         }
     
         res.send(JSON.stringify(resultObj));
     
       } catch (e) {
+        // 에러가 발생하면 에러를 기록하고 클라이언트에 에러 메시지를 전송합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /dailySales
+     * @description 최근 30일간의 클라이언트 요청을 분석하여 일일 매출 데이터를 생성하고 저장하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체.
+     * @param {object} res - 서버 응답 객체. 생성된 일일 매출 데이터를 반환합니다.
+     */
     router.post([ "/dailySales" ], async function (req, res) {
+      // 응답 헤더를 설정: JSON 형식으로 반환하며, CORS 설정으로 다양한 출처에서의 접근을 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        const selfMongo = instance.mongolocal;
-        const selfCoreMongo = instance.mongo;
-        const aMonthAgo = new Date();
-        aMonthAgo.setDate(aMonthAgo.getDate() - 30);
-        const clients = await back.getClientsByQuery({
-          requests: {
-            $elemMatch: {
-              "request.timeline": { $gte: aMonthAgo }
-            }
+          // MongoDB 인스턴스 초기화: selfMongo는 로컬 MongoDB, selfCoreMongo는 메인 MongoDB를 참조합니다.
+          const selfMongo = instance.mongolocal;
+          const selfCoreMongo = instance.mongo;
+
+          // aMonthAgo는 30일 전의 날짜를 나타냅니다.
+          const aMonthAgo = new Date();
+          aMonthAgo.setDate(aMonthAgo.getDate() - 30);
+
+          // 최근 30일 동안의 클라이언트 요청을 가져옵니다.
+          const clients = await back.getClientsByQuery({
+              requests: {
+                  $elemMatch: {
+                      "request.timeline": { $gte: aMonthAgo }  // 30일 전 이후의 요청을 가져옴
+                  }
+              }
+          }, { selfMongo: selfCoreMongo, withTools: true });
+
+          // 요청을 클라이언트별로 분류하여 가져옵니다.
+          const requests = clients.getRequestsTong();
+
+          // dailySales라는 컬렉션을 사용할 것입니다.
+          const collection = "dailySales";
+
+          // idMaker 함수는 날짜를 기반으로 ID를 생성합니다.
+          const idMaker = (date) => {
+              return `sales_${dateToString(date).replace(/\-/gi, '')}`;
           }
-        }, { selfMongo: selfCoreMongo, withTools: true });
-        const requests = clients.getRequestsTong();
-        const collection = "dailySales";
-        const idMaker = (date) => {
-          return `sales_${dateToString(date).replace(/\-/gi, '')}`;
-        }
-        let now;
-        let standard0From, standard1From, standard2From, standard3From, standard4From;
-        let standard0To, standard1To, standard2To, standard3To, standard4To;
-        let dummy;
-        let thisRequests;
-        let matrix;
-        let rows;
-        let resultObj;
-    
-        now = new Date();
-    
-        standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);
-        while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
-          standard0From.setDate(standard0From.getDate() - 1);
-        }
-        standard1From = new Date(JSON.stringify(standard0From).slice(1, -1));
-        standard1From.setDate(standard1From.getDate() - 1);
-        while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+
+          let now, standard0From, standard1From, standard2From, standard3From, standard4From;
+          let standard0To, standard1To, standard2To, standard3To, standard4To;
+          let dummy, thisRequests, matrix, rows, resultObj;
+
+          // 현재 시간을 기준으로 기준일을 설정합니다.
+          now = new Date();
+
+          // 월요일부터 금요일까지의 데이터를 계산하기 위한 날짜 설정입니다.
+          standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);
+          while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
+              standard0From.setDate(standard0From.getDate() - 1);  // 주말이면 하루씩 앞으로 이동
+          }
+
+          // 이전 날짜로 이동하며 평일을 찾는 작업을 반복합니다.
+          standard1From = new Date(JSON.stringify(standard0From).slice(1, -1));
           standard1From.setDate(standard1From.getDate() - 1);
-        }
-        standard2From = new Date(JSON.stringify(standard1From).slice(1, -1));
-        standard2From.setDate(standard2From.getDate() - 1);
-        while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+          while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+              standard1From.setDate(standard1From.getDate() - 1);
+          }
+
+          standard2From = new Date(JSON.stringify(standard1From).slice(1, -1));
           standard2From.setDate(standard2From.getDate() - 1);
-        }
-        standard3From = new Date(JSON.stringify(standard2From).slice(1, -1));
-        standard3From.setDate(standard3From.getDate() - 1);
-        while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+          while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+              standard2From.setDate(standard2From.getDate() - 1);
+          }
+
+          standard3From = new Date(JSON.stringify(standard2From).slice(1, -1));
           standard3From.setDate(standard3From.getDate() - 1);
-        }
-        standard4From = new Date(JSON.stringify(standard3From).slice(1, -1));
-        standard4From.setDate(standard4From.getDate() - 1);
-        while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+          while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+              standard3From.setDate(standard3From.getDate() - 1);
+          }
+
+          standard4From = new Date(JSON.stringify(standard3From).slice(1, -1));
           standard4From.setDate(standard4From.getDate() - 1);
-        }
-    
-        standard0To = new Date(JSON.stringify(standard0From).slice(1, -1));
-        standard1To = new Date(JSON.stringify(standard1From).slice(1, -1));
-        standard2To = new Date(JSON.stringify(standard2From).slice(1, -1));
-        standard3To = new Date(JSON.stringify(standard3From).slice(1, -1));
-        standard4To = new Date(JSON.stringify(standard4From).slice(1, -1));
-    
-        standard0From.setDate(standard0From.getDate() - 1);
-        while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
+          while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+              standard4From.setDate(standard4From.getDate() - 1);
+          }
+
+          // 'To' 값은 'From' 값을 기준으로 동일하게 설정합니다.
+          standard0To = new Date(JSON.stringify(standard0From).slice(1, -1));
+          standard1To = new Date(JSON.stringify(standard1From).slice(1, -1));
+          standard2To = new Date(JSON.stringify(standard2From).slice(1, -1));
+          standard3To = new Date(JSON.stringify(standard3From).slice(1, -1));
+          standard4To = new Date(JSON.stringify(standard4From).slice(1, -1));
+
+          // 각 기준일 사이에 공휴일이나 주말을 피해서 날짜를 설정합니다.
           standard0From.setDate(standard0From.getDate() - 1);
-        }
-        standard1From.setDate(standard1From.getDate() - 1);
-        while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+          while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
+              standard0From.setDate(standard0From.getDate() - 1);
+          }
           standard1From.setDate(standard1From.getDate() - 1);
-        }
-        standard2From.setDate(standard2From.getDate() - 1);
-        while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+          while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+              standard1From.setDate(standard1From.getDate() - 1);
+          }
           standard2From.setDate(standard2From.getDate() - 1);
-        }
-        standard3From.setDate(standard3From.getDate() - 1);
-        while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+          while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+              standard2From.setDate(standard2From.getDate() - 1);
+          }
           standard3From.setDate(standard3From.getDate() - 1);
-        }
-        standard4From.setDate(standard4From.getDate() - 1);
-        while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+          while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+              standard3From.setDate(standard3From.getDate() - 1);
+          }
           standard4From.setDate(standard4From.getDate() - 1);
-        }
-    
-        matrix = [
-          [ standard0From, standard0To ],
-          [ standard1From, standard1To ],
-          [ standard2From, standard2To ],
-          [ standard3From, standard3To ],
-          [ standard4From, standard4To ],
-        ];
-    
-        for (let [ standardFrom, standardTo ] of matrix) {
-    
-          dummy = {
-            id: idMaker(standardTo),
-            date: new Date(JSON.stringify(standardTo).slice(1, -1)),
-            range: {
-              from: new Date(JSON.stringify(standardFrom).slice(1, -1)),
-              to: new Date(JSON.stringify(standardTo).slice(1, -1)),
-            },
-            cliids: [],
+          while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+              standard4From.setDate(standard4From.getDate() - 1);
           }
-    
-          thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf() })
-    
-          for (let obj of thisRequests) {
-            dummy.cliids.push({
-              cliid: obj.cliid,
-              possible: 0,
-              priority: 0,
-              target: 0,
-            })
+
+          // 매트릭스 배열을 생성하여 각 기준일의 범위를 설정합니다.
+          matrix = [
+              [standard0From, standard0To],
+              [standard1From, standard1To],
+              [standard2From, standard2To],
+              [standard3From, standard3To],
+              [standard4From, standard4To],
+          ];
+
+          // 각 날짜 범위에 대해 데이터를 생성합니다.
+          for (let [standardFrom, standardTo] of matrix) {
+              // dummy 객체에 해당 날짜 범위의 데이터를 저장합니다.
+              dummy = {
+                  id: idMaker(standardTo),
+                  date: new Date(JSON.stringify(standardTo).slice(1, -1)),
+                  range: {
+                      from: new Date(JSON.stringify(standardFrom).slice(1, -1)),
+                      to: new Date(JSON.stringify(standardTo).slice(1, -1)),
+                  },
+                  cliids: [],
+              };
+
+              // 주어진 기간 동안의 요청을 필터링하여 해당 기간에 맞는 클라이언트 요청을 가져옵니다.
+              thisRequests = requests.filter((request) => {
+                  return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf();
+              });
+
+              // 각 요청을 반복하며 클라이언트 ID를 저장합니다.
+              for (let obj of thisRequests) {
+                  dummy.cliids.push({
+                      cliid: obj.cliid,  // 클라이언트 ID
+                      possible: 0,  // 예상 가능성 값 (임의 값)
+                      priority: 0,  // 우선 순위 값 (임의 값)
+                      target: 0,  // 목표 값 (임의 값)
+                  });
+              }
+
+              // 동일한 ID의 데이터가 이미 있는지 확인하고, 있으면 삭제한 후 새로 저장합니다.
+              rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
+              if (rows.length !== 0) {
+                  await back.mongoDelete(collection, { id: dummy.id }, { selfMongo });
+              }
+              await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
           }
-    
-          rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
-          if (rows.length !== 0) {
-            await back.mongoDelete(collection, { id: dummy.id }, { selfMongo });
-          }
-          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
-    
-        }
-    
-        resultObj = { message: "done" };
-    
-        res.send(JSON.stringify(resultObj));
-    
+
+          // 결과 객체를 생성하고 클라이언트에 반환합니다.
+          resultObj = { message: "done" };
+
+          // 클라이언트에 최종 결과를 JSON 형식으로 전송합니다.
+          res.send(JSON.stringify(resultObj));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생하면 에러를 기록하고 클라이언트에 에러 메시지를 전송합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /dailySalesReport
+     * @description 지정된 기간 동안의 일일 판매 보고서를 생성하는 라우터입니다. 클라이언트의 요청에 따라 시작 연도/월과 종료 연도/월을 기준으로 데이터를 조회하고 보고서를 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에는 startYear, startMonth, endYear, endMonth가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리된 판매 보고서를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/dailySalesReport" ], async function (req, res) {
+      
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 형식으로 JSON 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더 설정
       });
       try {
+        // 요청에 필요한 파라미터들이 누락되었을 경우 에러를 발생시킵니다.
         if (req.body.startYear === undefined || req.body.startMonth === undefined || req.body.endYear === undefined || req.body.endMonth === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 파라미터가 없을 경우 잘못된 요청 처리
         }
+
+        // 요청으로부터 필요한 파라미터들을 추출합니다.
         const { startYear, startMonth, endYear, endMonth } = req.body;
-        const selfMongo = instance.mongolocal;
-        const selfCoreMongo = instance.mongo;
-        const collection = "dailySales";
-        const historyCollection = "clientHistory";
-        const proposalKeywords = "designerProposal";
-        const db = "miro81";
+
+        // MongoDB와 관련된 인스턴스 설정
+        const selfMongo = instance.mongolocal;  // 로컬 MongoDB 인스턴스
+        const selfCoreMongo = instance.mongo;  // 메인 MongoDB 인스턴스
+        const collection = "dailySales";  // 조회할 컬렉션 이름
+        const historyCollection = "clientHistory";  // 클라이언트 기록이 저장된 컬렉션
+        const proposalKeywords = "designerProposal";  // 제안 관련 키워드
+        const db = "miro81";  // 데이터베이스 이름
+
+        // 특정 row에서 cliids 값을 추출하여 클라이언트 ID 목록을 반환하는 함수
         const rowToCliids = (rows) => {
-          const targetRows = equalJson(JSON.stringify(rows));
-          return targetRows.map((o) => { return o.cliids.map(({ cliid }) => { return cliid }) }).flat();
+          const targetRows = equalJson(JSON.stringify(rows));  // deep copy를 위한 equalJson 사용
+          return targetRows.map((o) => { return o.cliids.map(({ cliid }) => { return cliid }) }).flat();  // cliid 추출 및 플랫 처리
         }
         let rows;
         let rowsCopy;
@@ -7833,334 +10366,455 @@ class DataRouter {
         let thisDateCopied;
         let totalProjects;
     
-        startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
-        endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
-        endDate.setMonth(endDate.getMonth() + 1);
-        endDate.setDate(endDate.getDate() - 1);
-    
+        // 시작 날짜와 종료 날짜를 생성합니다.
+        startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);  // 요청 받은 시작 연도와 월을 기반으로 시작 날짜 생성
+        endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);  // 요청 받은 종료 연도와 월을 기반으로 종료 날짜 생성
+        endDate.setMonth(endDate.getMonth() + 1);  // 종료 월을 한 달 증가시킴으로써 해당 월의 마지막 날을 찾습니다.
+        endDate.setDate(endDate.getDate() - 1);  // 종료 월의 마지막 날짜를 설정
+
+        // MongoDB에서 계약 프로젝트를 조회합니다.
         contractProjects = await back.getProjectsByQuery({
-          $and: [
+          $and: [  // 조회 조건 설정: 계약의 첫 날짜가 startDate와 endDate 사이에 있는 프로젝트를 찾습니다.
             {
-              "process.contract.first.date": { $gte: startDate }
+              "process.contract.first.date": { $gte: startDate }  // 계약 시작일이 startDate 이상인 프로젝트
             },
             {
-              "process.contract.first.date": { $lte: endDate }
+              "process.contract.first.date": { $lte: endDate }  // 계약 시작일이 endDate 이하인 프로젝트
             },
           ]
-        }, { selfMongo: selfCoreMongo });
-        contractProjectsCliids = contractProjects.toNormal().map((p) => { return p.cliid });
-    
+        }, { selfMongo: selfCoreMongo });  // 메인 MongoDB 인스턴스 사용
+
+        // 조회한 프로젝트의 cliid(클라이언트 ID)를 배열로 만듭니다.
+        contractProjectsCliids = contractProjects.toNormal().map((p) => { return p.cliid });  // toNormal 메서드를 통해 클라이언트 ID 배열 생성
+
+        // dailySales 컬렉션에서 지정된 날짜 범위에 해당하는 데이터를 조회합니다.
         rows = await back.mongoRead(collection, {
-          $and: [
+          $and: [  // 조회 조건: startDate 이상, endDate 이하인 데이터
             {
-              date: { $gte: startDate }
+              date: { $gte: startDate }  // date가 startDate 이상인 데이터
             },
             {
-              date: { $lte: endDate }
+              date: { $lte: endDate }  // date가 endDate 이하인 데이터
             },
           ]
-        }, { selfMongo });
-    
+        }, { selfMongo });  // 로컬 MongoDB 인스턴스 사용
+
+        // 조회한 데이터들을 날짜순으로 내림차순 정렬합니다.
         rows.sort((a, b) => {
-          return b.date.valueOf() - a.date.valueOf();
+          return b.date.valueOf() - a.date.valueOf();  // 가장 최근 날짜가 앞으로 오도록 정렬
         });
-    
-        rowsCopy = equalJson(JSON.stringify(rows));
-        rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
-    
-        whereQuery = rowToCliids(rows).concat(contractProjectsCliids);
-        whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }
-    
+
+        // 조회한 rows 데이터를 깊은 복사합니다.
+        rowsCopy = equalJson(JSON.stringify(rows));  // equalJson은 JSON.parse와 JSON.stringify를 결합한 깊은 복사 유틸리티 메서드
+        rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();  // 클라이언트 ID 배열을 평탄화(flat)하여 배열 생성
+
+        // 계약 프로젝트에서 가져온 클라이언트 ID와 조회된 데이터에서의 클라이언트 ID를 결합합니다.
+        whereQuery = rowToCliids(rows).concat(contractProjectsCliids);  // rowToCliids는 rows에서 cliid를 추출하는 함수
+        whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }  // 중복 제거 후 MongoDB의 $or 연산자로 변환
+
+        // clientHistory 컬렉션에서 curation.analytics.send 필드에 startDate 이후로 발송된 데이터를 조회합니다.
         allSendHistories = await selfMongo.db(db).collection(historyCollection).find({
           "curation.analytics.send": {
-            $elemMatch: {
-              date: { $gte: startDate }
+            $elemMatch: {  // startDate 이후에 발송된 항목이 있는지 확인
+              date: { $gte: startDate }  // 발송 날짜가 startDate 이상인 항목
             }
           }
-        }).project({ manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
+        }).project({ manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();  // 필요한 필드만 조회
     
         if (whereQuery["$or"].length > 0) {
     
-          thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
-          thisProjects = (await back.getProjectsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
-          thisHistories = await selfMongo.db(db).collection(historyCollection).find(whereQuery).project({ cliid: 1, manager: 1, _id: 0 }).toArray();
+          // 클라이언트 데이터를 MongoDB에서 조회하여 배열로 반환합니다.
+          thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal(); 
+          // whereQuery에 해당하는 프로젝트 데이터를 조회하여 배열로 변환합니다.
+          thisProjects = (await back.getProjectsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal(); 
+          // clientHistory 컬렉션에서 cliid와 매니저 정보를 조회하여 반환합니다.
+          thisHistories = await selfMongo.db(db).collection(historyCollection).find(whereQuery).project({ cliid: 1, manager: 1, _id: 0 }).toArray(); 
+          // 계약 프로젝트 데이터를 복사하여 새로운 배열로 생성합니다.
           contractProjectsCopied = contractProjects.toNormal();
-    
+
+          // 백엔드에서 setMemberObj 메서드를 호출하여 매니저 정보를 가져옵니다.
           managers = await back.setMemberObj({ getMode: true, selfMongo: selfCoreMongo });
+          // CX 역할을 가진 매니저만 필터링하여 배열로 변환한 후, 이름 목록을 가져옵니다.
           managers = managers.filter((member) => { return member.roles.includes("CX") }).map((member) => { return member.name });
+          // 미지정 및 total을 매니저 목록에 추가합니다.
           managers.push("미지정");
           managers.push("total");
-    
+
+          // 보고서 데이터를 저장할 배열을 초기화합니다.
           reports = [];
+          
           for (let row of rows) {
     
+            // reportObject는 보고서 데이터를 저장하는 객체입니다.
             reportObject = {};
+
+            // reportObject에 기준 날짜를 추가합니다.
             reportObject.standard = row.date;
-    
-            // today stadard
-            todayClients = row.cliids.map(({ cliid }) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+
+            // 오늘 날짜 기준으로 클라이언트 데이터를 매핑하여 가져옵니다.
+            todayClients = row.cliids.map(({ cliid }) => { 
+              return thisClients.find((c) => { return c.cliid === cliid });
+            });
+
+            // todayClients에 포함된 각 클라이언트에 대해 히스토리와 프로젝트 데이터를 추가합니다.
             for (let client of todayClients) {
-              client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
-              client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
-              client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
+              client.history = thisHistories.find((h) => { return h.cliid === client.cliid });  // 클라이언트의 히스토리 추가
+              client.project = thisProjects.find((p) => { return p.cliid === client.cliid });   // 클라이언트의 프로젝트 추가
+              client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });           // 플랫하게 변환된 rows에서 클라이언트 데이터 추가
             }
-    
-            // total standard
+
+            // total 기준으로 클라이언트 데이터를 가져옵니다.
             targetRows = rowsCopy.filter((o) => { return o.date.valueOf() <= row.date.valueOf() });
             targetCliids = rowToCliids(targetRows);
-            targetClients = targetCliids.map((cliid) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+
+            // total 기준으로 클라이언트에 대한 히스토리와 프로젝트 데이터를 추가합니다.
+            targetClients = targetCliids.map((cliid) => { 
+              return thisClients.find((c) => { return c.cliid === cliid });
+            });
             for (let client of targetClients) {
               client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
               client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
               client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
             }
-    
-            // month standard
+
+            // 해당 월의 시작 날짜와 끝 날짜를 계산합니다.
             fromDate = new Date(row.date.getFullYear(), row.date.getMonth(), 1, 8, 0, 0);
             monthFromDate = new Date(JSON.stringify(fromDate).slice(1, -1));
             toDate = new Date(row.date.getFullYear(), row.date.getMonth() + 1, 1);
+
+            // 해당 월의 클라이언트 데이터를 필터링하여 가져옵니다.
             monthRows = rowsCopy.filter((o) => {
               return (o.date.valueOf() > fromDate.valueOf() && o.date.valueOf() < toDate.valueOf()) && (o.date.valueOf() <= row.date.valueOf());
             });
+
+            // 월별 클라이언트 데이터에서 클라이언트 ID를 추출하고 클라이언트 정보를 매핑합니다.
             monthCliids = rowToCliids(monthRows);
             monthClients = monthCliids.map((cliid) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+
+            // 각 클라이언트의 히스토리와 프로젝트 데이터를 추가합니다.
             for (let client of monthClients) {
               client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
               client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
               client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
             }
+
+            // toDateStandard는 해당 row의 날짜에 해당하는 시간까지 설정합니다.
             toDateStandard = new Date(JSON.stringify(row.date).slice(1, -1));
             toDateStandard.setHours(23);
             toDateStandard.setMinutes(59);
             toDateStandard.setSeconds(59);
+
+            // 월별 계약 프로젝트를 필터링하여 데이터를 가져옵니다.
             monthProjects = contractProjectsCopied.filter((obj) => {
               return (obj.process.contract.first.date.valueOf() > fromDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf()) && (obj.process.contract.first.date.valueOf() <= toDateStandard.valueOf());
             });
+
+            // 각 프로젝트에 대한 히스토리 데이터를 추가합니다.
             for (let project of monthProjects) {
               project.history = thisHistories.find((h) => { return h.cliid === project.cliid });
             }
-    
+
+            // 전체 기간에 해당하는 계약 프로젝트를 필터링하여 데이터를 가져옵니다.
             totalProjects = contractProjectsCopied.filter((obj) => {
               return (obj.process.contract.first.date.valueOf() > startDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf()) && (obj.process.contract.first.date.valueOf() <= toDateStandard.valueOf());
             });
+
+            // 각 프로젝트에 대한 히스토리 데이터를 추가합니다.
             for (let project of totalProjects) {
               project.history = thisHistories.find((h) => { return h.cliid === project.cliid });
             }
     
-            // day clients
+            // day clients: 오늘 날짜 기준으로 클라이언트 데이터를 관리별로 분류합니다.
             reportObject.dayClients = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 클라이언트 수를 추가
                 reportObject.dayClients.push({
-                  manager,
-                  value: row.cliids.length,
-                })
+                  manager,  // 관리자 이름
+                  value: row.cliids.length,  // 오늘의 전체 클라이언트 수
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 클라이언트 수를 필터링하여 추가
                 reportObject.dayClients.push({
                   manager,
-                  value: todayClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
-                })
+                  value: todayClients.filter((c) => { return !managers.includes(c.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 클라이언트 수를 추가
                 reportObject.dayClients.push({
                   manager,
-                  value: todayClients.filter((c) => { return c.history.manager === manager }).length,
-                })
+                  value: todayClients.filter((c) => { return c.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // total clients
+
+            // total clients: 전체 기간 동안의 클라이언트 데이터를 관리별로 분류합니다.
             reportObject.totalClients = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 클라이언트 수를 추가
                 reportObject.totalClients.push({
                   manager,
-                  value: targetCliids.length,
-                })
+                  value: targetCliids.length,  // 전체 클라이언트 수
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 클라이언트 수를 필터링하여 추가
                 reportObject.totalClients.push({
                   manager,
-                  value: targetClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
-                })
+                  value: targetClients.filter((c) => { return !managers.includes(c.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 클라이언트 수를 추가
                 reportObject.totalClients.push({
                   manager,
-                  value: targetClients.filter((c) => { return c.history.manager === manager }).length,
-                })
+                  value: targetClients.filter((c) => { return c.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // monthly clients
+
+            // monthly clients: 월간 기준으로 클라이언트 데이터를 관리별로 분류합니다.
             reportObject.monthClients = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 해당 월의 전체 클라이언트 수를 추가
                 reportObject.monthClients.push({
                   manager,
-                  value: monthCliids.length,
-                })
+                  value: monthCliids.length,  // 월간 전체 클라이언트 수
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 클라이언트 수를 필터링하여 추가
                 reportObject.monthClients.push({
                   manager,
-                  value: monthClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
-                })
+                  value: monthClients.filter((c) => { return !managers.includes(c.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 클라이언트 수를 추가
                 reportObject.monthClients.push({
                   manager,
-                  value: monthClients.filter((c) => { return c.history.manager === manager }).length,
-                })
+                  value: monthClients.filter((c) => { return c.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // current clients
+
+            // current clients: 현재 진행 중인 클라이언트 데이터 필터링
             currentClients = targetClients.filter((client) => {
-              return client.requests.some(({ analytics }) => { return /^[응장]/gi.test(analytics.response.status) })
+              // 응답 상태가 "응장"인 클라이언트만 필터링
+              return client.requests.some(({ analytics }) => { return /^[응장]/gi.test(analytics.response.status); });
             });
             reportObject.currentClients = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 진행 중인 클라이언트 수 추가
                 reportObject.currentClients.push({
                   manager,
                   value: currentClients.length,
-                })
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 진행 중인 클라이언트 수 추가
                 reportObject.currentClients.push({
                   manager,
-                  value: currentClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
-                })
+                  value: currentClients.filter((c) => { return !managers.includes(c.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 진행 중인 클라이언트 수 추가
                 reportObject.currentClients.push({
                   manager,
-                  value: currentClients.filter((c) => { return c.history.manager === manager }).length,
-                })
+                  value: currentClients.filter((c) => { return c.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // contract possible clients
+
+            // contract possible clients: 계약 가능성이 높은 클라이언트 데이터를 필터링
             reportObject.contractPossible = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 계약 가능성이 높은 전체 클라이언트 수 추가
                 reportObject.contractPossible.push({
                   manager,
-                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).length,
-                })
+                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음"; }).length,
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 계약 가능성이 높은 클라이언트 수 추가
                 reportObject.contractPossible.push({
                   manager,
-                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).filter((c) => { return !managers.includes(c.history.manager) }).length,
-                })
+                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음"; })
+                                      .filter((c) => { return !managers.includes(c.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 계약 가능성이 높은 클라이언트 수 추가
                 reportObject.contractPossible.push({
                   manager,
-                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).filter((c) => { return c.history.manager === manager }).length,
-                })
+                  value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음"; })
+                                      .filter((c) => { return c.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // total contracts
+            
+            // total contracts: 전체 계약 데이터를 관리별로 분류합니다.
             reportObject.totalContracts = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 계약 수 추가
                 reportObject.totalContracts.push({
                   manager,
-                  value: totalProjects.length,
-                })
+                  value: totalProjects.length,  // 전체 계약 프로젝트 수
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 계약 프로젝트 수 추가
                 reportObject.totalContracts.push({
                   manager,
-                  value: totalProjects.filter((p) => { return !managers.includes(p.history.manager) }).length,
-                })
+                  value: totalProjects.filter((p) => { return !managers.includes(p.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 계약 프로젝트 수 추가
                 reportObject.totalContracts.push({
                   manager,
-                  value: totalProjects.filter((p) => { return p.history.manager === manager }).length,
-                })
+                  value: totalProjects.filter((p) => { return p.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // month contracts
+
+            // month contracts: 월간 계약 데이터를 관리별로 분류합니다.
             reportObject.monthContracts = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 해당 월의 전체 계약 수 추가
                 reportObject.monthContracts.push({
                   manager,
-                  value: monthProjects.length,
-                })
+                  value: monthProjects.length,  // 월간 계약 프로젝트 수
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 월간 계약 프로젝트 수 추가
                 reportObject.monthContracts.push({
                   manager,
-                  value: monthProjects.filter((p) => { return !managers.includes(p.history.manager) }).length,
-                })
+                  value: monthProjects.filter((p) => { return !managers.includes(p.history.manager); }).length,
+                });
               } else {
+                // 특정 관리자에 속한 월간 계약 프로젝트 수 추가
                 reportObject.monthContracts.push({
                   manager,
-                  value: monthProjects.filter((p) => { return p.history.manager === manager }).length,
-                })
+                  value: monthProjects.filter((p) => { return p.history.manager === manager; }).length,
+                });
               }
             }
-    
-            // day proposal
+
+            // day proposal: 일일 제안서 데이터를 관리별로 분류합니다.
             reportObject.dayProposals = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 일일 제안서 수 추가
                 reportObject.dayProposals.push({
                   manager,
-                  value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.map(({ curation }) => {
+                    return curation.analytics.send
+                      .filter((obj) => { return dateToString(obj.date) === dateToString(row.date); })
+                      .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                  }),
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 일일 제안서 수 추가
                 reportObject.dayProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager); })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return dateToString(obj.date) === dateToString(row.date); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               } else {
+                // 특정 관리자에 속한 일일 제안서 수 추가
                 reportObject.dayProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return c.manager === manager; })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return dateToString(obj.date) === dateToString(row.date); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               }
             }
-    
-            // month proposal
+
+            // month proposal: 월간 제안서 데이터를 관리별로 분류합니다.
             reportObject.monthProposals = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 월간 제안서 수 추가
                 reportObject.monthProposals.push({
                   manager,
-                  value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.map(({ curation }) => {
+                    return curation.analytics.send
+                      .filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                      .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                  }),
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 월간 제안서 수 추가
                 reportObject.monthProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager); })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               } else {
+                // 특정 관리자에 속한 월간 제안서 수 추가
                 reportObject.monthProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return c.manager === manager; })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               }
             }
-    
-            // total proposal
+
+            // total proposal: 전체 제안서 데이터를 관리별로 분류합니다.
             reportObject.totalProposals = [];
             for (let manager of managers) {
               if (manager === "total") {
+                // 전체 제안서 수 추가
                 reportObject.totalProposals.push({
                   manager,
-                  value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.map(({ curation }) => {
+                    return curation.analytics.send
+                      .filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                      .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                  }),
+                });
               } else if (manager === "미지정") {
+                // 관리자가 지정되지 않은 제안서 수 추가
                 reportObject.totalProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return !managers.includes(c.manager); })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               } else {
+                // 특정 관리자에 속한 제안서 수 추가
                 reportObject.totalProposals.push({
                   manager,
-                  value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
-                })
+                  value: allSendHistories.filter((c) => { return c.manager === manager; })
+                    .map(({ curation }) => {
+                      return curation.analytics.send
+                        .filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf(); })
+                        .flat().filter((obj) => { return obj.page === proposalKeywords; }).length;
+                    }),
+                });
               }
             }
-    
+
+            // 보고서에 최종 결과 추가
             reports.push(reportObject);
+
           }
     
           resultObj = { reports };
@@ -8171,183 +10825,266 @@ class DataRouter {
         res.send(JSON.stringify(resultObj));
     
       } catch (e) {
+        // 에러가 발생하면 에러를 기록하고 클라이언트에 에러 메시지를 전송합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /updateContentsStatus
+     * @description 콘텐츠 상태를 업데이트하거나 조회하는 라우터입니다. 'get'과 'update' 모드를 지원하며, 새로운 콘텐츠 상태를 생성하거나 기존 상태를 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 mode, whereQuery, updateQuery가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/updateContentsStatus" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답의 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 요청 본문에 mode가 없으면 오류 발생
         if (req.body.mode === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 잘못된 요청 처리
         }
-        const selfMongo = instance.mongolocal;
-        const { mode } = equalJson(req.body);
-        const collection = "contentsStatus";
-        let whereQuery, updateQuery;
-        let rows;
-        let resultObj;
-        let dummy;
-        let emptyObject;
-    
+
+        const selfMongo = instance.mongolocal;  // MongoDB 로컬 인스턴스 설정
+        const { mode } = equalJson(req.body);  // 요청 본문의 데이터를 equalJson으로 처리하여 mode 추출
+        const collection = "contentsStatus";  // 사용할 컬렉션 이름 설정
+        let whereQuery, updateQuery;  // whereQuery: 조회 조건, updateQuery: 업데이트할 내용
+        let rows;  // 데이터베이스에서 조회된 결과 저장
+        let resultObj;  // 최종 결과를 저장할 객체
+        let dummy;  // 초기 상태 생성 시 사용할 더미 객체
+        let emptyObject;  // 비어 있는 객체 생성용
+
+        // 더미 객체: 새로운 콘텐츠 상태 생성 시 기본값으로 사용
         dummy = {
-          conid: "",
-          pid: "",
-          complete: false,
-          date: new Date(),
+          conid: "",  // 콘텐츠 ID
+          pid: "",  // 프로젝트 ID
+          complete: false,  // 콘텐츠 완료 여부
+          date: new Date(),  // 생성 날짜
         };
-    
+
+        // 모드가 'get'일 경우: 콘텐츠 상태 조회
         if (mode === "get") {
-          ({ whereQuery } = equalJson(req.body));
-          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-          resultObj = rows;
-    
+          ({ whereQuery } = equalJson(req.body));  // 요청에서 whereQuery 추출
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });  // 조건에 맞는 데이터를 조회
+          resultObj = rows;  // 조회된 결과를 반환 객체에 저장
+
+        // 모드가 'update'일 경우: 콘텐츠 상태 업데이트
         } else if (mode === "update") {
-          ({ whereQuery, updateQuery } = equalJson(req.body));
-    
+          ({ whereQuery, updateQuery } = equalJson(req.body));  // 요청에서 whereQuery와 updateQuery 추출
+
+          // 조회된 데이터가 없으면 새로 생성
           rows = await back.mongoRead(collection, whereQuery, { selfMongo });
           if (rows.length === 0) {
-            emptyObject = equalJson(JSON.stringify(dummy));
-            emptyObject.conid = updateQuery.conid;
-            await back.mongoCreate(collection, emptyObject, { selfMongo });
-            await sleep(300);
-            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+            // 데이터가 없을 경우 빈 객체 생성 후 업데이트
+            emptyObject = equalJson(JSON.stringify(dummy));  // 더미 객체를 깊은 복사하여 빈 객체 생성
+            emptyObject.conid = updateQuery.conid;  // 업데이트할 콘텐츠 ID 설정
+            await back.mongoCreate(collection, emptyObject, { selfMongo });  // 새로운 콘텐츠 상태를 생성
+            await sleep(300);  // 데이터베이스 처리 대기
+            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });  // 콘텐츠 상태 업데이트
           } else {
+            // 데이터가 있을 경우 바로 업데이트
             await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
           }
-          resultObj = { message: "done" };
-    
+          resultObj = { message: "done" };  // 완료 메시지 반환
+
         } else {
-          throw new Error("invalid mode");
+          throw new Error("invalid mode");  // 잘못된 모드일 경우 오류 처리
         }
-    
-        res.send(JSON.stringify(resultObj));
-    
+
+        res.send(JSON.stringify(resultObj));  // 결과를 JSON으로 응답
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
+        logger.error(e, req).catch((e) => { console.log(e); });  // 오류 발생 시 로깅
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.send(JSON.stringify({ error: e.message }));  // 오류 메시지를 JSON으로 응답
       }
     });
     
+    /**
+     * @route POST /proposalGeneration
+     * @description 지정된 디자이너의 프로젝트 제안서를 생성하여 반환하는 라우터입니다. 제안서 내 특정 디자이너의 설정을 기반으로 데이터를 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 desid가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리된 제안서를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/proposalGeneration" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답의 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // desid가 요청 본문에 없으면 오류 발생
         if (req.body.desid === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post");  // 잘못된 요청 처리
         }
+
+        // 요청 본문에서 desid를 추출하고 equalJson으로 처리
         const { desid } = equalJson(req.body);
+
+        // MongoDB 인스턴스 및 컬렉션 설정
         const selfMongo = instance.mongo;
         const collection = "project";
-        const projects = await back.mongoPick(collection, [ { "proposal.detail": { $elemMatch: { desid } } }, { proid: 1, desid: 1, proposal: 1 } ], { selfMongo });
+
+        // MongoDB에서 프로젝트 조회: 디자이너 ID가 제안서에 포함된 프로젝트만 조회
+        const projects = await back.mongoPick(collection, [ 
+          { "proposal.detail": { $elemMatch: { desid } } },  // 제안서 세부정보에서 desid를 검색
+          { proid: 1, desid: 1, proposal: 1 }  // 필요한 필드만 선택
+        ], { selfMongo });
+
         let targetProposals;
-    
-        projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() })
+
+        // 프로젝트를 제안서 날짜 기준으로 내림차순 정렬
+        projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() });
+
+        // 해당 디자이너의 제안서 세부정보 필터링
         targetProposals = projects.map((p) => { return p.proposal.detail }).flat().filter((o) => { return o.desid === desid });
+
+        // 제안서의 pictureSettings를 추출하고 JSON 문자열로 변환 후 중복 제거
         targetProposals = targetProposals.map(({ pictureSettings }) => { return JSON.stringify(pictureSettings) });
         targetProposals = [ ...new Set(targetProposals) ].map((str) => { return equalJson(str) });
-    
+
+        // 제안서 결과를 JSON 형식으로 응답
         res.send(JSON.stringify(targetProposals));
-    
+
       } catch (e) {
+        // 에러 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /frontMemberParsing
+     * @description 클라이언트에서 전달된 데이터를 기반으로 특정 멤버의 접속 기록을 저장하는 라우터입니다. 모드가 "store"일 경우, 전달받은 IP를 기준으로 멤버 데이터를 검색하여 저장합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, id, ip, href, mode가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 저장된 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/frontMemberParsing" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 형식으로 JSON 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더 설정
       });
+
       try {
+        // 필수 데이터가 없을 경우 오류를 발생시킴
         if (req.body.id === undefined || req.body.ip === undefined || req.body.href === undefined || req.body.mode === undefined) {
-          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));  // 누락된 입력값에 대한 오류 처리
         }
+
+        // 요청 데이터에서 필요한 값들을 equalJson을 통해 깊은 복사 및 파싱
         const { id, ip, href, mode } = equalJson(req.body);
-        const selfMongo = instance.mongolocal;
-        const collection = "frontMemberHistory";
-        const members = instance.members;
-        let json;
-        let targetMember;
-        let memberId, memberName;
-    
+
+        // MongoDB와 관련된 설정
+        const selfMongo = instance.mongolocal;  // 로컬 MongoDB 인스턴스
+        const collection = "frontMemberHistory";  // 데이터를 저장할 컬렉션
+        const members = instance.members;  // 서버에 저장된 멤버 리스트
+        let json;  // 저장할 JSON 객체
+        let targetMember;  // IP로 찾을 멤버 정보
+        let memberId, memberName;  // 멤버 ID와 이름
+
+        // 모드가 "store"인 경우에만 처리
         if (mode === "store") {
-    
+
+          // 전달받은 IP로 멤버를 찾아냄
           targetMember = members.find((o) => { return o.ip.includes(ip) });
+
+          // 멤버가 존재하는 경우, 접속 기록을 저장할 데이터를 구성
           if (targetMember !== undefined && targetMember !== null) {
-            memberId = targetMember.id;
-            memberName = targetMember.name;
-    
+            memberId = targetMember.id;  // 멤버 ID
+            memberName = targetMember.name;  // 멤버 이름
+
+            // 저장할 JSON 객체를 구성
             json = {
-              date: new Date(),
+              date: new Date(),  // 현재 날짜 및 시간
               member: {
-                memid: memberId,
-                name: memberName,
+                memid: memberId,  // 멤버 ID
+                name: memberName,  // 멤버 이름
               },
               data: {
-                session: id,
-                ip: ip,
-                href: href,
+                session: id,  // 세션 ID
+                ip: ip,  // 접속한 IP 주소
+                href: href,  // 접속한 URL
               },
             };
-    
+
+            // MongoDB에 접속 기록을 저장
             await back.mongoCreate(collection, json, { selfMongo });
           } else {
+            // 멤버를 찾지 못한 경우 null 데이터를 반환
             json = { data: null };
           }
-    
+
+          // 결과 데이터를 JSON 형식으로 클라이언트에 반환
           res.send(JSON.stringify(json));
-    
+
         } else {
+          // 모드가 "store"가 아닌 경우 오류 발생
           throw new Error("invalid mode");
         }
-    
+
       } catch (e) {
+        // 오류 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /blackButtonsClick
+     * @description 고객이 '상담' 또는 '추천' 버튼을 클릭할 때 해당 정보를 기록하고 적절한 알림을 전송하는 라우터입니다. '추천' 모드 선택 시 일정 시간 후 자동 추천서를 생성하여 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, cliid(고객 ID), name(고객 이름), mode(모드)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리된 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/blackButtonsClick" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더 설정
       });
+
       try {
+        // 필수 파라미터가 없을 경우 오류 발생
         if (req.body.cliid === undefined || req.body.name === undefined || req.body.mode === undefined) {
-          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));  // 누락된 입력값에 대한 오류 처리
         }
+
+        // 요청에서 받은 데이터를 equalJson을 사용하여 깊은 복사 및 파싱
         const { cliid, name, mode } = equalJson(req.body);
-        const selfCoreMongo = instance.mongo;
-        const selfMongo = instance.mongolocal;
-        const toNormal = true;
-        const collection = "blackButtonsClick";
-        const delta = Math.floor((1 + Math.random()) * 60 * 60 * 1000) - (10 * 60 * 1000);
-        const generalPort = 3000;
-        let proid, rows;
-        let targetProposal;
-    
+        
+        // MongoDB 인스턴스 설정
+        const selfCoreMongo = instance.mongo;  // 메인 MongoDB 인스턴스
+        const selfMongo = instance.mongolocal;  // 로컬 MongoDB 인스턴스
+        const toNormal = true;  // 결과를 일반 객체로 변환하는 플래그
+        const collection = "blackButtonsClick";  // 기록을 저장할 컬렉션
+        const delta = Math.floor((1 + Math.random()) * 60 * 60 * 1000) - (10 * 60 * 1000);  // 최대 2시간 내로 자동 추천서 생성 시간을 설정
+        const generalPort = 3000;  // 일반 포트 설정
+        let proid, rows;  // 프로젝트 ID와 결과 데이터를 담을 변수
+        let targetProposal;  // 타겟 제안서 객체
+
+        // 상담 모드일 경우 처리
         if (mode === "consulting") {
+          // 상담 요청에 대한 메시지를 전송
           await messageSend({ text: name + " 고객님(" + cliid + ")이 상담부터 원한다고 선택하셨어요!", channel: "#404_curation", voice: true });
+
+          // MongoDB에 상담 요청을 기록
           await back.mongoCreate(collection, {
             cliid,
             name,
@@ -8355,96 +11092,120 @@ class DataRouter {
             mode,
           }, { selfMongo });
         } else {
+          // 추천 모드일 경우 처리
           await messageSend({ text: name + " 고객님(" + cliid + ")이 추천부터 원한다고 선택하셨어요! 2시간 이내로(" + String(Math.floor((delta / 1000) / 60)) + "분 뒤에) 자동 추천서가 발송될 예정입니다!", channel: "#404_curation", voice: true });
-    
+
+          // 일정 시간이 지난 후 자동 추천서 생성 및 전송
           setTimeout(async () => {
             try {
+              // 고객의 프로젝트 목록을 가져옴
               rows = await back.getProjectsByQuery({ cliid }, { selfMongo: selfCoreMongo, toNormal });
+
+              // 프로젝트가 없으면 10분 후 다시 시도
               while (rows.length === 0) {
                 await sleep(10 * 60 * 1000);
                 rows = await back.getProjectsByQuery({ cliid }, { selfMongo: selfCoreMongo, toNormal });
               }
-    
+
               if (rows.length === 0) {
-                throw new Error("cannot find proposal");
+                throw new Error("cannot find proposal");  // 프로젝트가 없으면 오류 발생
               }
-    
+
+              // 최신 제안서를 가져옴
               rows.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() });
-              [ targetProposal ] = rows;
+              [targetProposal] = rows;
               proid = targetProposal.proid;
-    
+
+              // 자동 추천서 생성 요청
               await requestSystem("https://" + address.officeinfo.host + ":" + String(3002) + "/createProposalDocument", { instant: true, proid }, { headers: { "Content-Type": "application/json", "origin": "https://" + address.frontinfo.host } });
+
+              // 추천서 전송 알림 전송
               await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#404_curation", voice: true });
               await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#403_proposal", voice: false });
-    
+
+              // MongoDB에 추천서 전송 기록을 저장
               await back.mongoCreate(collection, {
                 cliid,
                 name,
                 date: new Date(),
                 mode,
               }, { selfMongo });
-    
-            } catch(e) {
+
+            } catch (e) {
               console.log(e);
+
+              // 오류가 발생하면 상담 모드로 처리
               await messageSend({ text: name + " 고객님(" + cliid + ")이 상담부터 원한다고 선택하셨어요!", channel: "#404_curation", voice: true });
-    
+
               await back.mongoCreate(collection, {
                 cliid,
                 name,
                 date: new Date(),
                 mode: "consulting",
               }, { selfMongo });
-    
+
               logger.error(e, req).catch((e) => { console.log(e); });
             }
           }, delta);
         }
-    
+
+        // 응답 데이터를 JSON 형식으로 반환
         res.send(JSON.stringify({ message: "done" }));
-    
+
       } catch (e) {
+        // 오류 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /justClientEvaluation
+     * @description 고객 평가 관련 요청을 처리하는 라우터입니다. 모드에 따라 평가 요청을 보내거나 평가 데이터를 조회 및 저장합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 평가 요청의 모드와 관련된 데이터가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리된 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/justClientEvaluation" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더 설정
       });
+
       try {
+        // 요청 모드가 없는 경우 오류 처리
         if (req.body.mode === undefined) {
-          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+          throw new Error("invalid input => " + JSON.stringify(req.body, null, 2)); // 잘못된 요청 오류
         }
+
+        // 요청 데이터를 equalJson을 사용해 깊은 복사 및 파싱
         const { cliid, proid, mode } = equalJson(req.body);
-        const selfCoreMongo = instance.mongo;
-        const selfMongo = instance.mongo;
-        const selfOfficeMongo = instance.mongo;
-        const collection = "clientEvaluationSendHistory";
-        const collection2 = "clientEvaluation";
-        let thisClient;
-        let method;
-        let name, phone;
-        let projects;
-        let rows;
-        let target;
-        let json;
-        
+        const selfCoreMongo = instance.mongo;  // 메인 MongoDB 인스턴스
+        const selfMongo = instance.mongo;  // 로컬 MongoDB 인스턴스
+        const selfOfficeMongo = instance.mongo;  // 오피스 MongoDB 인스턴스
+        const collection = "clientEvaluationSendHistory";  // 평가 요청 기록 컬렉션
+        const collection2 = "clientEvaluation";  // 평가 데이터 컬렉션
+        let thisClient, method, name, phone, projects, rows, target, json; // 처리에 필요한 변수들 선언
+
+        // 'send' 모드: 고객에게 평가 요청을 전송
         if (mode === "send") {
-    
+          // 고객 데이터를 조회
           [ thisClient ] = await back.mongoPick("client", [ { cliid }, { cliid: 1, name: 1, phone: 1 } ], { selfMongo: selfCoreMongo });
           ({ name, phone } = thisClient);
-    
+
+          // 해당 프로젝트 정보를 가져옴
           projects = await back.mongoRead("project", { proid }, { selfMongo: selfCoreMongo });
+          // 진행 또는 완료된 프로젝트만 필터링
           projects = projects.filter((p) => { return p.desid !== "" }).filter((p) => {
             return (/진행/gi.test(p.process.status) || /완료/gi.test(p.process.status));
           });
-          method = "justClientEvaluation";
-    
+
+          method = "justClientEvaluation";  // 메시지 발송 메서드 정의
+
+          // 프로젝트가 존재할 경우 평가 요청을 전송
           if (projects.length > 0) {
             await kakao.sendTalk(method, name, phone, {
               client: name,
@@ -8452,12 +11213,16 @@ class DataRouter {
               path: "evaluation",
               proid
             });
+
+            // 웹 채널에 알림 메시지 전송
             await messageSend({
               text: name + " 고객님께 서비스 평가 요청을 보냈어요!",
               channel: "#200_web",
               voice: false,
             });
-            rows = await back.mongoRead(collection, { proid }, { selfMongo })
+
+            // 기존 기록이 있는지 조회하고 없으면 새로 생성, 있으면 업데이트
+            rows = await back.mongoRead(collection, { proid }, { selfMongo });
             if (rows.length === 0) {
               json = {
                 proid,
@@ -8470,42 +11235,43 @@ class DataRouter {
               [ target ] = rows;
               target.send.unshift({ date: new Date() });
               target.date = new Date();
-              json = objectDeepCopy(target);
+              json = objectDeepCopy(target);  // 기록을 깊은 복사한 후 삭제하고 새로 생성
               await back.mongoDelete(collection, { proid }, { selfMongo });
               await back.mongoCreate(collection, json, { selfMongo });
             }
-            res.send(JSON.stringify({ message: "success" }));
+            res.send(JSON.stringify({ message: "success" }));  // 성공 메시지 반환
           } else {
-            res.send(JSON.stringify({ message: "fail" }));
+            res.send(JSON.stringify({ message: "fail" }));  // 프로젝트가 없으면 실패 메시지 반환
           }
-    
+
+        // 'list' 또는 'get' 모드: 특정 프로젝트의 평가 요청 내역을 조회
         } else if (mode === "list" || mode === "get") {
-    
-          rows = await back.mongoRead(collection, { proid }, { selfMongo })
+          rows = await back.mongoRead(collection, { proid }, { selfMongo });
           if (rows.length === 0) {
-            res.send(JSON.stringify({ data: null }));
+            res.send(JSON.stringify({ data: null }));  // 기록이 없으면 null 반환
           } else {
-            res.send(JSON.stringify({ data: rows[0] }));
+            res.send(JSON.stringify({ data: rows[0] }));  // 조회된 데이터를 반환
           }
-    
+
+        // 'all' 모드: 모든 평가 요청 내역을 조회
         } else if (mode === "all") {
-    
-          rows = await back.mongoRead(collection, {}, { selfMongo })
-          res.send(JSON.stringify(rows));
-    
+          rows = await back.mongoRead(collection, {}, { selfMongo });
+          res.send(JSON.stringify(rows));  // 모든 기록을 반환
+
+        // 'store' 모드: 평가 요청 내역을 저장
         } else if (mode === "store") {
-    
           [ thisClient ] = await back.mongoPick("client", [ { cliid }, { cliid: 1, name: 1, phone: 1 } ], { selfMongo: selfCoreMongo });
           ({ name, phone } = thisClient);
-    
+
           projects = await back.mongoRead("project", { proid }, { selfMongo: selfCoreMongo });
           projects = projects.filter((p) => { return p.desid !== "" }).filter((p) => {
             return (/진행/gi.test(p.process.status) || /완료/gi.test(p.process.status));
           });
+
           method = "justClientEvaluation";
-    
+
           if (projects.length > 0) {
-            rows = await back.mongoRead(collection, { proid }, { selfMongo })
+            rows = await back.mongoRead(collection, { proid }, { selfMongo });
             if (rows.length === 0) {
               json = {
                 proid,
@@ -8526,22 +11292,23 @@ class DataRouter {
           } else {
             res.send(JSON.stringify({ message: "fail" }));
           }
-    
+
+        // 'result' 모드: 특정 프로젝트의 평가 결과를 조회
         } else if (mode === "result") {
-    
-          rows = await back.mongoRead(collection2, { proid }, { selfMongo: selfOfficeMongo })
+          rows = await back.mongoRead(collection2, { proid }, { selfMongo: selfOfficeMongo });
           res.send(JSON.stringify({ data: rows.find((r) => { return r.proid === proid }) ? rows.find((r) => { return r.proid === proid }) : null }));
-    
+
+        // 'resultAll' 모드: 모든 프로젝트의 평가 결과를 조회
         } else if (mode === "resultAll") {
-    
-          rows = await back.mongoRead(collection2, {}, { selfMongo: selfOfficeMongo })
+          rows = await back.mongoRead(collection2, {}, { selfMongo: selfOfficeMongo });
           res.send(JSON.stringify(rows));
-    
+
         } else {
-          throw new Error("invalid mode");
+          throw new Error("invalid mode");  // 유효하지 않은 모드 처리
         }
-    
+
       } catch (e) {
+        // 오류 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -8620,27 +11387,42 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /createStylingContract
+     * @description 스타일링 계약서를 생성하는 라우터입니다. 프로젝트 ID에 따라 새로운 스타일링 계약서를 생성하고 고객에게 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID), contractName(계약서에 표시할 이름), contractAddress(계약서에 표시할 주소)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/createStylingContract" ], async function (req, res) {
+      
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 요청 본문에 proid, contractName, contractAddress가 없으면 오류 발생
         if (req.body.proid === undefined || req.body.contractName === undefined || req.body.contractAddress === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없는 경우 잘못된 요청 처리
         }
+
+        // 요청 본문에서 proid, contractName, contractAddress 값을 추출
         const { proid, contractName, contractAddress } = req.body;
+
+        // MongoDB에서 해당 proid로 스타일링 계약 데이터를 조회
         const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+        // 조회된 데이터가 없는 경우 새로운 계약서를 생성
         if (rows.length === 0) {
           const selfMongo = instance.mongo;
-          const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-          const title = "2024디자인계약서_000고객님_주홈리에종_YYMMDD";
-          const project = await back.getProjectById(proid, { selfMongo });
-          const client = await back.getClientById(project.cliid, { selfMongo });
-          const designer = await back.getDesignerById(project.desid, { selfMongo });
-          const today = new Date();
+          const { officeinfo: { widsign: { id, key, endPoint } } } = address;  // Widsign API 정보를 불러옴
+          const title = "2024디자인계약서_000고객님_주홈리에종_YYMMDD";  // 계약서 제목 설정
+          const project = await back.getProjectById(proid, { selfMongo });  // 프로젝트 정보를 가져옴
+          const client = await back.getClientById(project.cliid, { selfMongo });  // 클라이언트 정보를 가져옴
+          const designer = await back.getDesignerById(project.desid, { selfMongo });  // 디자이너 정보를 가져옴
+          const today = new Date();  // 현재 날짜를 today로 설정
           let url, requestNumber, proposalDate;
           let widsignRes, token, target, targetFormId, safeNum;
           let titleName, titleAddress, formTitle;
@@ -8651,76 +11433,93 @@ class DataRouter {
           let todayYear, todayMonth ,todayDate;
           let delta;
     
+          // 현재 연도를 문자열로 변환하여 저장
           todayYear = String(today.getFullYear());
+          // 현재 월을 문자열로 변환하여 저장 (월은 0부터 시작하므로 1을 더함)
           todayMonth = String(today.getMonth() + 1);
+          // 현재 날짜를 문자열로 변환하여 저장
           todayDate = String(today.getDate());
-    
+
+          // 프로젝트 제안서의 날짜를 가져와서 Unix 시간 값으로 변환
           proposalDate = project.proposal.date.valueOf();
-    
+
+          // 요청 배열에서 제안서 날짜와 일치하거나 더 이전의 요청을 찾기 위한 변수 초기화
           requestNumber = 0;
+          // 클라이언트의 요청 배열을 순회하면서 해당 요청의 타임라인이 제안서 날짜보다 작거나 같은 경우 찾음
           for (let i = 0; i < client.requests.length; i++) {
             if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+              // 해당 요청의 인덱스를 requestNumber에 저장하고 반복문을 종료
               requestNumber = i;
               break;
             }
           }
-    
+
+          // 클라이언트의 요청 배열에서 찾은 인덱스(requestNumber)에 해당하는 요청과 분석 데이터를 구조 분해 할당으로 추출
           ({ request, analytics } = client.toNormal().requests[requestNumber]);
-    
+
+          // 외부 API에 액세스 토큰을 요청하는 API 호출, method는 GET, 헤더에 API ID와 키를 포함
           widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    
+
           if (widsignRes.data.result_code !== 200) {
             throw new Error("access token error");
           } else {
+
             token = widsignRes.data.access_token;
             num = 1;
             safeNum = 0;
             do {
+              // 계약서 양식 목록을 검색해서 제목이 일치하는 양식을 찾음
               widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
               target = widsignRes.data.result.filter((obj) => { return obj.title === title });
               num++;
               safeNum++;
               if (safeNum > 1000) {
-                throw new Error("title name error");
+                throw new Error("title name error");  // 타이틀을 찾을 수 없는 경우 오류 발생
               }
             } while (target.length === 0);
     
+            // 양식의 ID를 추출
             [ { id: targetFormId } ] = target;
     
+            // 계약서에 표시할 이름을 설정
             titleName = client.name;
             if (contractName.trim() !== "") {
               titleName = contractName;
             }
     
+            // 계약서에 표시할 주소를 설정
             titleAddress = request.space.address;
             if (contractAddress.trim() !== "") {
               titleAddress = contractAddress;
             }
     
+            // 오늘 날짜를 "YYMMDD" 형식으로 변환하여 계약서 제목을 생성
             tempArr = dateToString(today).split('-');
             formTitle = "2024디자인계약서_" + titleName + "고객님_주홈리에종_";
             formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+    
+            // 계약서에 필요한 필드들을 설정
             map = [
-              { id: "66d16860fbe5f88a937b7968", value: todayYear },
-              { id: "66d16860fbe5f88a937b7969", value: todayMonth },
-              { id: "66d16860fbe5f88a937b796a", value: todayDate },
-              { id: "66d16860fbe5f88a937b796b", value: titleName === '' ? '-' : titleName },
-              { id: "66d16860fbe5f88a937b796c", value: client.phone === '' ? '-' : client.phone },
-              { id: "66d16860fbe5f88a937b796d", value: request.family === '' ? "알 수 없음" : request.family },
-              { id: "66d16860fbe5f88a937b796e", value: titleAddress === '' ? '-' : titleAddress },
-              { id: "66d16860fbe5f88a937b796f", value: request.budget + " (디자이너 논의 및 조정)" },
-              { id: "66d16860fbe5f88a937b7970", value: request.space.contract === '' ? '-' : request.space.contract },
-              { id: "66d16860fbe5f88a937b7971", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
-              { id: "66d16860fbe5f88a937b7972", value: String(request.space.pyeong) },
-              { id: "66d16860fbe5f88a937b7973", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
-              { id: "66d16860fbe5f88a937b7974", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
-              { id: "66d16860fbe5f88a937b7975", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
+              { id: "66d16860fbe5f88a937b7968", value: todayYear },  // 연도 필드
+              { id: "66d16860fbe5f88a937b7969", value: todayMonth },  // 월 필드
+              { id: "66d16860fbe5f88a937b796a", value: todayDate },  // 일 필드
+              { id: "66d16860fbe5f88a937b796b", value: titleName === '' ? '-' : titleName },  // 계약서에 표시할 고객 이름
+              { id: "66d16860fbe5f88a937b796c", value: client.phone === '' ? '-' : client.phone },  // 고객의 전화번호
+              { id: "66d16860fbe5f88a937b796d", value: request.family === '' ? "알 수 없음" : request.family },  // 가족 정보
+              { id: "66d16860fbe5f88a937b796e", value: titleAddress === '' ? '-' : titleAddress },  // 계약서에 표시할 주소
+              { id: "66d16860fbe5f88a937b796f", value: request.budget + " (디자이너 논의 및 조정)" },  // 예산 정보
+              { id: "66d16860fbe5f88a937b7970", value: request.space.contract === '' ? '-' : request.space.contract },  // 계약 정보
+              { id: "66d16860fbe5f88a937b7971", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },  // 방/화장실 수
+              { id: "66d16860fbe5f88a937b7972", value: String(request.space.pyeong) },  // 평수
+              { id: "66d16860fbe5f88a937b7973", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },  // 사전 점검 날짜
+              { id: "66d16860fbe5f88a937b7974", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },  // 공간 비우기 날짜
+              { id: "66d16860fbe5f88a937b7975", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },  // 예상 입주 날짜
             ];
     
-            map.push({ id: "66d16860fbe5f88a937b7976", value: serviceParsing(project.service) });
+            map.push({ id: "66d16860fbe5f88a937b7976", value: serviceParsing(project.service) });  // 서비스 항목 추가
+            map.push({ id: "66d16860fbe5f88a937b7977", value: designer.designer });  // 디자이너 정보 추가
     
-            map.push({ id: "66d16860fbe5f88a937b7977", value: designer.designer });
-    
+            // 계약서의 날짜 정보
             map.push({ id: "66d16860fbe5f88a937b7978", value: todayYear });
             map.push({ id: "66d16860fbe5f88a937b7979", value: todayMonth });
             map.push({ id: "66d16860fbe5f88a937b797b", value: todayDate });
@@ -8733,51 +11532,50 @@ class DataRouter {
             map.push({ id: "66d16860fbe5f88a937b797f", value: String(project.process.contract.form.date.to.getMonth() + 1) });
             map.push({ id: "66d16860fbe5f88a937b7980", value: String(project.process.contract.form.date.to.getDate()) });
     
+            // 계약 기간을 계산하여 필드에 추가
             delta = (((((project.process.contract.form.date.to.valueOf() - project.process.contract.form.date.from.valueOf()) / 1000) / 60) / 60) / 24) / 30;
             map.push({ id: "66d16860fbe5f88a937b7981", value: String(Math.round(delta * 10) / 10) });
     
+            // 소비자 금액 계산
             map.push({ id: "66d16860fbe5f88a937b7982", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) });
     
+            // 계약 담당자 정보
             map.push({ id: "66d16860fbe5f88a937b7983", value: "박헌성" });
             map.push({ id: "66d16860fbe5f88a937b7984", value: "02-2039-2252" });
             map.push({ id: "66d16860fbe5f88a937b7985", value: "help@home-liaison.com" });
     
+            // 계약서 전송일 관련 정보
             map.push({ id: "66d16860fbe5f88a937b7987", value: todayYear });
             map.push({ id: "66d16860fbe5f88a937b7988", value: todayMonth });
             map.push({ id: "66d16860fbe5f88a937b7989", value: todayDate });
+    
+            // 계약서에 표시할 추가 필드들
             map.push({ id: "66d16860fbe5f88a937b798a", value: titleName === '' ? '-' : titleName });
     
             map.push({ id: "66d16860fbe5f88a937b798c", value: titleName === '' ? '-' : titleName });
     
+            // 계약서의 시작 날짜
             map.push({ id: "66d16860fbe5f88a937b798d", value: String(project.process.contract.form.date.from.getFullYear()) });
             map.push({ id: "66d16860fbe5f88a937b798f", value: String(project.process.contract.form.date.from.getMonth() + 1) });
             map.push({ id: "66d16860fbe5f88a937b7990", value: String(project.process.contract.form.date.from.getDate()) });
     
+            // 계약서의 종료 날짜
             map.push({ id: "66d16860fbe5f88a937b798e", value: String(project.process.contract.form.date.to.getFullYear()) });
             map.push({ id: "66d16860fbe5f88a937b7992", value: String(project.process.contract.form.date.to.getMonth() + 1) });
             map.push({ id: "66d16860fbe5f88a937b7991", value: String(project.process.contract.form.date.to.getDate()) });
     
+            // 소비자 금액 추가
             map.push({ id: "66d16860fbe5f88a937b7993", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) });
     
             map.push({ id: "66d16860fbe5f88a937b7997", value: todayYear });
             map.push({ id: "66d16860fbe5f88a937b7998", value: todayMonth });
             map.push({ id: "66d16860fbe5f88a937b7999", value: todayDate });
     
+            // 주소 및 이름 정보 추가
             map.push({ id: "66d16860fbe5f88a937b7994", value: titleAddress === '' ? '-' : titleAddress });
             map.push({ id: "66d16860fbe5f88a937b7995", value: titleName === '' ? '-' : titleName });
     
-            map.push({ id: "66d16860fbe5f88a937b799a", value: titleName === '' ? '-' : titleName });
-            map.push({ id: "66d16860fbe5f88a937b799b", value: todayYear });
-            map.push({ id: "66d16860fbe5f88a937b799c", value: todayMonth });
-            map.push({ id: "66d16860fbe5f88a937b799d", value: todayDate });
-    
-            map.push({ id: "66d16860fbe5f88a937b79a1", value: todayYear });
-            map.push({ id: "66d16860fbe5f88a937b79a2", value: todayMonth });
-            map.push({ id: "66d16860fbe5f88a937b79a3", value: todayDate });
-    
-            map.push({ id: "66d16860fbe5f88a937b799e", value: titleAddress === '' ? '-' : titleAddress });
-            map.push({ id: "66d16860fbe5f88a937b799f", value: titleName === '' ? '-' : titleName });
-    
+            // 클라이언트에게 전송할 데이터 구성
             data = {
               form_id: targetFormId,
               title: formTitle,
@@ -8794,8 +11592,10 @@ class DataRouter {
               items: map
             }
     
+            // 계약서를 전송
             widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
     
+            // 계약서 관련 정보를 MongoDB에 저장
             await bill.createBill("stylingForm", [ {
               name: widsignRes.data.result[0].doc_name,
               id: widsignRes.data.result[0].receiver_meta_id,
@@ -8805,6 +11605,7 @@ class DataRouter {
               proid: project.proid
             } ], { selfMongo: instance.mongolocal });
     
+            // 고객에게 알림톡을 전송
             await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
             messageSend({ text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
               console.log(err);
@@ -8814,87 +11615,147 @@ class DataRouter {
     
           res.send(JSON.stringify({ message: "OK" }));
         } else {
+          // 스타일링 계약서가 이미 존재할 경우 처리하지 않음
           await messageSend({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
           res.send(JSON.stringify({ message: "ERROR" }));
         }
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 에러 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     });
     
+    /**
+     * @route POST /removeStylingContract
+     * @description 스타일링 계약을 삭제하는 라우터입니다. 지정된 프로젝트 ID에 해당하는 모든 스타일링 계약 데이터를 제거합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에는 proid(프로젝트 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/removeStylingContract" ], async function (req, res) {
+      
+      // 응답 헤더 설정: JSON 형식으로 응답하고, CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 요청 본문에 proid(프로젝트 ID)가 없는 경우 오류 발생
         if (req.body.proid === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 잘못된 요청 처리
         }
+
+        // 요청 본문에서 proid를 추출합니다.
         const { proid } = req.body;
+
+        // MongoDB에서 스타일링 계약 데이터를 조회합니다.
         const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+
+        // 조회된 각 데이터를 반복하여 삭제 작업을 수행합니다.
         for (let i = 0; i < rows.length; i++) {
+          // MongoDB에서 해당 프로젝트 ID와 관련된 스타일링 계약을 삭제합니다.
           await back.mongoDelete("stylingForm", { proid }, { selfMongo: instance.mongolocal });
         }
+
+        // 성공적으로 처리되었을 때 OK 메시지를 반환합니다.
         res.send(JSON.stringify({ message: "OK" }));
+
       } catch (e) {
+        // 오류 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.set("Content-Type", "application/json");  // 응답을 JSON 형식으로 설정
+        res.send(JSON.stringify({ error: e.message }));  // 오류 메시지를 클라이언트에 반환
       }
     });
     
+    /**
+     * @route POST /removeConstructContract
+     * @description 시공 계약을 삭제하는 라우터입니다. 해당 프로젝트 ID (proid)를 받아서 해당 프로젝트와 관련된 시공 양식을 삭제합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid가 포함되어야 합니다.
+     * @param {Object} res - 서버 응답 객체로, 작업 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/removeConstructContract" ], async function (req, res) {
+      
+      // 응답 헤더 설정: 응답을 JSON 형식으로 반환하고, CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json", // 응답을 JSON 형식으로 설정
+        "Access-Control-Allow-Origin": "*", // 모든 도메인에서 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 헤더 설정
       });
+
       try {
+        // 요청 본문에 proid가 없으면 에러를 발생시킵니다.
         if (req.body.proid === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // proid가 없으면 잘못된 요청으로 처리
         }
+
+        // 요청 본문에서 proid를 추출합니다.
         const { proid } = req.body;
+
+        // MongoDB에서 해당 proid와 일치하는 스타일링 양식을 조회합니다.
         const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+
+        // 조회된 양식들을 반복하면서 해당 프로젝트 ID와 관련된 constructForm 데이터를 삭제합니다.
         for (let i = 0; i < rows.length; i++) {
           await back.mongoDelete("constructForm", { proid }, { selfMongo: instance.mongolocal });
         }
+
+        // 작업이 성공적으로 끝나면 OK 메시지를 반환합니다.
         res.send(JSON.stringify({ message: "OK" }));
+
       } catch (e) {
+        // 에러가 발생하면 로그를 기록하고, 클라이언트에 에러 메시지를 반환합니다.
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /createConstructContract
+     * @description 시공 계약서를 생성하는 라우터입니다. 프로젝트 ID에 따라 새로운 시공 계약서를 생성하고 고객에게 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID)와 summary(계약 요약 정보)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/createConstructContract" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 요청 본문에 proid와 summary가 없으면 오류 발생
         if (req.body.proid === undefined || req.body.summary === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없는 경우 잘못된 요청 처리
         }
+
+        // 요청 본문에서 proid와 summary(계약 요약 정보)를 추출
         const { proid, summary } = req.body;
         const { contractName, contractAddress, contractPhone } = summary;
+
+        // MongoDB에서 해당 proid로 시공 계약 데이터를 조회
         const rows = await back.mongoRead("constructForm", { proid }, { selfMongo: instance.mongolocal });
-    
+
         if (rows.length === 0) {
           const selfMongo = instance.mongo;
           const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+
+          // 기본 계약서 제목 설정
           const title = "2023시공계약서_000고객님_주홈리에종_YYMMDD";
-          const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-          const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
-          const designer = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
-          const today = new Date();
+          const project = await back.getProjectById(proid, { selfMongo: instance.mongo });  // 프로젝트 정보 조회
+          const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });  // 클라이언트 정보 조회
+          const designer = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });  // 디자이너 정보 조회
+          const today = new Date();  // 현재 날짜 저장
+
+          // 영수증 정보 조회
           const thisBills = await bill.getBillsByQuery({
             $and: [
               { "links.proid": project.proid },
@@ -8903,6 +11764,7 @@ class DataRouter {
               { "links.method": project.service.online ? "online" : "offline" }
             ]
           }, { selfMongo: instance.mongolocal });
+
           if (thisBills.length > 0) {
             const [ thisBill ] = thisBills;
             let url, requestNumber, proposalDate;
@@ -8915,11 +11777,14 @@ class DataRouter {
             let request, analytics;
             let map;
             let data;
-    
+
+            // 프로젝트 정보를 일반 객체로 변환
             projectNormal = project.toNormal();
-    
+
+            // 시공 계약서 작성에 필요한 시공 파트너 정보를 확인
             if (projectNormal.process.design.construct.contract.partner !== "") {
-    
+
+              // 시공 파트너 이름 파싱
               if (/_/gi.test(projectNormal.process.design.construct.contract.partner)) {
                 tempArr = projectNormal.process.design.construct.contract.partner.split('_');
                 searchPoint0 = tempArr[0].trim();
@@ -8928,25 +11793,29 @@ class DataRouter {
                 searchPoint0 = projectNormal.process.design.construct.contract.partner.trim();
                 searchPoint1 = '';
               }
-    
+
+              // 시공사를 MongoDB에서 조회
               builders = await back.getBuildersByQuery({
                 $and: [
                   { "builder": searchPoint0 },
                   { "information.business.company": searchPoint1 }
                 ]
               }, { selfMongo: instance.mongo });
-    
+
               if (builders.length !== 0) {
                 const [ builder ] = builders;
-    
+
+                // 시공 정보에 기반하여 영수증에 시공 관련 정보를 추가
                 await bill.constructInjection(thisBill.bilid, builder.buiid, {
                   first: summary.first.amount,
                   start: summary.start.amount,
                   middle: summary.middle.amount,
                   remain: summary.remain.amount,
                 }, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
+
                 await messageLog(thisBill.bilid + " construct request, response set complete");
-    
+
+                // 클라이언트 요청의 타임라인에 맞는 요청을 찾음
                 proposalDate = project.proposal.date.valueOf();
                 requestNumber = 0;
                 for (let i = 0; i < client.requests.length; i++) {
@@ -8955,11 +11824,13 @@ class DataRouter {
                     break;
                   }
                 }
-    
+
                 ({ request, analytics } = client.toNormal().requests[requestNumber]);
-    
+
+                // Widsign API를 통해 토큰을 요청
                 widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    
+
+                // Widsign API 호출 결과를 통해 토큰 값을 가져옴
                 if (widsignRes.data.result_code !== 200) {
                   throw new Error("access token error");
                 } else {
@@ -8967,63 +11838,71 @@ class DataRouter {
                   num = 1;
                   safeNum = 0;
                   do {
+                    // 계약서 양식 목록을 검색해서 제목이 일치하는 양식을 찾음
                     widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
                     target = widsignRes.data.result.filter((obj) => { return obj.title === title });
                     num++;
                     safeNum++;
                     if (safeNum > 1000) {
-                      throw new Error("title name error");
+                      throw new Error("title name error");  // 타이틀을 찾을 수 없는 경우 오류 발생
                     }
                   } while (target.length === 0);
-    
+
+                  // 양식의 ID를 추출
                   [ { id: targetFormId } ] = target;
-    
+
+                  // 계약서에 표시할 이름을 설정
                   titleName = client.name;
                   if (contractName.trim() !== "") {
                     titleName = contractName;
                   }
-    
+
+                  // 계약서에 표시할 주소를 설정
                   titleAddress = request.space.address;
                   if (contractAddress.trim() !== "") {
                     titleAddress = contractAddress;
                   }
-    
+
+                  // 오늘 날짜를 "YYMMDD" 형식으로 변환하여 계약서 제목을 생성
                   tempArr = dateToString(today).split('-');
                   formTitle = "2023시공계약서_" + titleName + "고객님_주홈리에종_";
                   formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+
+                  // 계약서에 필요한 필드들을 설정
                   map = [
-                    { id: "651e7414fbcd2144a51009c2", value: titleName === '' ? '-' : titleName },
-                    { id: "651e7414fbcd2144a51009c3", value: summary.name === '' ? '-' : summary.name },
-                    { id: "651e7414fbcd2144a51009c4", value: summary.address === '' ? '-' : summary.address },
-                    { id: "651e7414fbcd2144a51009c5", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[0] },
-                    { id: "651e7414fbcd2144a51009c7", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[1] },
-                    { id: "651e7414fbcd2144a51009c9", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[2] },
-                    { id: "651e7414fbcd2144a51009c6", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[0] },
-                    { id: "651e7414fbcd2144a51009c8", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[1] },
-                    { id: "651e7414fbcd2144a51009ca", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[2] },
-                    { id: "651e7414fbcd2144a51009cb", value: summary.hangul === '' ? '-' : summary.hangul.replace(/원$/, '') },
-                    { id: "651e7414fbcd2144a51009cc", value: autoComma(summary.total) === '' ? '-' : autoComma(summary.total) },
-                    { id: "651e7414fbcd2144a51009cd", value: String(summary.first.percentage) + '%' },
-                    { id: "651e7414fbcd2144a51009d1", value: autoComma(summary.first.amount) === '' ? '-' : autoComma(summary.first.amount) },
-                    { id: "651e7414fbcd2144a51009d5", value: summary.first.date === '' ? '-' : summary.first.date },
-                    { id: "651e7414fbcd2144a51009d9", value: summary.first.etc === '' ? '-' : summary.first.etc },
-                    { id: "651e7414fbcd2144a51009ce", value: String(summary.start.percentage) + '%' },
-                    { id: "651e7414fbcd2144a51009d2", value: autoComma(summary.start.amount) === '' ? '-' : autoComma(summary.start.amount) },
-                    { id: "651e7414fbcd2144a51009d6", value: summary.start.date === '' ? '-' : summary.start.date },
-                    { id: "651e7414fbcd2144a51009da", value: summary.start.etc === '' ? '-' : summary.start.etc },
-                    { id: "651e7414fbcd2144a51009cf", value: String(summary.middle.percentage) + '%' },
-                    { id: "651e7414fbcd2144a51009d3", value: autoComma(summary.middle.amount) === '' ? '-' : autoComma(summary.middle.amount) },
-                    { id: "651e7414fbcd2144a51009d7", value: summary.middle.date === '' ? '-' : summary.middle.date },
-                    { id: "651e7414fbcd2144a51009db", value: summary.middle.etc === '' ? '-' : summary.middle.etc },
-                    { id: "651e7414fbcd2144a51009d0", value: String(summary.remain.percentage) + '%' },
-                    { id: "651e7414fbcd2144a51009d4", value: autoComma(summary.remain.amount) === '' ? '-' : autoComma(summary.remain.amount) },
-                    { id: "651e7414fbcd2144a51009d8", value: summary.remain.date === '' ? '-' : summary.remain.date },
-                    { id: "651e7414fbcd2144a51009dc", value: summary.remain.etc === '' ? '-' : summary.remain.etc },
-                    { id: "651e7414fbcd2144a51009e0", value: titleName === '' ? '-' : titleName },
-                    { id: "651e7414fbcd2144a51009de", value: contractPhone === '' ? '-' : contractPhone },
-                    { id: "651e7414fbcd2144a51009df", value: contractAddress === '' ? '-' : contractAddress },
+                    { id: "651e7414fbcd2144a51009c2", value: titleName === '' ? '-' : titleName },  // 계약서에 표시할 이름
+                    { id: "651e7414fbcd2144a51009c3", value: summary.name === '' ? '-' : summary.name },  // 계약자 이름
+                    { id: "651e7414fbcd2144a51009c4", value: summary.address === '' ? '-' : summary.address },  // 계약자 주소
+                    { id: "651e7414fbcd2144a51009c5", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[0] },  // 계약 시작 연도
+                    { id: "651e7414fbcd2144a51009c7", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[1] },  // 계약 시작 월
+                    { id: "651e7414fbcd2144a51009c9", value: summary.date.start === '' ? '-' : summary.date.start.split('-')[2] },  // 계약 시작 일
+                    { id: "651e7414fbcd2144a51009c6", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[0] },  // 계약 종료 연도
+                    { id: "651e7414fbcd2144a51009c8", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[1] },  // 계약 종료 월
+                    { id: "651e7414fbcd2144a51009ca", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[2] },  // 계약 종료 일
+                    { id: "651e7414fbcd2144a51009cb", value: summary.hangul === '' ? '-' : summary.hangul.replace(/원$/, '') },  // 한글 금액
+                    { id: "651e7414fbcd2144a51009cc", value: autoComma(summary.total) === '' ? '-' : autoComma(summary.total) },  // 계약 총 금액
+                    { id: "651e7414fbcd2144a51009cd", value: String(summary.first.percentage) + '%' },  // 1차 계약 금액 비율
+                    { id: "651e7414fbcd2144a51009d1", value: autoComma(summary.first.amount) === '' ? '-' : autoComma(summary.first.amount) },  // 1차 계약 금액
+                    { id: "651e7414fbcd2144a51009d5", value: summary.first.date === '' ? '-' : summary.first.date },  // 1차 계약 날짜
+                    { id: "651e7414fbcd2144a51009d9", value: summary.first.etc === '' ? '-' : summary.first.etc },  // 1차 계약 비고
+                    { id: "651e7414fbcd2144a51009ce", value: String(summary.start.percentage) + '%' },  // 착공 금액 비율
+                    { id: "651e7414fbcd2144a51009d2", value: autoComma(summary.start.amount) === '' ? '-' : autoComma(summary.start.amount) },  // 착공 금액
+                    { id: "651e7414fbcd2144a51009d6", value: summary.start.date === '' ? '-' : summary.start.date },  // 착공 날짜
+                    { id: "651e7414fbcd2144a51009da", value: summary.start.etc === '' ? '-' : summary.start.etc },  // 착공 비고
+                    { id: "651e7414fbcd2144a51009cf", value: String(summary.middle.percentage) + '%' },  // 중도 금액 비율
+                    { id: "651e7414fbcd2144a51009d3", value: autoComma(summary.middle.amount) === '' ? '-' : autoComma(summary.middle.amount) },  // 중도 금액
+                    { id: "651e7414fbcd2144a51009d7", value: summary.middle.date === '' ? '-' : summary.middle.date },  // 중도 날짜
+                    { id: "651e7414fbcd2144a51009db", value: summary.middle.etc === '' ? '-' : summary.middle.etc },  // 중도 비고
+                    { id: "651e7414fbcd2144a51009d0", value: String(summary.remain.percentage) + '%' },  // 잔금 비율
+                    { id: "651e7414fbcd2144a51009d4", value: autoComma(summary.remain.amount) === '' ? '-' : autoComma(summary.remain.amount) },  // 잔금 금액
+                    { id: "651e7414fbcd2144a51009d8", value: summary.remain.date === '' ? '-' : summary.remain.date },  // 잔금 날짜
+                    { id: "651e7414fbcd2144a51009dc", value: summary.remain.etc === '' ? '-' : summary.remain.etc },  // 잔금 비고
+                    { id: "651e7414fbcd2144a51009e0", value: titleName === '' ? '-' : titleName },  // 계약서 이름
+                    { id: "651e7414fbcd2144a51009de", value: contractPhone === '' ? '-' : contractPhone },  // 계약자 전화번호
+                    { id: "651e7414fbcd2144a51009df", value: contractAddress === '' ? '-' : contractAddress },  // 계약자 주소
                   ];
-    
+
+                  // 전송할 데이터를 구성
                   data = {
                     form_id: targetFormId,
                     title: formTitle,
@@ -9039,8 +11918,11 @@ class DataRouter {
                     ],
                     items: map
                   }
+
+                  // Widsign API를 통해 계약서를 전송
                   widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
-    
+
+                  // 계약서 관련 정보를 MongoDB에 저장
                   await bill.createBill("constructForm", [ {
                     name: widsignRes.data.result[0].doc_name,
                     id: widsignRes.data.result[0].receiver_meta_id,
@@ -9049,7 +11931,8 @@ class DataRouter {
                     cliid: client.cliid,
                     proid: project.proid
                   } ], { selfMongo: instance.mongolocal });
-    
+
+                  // 클라이언트에게 알림톡을 전송
                   await kakao.sendTalk("constructForm", client.name, client.phone, { client: client.name });
                   messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).then(() => {
                     return requestSystem("https://" + instance.address.officeinfo.host + ":3002/constructInteraction", {
@@ -9060,55 +11943,76 @@ class DataRouter {
                   }).catch((err) => {
                     console.log(err);
                   });
-    
-    
+
+                  // 계약서 생성 완료 메시지 반환
                   res.send(JSON.stringify({ message: "OK" }));
                 }
-    
+
               } else {
+                // 지정된 파트너 시공사가 없을 경우 오류 처리
                 await messageSend({ text: "프로젝트 " + proid + "에서 지정된 파트서 시공사가 등록된 파트너가 아니에요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
                 res.send(JSON.stringify({ message: "ERROR" }));
               }
             } else {
+              // 파트너 시공사가 지정되지 않은 경우 오류 처리
               await messageSend({ text: "프로젝트 " + proid + "는 파트서 시공사가 지정되지 않았어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
               res.send(JSON.stringify({ message: "ERROR" }));
             }
           } else {
+            // 프로젝트 영수증이 없는 경우 오류 처리
             await messageSend({ text: "프로젝트 " + proid + "의 영수증을 찾을 수 없어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
             res.send(JSON.stringify({ message: "ERROR" }));
           }
         } else {
-          console.log("styling form cancel : " + proid);
+          // 시공 계약서가 이미 존재할 경우 처리하지 않음
+          console.log("construct form cancel : " + proid);
           await messageSend({ text: "프로젝트 " + proid + "의 시공 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
           res.send(JSON.stringify({ message: "ERROR" }));
         }
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 에러 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     });
     
+    /**
+     * @route POST /createPartnershipContract
+     * @description 디자이너 파트너십 계약서를 생성하는 라우터입니다. 신청자 ID에 따라 새로운 파트너십 계약서를 생성하고 해당 디자이너에게 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 aspid(신청자 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/createPartnershipContract" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 요청 본문에 aspid가 없으면 오류 발생
         if (req.body.aspid === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없는 경우 잘못된 요청 처리
         }
+
+        // 요청 본문에서 aspid 값을 추출
         const { aspid } = req.body;
+
+        // MongoDB에서 해당 aspid로 파트너십 계약 데이터를 조회
         const rows = await back.mongoRead("partnershipForm", { aspid }, { selfMongo: instance.mongolocal });
+
         if (rows.length === 0) {
           const selfMongo = instance.mongo;
           const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+
+          // 기본 계약서 제목 설정
           const title = "2023디자이너파트너십계약서_000디자이너_YYMMDD";
-          const aspirant = await back.getAspirantById(aspid, { selfMongo });
-          const today = new Date();
-          const nextYear = new Date();
+          const aspirant = await back.getAspirantById(aspid, { selfMongo });  // 신청자 정보 조회
+          const today = new Date();  // 현재 날짜 저장
+          const nextYear = new Date();  // 계약 종료일은 1년 후로 설정
           nextYear.setFullYear(nextYear.getFullYear() + 1);
           nextYear.setDate(nextYear.getDate() - 1);
           let url, requestNumber, proposalDate;
@@ -9118,13 +12022,16 @@ class DataRouter {
           let map;
           let data;
           let todayYear, todayMonth ,todayDate;
-    
+
+          // 오늘 날짜를 "YYMMDD" 형식으로 변환
           todayYear = String(today.getFullYear());
           todayMonth = String(today.getMonth() + 1);
           todayDate = String(today.getDate());
-    
+
+          // Widsign API를 통해 토큰을 요청
           widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    
+
+          // Widsign API 호출 결과를 통해 토큰 값을 가져옴
           if (widsignRes.data.result_code !== 200) {
             throw new Error("access token error");
           } else {
@@ -9132,36 +12039,42 @@ class DataRouter {
             num = 1;
             safeNum = 0;
             do {
+              // 계약서 양식 목록을 검색해서 제목이 일치하는 양식을 찾음
               widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
               target = widsignRes.data.result.filter((obj) => { return obj.title === title });
               num++;
               safeNum++;
               if (safeNum > 1000) {
-                throw new Error("title name error");
+                throw new Error("title name error");  // 타이틀을 찾을 수 없는 경우 오류 발생
               }
             } while (target.length === 0);
-    
+
+            // 양식의 ID를 추출
             [ { id: targetFormId } ] = target;
-    
+
+            // 계약서에 표시할 이름과 주소를 설정
             titleName = aspirant.designer;
             titleAddress = aspirant.address;
-    
+
+            // 오늘 날짜를 "YYMMDD" 형식으로 변환하여 계약서 제목을 생성
             tempArr = dateToString(today).split('-');
             formTitle = "2023디자이너파트너십계약서_" + titleName + "디자이너_";
             formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
-    
+
+            // 계약서에 필요한 필드들을 설정
             map = [
-              { id: "6441eeed39f14f6a53000001", value: aspirant.designer },
-              { id: "6441ef0e39f14f6a53000002", value: dateToString(today) + " ~ " + dateToString(nextYear) },
-              { id: "6441ef2c39f14f6a53000003", value: aspirant.designer },
-              { id: "6441ef4239f14f6a53000005", value: /프리/gi.test(aspirant.information.company.classification) ? "-" : aspirant.information.company.businessNumber },
-              { id: "6441ef4b39f14f6a53000006", value: dateToString(aspirant.birth) },
-              { id: "6441ef3f39f14f6a53000004", value: dateToString(today) },
-              { id: "6441f02f39f14f6a53000009", value: titleAddress },
-              { id: "6441f03e39f14f6a5300000a", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },
-              { id: "6441f04b39f14f6a5300000b", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },
+              { id: "6441eeed39f14f6a53000001", value: aspirant.designer },  // 디자이너 이름
+              { id: "6441ef0e39f14f6a53000002", value: dateToString(today) + " ~ " + dateToString(nextYear) },  // 계약 시작 및 종료 날짜
+              { id: "6441ef2c39f14f6a53000003", value: aspirant.designer },  // 디자이너 이름
+              { id: "6441ef4239f14f6a53000005", value: /프리/gi.test(aspirant.information.company.classification) ? "-" : aspirant.information.company.businessNumber },  // 사업자 번호 또는 프리랜서 여부
+              { id: "6441ef4b39f14f6a53000006", value: dateToString(aspirant.birth) },  // 디자이너 생년월일
+              { id: "6441ef3f39f14f6a53000004", value: dateToString(today) },  // 계약서 작성 날짜
+              { id: "6441f02f39f14f6a53000009", value: titleAddress },  // 디자이너 주소
+              { id: "6441f03e39f14f6a5300000a", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },  // 회사 이름 또는 프리랜서 여부
+              { id: "6441f04b39f14f6a5300000b", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },  // 회사 대표 또는 디자이너 이름
             ];
-            
+
+            // 전송할 데이터를 구성
             data = {
               form_id: targetFormId,
               title: formTitle,
@@ -9177,73 +12090,98 @@ class DataRouter {
               ],
               items: map
             }
-    
+
+            // Widsign API를 통해 계약서를 전송
             widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
-    
+
+            // 계약서 관련 정보를 MongoDB에 저장
             await bill.createBill("partnershipForm", [ {
               name: widsignRes.data.result[0].doc_name,
               id: widsignRes.data.result[0].receiver_meta_id,
               time: new Date(),
               aspid: aspid,
             } ], { selfMongo: instance.mongolocal });
-    
+
+            // 클라이언트에게 알림톡을 전송
             messageSend({ text: aspirant.designer + " 파트너십 계약서를 작성하고 알림톡을 전송했어요!", channel: "#301_apply", voice: true }).catch((err) => {
               console.log(err);
             });
-    
           }
-    
+
+          // 계약서 생성 완료 메시지 반환
           res.send(JSON.stringify({ message: "OK" }));
         } else {
+          // 파트너십 계약서가 이미 존재할 경우 처리하지 않음
           await messageSend({ text: "신청자 " + aspid + "의 파트너십 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#301_apply", voice: true });
           res.send(JSON.stringify({ message: "ERROR" }));
         }
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 에러 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "ERROR" }));
       }
     });
     
+    /**
+     * @route POST /createDesignerContract
+     * @description 디자이너 서비스 제휴 계약서를 생성하는 라우터입니다. 신청자 ID에 따라 새로운 계약서를 생성하고 해당 디자이너에게 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 aspid(신청자 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/createDesignerContract" ], async function (req, res) {
+      
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
       });
+
       try {
+        // 요청 본문에 aspid가 없으면 오류 발생
         if (req.body.aspid === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없는 경우 잘못된 요청 처리
         }
+
+        // 요청 본문에서 aspid 값을 추출
         const { aspid } = req.body;
+
+        // MongoDB에서 해당 aspid로 디자이너 계약서를 조회
         const rows = await back.mongoRead("designerForm", { aspid }, { selfMongo: instance.mongolocal });
+
         if (rows.length === 0) {
           const selfMongo = instance.mongo;
           const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+
+          // 계약서 제목 설정
           const title = "2023디자인서비스제휴계약서_000디자이너_YYMMDD";
-          const aspirant = await back.getAspirantById(aspid, { selfMongo });
-          const today = new Date();
-          const nextYear = new Date();
+          const aspirant = await back.getAspirantById(aspid, { selfMongo });  // 신청자 정보 조회
+          const today = new Date();  // 현재 날짜 저장
+          const nextYear = new Date();  // 계약 종료일을 1년 후로 설정
           nextYear.setFullYear(nextYear.getFullYear() + 1);
           nextYear.setDate(nextYear.getDate() - 1);
-          let url, requestNumber, proposalDate;
           let widsignRes, token, target, targetFormId, safeNum;
           let titleName, titleAddress, formTitle;
           let tempArr;
           let map;
           let data;
-          let todayYear, todayMonth ,todayDate;
+          let todayYear, todayMonth, todayDate;
           let percentage;
-    
+
+          // 오늘 날짜를 "YYMMDD" 형식으로 변환
           todayYear = String(today.getFullYear());
           todayMonth = String(today.getMonth() + 1);
           todayDate = String(today.getDate());
-    
+
+          // 서비스 수수료 비율 설정
           percentage = 30;
-    
+
+          // Widsign API를 통해 토큰을 요청
           widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    
+
+          // Widsign API 호출 결과를 통해 토큰 값을 가져옴
           if (widsignRes.data.result_code !== 200) {
             throw new Error("access token error");
           } else {
@@ -9251,38 +12189,44 @@ class DataRouter {
             num = 1;
             safeNum = 0;
             do {
+              // 계약서 양식 목록을 검색하여 제목이 일치하는 양식을 찾음
               widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
               target = widsignRes.data.result.filter((obj) => { return obj.title === title });
               num++;
               safeNum++;
               if (safeNum > 1000) {
-                throw new Error("title name error");
+                throw new Error("title name error");  // 타이틀을 찾을 수 없는 경우 오류 발생
               }
             } while (target.length === 0);
-    
+
+            // 양식의 ID를 추출
             [ { id: targetFormId } ] = target;
-    
+
+            // 계약서에 표시할 이름과 주소를 설정
             titleName = aspirant.designer;
             titleAddress = aspirant.address;
-    
+
+            // 오늘 날짜를 "YYMMDD" 형식으로 변환하여 계약서 제목을 생성
             tempArr = dateToString(today).split('-');
             formTitle = "2023디자인서비스제휴계약서_" + titleName + "디자이너_";
             formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
-    
+
+            // 계약서에 필요한 필드들을 설정
             map = [
-              { id: "6440dafad4a1496b82000005", value: aspirant.designer },
-              { id: "6440db17d4a1496b82000006", value: todayYear },
-              { id: "6440db23d4a1496b82000007", value: todayMonth },
-              { id: "6440db3dd4a1496b82000009", value: todayDate },
-              { id: "6440db8fd4a1496b8200000a", value: String(percentage) },
-              { id: "6440dbc3d4a1496b8200000b", value: aspirant.information.account.to },
-              { id: "6440dbe4d4a1496b8200000d", value: aspirant.information.account.bank },
-              { id: "6440dc17d4a1496b8200000e", value: aspirant.information.account.number },
-              { id: "6440dddad4a1496b82000011", value: titleAddress },
-              { id: "6440ddebd4a1496b82000012", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },
-              { id: "6440ddfbd4a1496b82000013", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },
+              { id: "6440dafad4a1496b82000005", value: aspirant.designer },  // 디자이너 이름
+              { id: "6440db17d4a1496b82000006", value: todayYear },  // 계약 시작 연도
+              { id: "6440db23d4a1496b82000007", value: todayMonth },  // 계약 시작 월
+              { id: "6440db3dd4a1496b82000009", value: todayDate },  // 계약 시작 날짜
+              { id: "6440db8fd4a1496b8200000a", value: String(percentage) },  // 서비스 수수료 비율
+              { id: "6440dbc3d4a1496b8200000b", value: aspirant.information.account.to },  // 송금 계좌 정보
+              { id: "6440dbe4d4a1496b8200000d", value: aspirant.information.account.bank },  // 은행 이름
+              { id: "6440dc17d4a1496b8200000e", value: aspirant.information.account.number },  // 계좌 번호
+              { id: "6440dddad4a1496b82000011", value: titleAddress },  // 디자이너 주소
+              { id: "6440ddebd4a1496b82000012", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },  // 회사 이름 또는 프리랜서 여부
+              { id: "6440ddfbd4a1496b82000013", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },  // 회사 대표 또는 디자이너 이름
             ];
-    
+
+            // 전송할 데이터를 구성
             data = {
               form_id: targetFormId,
               title: formTitle,
@@ -9298,28 +12242,33 @@ class DataRouter {
               ],
               items: map
             }
-    
+
+            // Widsign API를 통해 계약서를 전송
             widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
-    
+
+            // 계약서 관련 정보를 MongoDB에 저장
             await bill.createBill("designerForm", [ {
               name: widsignRes.data.result[0].doc_name,
               id: widsignRes.data.result[0].receiver_meta_id,
               time: new Date(),
               aspid: aspid,
             } ], { selfMongo: instance.mongolocal });
-    
+
+            // 클라이언트에게 알림톡을 전송
             messageSend({ text: aspirant.designer + " 서비스 제휴 계약서를 작성하고 알림톡을 전송했어요!", channel: "#301_apply", voice: true }).catch((err) => {
               console.log(err);
             });
-    
           }
-    
+
+          // 계약서 생성 완료 메시지 반환
           res.send(JSON.stringify({ message: "OK" }));
         } else {
+          // 디자이너 계약서가 이미 존재할 경우 처리하지 않음
           await messageSend({ text: "신청자 " + aspid + "의 서비스 제휴 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#301_apply", voice: true });
           res.send(JSON.stringify({ message: "ERROR" }));
         }
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 에러 메시지 반환
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "ERROR" }));
@@ -9399,28 +12348,43 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /constructAmountSync
+     * @description 시공 금액을 동기화하는 라우터입니다. 클라이언트에서 프로젝트 ID, 클라이언트 ID, 디자이너 ID, 결제 방식과 금액 정보를 받아 MongoDB에 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID), cliid(클라이언트 ID), desid(디자이너 ID), method(결제 방식), amount(금액 정보) 등이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/constructAmountSync" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답의 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
+        // 필수 요청 본문 값이 없으면 오류를 발생시킵니다.
         if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined || req.body.method === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없으면 오류 발생
         }
+
+        // 요청 본문에서 필요한 데이터 추출 (equalJson을 사용해 깊은 복사 수행)
         const { proid, cliid, desid, method } = equalJson(req.body);
+
+        // 찾을 키워드를 정의합니다.
         const find0 = "시공 잔금";
         const findFirst = "시공 계약금";
         const findStart = "시공 착수금";
         const findMiddle = "시공 중도금";
         const findRemain = "시공 잔금";
         const find1 = "시공";
+
         let bills, bilid, tempIndex, targetIndex, targetBill;
         let itemIndex;
         let whereQuery, updateQuery;
-    
+
+        // MongoDB에서 관련 청구서 데이터를 조회합니다.
         bills = await bill.getBillsByQuery({
           $and: [
             { "links.proid": proid },
@@ -9429,10 +12393,14 @@ class DataRouter {
             { "links.method": method },
           ]
         }, { selfMongo: instance.mongolocal });
+
+        // 조회한 청구서가 있을 경우
         if (bills.length > 0) {
           bilid = null;
           targetBill = null;
           targetIndex = -1;
+
+          // "시공 잔금" 항목이 포함된 청구서를 찾습니다.
           for (let i = 0; i < bills.length; i++) {
             tempIndex = bills[i].requests.findIndex((obj) => {
               return (new RegExp(find0, "gi")).test(obj.name);
@@ -9444,34 +12412,43 @@ class DataRouter {
               break;
             }
           }
-    
+
+          // 시공 금액을 동기화할 청구서를 찾은 경우
           if (bilid !== null) {
+            // 요청 본문에 금액 정보가 포함된 경우
             if (req.body.amount !== undefined) {
               const { amount: { supply, vat, consumer } } = equalJson(req.body);
-    
+
               if (targetIndex !== -1) {
                 itemIndex = -1;
+                // "시공" 항목을 찾습니다.
                 for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
                   if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
                     itemIndex = i;
                     break;
                   }
                 }
+
+                // MongoDB에 업데이트할 쿼리를 구성합니다.
                 whereQuery = { bilid };
                 updateQuery = {};
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
+
+                // 청구서 업데이트
                 await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
               }
-    
+
             } else {
+              // 각 금액 정보에 따라 해당 항목을 업데이트합니다.
               const { first, start, middle, remain } = equalJson(req.body);
-    
+
               whereQuery = { bilid };
               updateQuery = {};
-    
+
+              // 시공 계약금 업데이트
               targetIndex = targetBill.requests.findIndex((obj) => {
                 return (new RegExp(findFirst, "gi")).test(obj.name);
               });
@@ -9488,9 +12465,8 @@ class DataRouter {
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = first.vat;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = first.consumer;
               }
-    
-    
-    
+
+              // 시공 착수금 업데이트
               targetIndex = targetBill.requests.findIndex((obj) => {
                 return (new RegExp(findStart, "gi")).test(obj.name);
               });
@@ -9507,9 +12483,8 @@ class DataRouter {
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = start.vat;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = start.consumer;
               }
-    
-    
-    
+
+              // 시공 중도금 업데이트
               targetIndex = targetBill.requests.findIndex((obj) => {
                 return (new RegExp(findMiddle, "gi")).test(obj.name);
               });
@@ -9526,9 +12501,8 @@ class DataRouter {
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = middle.vat;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = middle.consumer;
               }
-    
-    
-    
+
+              // 시공 잔금 업데이트
               targetIndex = targetBill.requests.findIndex((obj) => {
                 return (new RegExp(findRemain, "gi")).test(obj.name);
               });
@@ -9545,15 +12519,18 @@ class DataRouter {
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = remain.vat;
                 updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = remain.consumer;
               }
-    
+
+              // 청구서 업데이트
               await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
             }
-    
           }
         }
-    
+
+        // 성공 메시지 응답
         res.send(JSON.stringify({ message: "success" }));
+
       } catch (e) {
+        // 오류 처리 및 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -10013,71 +12990,119 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /designerTransfer
+     * @description 디자이너에게 계좌 이체 안내를 전송하는 라우터입니다. 디자이너가 특정 결제를 위한 입금 안내를 받을 때 사용됩니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 designer(디자이너 이름), desid(디자이너 ID), body(결제 정보)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerTransfer" ], async function (req, res) {
+
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
       });
-      const collection = "designerTransfer";
+
+      const collection = "designerTransfer";  // MongoDB 컬렉션 이름
+
       try {
+        // 필수 필드가 누락되었는지 확인합니다.
         if (req.body.designer === undefined || req.body.desid === undefined || req.body.body === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없으면 에러 처리
         }
+
+        // MongoDB 인스턴스 설정
         const selfMongo = instance.mongolocal;
+
+        // 요청 본문에서 데이터를 추출합니다.
         const { designer, desid, body } = equalJson(req.body);
+
+        // 디자이너의 ID로 디자이너 정보를 조회합니다.
         const thisDesigner = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-    
-        messageSend(`${designer} 실장님이 ${body.goodname} 결제를 위해 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
-    
+
+        // 메시지 전송: 디자이너에게 결제 안내 메시지를 전송합니다.
+        messageSend(`${designer} 실장님이 ${body.goodname} 결제를 위해 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true)
+          .catch((err) => { throw new Error(err.message); });
+
+        // 카카오톡 전송: 디자이너에게 계좌 정보와 결제 금액을 카카오톡으로 전송합니다.
         kakao.sendTalk("designerAccount", designer, thisDesigner.information.phone, {
           designer,
           goodName: body.goodname,
-          bankName: "기업",
-          account: "049-085567-04-022",
+          bankName: "기업",  // 은행 이름
+          account: "049-085567-04-022",  // 계좌 번호
           to: designer,
-          amount: autoComma(body.amount),
+          amount: autoComma(body.amount),  // 금액을 콤마로 구분하여 표시
         }).catch((err) => {
-          console.log(err);
+          console.log(err);  // 카카오톡 전송 실패 시 로그 출력
         });
-    
+
+        // 결제 정보를 MongoDB에 저장합니다.
         await back.mongoCreate(collection, body, { selfMongo });
-    
+
+        // 클라이언트에 응답 메시지 전송
         res.send(JSON.stringify({ message: "will do" }));
+
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 클라이언트에 에러 메시지 전송
         logger.error(e, req).catch((e) => { console.log(e); });
+        
+        // 에러 발생 시 JSON 형식으로 오류 메시지를 전송
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /accountTimeUpdate
+     * @description MongoDB 컬렉션에서 조건에 맞는 데이터를 업데이트하는 라우터.
+     *              클라이언트가 제공한 정보(whereQuery, updateQuery)를 기반으로 데이터를 수정하고, 전화번호에 따라 메시지를 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체, whereQuery, updateQuery, name, phone 등의 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체, JSON 형식으로 처리 결과를 반환합니다.
+     * @throws {Error} MongoDB 업데이트 중 발생한 오류 또는 메시지 전송 오류가 발생할 경우 이를 처리합니다.
+     */
     router.post([ "/accountTimeUpdate" ], async function (req, res) {
+      // 응답의 헤더를 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답의 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 접근을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용된 HTTP 메서드를 정의
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용된 헤더를 정의
       });
-      const collection = "accountTransfer";
+
+      const collection = "accountTransfer";  // 업데이트할 MongoDB 컬렉션명
       try {
-        const selfMongo = instance.mongolocal;
-        const { whereQuery, updateQuery, name, phone } = equalJson(req.body);
-    
-        logger.log(`증빙 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
-    
+        const selfMongo = instance.mongolocal;  // MongoDB의 인스턴스를 가져옴 (로컬 MongoDB 사용)
+        const { whereQuery, updateQuery, name, phone } = equalJson(req.body);  // 클라이언트로부터 받은 요청 데이터를 파싱
+        
+        // 로그에 업데이트 요청 기록
+        logger.log(`증빙 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`)
+          .catch((err) => { throw new Error(err.message); });
+
+        // 전화번호가 010으로 시작하지 않는 경우 알림을 전송
         if (/^010/.test(phone)) {
-          // pass
+          // 전화번호가 010으로 시작하면 아무 작업도 하지 않음
         } else {
-          await messageSend({ text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`, channel: "#700_operation", voice: true });
+          // 010으로 시작하지 않으면 알림 채널로 메시지 전송
+          await messageSend({
+            text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`,  // 고객명과 전화번호를 포함한 메시지
+            channel: "#700_operation",  // 메시지를 보낼 슬랙 채널
+            voice: true  // 음성 알림 여부
+          });
         }
+
+        // MongoDB에서 해당 whereQuery 조건을 만족하는 데이터를 updateQuery로 업데이트
         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-    
+
+        // 클라이언트에 성공 메시지를 JSON 형식으로 응답
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
+        // 오류가 발생한 경우 로그에 기록하고, 클라이언트에 오류 메시지를 응답
         logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.set("Content-Type", "application/json");  // 응답의 Content-Type을 JSON으로 설정
+        res.send(JSON.stringify({ error: e.message }));  // 오류 메시지를 JSON 형식으로 응답
       }
     });
     
@@ -10579,94 +13604,187 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /travelInjection
+     * @description 출장비 관련 결제 정보를 처리하는 라우터입니다. injectionCase, proid, method, number 등의 정보가 필요합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 injectionCase(케이스), proid(프로젝트 ID), method(결제 방법), number(횟수)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/travelInjection" ], async function (req, res) {
       try {
+        // 필수 필드가 요청 본문에 포함되지 않았는지 확인합니다.
         if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.number === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 누락된 경우 에러 발생
         }
+
+        // MongoDB 인스턴스 설정
         const selfMongo = instance.mongolocal;
+
+        // 요청 본문에서 데이터를 추출하고 equalJson을 사용해 깊은 복사를 합니다.
         const { injectionCase, proid, method, number: rawNumber } = equalJson(req.body);
+
+        // 요청된 number 값을 숫자 형식으로 변환
         const number = Number(rawNumber);
+
+        // 결제 정보를 처리하기 위해 travelInjection 메서드를 호출
         const thisBill = await bill.travelInjection(injectionCase, proid, method, number, { selfMongo });
+
+        // 응답 헤더를 설정하여 CORS 허용 및 JSON 형식으로 응답
         res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",  // 응답 형식을 JSON으로 설정
+          "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
         });
+
+        // 처리된 결제 정보를 클라이언트에 JSON 형식으로 반환
         res.send(JSON.stringify(thisBill.toNormal()));
+
       } catch (e) {
+        // 오류 발생 시 로그 기록
         logger.error(e, req).catch((e) => { console.log(e); });
+
+        // 오류 메시지를 클라이언트에 JSON 형식으로 전송
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /travelEjection
+     * @description 출장비 관련 결제 정보를 취소하는 라우터입니다. injectionCase, proid, method, index 등의 정보가 필요합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 injectionCase(케이스), proid(프로젝트 ID), method(결제 방법), index(인덱스)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/travelEjection" ], async function (req, res) {
+
       try {
+        // 요청 본문에 필수 필드들이 모두 포함되었는지 확인합니다.
         if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없을 경우 에러 발생
         }
+
+        // MongoDB 인스턴스 설정
         const selfMongo = instance.mongolocal;
+
+        // 요청 본문에서 필요한 데이터를 추출합니다. equalJson을 사용해 깊은 복사를 수행
         const { injectionCase, proid, method, index: rawIndex } = equalJson(req.body);
+
+        // index 값을 숫자로 변환합니다.
         const index = Number(rawIndex);
+
+        // 여행 결제 취소 관련 정보를 처리하기 위해 travelEjection 메서드를 호출
         const thisBill = await bill.travelEjection(injectionCase, proid, method, index, { selfMongo });
+
+        // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
         res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",  // 응답 형식 JSON으로 설정
+          "Access-Control-Allow-Origin": "*",  // 모든 도메인에서 요청 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
         });
+
+        // 처리된 결제 취소 정보를 클라이언트에 JSON 형식으로 반환
         res.send(JSON.stringify(thisBill.toNormal()));
+
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 응답 처리
         logger.error(e, req).catch((e) => { console.log(e); });
+
+        // 에러 발생 시 에러 메시지를 JSON 형식으로 응답
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /travelUpDown
+     * @description 출장비 관련 결제 정보를 수정하는 라우터입니다. order, proid, method, index 등의 정보가 필요합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 order(상태 변경 명령), proid(프로젝트 ID), method(결제 방법), index(인덱스)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/travelUpDown" ], async function (req, res) {
       try {
+        // 요청 본문에 필수 값들이 포함되어 있는지 확인
         if (req.body.order === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없으면 에러 발생
         }
+
+        // MongoDB 인스턴스 설정
         const selfMongo = instance.mongolocal;
+
+        // 요청 본문에서 필요한 데이터 추출 (equalJson을 사용해 깊은 복사 수행)
         const { order, proid, method, index: rawIndex } = equalJson(req.body);
+
+        // index 값을 숫자로 변환
         const index = Number(rawIndex);
+
+        // 출장비 결제 상태를 변경하는 메서드 호출
         const thisBill = await bill.travelUpDown(order, proid, method, index, { selfMongo });
+
+        // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
         res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",  // 응답 형식으로 JSON 설정
+          "Access-Control-Allow-Origin": "*",  // 모든 도메인에서 요청 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
         });
+
+        // 처리된 결제 상태 정보를 클라이언트에 JSON 형식으로 반환
         res.send(JSON.stringify(thisBill.toNormal()));
+
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 응답 처리
         logger.error(e, req).catch((e) => { console.log(e); });
+
+        // 에러 발생 시 에러 메시지를 JSON 형식으로 응답
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /travelReconfig
+     * @description 출장비 결제 관련 정보를 재구성하는 라우터입니다. injectionCase, proid, method, index, number 등의 정보가 필요합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 injectionCase(케이스), proid(프로젝트 ID), method(결제 방법), index(인덱스), number(금액)이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/travelReconfig" ], async function (req, res) {
       try {
+        // 요청 본문에 필요한 값들이 있는지 확인
         if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined || req.body.number === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 값이 없으면 오류 발생
         }
+
+        // MongoDB 인스턴스 설정
         const selfMongo = instance.mongolocal;
+
+        // 요청 본문에서 필요한 데이터 추출 (equalJson을 사용해 깊은 복사 수행)
         const { injectionCase, proid, method, index: rawIndex, number: rawNumber } = equalJson(req.body);
+
+        // index와 number 값을 숫자로 변환
         const index = Number(rawIndex);
         const number = Number(rawNumber);
+
+        // 출장비 결제 정보를 재구성하는 메서드 호출
         const thisBill = await bill.travelReconfig(injectionCase, proid, method, index, number, { selfMongo });
+
+        // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
         res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",  // 응답 형식으로 JSON 설정
+          "Access-Control-Allow-Origin": "*",  // 모든 도메인에서 요청 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
         });
+
+        // 재구성된 결제 정보를 클라이언트에 JSON 형식으로 반환
         res.send(JSON.stringify(thisBill.toNormal()));
+
       } catch (e) {
+        // 오류 발생 시 로그 기록 및 응답 처리
         logger.error(e, req).catch((e) => { console.log(e); });
+
+        // 에러 발생 시 에러 메시지를 JSON 형식으로 응답
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
       }
@@ -11024,195 +14142,314 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /returnBankCode
+     * @description 은행 코드를 반환하는 라우터입니다. 요청에 따라 서버에 저장된 은행 코드 데이터를 JSON 형식으로 반환합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문은 필요하지 않습니다.
+     * @param {object} res - 서버 응답 객체. 은행 코드 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/returnBankCode" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식 및 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        const bankCode = instance.bankCode;
-        res.send(JSON.stringify(bankCode));
+          // instance에서 bankCode 객체를 가져옵니다. 이 객체는 은행 코드 정보를 담고 있습니다.
+          const bankCode = instance.bankCode;
+
+          // 은행 코드를 JSON 형식으로 클라이언트에 반환합니다.
+          res.send(JSON.stringify(bankCode));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 에러 로그를 기록하고, 클라이언트에 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+
+          // 에러 메시지를 JSON 형식으로 클라이언트에 전송합니다.
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
 
+    /**
+     * @route POST /storeServerLog
+     * @description 서버 로그를 읽고, 처리 후 MongoDB에 저장한 후, 로그 파일을 초기화하는 라우터입니다.
+     *              서버 로그는 여러 서버에서 수집되며, 각 서버 로그 파일은 개별적으로 처리됩니다.
+     * @param {object} req - 클라이언트 요청 객체.
+     * @param {object} res - 서버 응답 객체. 로그 처리 결과를 반환합니다.
+     */
     router.post([ "/storeServerLog" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        const bar = "============================================================"; // 로그 출력을 위한 구분선
-        const collection = "serverLog";
-        const selfMongo = instance.mongo;
-        const rawLogTargetFolder = "/home/ubuntu/.pm2/logs";
-        const rawLogFolderList = await fileSystem("readFolder", [ rawLogTargetFolder ]);
-        const serverLogDictionary = {
-          staticLounge: {
-            name: "robot",
-            files: [],
-          },
-          dataConsole: {
-            name: "robot2",
-            files: [],
-          },
-          transferLounge: {
-            name: "robot3",
-            files: [],
+          // 로그 출력을 위한 구분선입니다.
+          const bar = "============================================================";
+
+          // 로그를 저장할 MongoDB 컬렉션 이름을 설정합니다.
+          const collection = "serverLog";
+
+          // MongoDB 인스턴스를 가져옵니다.
+          const selfMongo = instance.mongo;
+
+          // 서버 로그 파일이 저장된 폴더 경로를 설정합니다.
+          const rawLogTargetFolder = "/home/ubuntu/.pm2/logs";
+
+          // 로그 폴더에서 파일 목록을 읽어옵니다.
+          const rawLogFolderList = await fileSystem("readFolder", [rawLogTargetFolder]);
+
+          // 서버별 로그 파일을 관리하는 객체를 설정합니다.
+          const serverLogDictionary = {
+              staticLounge: {
+                  name: "robot",  // staticLounge 서버 이름
+                  files: [],      // staticLounge 관련 로그 파일 목록
+              },
+              dataConsole: {
+                  name: "robot2",  // dataConsole 서버 이름
+                  files: [],       // dataConsole 관련 로그 파일 목록
+              },
+              transferLounge: {
+                  name: "robot3",  // transferLounge 서버 이름
+                  files: [],       // transferLounge 관련 로그 파일 목록
+              }
+          };
+
+          let fileContents; // 로그 파일 내용을 저장할 변수
+          let packetContents, packetDate, packetPlace;  // 로그의 각 패킷 내용, 날짜, 위치를 저장할 변수
+          let logPacketJson;  // 로그 패킷을 JSON 형태로 저장할 변수
+          let logPacketTong;  // 로그 패킷들을 저장할 배열
+
+          // dataConsole 서버의 로그 파일 목록을 필터링합니다.
+          serverLogDictionary.dataConsole.files = rawLogFolderList.filter((s) => { return /^robot2-out/g.test(s) });
+
+          // 로그 파일의 내용을 초기화합니다.
+          fileContents = "";
+          for (let fileName of serverLogDictionary.dataConsole.files) {
+              // 각 로그 파일의 내용을 읽어와 fileContents에 추가합니다.
+              fileContents += (await fileSystem("readString", [rawLogTargetFolder + "/" + fileName]));
           }
-        }
-        let fileContents;
-        let packetContents, packetDate, packetPlace;
-        let logPacketJson;
-        let logPacketTong;
 
-        serverLogDictionary.dataConsole.files = rawLogFolderList.filter((s) => { return /^robot2-out/g.test(s) });
-        fileContents = "";
-        for (let fileName of serverLogDictionary.dataConsole.files) {
-          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
-        }
-        logPacketTong = [];
-        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
-          packetContents = bar + p1;
-          try {
-            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
-            packetDate = new Date(packetDate);
-            packetPlace = "dataConsole";
-            logPacketJson = {
-              date: packetDate,
-              server: packetPlace,
-              contents: packetContents
-            }
-            logPacketTong.push(logPacketJson);
-          } catch {}
-          return "";
-        })
-        for (let j of logPacketTong) {
-          await back.mongoCreate(collection, j, { selfMongo });
-        }
-        for (let fileName of serverLogDictionary.dataConsole.files) {
-          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
-        }
+          // 로그 패킷을 저장할 배열을 초기화합니다.
+          logPacketTong = [];
 
-        serverLogDictionary.staticLounge.files = rawLogFolderList.filter((s) => { return /^robot-out/g.test(s) });
-        fileContents = "";
-        for (let fileName of serverLogDictionary.staticLounge.files) {
-          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
-        }
-        logPacketTong = [];
-        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
-          packetContents = bar + p1;
-          try {
-            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
-            packetDate = new Date(packetDate);
-            packetPlace = "staticLounge";
-            logPacketJson = {
-              date: packetDate,
-              server: packetPlace,
-              contents: packetContents
-            }
-            logPacketTong.push(logPacketJson);
-          } catch {}
-          return "";
-        })
-        for (let j of logPacketTong) {
-          await back.mongoCreate(collection, j, { selfMongo });
-        }
-        for (let fileName of serverLogDictionary.staticLounge.files) {
-          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
-        }
+          // 로그 파일에서 구분선을 기준으로 패킷을 분리하고 처리합니다.
+          fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+              packetContents = bar + p1;  // 패킷 내용을 저장합니다.
+              try {
+                  // 패킷에서 날짜 정보를 추출합니다.
+                  packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0];
+                  packetDate = new Date(packetDate);  // 문자열을 Date 객체로 변환합니다.
 
-        serverLogDictionary.transferLounge.files = rawLogFolderList.filter((s) => { return /^robot3-out/g.test(s) });
-        fileContents = "";
-        for (let fileName of serverLogDictionary.transferLounge.files) {
-          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
-        }
-        logPacketTong = [];
-        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
-          packetContents = bar + p1;
-          try {
-            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
-            packetDate = new Date(packetDate);
-            packetPlace = "transferLounge";
-            logPacketJson = {
-              date: packetDate,
-              server: packetPlace,
-              contents: packetContents
-            }
-            logPacketTong.push(logPacketJson);
-          } catch {}
-          return "";
-        })
-        for (let j of logPacketTong) {
-          await back.mongoCreate(collection, j, { selfMongo });
-        }
-        for (let fileName of serverLogDictionary.transferLounge.files) {
-          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
-        }
+                  // 패킷의 서버 위치를 설정합니다.
+                  packetPlace = "dataConsole";
 
-        res.send(JSON.stringify({ message: "success" }));
+                  // 패킷 정보를 JSON 객체로 변환합니다.
+                  logPacketJson = {
+                      date: packetDate,        // 패킷의 날짜
+                      server: packetPlace,     // 서버 위치
+                      contents: packetContents // 패킷 내용
+                  };
+
+                  // 패킷을 로그 패킷 배열에 추가합니다.
+                  logPacketTong.push(logPacketJson);
+              } catch {}  // 패킷 처리 중 오류가 발생하면 무시합니다.
+              return "";
+          });
+
+          // MongoDB에 로그 패킷을 저장합니다.
+          for (let j of logPacketTong) {
+              await back.mongoCreate(collection, j, { selfMongo });
+          }
+
+          // 로그 파일 내용을 초기화합니다. (빈 문자열로 덮어씁니다.)
+          for (let fileName of serverLogDictionary.dataConsole.files) {
+              await fileSystem("writeString", [rawLogTargetFolder + "/" + fileName, ""]);
+          }
+
+          // staticLounge 서버의 로그 파일 목록을 필터링합니다.
+          serverLogDictionary.staticLounge.files = rawLogFolderList.filter((s) => { return /^robot-out/g.test(s) });
+
+          // 로그 파일 내용을 초기화합니다.
+          fileContents = "";
+          for (let fileName of serverLogDictionary.staticLounge.files) {
+              fileContents += (await fileSystem("readString", [rawLogTargetFolder + "/" + fileName]));
+          }
+
+          // 로그 패킷을 다시 초기화합니다.
+          logPacketTong = [];
+
+          // 로그 파일에서 패킷을 분리하고 처리합니다.
+          fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+              packetContents = bar + p1;
+              try {
+                  packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0];
+                  packetDate = new Date(packetDate);
+                  packetPlace = "staticLounge";
+                  logPacketJson = {
+                      date: packetDate,
+                      server: packetPlace,
+                      contents: packetContents
+                  };
+                  logPacketTong.push(logPacketJson);
+              } catch {}
+              return "";
+          });
+
+          // MongoDB에 staticLounge 서버의 로그 패킷을 저장합니다.
+          for (let j of logPacketTong) {
+              await back.mongoCreate(collection, j, { selfMongo });
+          }
+
+          // staticLounge 로그 파일을 초기화합니다.
+          for (let fileName of serverLogDictionary.staticLounge.files) {
+              await fileSystem("writeString", [rawLogTargetFolder + "/" + fileName, ""]);
+          }
+
+          // transferLounge 서버의 로그 파일 목록을 필터링합니다.
+          serverLogDictionary.transferLounge.files = rawLogFolderList.filter((s) => { return /^robot3-out/g.test(s) });
+
+          // 로그 파일 내용을 초기화합니다.
+          fileContents = "";
+          for (let fileName of serverLogDictionary.transferLounge.files) {
+              fileContents += (await fileSystem("readString", [rawLogTargetFolder + "/" + fileName]));
+          }
+
+          // 로그 패킷을 다시 초기화합니다.
+          logPacketTong = [];
+
+          // 로그 파일에서 패킷을 분리하고 처리합니다.
+          fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+              packetContents = bar + p1;
+              try {
+                  packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0];
+                  packetDate = new Date(packetDate);
+                  packetPlace = "transferLounge";
+                  logPacketJson = {
+                      date: packetDate,
+                      server: packetPlace,
+                      contents: packetContents
+                  };
+                  logPacketTong.push(logPacketJson);
+              } catch {}
+              return "";
+          });
+
+          // MongoDB에 transferLounge 서버의 로그 패킷을 저장합니다.
+          for (let j of logPacketTong) {
+              await back.mongoCreate(collection, j, { selfMongo });
+          }
+
+          // transferLounge 로그 파일을 초기화합니다.
+          for (let fileName of serverLogDictionary.transferLounge.files) {
+              await fileSystem("writeString", [rawLogTargetFolder + "/" + fileName, ""]);
+          }
+
+          // 로그 처리 완료 후 성공 메시지를 클라이언트에 반환합니다.
+          res.send(JSON.stringify({ message: "success" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 기록하고 클라이언트에게 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /designerCalculation
+     * @description 클라이언트 또는 프로젝트 ID를 기반으로 디자이너의 계산(수수료 및 총계)을 수행하여 결과를 반환하는 라우터입니다.
+     *              요청 본문에는 공급가, 분류, 퍼센티지, 그리고 클라이언트 또는 프로젝트 ID가 포함되어야 합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에는 supply(공급가), classification(분류), percentage(퍼센티지), cliid(클라이언트 또는 프로젝트 ID)가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 계산된 수수료 또는 총계를 반환합니다.
+     */
     router.post([ "/designerCalculation" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        if (req.body.supply === undefined || req.body.classification === undefined || req.body.percentage === undefined || req.body.cliid === undefined) {
-          throw new Error("invaild post");
-        }
-        const { classification, cliid } = equalJson(req.body);
-        const supply = Number(req.body.supply);
-        const percentage = Number(req.body.percentage);
-        let calculate, commission;
-        let project, client;
-    
-        if (/^c/.test(cliid)) {
-          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-          if (client === null) {
-            throw new Error("invaild cliid");
+          // 요청 본문에 필요한 필드가 모두 존재하는지 확인합니다.
+          if (req.body.supply === undefined || req.body.classification === undefined || req.body.percentage === undefined || req.body.cliid === undefined) {
+              throw new Error("invaild post");  // 필수 필드가 없을 경우 에러를 발생시킵니다.
           }
-        } else if (/^p/.test(cliid)) {
-          project = await back.getProjectById(cliid, { selfMongo: instance.mongo });
-          if (project === null) {
-            throw new Error("invaild proid");
+
+          // 요청 본문에서 equalJson 메서드를 사용하여 깊은 복사된 데이터를 추출합니다.
+          // equalJson은 Date 객체를 포함한 모든 데이터를 정확하게 복사해주는 JSON.parse 업그레이드 버전입니다.
+          const { classification, cliid } = equalJson(req.body);
+
+          // 공급가와 퍼센티지를 숫자로 변환합니다.
+          const supply = Number(req.body.supply);
+          const percentage = Number(req.body.percentage);
+
+          let calculate, commission;  // 계산 결과와 수수료를 저장할 변수
+          let project, client;  // 프로젝트와 클라이언트 정보를 저장할 변수
+
+          // 클라이언트 또는 프로젝트 ID가 "c"로 시작하는 경우 클라이언트 정보를 가져옵니다.
+          if (/^c/.test(cliid)) {
+              // MongoDB에서 해당 클라이언트 ID로 클라이언트 정보를 가져옵니다.
+              client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+
+              // 클라이언트 정보가 없는 경우 에러를 발생시킵니다.
+              if (client === null) {
+                  throw new Error("invaild cliid");
+              }
+          } 
+          // 클라이언트 또는 프로젝트 ID가 "p"로 시작하는 경우 프로젝트 정보를 가져옵니다.
+          else if (/^p/.test(cliid)) {
+              // MongoDB에서 해당 프로젝트 ID로 프로젝트 정보를 가져옵니다.
+              project = await back.getProjectById(cliid, { selfMongo: instance.mongo });
+
+              // 프로젝트 정보가 없는 경우 에러를 발생시킵니다.
+              if (project === null) {
+                  throw new Error("invaild proid");
+              }
+
+              // 프로젝트에 연결된 클라이언트 정보를 가져옵니다.
+              client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+
+              // 클라이언트 정보가 없는 경우 에러를 발생시킵니다.
+              if (client === null) {
+                  throw new Error("invaild cliid");
+              }
+          } 
+          // 그 외의 경우 유효하지 않은 cliid로 에러를 발생시킵니다.
+          else {
+              throw new Error("invaild cliid");
           }
-          client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
-          if (client === null) {
-            throw new Error("invaild cliid");
+
+          // bill.designerCalculation 메서드를 호출하여 디자이너 계산을 수행합니다.
+          // supply(공급가), classification(분류), percentage(퍼센티지), client 정보를 인자로 넘겨줍니다.
+          // toArray 옵션을 사용하여 배열로 결과를 반환합니다.
+          [ calculate, commission ] = bill.designerCalculation(supply, classification, percentage, client, { toArray: true });
+
+          // 요청 모드가 "commission"일 경우, 수수료만 응답으로 반환합니다.
+          if (req.body.mode === "commission") {
+              res.send(JSON.stringify({ commission }));
+          } 
+          // 요청 모드가 "total"일 경우, 총계와 수수료를 응답으로 반환합니다.
+          else if (req.body.mode === "total") {
+              res.send(JSON.stringify({ calculate, commission }));
+          } 
+          // 그 외의 경우, 계산된 총계만 응답으로 반환합니다.
+          else {
+              res.send(JSON.stringify({ calculate }));
           }
-        } else {
-          throw new Error("invaild cliid");
-        }
-    
-        [ calculate, commission ] = bill.designerCalculation(supply, classification, percentage, client, { toArray: true });
-    
-        if (req.body.mode === "commission") {
-          res.send(JSON.stringify({ commission }));
-        } else if (req.body.mode === "total") {
-          res.send(JSON.stringify({ calculate, commission }));
-        } else {
-          res.send(JSON.stringify({ calculate }));
-        }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 기록하고 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -11254,22 +14491,36 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /taxBill
+     * @description 세금 계산서를 발행하는 비동기 요청을 처리하는 라우터입니다. 요청이 들어오면 `bill.taxBill` 메서드를 호출하여 세금 계산서 발행 절차를 처리합니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문에는 추가적인 정보가 포함될 수 있습니다.
+     * @param {object} res - 서버 응답 객체. 세금 계산서 발행 절차가 시작되었음을 알리는 메시지를 반환합니다.
+     */
     router.post([ "/taxBill" ], async function (req, res) {
+      // 응답 헤더에 JSON 형식과 CORS 설정을 추가합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        bill.taxBill().catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-        })
-        res.send(JSON.stringify({ message: "will do" }));
+          // 세금 계산서 발행을 위한 bill 객체의 taxBill 메서드를 호출합니다.
+          // 비동기 메서드이므로 catch 블록을 통해 에러를 처리합니다.
+          bill.taxBill().catch((err) => {
+              // 에러 발생 시 에러 로그를 기록합니다.
+              logger.error(err, req).catch((e) => { console.log(e); });
+          });
+
+          // 세금 계산서 발행 요청이 정상적으로 접수되었음을 클라이언트에 알립니다.
+          res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생한 경우 로그를 기록하고 클라이언트에게 에러 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -11294,20 +14545,36 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /nonPaidResponses
+     * @description 디자이너의 미지급 응답 내역을 처리하는 라우터입니다. 디자이너의 계산서를 확인하여 미지급된 부분을 반환합니다.
+     * @param {Object} req - 클라이언트 요청 객체.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/nonPaidResponses" ], async function (req, res) {
+
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 Content-Type을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더를 설정
       });
+
       try {
-        const result = await work.designerCalculation(false);
+        // 디자이너 계산 내역에서 미지급 응답을 처리하는 메서드 호출
+        const result = await work.designerCalculation(false);  // false는 미지급된 항목만을 대상으로 합니다.
+
+        // 처리된 결과를 JSON 형식으로 클라이언트에 응답
         res.send(JSON.stringify(result));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
+        // 오류 발생 시 로그 기록 및 클라이언트에게 에러 메시지 전송
+        logger.error(e, req).catch((e) => { console.log(e); });  // 에러를 기록합니다.
+        
+        // 에러 발생 시 JSON 형식으로 오류 메시지 반환
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+        res.send(JSON.stringify({ error: e.message }));  // 에러 메시지를 JSON 형식으로 전송
       }
     });
     
@@ -11531,76 +14798,97 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /passiveResponse
+     * @description 특정 청구서의 응답 항목을 수정하는 라우터입니다. bilid, responseIndex, amount를 받아 해당 청구서 응답 항목의 가격을 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, bilid, responseIndex, amount가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리된 청구서 데이터를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/passiveResponse" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 응답하고 CORS를 허용
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        "Content-Type": "application/json",  // 응답 형식을 JSON으로 설정
+        "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 요청을 허용
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용되는 HTTP 메서드를 설정
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용되는 헤더 설정
       });
+
       try {
+        // 필수 파라미터가 없으면 오류 발생
         if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.amount === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // 필수 데이터가 없으면 잘못된 요청 처리
         }
+
+        // 요청 본문에서 데이터 추출 및 equalJson으로 deep copy 처리
         let { bilid, responseIndex, amount } = equalJson(req.body);
-        let thisBill;
-        let whereQuery;
-        let updateQuery;
-        let thisResponse;
-        let thisItems;
-        let thisItem;
-    
+        let thisBill;  // 청구서 정보 저장 변수
+        let whereQuery;  // 업데이트할 청구서 조회 쿼리
+        let updateQuery;  // 청구서 업데이트 쿼리
+        let thisResponse;  // 청구서 응답 항목
+        let thisItems;  // 응답 항목의 세부 아이템들
+        let thisItem;  // 특정 아이템
+
+        // responseIndex와 amount를 숫자로 변환
         responseIndex = Number(responseIndex);
         if (Number.isNaN(responseIndex)) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // responseIndex가 숫자가 아니면 잘못된 요청 처리
         }
-    
+
         amount = Number(amount);
         if (Number.isNaN(amount)) {
-          throw new Error("invaild post");
+          throw new Error("invalid post");  // amount가 숫자가 아니면 잘못된 요청 처리
         }
-    
+
+        // MongoDB에서 bilid로 청구서 조회
         thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
         if (thisBill.responses[responseIndex] === undefined) {
-          throw new Error("invaild index");
+          throw new Error("invalid index");  // 잘못된 responseIndex 처리
         }
-    
+
+        // 해당 청구서 응답 항목과 세부 아이템 가져오기
         thisResponse = thisBill.responses[responseIndex];
         thisItems = thisResponse.items;
-        thisItem = thisItems[0];
-    
-        whereQuery = { bilid };
-        updateQuery = {};
-    
+        thisItem = thisItems[0];  // 첫 번째 아이템을 선택
+
+        // MongoDB 쿼리 구성
+        whereQuery = { bilid };  // 청구서를 조회할 조건
+        updateQuery = {};  // 업데이트할 내용을 저장할 객체
+
+        // 업데이트할 청구서 응답 항목 설정
         updateQuery["responses." + String(responseIndex) + ".items"] = [
           {
-            id: thisItem.id,
-            class: thisItem.class,
-            name: thisItem.name,
-            description: thisItem.description,
-            info: thisItem.info,
+            id: thisItem.id,  // 아이템 ID
+            class: thisItem.class,  // 아이템 클래스
+            name: thisItem.name,  // 아이템 이름
+            description: thisItem.description,  // 아이템 설명
+            info: thisItem.info,  // 아이템 추가 정보
             unit: {
-              ea: thisItem.unit.ea,
-              price: amount,
-              number: 1,
+              ea: thisItem.unit.ea,  // 아이템 단위 수량
+              price: amount,  // 요청 받은 금액으로 업데이트
+              number: 1,  // 수량은 1로 설정
             },
             amount: {
-              pure: amount,
-              commission: 0,
+              pure: amount,  // 순수 가격
+              commission: 0,  // 수수료는 0으로 설정
             }
           }
         ];
-    
+
+        // MongoDB에 청구서 업데이트
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+        
+        // 업데이트된 청구서 다시 조회
         thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
-    
+
+        // 업데이트된 청구서를 JSON 형식으로 응답
         res.send(JSON.stringify({
-          bilid: thisBill.bilid,
-          proid: thisBill.links.proid,
-          bill: thisBill.toNormal()
+          bilid: thisBill.bilid,  // 청구서 ID
+          proid: thisBill.links.proid,  // 프로젝트 ID
+          bill: thisBill.toNormal()  // 청구서의 일반 객체 형태 반환
         }));
-    
+
       } catch (e) {
+        // 오류 발생 시 로깅하고 클라이언트에 오류 메시지 응답
         logger.error(e, req).catch((e) => { console.log(e); });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ error: e.message }));
@@ -12203,26 +15491,45 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /designerProposal_policy
+     * @description 디자이너 제안서와 관련된 정책(policy)과 버튼 상태(button)를 반환하는 라우터입니다.
+     * @param {object} req - 클라이언트 요청 객체. 요청 본문은 필요하지 않습니다.
+     * @param {object} res - 서버 응답 객체. 정책과 버튼 상태를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerProposal_policy" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식 및 CORS 설정을 추가하여 다양한 출처에서 이 API에 접근할 수 있도록 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",  // 응답 데이터를 JSON 형식으로 반환
+          "Access-Control-Allow-Origin": "*",  // 모든 도메인에서의 접근을 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",  // 허용된 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",  // 허용된 헤더 설정
       });
+
       try {
-        let resultObj;
-        resultObj = {
-          policy: DataRouter.policy(),
-          button: DataRouter.policyButton(),
-        };
-        res.send(JSON.stringify(resultObj));
+          let resultObj;
+
+          /**
+           * @description 정책과 버튼 상태를 객체로 반환합니다.
+           * @returns {object} resultObj - policy와 button 정보를 담은 객체
+           */
+          resultObj = {
+              policy: DataRouter.policy(),  // 정책을 가져오는 메서드 호출
+              button: DataRouter.policyButton(),  // 버튼 상태를 가져오는 메서드 호출
+          };
+
+          // 정책과 버튼 상태를 포함한 객체를 JSON 형식으로 반환합니다.
+          res.send(JSON.stringify(resultObj));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.send(JSON.stringify({
-          policy: DataRouter.policy(),
-          button: DataRouter.policyButton(),
-        }));
+          // 에러가 발생한 경우, 에러 로그를 기록합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+
+          // 에러가 발생해도 정책과 버튼 상태를 반환합니다.
+          res.send(JSON.stringify({
+              policy: DataRouter.policy(),  // 정책을 가져오는 메서드 호출
+              button: DataRouter.policyButton(),  // 버튼 상태를 가져오는 메서드 호출
+          }));
       }
     });
     
@@ -12338,188 +15645,170 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /styleCuration_updateCalculation
+     * @description 스타일 큐레이션 결과를 업데이트하는 라우터입니다. 클라이언트의 제안서 및 요청 데이터를 기반으로 처리합니다.
+     * @param {object} req - 클라이언트 요청 객체. 본문에는 cliid(고객 ID), historyQuery(히스토리 업데이트 쿼리), coreQuery(코어 업데이트 쿼리), mode(작업 모드)가 포함됩니다.
+     * @param {object} res - 서버 응답 객체. 업데이트된 서비스 및 클라이언트 데이터를 반환합니다.
+     */
     router.post([ "/styleCuration_updateCalculation" ], async function (req, res) {
+      // 응답 헤더 설정: JSON 형식으로 반환하고, CORS 설정을 추가하여 다양한 출처에서 이 API에 접근할 수 있도록 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
+
       try {
-        if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined || req.body.mode === undefined) {
-          throw new Error("invaild post");
-        }
-        const passPromise = () => { return new Promise((resolve, reject) => { resolve(null); }); }
-        const cliid = req.body.cliid;
-        const historyQuery = equalJson(req.body.historyQuery);
-        const coreQuery = equalJson(req.body.coreQuery);
-        const mode = req.body.mode;
-        let client, history;
-    
-        if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
-          clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
-          DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
-        }
-    
-        if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
-          clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
-          DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
-        }
-    
-        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (history === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-        }
-    
-        if (Object.keys(coreQuery).length > 0) {
-          await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
-        }
-    
-        if (Object.keys(historyQuery).length > 0) {
-          await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
+          // 요청 본문에서 필수 값들이 존재하지 않는지 확인합니다.
+          if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined || req.body.mode === undefined) {
+              throw new Error("invalid post");
+          }
+
+          // 전달받은 데이터를 equalJson 메서드를 사용하여 깊은 복사합니다.
+          const cliid = req.body.cliid;  // 클라이언트 ID
+          const historyQuery = equalJson(req.body.historyQuery);  // 히스토리 업데이트 쿼리
+          const coreQuery = equalJson(req.body.coreQuery);  // 코어 업데이트 쿼리
+          const mode = req.body.mode;  // 작업 모드
+
+          let client, history;
+
+          // 타임아웃을 확인하고, 스타일 큐레이션 관련 타임아웃이 설정된 경우 이를 해제합니다.
+          if (DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] !== null) {
+              clearTimeout(DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid]);
+              DataRouter.timeouts["styleCuration_styleCheckComplete_" + cliid] = null;
+          }
+
+          if (DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== undefined && DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] !== null) {
+              clearTimeout(DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid]);
+              DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = null;
+          }
+
+          // 클라이언트의 히스토리를 조회하고, 없으면 생성합니다.
           history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        }
-    
-        const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-        if (clientCase === null) {
-          throw new Error("invaild client case");
-        } else {
-          const service = clientCase.caseService();
-          let detailUpdate, updateQuery;
-          let newProid;
-          let requestNumber;
-          let action;
-          let targetSerid;
-    
-          client = clientCase.client;
-          requestNumber = 0;
-    
-          if ([ "부재중 알림 발송", "상세 설문 대기" ].includes(client.requests[requestNumber].analytics.response.action.value)) {
-            action = "부재중 제안 발송";
+          if (history === null) {
+              await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          }
+
+          // coreQuery가 있는 경우 클라이언트 데이터를 업데이트합니다.
+          if (Object.keys(coreQuery).length > 0) {
+              await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+          }
+
+          // historyQuery가 있는 경우 클라이언트의 히스토리 데이터를 업데이트합니다.
+          if (Object.keys(historyQuery).length > 0) {
+              await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
+              history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+          }
+
+          // 클라이언트의 케이스를 가져옵니다. 존재하지 않으면 에러를 반환합니다.
+          const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+          if (clientCase === null) {
+              throw new Error("invalid client case");
           } else {
-            action = "제안 발송 예정";
-          }
-    
-          detailUpdate = [];
-          updateQuery = {};
-          newProid = null;
-    
-          targetSerid = (req.body.fromConsole !== undefined && Number(req.body.fromConsole) === 1) ? [ client.requests[requestNumber].analytics.response.service.serid ] : history.curation.service.serid;
-    
-          work.designerCuration(cliid, 4, targetSerid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
-            for (let obj of detail) {
-              detailUpdate.push(obj);
-            }
-    
-            updateQuery["desid"] = "";
-            updateQuery["proposal.status"] = "작성중";
-            updateQuery["proposal.date"] = new Date();
-            updateQuery["cliid"] = cliid;
-            updateQuery["service.serid"] = targetSerid[0];
-            if (service === null) {
-              updateQuery["service.xValue"] = "B";
-            } else {
-              if (typeof service === "object") {
-                if (Array.isArray(service.xValue)) {
-                  updateQuery["service.xValue"] = (service.xValue.length === 0 ? "B" : service.xValue[0].xValue);
-                  if (client.requests[requestNumber].analytics.response.service !== null && typeof client.requests[requestNumber].analytics.response.service.xValue === "string") {
-                    updateQuery["service.xValue"] = client.requests[requestNumber].analytics.response.service.xValue;
+              const service = clientCase.caseService();  // 케이스 서비스 데이터를 가져옵니다.
+              let detailUpdate = [], updateQuery = {}, newProid = null;
+              let requestNumber = 0;
+              let action;
+
+              client = clientCase.client;  // 클라이언트 데이터를 가져옵니다.
+
+              // 클라이언트의 요청 상태에 따라 action 값을 설정합니다.
+              if ([ "부재중 알림 발송", "상세 설문 대기" ].includes(client.requests[requestNumber].analytics.response.action.value)) {
+                  action = "부재중 제안 발송";
+              } else {
+                  action = "제안 발송 예정";
+              }
+
+              // 타겟 서비스 ID를 설정합니다.
+              const targetSerid = (req.body.fromConsole !== undefined && Number(req.body.fromConsole) === 1) ? [ client.requests[requestNumber].analytics.response.service.serid ] : history.curation.service.serid;
+
+              // 디자이너 큐레이션 작업을 수행합니다.
+              work.designerCuration(cliid, 4, targetSerid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
+                  for (let obj of detail) {
+                      detailUpdate.push(obj);  // 큐레이션 세부 정보를 업데이트합니다.
                   }
-                } else {
-                  updateQuery["service.xValue"] = "B";
-                }
-              } else {
-                updateQuery["service.xValue"] = "B";
+
+                  // 제안서 상태 및 세부 정보 업데이트
+                  updateQuery = {
+                      desid: "",
+                      "proposal.status": "작성중",
+                      "proposal.date": new Date(),
+                      cliid,
+                      "service.serid": targetSerid[0],
+                      "service.xValue": "B",
+                      "service.online": false,
+                      "proposal.detail": detailUpdate,
+                  };
+
+                  return back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo });
+
+              }).then((rows) => {
+                  // 기존 프로젝트가 있으면 업데이트하고, 없으면 새로 생성합니다.
+                  if (detailUpdate.length > 0) {
+                      if (rows.length > 0 && rows[0].desid === "") {
+                          newProid = rows[0].proid;
+                          return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+                      } else {
+                          return back.createProject(updateQuery, { selfMongo: instance.mongo });
+                      }
+                  } else {
+                      return Promise.resolve(null);  // 세부 정보가 없으면 작업을 패스합니다.
+                  }
+
+              }).then((proid) => {
+                  if (newProid === null) {
+                      newProid = proid;
+                  }
+                  return Promise.resolve(null);  // 프로젝트가 생성되거나 업데이트된 후 처리합니다.
+
+              }).then(() => {
+                  // 콘솔에서 요청한 것이 아닌 경우 클라이언트 데이터를 업데이트합니다.
+                  if (Number(req.body.fromConsole) !== 1) {
+                      let updateObj = {};
+                      updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+
+                      return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+                  } else {
+                      return Promise.resolve(null);  // 콘솔에서 요청한 경우 추가 작업 없음
+                  }
+
+              }).then(() => {
+                  // 메시지를 전송하여 큐레이션 작업 완료 알림을 보냅니다.
+                  if (detailUpdate.length > 0) {
+                      return messageSend({ text: client.name + " 고객님의 디자이너 추천서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: false });
+                  } else {
+                      return messageSend({ text: client.name + " 고객님의 디자이너 추천서를 자동으로 제작하려 했으나 매칭되는 경우가 없습니다!", channel: "#404_curation", voice: false });
+                  }
+
+              }).catch((err) => {
+                  // 에러 발생 시 로그와 알림을 보냅니다.
+                  console.log(err);
+                  messageSend({ text: client.name + " 제안서 제작 중 문제 발생: " + err.message, channel: "#404_curation" }).catch((e) => { console.log(e); });
+              });
+
+              // 콘솔에서 요청한 것이 아닌 경우 추가 작업을 수행합니다.
+              if (Number(req.body.fromConsole) !== 1) {
+                  await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
+                      client: client.name,
+                      cliid: client.cliid,
+                      host: instance.address.frontinfo.host,
+                      path: "about",
+                  });
+                  await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈습니다.", channel: "#404_curation" });
+                  await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
               }
-            }
-            updateQuery["service.online"] = false;
-            updateQuery["proposal.detail"] = detailUpdate;
-            return back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo });
-    
-          }).then((rows) => {
-    
-            if (detailUpdate.length > 0) {
-              if (rows.length > 0 && rows[0].desid === "") {
-                newProid = rows[0].proid;
-                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
-              } else {
-                return back.createProject(updateQuery, { selfMongo: instance.mongo });
-              }
-            } else {
-              return passPromise();
-            }
-    
-          }).then((proid) => {
-    
-            if (newProid === null) {
-              newProid = proid;
-            }
-            return new Promise((resolve, rejects) => {
-              resolve(null);
-            });
-    
-          }).then(() => {
-    
-            if (Number(req.body.fromConsole) !== 1) {
-              let updateObj, future, nextDate, nextNextDate;
-              updateObj = {};
-              updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-              nextDate = new Date();
-              nextDate.setDate(nextDate.getDate() + 1);
-              nextNextDate = new Date();
-              nextNextDate.setDate(nextNextDate.getDate() + 2);
-              if (client.requests[requestNumber].request.space.resident.living || client.requests[requestNumber].request.space.resident.expected.valueOf() <= nextNextDate.valueOf()) {
-                updateObj["requests." + String(requestNumber) + ".request.space.resident.expected"] = nextDate;
-                future = new Date();
-                future.setDate(future.getDate() + serviceParsing({
-                  serid: updateQuery["service.serid"],
-                  xValue: updateQuery["service.xValue"],
-                  online: updateQuery["service.online"],
-                }, true) + 1);
-                updateObj["requests." + String(requestNumber) + ".analytics.date.space.movein"] = future;
-              }
-    
-              return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-            } else {
-              return passPromise();
-            }
-    
-          }).then(() => {
-    
-            if (detailUpdate.length > 0) {
-              return messageSend({ text: client.name + " 고객님의 디자이너 추천서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: false });
-            } else {
-              return messageSend({ text: client.name + " 고객님의 디자이너 추천서를 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: false });
-            }
-    
-          }).catch((err) => {
-            console.log(err);
-            messageSend({ text: client.name + " 제안서 제작 문제 생김 " + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
-          });
-    
-          if (Number(req.body.fromConsole) !== 1) {
-            
-            await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
-              client: client.name,
-              cliid: client.cliid,
-              host: instance.address.frontinfo.host,
-              path: "about",
-            });
-            await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
-            requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } }).then(() => {
-              return sleep(10 * 1000);
-            }).then(() => {
-              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { report: 0 }, { headers: { "Content-Type": "application/json" } });
-            }).catch((err) => {
-              logger.error(err, req).catch((e) => { console.log(e); });
-            });
+
+              // 최종 응답을 클라이언트에 전송합니다.
+              res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
+
           }
-          res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
-        }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그를 기록하고, 에러 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
