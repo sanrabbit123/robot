@@ -4,7 +4,8 @@
   "description": "homeliaison SI system <Rohan>",
   "main": "robot.js",
   "scripts": {
-    "robot": "node robot.js"
+    "robot": "node robot.js",
+    "dev": "node robot.js dev"
   },
   "author": "uragen",
   "license": "ISC",

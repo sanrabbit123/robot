@@ -5401,6 +5401,7 @@ class StaticRouter {
       try {
           // 요청 본문에서 date, amount, name을 추출 및 equalJson 메서드를 사용하여 깊은 복사를 수행
           const { date, amount, name } = equalJson(req.body);
+          let rows;
 
           // 새로운 SMS 객체를 생성 (ID는 날짜와 금액을 기반으로 생성)
           const obj = {
@@ -5436,7 +5437,8 @@ class StaticRouter {
               date,
               amount,
               name
-          }
+          };
+          let rows;
 
           // MongoDB에서 동일한 ID를 가진 데이터가 있는지 재조회
           rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
@@ -7869,22 +7871,27 @@ class StaticRouter {
 
               const { cliids, statusArr } = equalJson(req.body); // 요청 본문에서 클라이언트 ID와 상태 배열을 추출합니다.
 
-              // MongoDB 쿼리를 작성하여 클라이언트 ID에 따라 데이터를 조회합니다.
-              whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
-              projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };
+              if (cliids.length > 0) {
+                // MongoDB 쿼리를 작성하여 클라이언트 ID에 따라 데이터를 조회합니다.
+                whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
+                projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };
 
-              // 클라이언트 히스토리 데이터를 MongoDB에서 조회합니다.
-              rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
-              rows2 = await back.mongoRead(collection2, whereQuery, { selfMongo });
+                // 클라이언트 히스토리 데이터를 MongoDB에서 조회합니다.
+                rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+                rows2 = await back.mongoRead(collection2, whereQuery, { selfMongo });
 
-              // 행동 로그 데이터를 MongoDB에서 조회합니다.
-              whereQuery = { $or: cliids.map((cliid) => { return { "data.cliid": cliid, "action": "pageInit" } }) };
-              projectQuery = { "page": 1, "data": 1, "action": 1 };
-              rows3 = await back.mongoPick(collection3, [ whereQuery, projectQuery ], { selfMongo: selfLogMongo });
+                // 행동 로그 데이터를 MongoDB에서 조회합니다.
+                whereQuery = { $or: cliids.map((cliid) => { return { "data.cliid": cliid, "action": "pageInit" } }) };
+                projectQuery = { "page": 1, "data": 1, "action": 1 };
+                rows3 = await back.mongoPick(collection3, [ whereQuery, projectQuery ], { selfMongo: selfLogMongo });
 
-              cliidStatusArr = []; // 클라이언트 상태 배열을 초기화합니다.
-              for (let i = 0; i < cliids.length; i++) {
-                  cliidStatusArr.push([ cliids[i], statusArr[i] ]); // 클라이언트 ID와 상태를 배열에 저장합니다.
+                cliidStatusArr = []; // 클라이언트 상태 배열을 초기화합니다.
+                for (let i = 0; i < cliids.length; i++) {
+                    cliidStatusArr.push([ cliids[i], statusArr[i] ]); // 클라이언트 ID와 상태를 배열에 저장합니다.
+                }
+              } else {
+                tong = []; // 최종 결과를 저장할 배열을 초기화합니다.
+                rows = [];
               }
 
               tong = []; // 최종 결과를 저장할 배열을 초기화합니다.

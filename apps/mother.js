@@ -5334,6 +5334,9 @@ Mother.prototype.errorLog = function (text) {
     console.log(new Date(), "error");
     console.log(text); // 에러를 콘솔에 출력
     console.trace("Trace: ");
+    if (text.stack !== undefined) {
+      console.log(text.stack); // 에러 트레이싱
+    }
     console.log(bar);
     resolve(true);
   });
@@ -5351,6 +5354,9 @@ Mother.prototype.errorLogSync = function (text) {
   console.log(new Date(), "error");
   console.log(text); // 에러를 콘솔에 출력
   console.trace("Trace: ");
+  if (text.stack !== undefined) {
+    console.log(text.stack); // 에러 트레이싱
+  }
   console.log(bar);
   return true;
 }
@@ -5721,6 +5727,9 @@ Mother.prototype.emergencyAlarm = function (text) {
     console.log(new Date(), "error");
     console.log(text); // 에러를 콘솔에 출력
     console.trace("Trace: ");
+    if (text.stack !== undefined) {
+      console.log(text.stack); // 에러 트레이싱
+    }
     console.log(bar);
     resolve(true);
   });
