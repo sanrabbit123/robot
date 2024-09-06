@@ -3173,6 +3173,7 @@ class StaticRouter {
                   for (let c in tong) {
                       for (let obj of tong[c].out) {
                           tempObj = {};
+                          console.log(obj);
                           tempObj.date = stringToDate(obj.TIME); // 통화 날짜 변환
                           tempObj.to = autoHypenPhone(obj.DST); // 목적지 전화번호 변환
                           tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, '')); // 통화 시간 변환
