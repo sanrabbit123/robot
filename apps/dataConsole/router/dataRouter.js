@@ -755,6 +755,46 @@ class DataRouter {
       }
     });
 
+    router.get([ "/tools/log/:id" ], async function (req, res) {
+      res.set({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const collection = "serverLog";
+        const selfMongo = instance.mongo;
+        let rows;
+        let html;
+        let whereQuery;
+        let ago;
+
+        ago = new Date();
+        ago.setMonth(ago.getMonth() - 3);
+
+        whereQuery = {};
+        whereQuery["$and"] = [];
+
+        if (typeof req.params.id === "string") {
+          whereQuery["$and"].push({ server: req.params.id });
+          whereQuery["$and"].push({ date: { $gte: ago } })
+
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+          html = "<body>" + rows.map((j) => { return j.contents }).join("\n\n") + "</body>";
+  
+          res.send(html);
+        } else {
+          res.send("");
+        }
+      } catch (e) {
+        logger.error(e, req).catch((e) => { console.log(e); });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+
     /**
      * @route POST /getClients, /getDesigners, /getProjects, /getContents, /getBuilders
      * @description 클라이언트, 디자이너, 프로젝트, 콘텐츠, 빌더 정보를 가져오는 라우터입니다.
