@@ -46,7 +46,7 @@ const password = "homeliaison"; // 비밀번호 설정
 const bar = "============================================================"; // 로그 출력을 위한 구분선
 
 // 여러 유틸리티 메서드와 Mother의 메서드를 가져옴
-const { errorLog, alertLog, cronLog, aliveLog, emergencyAlarm, expressLog, mysqlQuery, leafParsing, processSystem, linkToString, ghostFileUpload, jsonToString, tempReplaceImage } = mother;
+const { errorLog, alertLog, cronLog, aliveLog, emergencyAlarm, expressLog, errorLogSync, mysqlQuery, leafParsing, processSystem, linkToString, ghostFileUpload, jsonToString, tempReplaceImage } = mother;
 const { diskReading, aliveMongo, equalJson, dateToString, serviceParsing, stringToDate, requestSystem, db, fileSystem, shellExec, shellLink, messageLog, zeroAddition, objectDeepCopy, messageSend, shell, homeliaisonAnalytics, sleep, stringToLink, autoHypenPhone, autoComma, mongo, mongoconsoleinfo, cryptoString, decryptoHash, ipParsing, uniqueValue, setQueue, binaryRequest, generalFileUpload } = mother;
 const { consoleQ, copyToClipboard, http2InNode, orderSystem, stringToJson, chromeOpen, curlRequest, ajaxJson, getDateMatrix, promiseTimeout, headRequest, treeParsing, appleScript, copyJson, pythonExecute, ipCheck, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, localUnique, sha256Hmac, variableArray, designerCareer, mediaQuery, getHoliday, capitalizeString } = mother;
 
@@ -9226,7 +9226,7 @@ class DataRouter {
 
         } catch (e) {
           // 오류 발생 시 콘솔에 로그 출력
-          console.log(e);
+          errorLogSync(e);
         }
       }
       /**
@@ -9318,7 +9318,7 @@ class DataRouter {
 
         } catch (e) {
           // 오류 발생 시 콘솔에 로그 출력
-          console.log(e);
+          errorLogSync(e);
         }
       }
       try {
@@ -12537,456 +12537,581 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /stylingAmountSync
+     * @description 클라이언트의 스타일링 금액 정보를 동기화하는 라우터입니다. 클라이언트가 특정 프로젝트와 관련된 금액 정보를 서버에 요청할 때 사용됩니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/stylingAmountSync" ], async function (req, res) {
+      // 응답 헤더를 설정합니다. 클라이언트가 JSON 데이터를 받을 수 있도록 설정하고, CORS 정책을 적용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환되는 데이터는 JSON 형식입니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용되는 HTTP 메서드 목록입니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용되는 HTTP 헤더 목록입니다.
       });
+
       try {
-        if (req.body.proid === undefined) {
-          throw new Error("invaild post");
-        }
-        const { proid } = equalJson(req.body);
-        const find0 = "홈리에종 잔금";
-        const find1 = "디자인비";
-        const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-        let bills, bilid, tempIndex, targetIndex, targetBill;
-        let itemIndex;
-        let whereQuery, updateQuery;
-        let project;
-        let supply;
-        let vat;
-        let consumer;
-        let firstTargetIndex, firstItemIndex;
-        let firstConsumer;
-        let firstVat;
-        let firstSupply;
-        let firstIndex;
-        let remainIndex;
-    
-    
-        project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        if (project === null) {
-          throw new Error("invaild post");
-        }
-    
-        bills = await bill.getBillsByQuery({
-          $and: [
-            { "links.proid": proid },
-            { "links.cliid": project.cliid },
-            { "links.desid": project.desid },
-            { "links.method": (project.service.online ? "online" : "offline") },
-          ]
-        }, { selfMongo: instance.mongolocal });
-        if (bills.length === 0) {
-          throw new Error("cannot find bill");
-        }
-    
-        bilid = null;
-        targetBill = null;
-        targetIndex = -1;
-        for (let i = 0; i < bills.length; i++) {
-          tempIndex = bills[i].requests.findIndex((obj) => {
-            return (new RegExp(find0, "gi")).test(obj.name);
-          });
-          if (tempIndex !== -1) {
-            bilid = bills[i].bilid;
-            targetBill = bills[i];
-            targetIndex = tempIndex;
-            break;
+          // 요청 본문에 proid가 포함되지 않으면 예외를 발생시킵니다.
+          if (req.body.proid === undefined) {
+              throw new Error("invalid post");
           }
-        }
-    
-        consumer = Math.floor(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount);
-        vat = Math.floor(consumer / 11);
-        supply = Math.floor(consumer - vat);
-    
-        firstConsumer = Math.floor(project.process.contract.first.calculation.amount);
-        firstVat = Math.floor(firstConsumer / 11);
-        firstSupply = Math.floor(firstConsumer - firstVat);
-    
-    
-        itemIndex = -1;
-        for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
-          if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
-            itemIndex = i;
-            break;
+
+          // equalJson을 통해 요청 본문을 깊은 복사(deep copy)하고, proid 값을 추출합니다.
+          const { proid } = equalJson(req.body);
+
+          // 특정 값을 찾기 위한 상수 문자열입니다.
+          const find0 = "홈리에종 잔금";
+          const find1 = "디자인비";
+
+          // 빈 날짜 값을 나타내는 상수입니다. 2000년 1월 1일을 기준으로 설정됩니다.
+          const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+
+          // 여러 변수를 선언합니다. 프로젝트와 관련된 결제 정보 및 잔액을 처리하기 위한 변수들입니다.
+          let bills, bilid, tempIndex, targetIndex, targetBill;
+          let itemIndex;
+          let whereQuery, updateQuery;
+          let project;
+          let supply;
+          let vat;
+          let consumer;
+          let firstTargetIndex, firstItemIndex;
+          let firstConsumer;
+          let firstVat;
+          let firstSupply;
+          let firstIndex;
+          let remainIndex;
+
+          // 프로젝트 정보를 MongoDB에서 가져옵니다. MongoDB 인스턴스를 사용하여 데이터베이스에 접근합니다.
+          project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+          if (project === null) {
+              throw new Error("invalid post");
           }
-        }
-    
-        firstTargetIndex = -1;
-        firstItemIndex = -1;
-        for (let i = 0; i < targetBill.requests.length; i++) {
-          if (/홈리에종 계약금/gi.test(targetBill.requests[i].name)) {
-            firstTargetIndex = i;
-            break;
+
+          // 관련된 청구서 목록을 조회합니다. 프로젝트 ID와 클라이언트 ID, 디자이너 ID, 서비스 방식을 기준으로 청구서를 찾습니다.
+          bills = await bill.getBillsByQuery({
+              $and: [
+                  { "links.proid": proid }, // 프로젝트 ID로 필터링
+                  { "links.cliid": project.cliid }, // 클라이언트 ID로 필터링
+                  { "links.desid": project.desid }, // 디자이너 ID로 필터링
+                  { "links.method": (project.service.online ? "online" : "offline") }, // 온라인 또는 오프라인 서비스 여부로 필터링
+              ]
+          }, { selfMongo: instance.mongolocal });
+          if (bills.length === 0) {
+              throw new Error("cannot find bill");
           }
-        }
-    
-        for (let i = 0; i < targetBill.requests[firstTargetIndex].items.length; i++) {
-          if (/디자인비/gi.test(targetBill.requests[firstTargetIndex].items[i].name)) {
-            firstItemIndex = i;
-            break;
-          }
-        }
-    
-    
-        whereQuery = { bilid };
-        updateQuery = {};
-    
-        if (firstTargetIndex !== -1 && firstItemIndex !== -1) {
-          updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".unit.price"] = firstSupply;
-          updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.supply"] = firstSupply;
-          updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.vat"] = firstVat;
-          updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.consumer"] = firstConsumer;
-        }
-    
-        updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
-        updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
-        updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
-        updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
-    
-    
-        remainIndex = 0;
-        firstIndex = 0;
-        for (let i = 0; i < targetBill.responses.length; i++) {
-          if (/홈리에종 잔금/gi.test(targetBill.responses[i].name)) {
-            remainIndex = i;
-          }
-          if (/홈리에종 선금/gi.test(targetBill.responses[i].name)) {
-            firstIndex = i;
-          }
-        }
-    
-        updateQuery["responses." + String(firstIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.first.amount)
-        updateQuery["responses." + String(firstIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.first.amount)
-        updateQuery["responses." + String(firstIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2)
-    
-        updateQuery["responses." + String(remainIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.remain.amount)
-        updateQuery["responses." + String(remainIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.remain.amount)
-        updateQuery["responses." + String(remainIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2)
-    
-    
-        if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue) {
-          updateQuery["responses." + String(firstIndex) + ".pay"] = [
-            {
-              date: project.process.calculation.payments.first.date,
-              amount: Math.floor(project.process.calculation.payments.first.amount),
-              oid: ""
-            }
-          ]
-          updateQuery["responses." + String(firstIndex) + ".proofs"] = [
-            {
-              date: project.process.calculation.payments.first.date,
-              method: "계좌 이체",
-              proof: project.process.calculation.info.proof,
-              to: project.process.calculation.info.to,
-            }
-          ]
-        }
-    
-        if (project.process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
-          updateQuery["responses." + String(firstIndex) + ".cancel"] = [
-            {
-              date: project.process.calculation.payments.first.cancel,
-              amount: Math.floor(project.process.calculation.payments.first.refund),
-              oid: ""
-            }
-          ]
-        }
-    
-        if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
-          updateQuery["responses." + String(remainIndex) + ".pay"] = [
-            {
-              date: project.process.calculation.payments.remain.date,
-              amount: Math.floor(project.process.calculation.payments.remain.amount),
-              oid: ""
-            }
-          ]
-          updateQuery["responses." + String(remainIndex) + ".proofs"] = [
-            {
-              date: project.process.calculation.payments.remain.date,
-              method: "계좌 이체",
-              proof: project.process.calculation.info.proof,
-              to: project.process.calculation.info.to,
-            }
-          ]
-        }
-    
-        if (project.process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
-          updateQuery["responses." + String(remainIndex) + ".cancel"] = [
-            {
-              date: project.process.calculation.payments.remain.cancel,
-              amount: Math.floor(project.process.calculation.payments.remain.refund),
-              oid: ""
-            }
-          ]
-        }
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-        res.send(JSON.stringify({ message: "success" }));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/smsParsing" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      const collection = "accountTransfer";
-      const designerCollection = "designerTransfer";
-      const standardDay = 7;
-      try {
-        if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { date, amount, name } = equalJson(req.body);
-        const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
-        const ignoreMessage = "무시하는 리스트에 포함된 은행 문자 왔음 : " + name + " " + autoComma(amount) + "원";
-        const ignoreList = [
-          "KG이니시스",
-        ];
-        let rows, ago, target, rows2;
-        let target2;
-        let whereQuery;
-        let updateQuery;
-        let thisProject;
-        let thisClient;
-    
-        if (!ignoreList.includes(name.trim())) {
-          ago = new Date();
-          ago.setDate(ago.getDate() - (standardDay * 2));
-    
-          target = null;
-          rows = await back.mongoRead(collection, { amount }, { selfMongo });
-          if (rows.length > 0) {
-            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-            rows = rows.filter((obj) => {
-              return obj.date.valueOf() >= ago.valueOf();
-            }).filter((obj) => {
-              return (new RegExp(obj.name, "gi")).test(name);
-            });
-            if (rows.length > 0) {
-              if (rows.length === 1) {
-                [ target ] = rows;
-              } else {
-                rows2 = rows.filter((obj) => {
-                  return obj.name.trim() === name.trim();
-                });
-                if (rows2.length > 0) {
-                  [ target ] = rows2;
-                } else {
-                  [ target ] = rows;
-                }
+
+          // 청구서에서 필요한 정보들을 추출합니다.
+          bilid = null;
+          targetBill = null;
+          targetIndex = -1;
+
+          // 청구서 목록을 순회하며 "홈리에종 잔금" 항목을 찾습니다.
+          for (let i = 0; i < bills.length; i++) {
+              tempIndex = bills[i].requests.findIndex((obj) => {
+                  return (new RegExp(find0, "gi")).test(obj.name); // "홈리에종 잔금"이 포함된 항목을 찾습니다.
+              });
+              if (tempIndex !== -1) {
+                  bilid = bills[i].bilid; // 청구서 ID를 설정합니다.
+                  targetBill = bills[i]; // 해당 청구서를 타겟으로 설정합니다.
+                  targetIndex = tempIndex; // 해당 항목의 인덱스를 설정합니다.
+                  break;
               }
-            }
           }
-    
-          if (target !== null) {
-    
-            await sleep(500);
-    
-            const { phone, amount, requestNumber } = target;
-    
-            target.accountInfo.requestNumber = requestNumber;
-            messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-    
-            await requestSystem("https://" + instance.address.officeinfo.host + ":3002/webHookVAccount", target.accountInfo, {
-              headers: { "Content-Type": "application/json" }
-            });
-            logger.log("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
-            if (/^010/.test(phone)) {
-              requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/issueCashReceipt", { amount: Number(amount), phone }, { headers: { "Content-Type": "application/json" } }).then(() => {
-                return messageSend(`${name} 고객님의 현금 영수증을 발행하였습니다!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
-              }).catch((err) => {
-                logger.error(err, req).catch((e) => { console.log(e); });
-                throw new Error(err.message);
-              });
-            }
-    
-          } else {
-    
-            target2 = null;
-            rows = await back.mongoRead(designerCollection, { amount }, { selfMongo });
-            if (rows.length > 0) {
-              rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-              rows = rows.filter((obj) => {
-                return obj.date.valueOf() >= ago.valueOf();
-              }).filter((obj) => {
-                return (new RegExp(obj.name, "gi")).test(name);
-              }).filter((obj) => {
-                return obj.complete === 0;
-              });
-              if (rows.length > 0) {
-                if (rows.length === 1) {
-                  [ target2 ] = rows;
-                } else {
-                  rows2 = rows.filter((obj) => {
-                    return obj.name.trim() === name.trim();
-                  });
-                  if (rows2.length > 0) {
-                    [ target2 ] = rows2;
-                  } else {
-                    [ target2 ] = rows;
+
+          // 소비자 금액, 부가가치세(VAT), 공급가액을 계산합니다.
+          consumer = Math.floor(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+
+          // 첫 번째 소비자 금액, 첫 번째 VAT, 첫 번째 공급가액을 계산합니다.
+          firstConsumer = Math.floor(project.process.contract.first.calculation.amount);
+          firstVat = Math.floor(firstConsumer / 11);
+          firstSupply = Math.floor(firstConsumer - firstVat);
+
+          // "디자인비" 항목을 찾기 위해 청구서의 요청 항목을 순회합니다.
+          itemIndex = -1;
+          for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                  itemIndex = i; // "디자인비" 항목의 인덱스를 설정합니다.
+                  break;
+              }
+          }
+
+          // "홈리에종 계약금" 항목을 찾기 위한 인덱스를 설정합니다.
+          firstTargetIndex = -1;
+          firstItemIndex = -1;
+          for (let i = 0; i < targetBill.requests.length; i++) {
+              if (/홈리에종 계약금/gi.test(targetBill.requests[i].name)) {
+                  firstTargetIndex = i;
+                  break;
+              }
+          }
+
+          // "디자인비" 항목을 찾습니다.
+          for (let i = 0; i < targetBill.requests[firstTargetIndex].items.length; i++) {
+              if (/디자인비/gi.test(targetBill.requests[firstTargetIndex].items[i].name)) {
+                  firstItemIndex = i;
+                  break;
+              }
+          }
+
+          // whereQuery와 updateQuery를 설정합니다.
+          whereQuery = { bilid };
+          updateQuery = {};
+
+          // 계약금 항목이 있을 경우, 공급가액, VAT, 소비자 금액을 업데이트합니다.
+          if (firstTargetIndex !== -1 && firstItemIndex !== -1) {
+              updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".unit.price"] = firstSupply;
+              updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.supply"] = firstSupply;
+              updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.vat"] = firstVat;
+              updateQuery["requests." + String(firstTargetIndex) + ".items." + String(firstItemIndex) + ".amount.consumer"] = firstConsumer;
+          }
+
+          // 청구서의 금액 정보를 업데이트합니다.
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
+
+          // 잔금과 선금을 위한 인덱스를 설정합니다.
+          remainIndex = 0;
+          firstIndex = 0;
+          for (let i = 0; i < targetBill.responses.length; i++) {
+              if (/홈리에종 잔금/gi.test(targetBill.responses[i].name)) {
+                  remainIndex = i;
+              }
+              if (/홈리에종 선금/gi.test(targetBill.responses[i].name)) {
+                  firstIndex = i;
+              }
+          }
+
+          // 선금 항목의 금액을 업데이트합니다.
+          updateQuery["responses." + String(firstIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.first.amount);
+          updateQuery["responses." + String(firstIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.first.amount);
+          updateQuery["responses." + String(firstIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2);
+
+          // 잔금 항목의 금액을 업데이트합니다.
+          updateQuery["responses." + String(remainIndex) + ".items.0.unit.price"] = Math.floor(project.process.calculation.payments.remain.amount);
+          updateQuery["responses." + String(remainIndex) + ".items.0.amount.pure"] = Math.floor(project.process.calculation.payments.remain.amount);
+          updateQuery["responses." + String(remainIndex) + ".items.0.amount.commission"] = Math.floor((project.process.contract.remain.calculation.amount.supply - project.process.calculation.payments.totalAmount) / 2);
+
+          // 첫 번째 결제의 날짜가 유효한 경우, 결제 정보를 업데이트합니다.
+          if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue) {
+              updateQuery["responses." + String(firstIndex) + ".pay"] = [
+                  {
+                      date: project.process.calculation.payments.first.date,
+                      amount: Math.floor(project.process.calculation.payments.first.amount),
+                      oid: "" // 결제 ID는 빈 문자열로 설정
                   }
-                }
-              }
-            }
-    
-            if (target2 !== null) {
-    
-              if (/촬영/gi.test(target2.goodname)) {
-    
-                thisProject = await back.getProjectById(target2.proid, { selfMongo: instance.mongo });
-                thisClient = await back.getClientById(target2.cliid, { selfMongo: instance.mongo });
-    
-                messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#301_console", true).catch((err) => { throw new Error(err.message); });
-                messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
-                
-                whereQuery = { proid: target2.proid };
-                updateQuery = {};
-                updateQuery["contents.payment.status"] = "결제 완료";
-                updateQuery["contents.payment.date"] = new Date();
-                updateQuery["contents.payment.calculation.amount"] = amount;
-                updateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
-                if (/프리/gi.test(thisProject.process.calculation.method) || /간이/gi.test(thisProject.process.calculation.method)) {
-                  updateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
-                } else {
-                  updateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
-                }
-                updateQuery["contents.payment.calculation.info.to"] = target2.name;
-                await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-    
-                whereQuery = { proid: target2.proid, goodname: target2.goodname };
-                updateQuery = {};
-                updateQuery["complete"] = 1;
-                await selfMongo.db("miro81").collection(designerCollection).updateMany(whereQuery, { $set: updateQuery });
-    
-              } else {
-                messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-                logger.alert(errorMessage).catch((e) => { console.log(e); });
-              }
-    
-            } else {
-              messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-              logger.alert(errorMessage).catch((e) => { console.log(e); });
-            }
-    
+              ];
+              updateQuery["responses." + String(firstIndex) + ".proofs"] = [
+                  {
+                      date: project.process.calculation.payments.first.date,
+                      method: "계좌 이체", // 결제 방법은 계좌 이체로 설정
+                      proof: project.process.calculation.info.proof, // 증빙 정보
+                      to: project.process.calculation.info.to // 수신자 정보
+                  }
+              ];
           }
-        } else {
-          logger.log(ignoreMessage).catch((e) => { console.log(e); });
-        }
-    
-        res.send(JSON.stringify({ message: "will do" }));
+
+          // 첫 번째 결제가 취소된 경우, 취소 정보를 업데이트합니다.
+          if (project.process.calculation.payments.first.cancel.valueOf() > emptyDateValue) {
+              updateQuery["responses." + String(firstIndex) + ".cancel"] = [
+                  {
+                      date: project.process.calculation.payments.first.cancel,
+                      amount: Math.floor(project.process.calculation.payments.first.refund),
+                      oid: "" // 취소 ID는 빈 문자열로 설정
+                  }
+              ];
+          }
+
+          // 잔금 결제의 날짜가 유효한 경우, 결제 정보를 업데이트합니다.
+          if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue) {
+              updateQuery["responses." + String(remainIndex) + ".pay"] = [
+                  {
+                      date: project.process.calculation.payments.remain.date,
+                      amount: Math.floor(project.process.calculation.payments.remain.amount),
+                      oid: "" // 결제 ID는 빈 문자열로 설정
+                  }
+              ];
+              updateQuery["responses." + String(remainIndex) + ".proofs"] = [
+                  {
+                      date: project.process.calculation.payments.remain.date,
+                      method: "계좌 이체", // 결제 방법은 계좌 이체로 설정
+                      proof: project.process.calculation.info.proof, // 증빙 정보
+                      to: project.process.calculation.info.to // 수신자 정보
+                  }
+              ];
+          }
+
+          // 잔금 결제가 취소된 경우, 취소 정보를 업데이트합니다.
+          if (project.process.calculation.payments.remain.cancel.valueOf() > emptyDateValue) {
+              updateQuery["responses." + String(remainIndex) + ".cancel"] = [
+                  {
+                      date: project.process.calculation.payments.remain.cancel,
+                      amount: Math.floor(project.process.calculation.payments.remain.refund),
+                      oid: "" // 취소 ID는 빈 문자열로 설정
+                  }
+              ];
+          }
+
+          // 업데이트된 청구서 정보를 MongoDB에 저장합니다.
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          // 성공 메시지를 클라이언트에 전송합니다.
+          res.send(JSON.stringify({ message: "success" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생하면 로그를 기록하고, 클라이언트에 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+      }
+    });
+    
+    /**
+     * @route POST /smsParsing
+     * @description 은행 문자를 파싱하여 고객의 입금 정보를 처리하는 라우터입니다. 고객이 입금한 정보를 분석하여 알림을 보내고 관련 데이터를 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 date(날짜), amount(금액), name(이름)이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
+    router.post([ "/smsParsing" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트가 요청을 받아들이고 처리할 수 있게 합니다.
+      res.set({
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 명시합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 클라이언트에서 보내는 헤더 중 허용할 항목을 지정합니다.
+      });
+
+      // 컬렉션 이름을 정의합니다. 고객의 입금 정보와 관련된 데이터를 저장할 컬렉션입니다.
+      const collection = "accountTransfer"; 
+      const designerCollection = "designerTransfer"; // 디자이너와 관련된 계좌 이체 정보를 저장하는 컬렉션입니다.
+      const standardDay = 7; // 기준 날짜로 7일을 설정합니다.
+
+      try {
+          // 필수 정보가 요청 본문에 포함되어 있지 않을 경우 에러를 발생시킵니다.
+          if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
+              throw new Error("invalid post");
+          }
+
+          // MongoDB 연결 정보와 equalJson 메서드를 사용하여 요청 본문을 처리합니다.
+          const selfMongo = instance.mongolocal; 
+          const { date, amount, name } = equalJson(req.body); // equalJson을 통해 요청 본문을 깊은 복사한 후 필요한 정보를 추출합니다.
+          
+          // 처리되지 않은 은행 문자를 기록할 때 사용할 메시지입니다.
+          const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
+          const ignoreMessage = "무시하는 리스트에 포함된 은행 문자 왔음 : " + name + " " + autoComma(amount) + "원"; // 무시할 메시지를 기록합니다.
+
+          // 무시할 이름 리스트를 정의합니다. 특정 기업의 입금 내역은 처리하지 않도록 무시 리스트에 추가합니다.
+          const ignoreList = [
+              "KG이니시스",
+          ];
+
+          let rows, ago, target, rows2; // 필요한 변수들을 미리 선언합니다.
+          let target2;
+          let whereQuery;
+          let updateQuery;
+          let thisProject;
+          let thisClient;
+
+          // 만약 무시 리스트에 이름이 포함되지 않는다면 은행 문자를 처리합니다.
+          if (!ignoreList.includes(name.trim())) {
+              ago = new Date(); // 현재 날짜를 가져옵니다.
+              ago.setDate(ago.getDate() - (standardDay * 2)); // 기준 날짜에서 14일 전으로 설정합니다.
+
+              target = null; // 타겟을 null로 초기화합니다.
+              rows = await back.mongoRead(collection, { amount }, { selfMongo }); // amount를 기준으로 계좌 이체 데이터를 읽어옵니다.
+              if (rows.length > 0) {
+                  // 날짜순으로 데이터를 정렬한 후, 기준 날짜 이후의 데이터만 필터링합니다.
+                  rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+                  rows = rows.filter((obj) => {
+                      return obj.date.valueOf() >= ago.valueOf(); // 기준 날짜 이후의 데이터만 필터링
+                  }).filter((obj) => {
+                      return (new RegExp(obj.name, "gi")).test(name); // 이름이 일치하는 데이터를 필터링
+                  });
+
+                  // 필터링된 데이터가 하나일 경우 그 데이터를 타겟으로 설정합니다.
+                  if (rows.length > 0) {
+                      if (rows.length === 1) {
+                          [ target ] = rows;
+                      } else {
+                          rows2 = rows.filter((obj) => {
+                              return obj.name.trim() === name.trim(); // 이름이 정확히 일치하는 데이터를 필터링
+                          });
+                          if (rows2.length > 0) {
+                              [ target ] = rows2;
+                          } else {
+                              [ target ] = rows;
+                          }
+                      }
+                  }
+              }
+
+              if (target !== null) {
+                  // 타겟 데이터가 존재하면 500밀리초 대기 후 처리합니다.
+                  await sleep(500); 
+
+                  const { phone, amount, requestNumber } = target; // 타겟에서 필요한 데이터를 추출합니다.
+
+                  target.accountInfo.requestNumber = requestNumber; // 요청 번호를 설정합니다.
+                  // 입금 알림을 전송합니다.
+                  messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
+
+                  // 외부 시스템에 요청을 보내 입금 정보를 전송합니다.
+                  await requestSystem("https://" + instance.address.officeinfo.host + ":3002/webHookVAccount", target.accountInfo, {
+                      headers: { "Content-Type": "application/json" }
+                  });
+
+                  // 현금 영수증 관련 로그를 남깁니다.
+                  logger.log("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
+
+                  // 휴대폰 번호가 010으로 시작하면 현금 영수증을 발행합니다.
+                  if (/^010/.test(phone)) {
+                      requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/issueCashReceipt", { amount: Number(amount), phone }, { headers: { "Content-Type": "application/json" } }).then(() => {
+                          return messageSend(`${name} 고객님의 현금 영수증을 발행하였습니다!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
+                      }).catch((err) => {
+                          logger.error(err, req).catch((e) => { console.log(e); });
+                          throw new Error(err.message);
+                      });
+                  }
+
+              } else {
+                  // 타겟이 없을 경우 디자이너 계좌 이체 정보를 읽어옵니다.
+                  target2 = null;
+                  rows = await back.mongoRead(designerCollection, { amount }, { selfMongo }); // 디자이너의 계좌 이체 정보를 가져옵니다.
+                  if (rows.length > 0) {
+                      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+                      rows = rows.filter((obj) => {
+                          return obj.date.valueOf() >= ago.valueOf(); // 기준 날짜 이후의 데이터만 필터링
+                      }).filter((obj) => {
+                          return (new RegExp(obj.name, "gi")).test(name); // 이름이 일치하는 데이터를 필터링
+                      }).filter((obj) => {
+                          return obj.complete === 0; // 완료되지 않은 데이터를 필터링
+                      });
+
+                      // 필터링된 데이터를 타겟으로 설정합니다.
+                      if (rows.length > 0) {
+                          if (rows.length === 1) {
+                              [ target2 ] = rows;
+                          } else {
+                              rows2 = rows.filter((obj) => {
+                                  return obj.name.trim() === name.trim(); // 이름이 정확히 일치하는 데이터를 필터링
+                              });
+                              if (rows2.length > 0) {
+                                  [ target2 ] = rows2;
+                              } else {
+                                  [ target2 ] = rows;
+                              }
+                          }
+                      }
+                  }
+
+                  if (target2 !== null) {
+                      // 타겟2가 있을 경우 결제 정보를 업데이트합니다.
+                      if (/촬영/gi.test(target2.goodname)) {
+                          thisProject = await back.getProjectById(target2.proid, { selfMongo: instance.mongo }); // 프로젝트 ID로 프로젝트를 조회합니다.
+                          thisClient = await back.getClientById(target2.cliid, { selfMongo: instance.mongo }); // 클라이언트 ID로 클라이언트를 조회합니다.
+
+                          // 알림 메시지를 전송합니다.
+                          messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#301_console", true).catch((err) => { throw new Error(err.message); });
+                          messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+                          
+                          // 프로젝트의 결제 상태를 업데이트합니다.
+                          whereQuery = { proid: target2.proid };
+                          updateQuery = {};
+                          updateQuery["contents.payment.status"] = "결제 완료";
+                          updateQuery["contents.payment.date"] = new Date();
+                          updateQuery["contents.payment.calculation.amount"] = amount;
+                          updateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
+
+                          // 결제 방식에 따라 영수증 또는 세금계산서를 설정합니다.
+                          if (/프리/gi.test(thisProject.process.calculation.method) || /간이/gi.test(thisProject.process.calculation.method)) {
+                              updateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
+                          } else {
+                              updateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
+                          }
+                          updateQuery["contents.payment.calculation.info.to"] = target2.name;
+                          await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+                          // 디자이너의 결제 상태를 업데이트합니다.
+                          whereQuery = { proid: target2.proid, goodname: target2.goodname };
+                          updateQuery = {};
+                          updateQuery["complete"] = 1;
+                          await selfMongo.db("miro81").collection(designerCollection).updateMany(whereQuery, { $set: updateQuery });
+
+                      } else {
+                          // 다른 결제일 경우 메시지를 전송하고 에러를 로그에 기록합니다.
+                          messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
+                          logger.alert(errorMessage).catch((e) => { console.log(e); });
+                      }
+
+                  } else {
+                      // 타겟을 찾지 못할 경우 메시지를 전송하고 로그에 기록합니다.
+                      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { console.log(e); });
+                      logger.alert(errorMessage).catch((e) => { console.log(e); });
+                  }
+
+              }
+          } else {
+              // 무시 리스트에 포함된 이름의 문자를 처리하지 않고 로그에 기록합니다.
+              logger.log(ignoreMessage).catch((e) => { console.log(e); });
+          }
+
+          // 성공적으로 처리되었음을 클라이언트에 응답합니다.
+          res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+          // 오류 발생 시 로그에 기록하고, 클라이언트에 오류 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
 
-    // 수동 입금 처리
+    /**
+     * @route POST /passivePayment
+     * @description 클라이언트의 수동 입금 처리를 담당하는 라우터입니다. 주어진 bilid(청구서 ID)와 금액(amount)를 기반으로 청구서 결제 상태를 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 amount(금액), bilid(청구서 ID), index(요청 인덱스)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/passivePayment" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트가 요청을 올바르게 처리할 수 있도록 합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 요청을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 클라이언트가 보낼 수 있는 헤더를 정의합니다.
       });
+
       try {
-        if (req.body.amount === undefined || req.body.bilid === undefined || req.body.index === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongo;
-        const amount = Number(req.body.amount);
-        const bilid = req.body.bilid;
-        const requestNumber = Number(req.body.index);
-        let bills;
-        let thisBill;
-        let client;
-        let itemArr;
-        let payArr;
-        let cancelArr;
-        let payObject;
-        let updateQuery;
-        let proofs;
-        let message;
-        let whereQuery;
-        
-        bills = await bill.getBillsByQuery({ "bilid": bilid }, { selfMongo });
-        thisBill = bills[0];
+          // 요청 본문에 필수 정보(amount, bilid, index)가 누락된 경우 에러를 발생시킵니다.
+          if (req.body.amount === undefined || req.body.bilid === undefined || req.body.index === undefined) {
+              throw new Error("invalid post");
+          }
 
-        client = await back.getClientById(thisBill.links.cliid, { selfMongo });
-        client = client.toNormal();
+          // MongoDB 연결 객체와 요청 본문에서 필요한 데이터를 가져옵니다.
+          const selfMongo = instance.mongo; // MongoDB 인스턴스
+          const amount = Number(req.body.amount); // 요청 본문에서 amount(금액)을 숫자로 변환하여 추출합니다.
+          const bilid = req.body.bilid; // 청구서 ID
+          const requestNumber = Number(req.body.index); // 요청 인덱스
 
-        itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
-        payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
-        cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
-        payObject = bill.returnBillDummies("pay");
-        payObject.oid = "real_" + uniqueValue("hex");
-        payObject.amount = amount;
-        payArr.unshift(payObject);
+          let bills; // 청구서 목록
+          let thisBill; // 현재 처리 중인 청구서
+          let client; // 클라이언트 정보
+          let itemArr; // 청구서 항목 배열
+          let payArr; // 결제 정보 배열
+          let cancelArr; // 취소 정보 배열
+          let payObject; // 결제 객체
+          let updateQuery; // MongoDB 업데이트 쿼리
+          let proofs; // 결제 증명 정보
+          let message; // 알림 메시지
+          let whereQuery; // MongoDB 쿼리 조건
 
-        whereQuery = { bilid: thisBill.bilid };
+          // 청구서 ID(bilid)를 사용하여 관련된 청구서를 가져옵니다.
+          bills = await bill.getBillsByQuery({ "bilid": bilid }, { selfMongo });
+          thisBill = bills[0]; // 가져온 청구서 중 첫 번째 항목을 현재 청구서로 설정합니다.
 
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-        updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+          // 청구서에 연결된 클라이언트 정보를 가져옵니다.
+          client = await back.getClientById(thisBill.links.cliid, { selfMongo });
+          client = client.toNormal(); // 클라이언트 정보를 일반 형식으로 변환합니다.
 
-        proofs = bill.returnBillDummies("proofs");
-        proofs.method = "계좌 이체";
-        proofs.proof = "이니시스";
-        proofs.to = client.name;
+          // 해당 요청 번호(requestNumber)에 해당하는 청구서 항목, 결제 정보, 취소 정보를 깊은 복사합니다.
+          itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items)); // 항목 배열을 깊은 복사
+          payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay)); // 결제 정보 배열을 깊은 복사
+          cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel)); // 취소 정보 배열을 깊은 복사
 
-        thisBill.requests[requestNumber].proofs.unshift(proofs);
-        updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
+          // 새로운 결제 객체(payObject)를 생성하고, 결제 정보를 추가합니다.
+          payObject = bill.returnBillDummies("pay"); // 기본 결제 객체를 가져옵니다.
+          payObject.oid = "real_" + uniqueValue("hex"); // 고유한 결제 ID(oid)를 설정합니다.
+          payObject.amount = amount; // 결제 금액을 설정합니다.
+          payArr.unshift(payObject); // 새로운 결제 정보를 결제 배열 앞에 추가합니다.
 
-        message = client.name + " 고객님이 " + proofs.method + "로 " + thisBill.requests[requestNumber].name.trim() + "을 결제하셨습니다!";
-        messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-          console.log(err);
-        });
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+          // 청구서 ID를 기준으로 MongoDB에서 업데이트할 데이터를 설정합니다.
+          whereQuery = { bilid: thisBill.bilid }; // 업데이트 조건으로 청구서 ID를 사용합니다.
 
-        res.send(JSON.stringify({ message: "will do" }));
+          // 업데이트할 데이터를 정의합니다. 요청 상태를 "결제 완료"로 설정하고, 결제 정보를 추가합니다.
+          updateQuery = {};
+          updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료"; // 요청 상태를 결제 완료로 업데이트
+          updateQuery["requests." + String(requestNumber) + ".pay"] = payArr; // 결제 정보를 업데이트
+
+          // 결제 증명(proofs) 객체를 생성하여 필요한 정보를 추가합니다.
+          proofs = bill.returnBillDummies("proofs"); // 기본 결제 증명 객체를 가져옵니다.
+          proofs.method = "계좌 이체"; // 결제 방법을 계좌 이체로 설정
+          proofs.proof = "이니시스"; // 결제 증명 방법을 "이니시스"로 설정
+          proofs.to = client.name; // 결제 증명의 수신자를 클라이언트 이름으로 설정
+
+          // 결제 증명 정보를 청구서 요청 항목에 추가합니다.
+          thisBill.requests[requestNumber].proofs.unshift(proofs); // 결제 증명을 요청 항목에 추가
+          updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs; // MongoDB 업데이트 쿼리에 반영
+
+          // 클라이언트에게 결제 완료 알림 메시지를 생성합니다.
+          message = client.name + " 고객님이 " + proofs.method + "로 " + thisBill.requests[requestNumber].name.trim() + "을 결제하셨습니다!";
+
+          // 결제 완료 메시지를 지정된 채널에 전송합니다.
+          messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+              console.log(err); // 메시지 전송 실패 시 오류를 로그에 출력합니다.
+          });
+
+          // 청구서 정보를 MongoDB에 업데이트합니다.
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
+          // 클라이언트에게 성공적으로 처리되었음을 알립니다.
+          res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 오류 메시지를 로그에 기록하고 클라이언트에게 오류를 전송합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 로그에 오류 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 클라이언트에 전송
       }
     });
     
+    /**
+     * @route POST /accountTimeSet
+     * @description 고객에게 계좌 이체 안내를 전송하는 라우터입니다. 고객이 특정 금액을 입금할 때까지 대기하며, 계좌 이체 안내 정보를 MongoDB에 기록합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 amount(금액), name(고객 이름)이 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/accountTimeSet" ], async function (req, res) {
+      // 클라이언트가 요청을 받아들이고, 요청에 대한 응답을 올바르게 처리할 수 있도록 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 목록을 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 클라이언트가 보낼 수 있는 헤더를 정의합니다.
       });
-      const collection = "accountTransfer";
+
+      // 계좌 이체 안내 정보를 저장할 MongoDB 컬렉션 이름을 정의합니다.
+      const collection = "accountTransfer"; // 계좌 이체 관련 정보를 저장할 컬렉션
+
       try {
-        if (req.body.amount === undefined || req.body.name === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { amount, name } = equalJson(req.body);
-        let rows, result;
-    
-        messageSend(`${name} 고객님이 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
-        await back.mongoCreate(collection, equalJson(req.body), { selfMongo });
-    
-        res.send(JSON.stringify({ message: "will do" }));
+          // 요청 본문에 필수 값(amount 또는 name)이 포함되지 않으면 에러를 발생시킵니다.
+          if (req.body.amount === undefined || req.body.name === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // MongoDB에 연결할 로컬 인스턴스를 가져옵니다.
+          const selfMongo = instance.mongolocal; 
+
+          // equalJson을 사용해 요청 본문을 깊은 복사(deep copy)하여 amount(금액)와 name(고객 이름)을 추출합니다.
+          const { amount, name } = equalJson(req.body);
+
+          let rows, result; // 데이터를 처리하기 위한 변수들 선언
+
+          // 고객에게 입금 안내 메시지를 전송합니다. 이 메시지는 입금이 아직 완료되지 않았음을 알립니다.
+          messageSend(`${name} 고객님이 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true)
+              .catch((err) => { throw new Error(err.message); }); // 메시지 전송 오류 시 예외 처리
+
+          // MongoDB에 계좌 이체 정보를 저장합니다.
+          await back.mongoCreate(collection, equalJson(req.body), { selfMongo }); // 요청 데이터를 MongoDB에 저장
+
+          // 성공 메시지를 클라이언트에 응답으로 전송합니다.
+          res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생하면 오류 메시지를 로깅하고, 클라이언트에게 오류를 응답으로 전송합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류 로그 기록
+          res.set("Content-Type", "application/json"); // 응답 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON으로 클라이언트에 전송
       }
     });
     
@@ -13106,332 +13231,183 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /createStylingBill
+     * @description 스타일링 청구서를 생성하는 라우터입니다. 요청 본문에서 전달된 proid(프로젝트 ID)를 기반으로 청구서를 생성합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/createStylingBill" ], async function (req, res) {
       try {
-        if (req.body.proid === undefined) {
-          throw new Error("invaild post, must be { proid }");
-        }
-        const { proid } = req.body;
-        let option, bilidArr;
-        option = { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal };
-        if (req.body.desid !== undefined) {
-          option.forceDesid = req.body.desid;
-        }
-        bilidArr = await bill.createStylingBill(proid, option);
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send(JSON.stringify(bilidArr));
+          // 요청 본문에 proid(프로젝트 ID)가 포함되지 않으면 에러를 발생시킵니다.
+          if (req.body.proid === undefined) {
+              throw new Error("invalid post, must be { proid }"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // 요청 본문에서 proid를 추출합니다.
+          const { proid } = req.body;
+
+          let option, bilidArr; // 옵션 객체와 청구서 ID 배열을 선언합니다.
+
+          // MongoDB에 연결하기 위한 옵션 객체를 설정합니다.
+          option = { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal };
+
+          // 만약 요청 본문에 desid(디자이너 ID)가 포함되어 있으면, 옵션 객체에 추가합니다.
+          if (req.body.desid !== undefined) {
+              option.forceDesid = req.body.desid; // 디자이너 ID를 강제로 설정
+          }
+
+          // createStylingBill 메서드를 호출하여 스타일링 청구서를 생성하고, 생성된 청구서 ID 배열을 bilidArr에 저장합니다.
+          bilidArr = await bill.createStylingBill(proid, option);
+
+          // 응답 헤더를 설정하여 클라이언트가 요청에 대한 응답을 받을 수 있도록 합니다.
+          res.set({
+              "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정
+              "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 목록을 설정
+              "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정
+          });
+
+          // 생성된 청구서 ID 배열을 JSON 형식으로 클라이언트에 응답합니다.
+          res.send(JSON.stringify(bilidArr));
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류 발생 시 로그에 기록하고, 클라이언트에게 오류 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 로그에 오류 기록
+          res.set("Content-Type", "application/json"); // 응답 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON으로 클라이언트에 전송
       }
     });
     
+    /**
+     * @route POST /generalBill
+     * @description 일반 청구서(generalBill)를 처리하는 라우터입니다. 청구서를 생성, 읽기, 업데이트, 삭제 등의 작업을 수행합니다.
+     *              요청 본문에서 mode(작업 모드)를 통해 수행할 작업을 지정합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 mode(작업 모드) 및 whereQuery, updateQuery 등의 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/generalBill" ], async function (req, res) {
+      // 클라이언트가 요청을 올바르게 처리할 수 있도록 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
+
       try {
-        if (req.body.mode === undefined) {
-          throw new Error("must be mode => [ create, read, update, delete ]");
-        }
-        const collection = "generalBill";
-        const { mode } = req.body;
-        let selfMongo, result;
-        let whereQuery, updateQuery;
-        let option;
-    
-        selfMongo = instance.mongolocal;
-    
-        if (mode === "read") {
-          if (req.body.whereQuery === undefined) {
-            throw new Error("must be whereQuery");
+          // 요청 본문에 mode가 정의되지 않았을 경우 에러를 발생시킵니다.
+          if (req.body.mode === undefined) {
+              throw new Error("must be mode => [ create, read, update, delete ]"); // mode는 필수 값입니다.
           }
-          whereQuery = equalJson(req.body.whereQuery);
-          option = { selfMongo };
-          if (req.body.limit !== undefined && !Number.isNaN(Number(req.body.limit))) {
-            option.limit = Number(req.body.limit);
+
+          // MongoDB에서 사용할 컬렉션 이름을 정의합니다.
+          const collection = "generalBill"; // 일반 청구서 컬렉션
+
+          // 요청 본문에서 mode 값을 추출합니다.
+          const { mode } = req.body;
+
+          let selfMongo, result; // MongoDB 인스턴스와 결과를 저장할 변수를 선언합니다.
+          let whereQuery, updateQuery; // whereQuery와 updateQuery 변수를 선언합니다.
+          let option; // MongoDB 쿼리 옵션을 저장할 변수를 선언합니다.
+
+          // MongoDB 로컬 인스턴스를 selfMongo로 설정합니다.
+          selfMongo = instance.mongolocal;
+
+          // mode가 "read"인 경우 청구서를 읽어오는 작업을 수행합니다.
+          if (mode === "read") {
+              // whereQuery가 정의되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.whereQuery === undefined) {
+                  throw new Error("must be whereQuery"); // whereQuery는 필수 값입니다.
+              }
+
+              // 요청 본문에서 whereQuery를 equalJson 메서드를 사용해 깊은 복사합니다.
+              whereQuery = equalJson(req.body.whereQuery);
+
+              // MongoDB 쿼리 옵션을 설정합니다.
+              option = { selfMongo };
+
+              // 요청 본문에 limit(제한)이 정의되어 있고 숫자일 경우 옵션에 limit을 추가합니다.
+              if (req.body.limit !== undefined && !Number.isNaN(Number(req.body.limit))) {
+                  option.limit = Number(req.body.limit); // limit 값을 설정
+              }
+
+              // whereQuery와 option을 사용하여 청구서 데이터를 조회합니다.
+              result = await bill.getBillsByQuery(whereQuery, option);
+
+          // mode가 "update"인 경우 청구서를 업데이트하는 작업을 수행합니다.
+          } else if (mode === "update") {
+              // whereQuery 또는 updateQuery가 정의되지 않았을 경우 에러를 발생시킵니다.
+              if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+                  throw new Error("must be whereQuery, updateQuery"); // whereQuery와 updateQuery는 필수 값입니다.
+              }
+
+              // 요청 본문에서 whereQuery와 updateQuery를 추출하여 equalJson 메서드를 사용해 깊은 복사합니다.
+              ({ whereQuery, updateQuery } = equalJson(req.body));
+
+              // whereQuery와 updateQuery를 사용하여 청구서를 업데이트합니다.
+              await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
+              // 성공 메시지를 결과에 저장합니다.
+              result = { message: "success" };
+
+          } else {
+              // mode가 "read" 또는 "update"가 아닐 경우 에러를 발생시킵니다.
+              throw new Error("must be mode => [ read, update ]");
           }
-          result = await bill.getBillsByQuery(whereQuery, option);
-    
-        } else if (mode === "update") {
-    
-          if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
-            throw new Error("must be whereQuery, updateQuery");
-          }
-          ({ whereQuery, updateQuery } = equalJson(req.body));
-          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-          result = { message: "success" };
-    
-        } else {
-          throw new Error("must be mode => [ read, update ]");
-        }
-    
-        res.send(JSON.stringify(result));
+
+          // 처리된 결과를 클라이언트에 JSON 형식으로 응답합니다.
+          res.send(JSON.stringify(result));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 JSON 형식으로 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류 로그 기록
+          res.set("Content-Type", "application/json"); // 응답 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 클라이언트에 응답
       }
     });
-    
+  
+    /**
+     * @route POST /ghostClientBill
+     * @description 고객이 가상 계좌를 발급받거나 결제를 처리하는 라우터입니다. 청구서 ID(bilid), 요청 번호(requestNumber), 결제 데이터(data)를 기반으로 처리합니다.
+     *              결제가 완료되면 청구서와 결제 정보를 업데이트합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 bilid(청구서 ID), requestNumber(요청 번호), data(결제 정보)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/ghostClientBill" ], async function (req, res) {
       try {
-        if (req.body.bilid === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { bilid, requestNumber, data } = equalJson(req.body);
-        if (typeof data !== "object") {
-          throw new Error("invaild post : data must be object");
-        }
-        if (typeof data.MOID !== "string") {
-          throw new Error("invaild post");
-        }
-        if (Number.isNaN(Number(requestNumber))) {
-          throw new Error("invaild request number");
-        }
-        const oid = data.MOID;
-        const inisis = "이니시스";
-        let whereQuery, updateQuery, method;
-        let thisBill;
-        let cliid, desid, proid;
-        let client, designer, project;
-        let proposal;
-        let oidArr, infoArr;
-        let index;
-        let boo;
-        let proofs;
-        let projectQuery;
-        let amount;
-        let pureDesignFee;
-        let vat, consumer;
-        let classification, percentage;
-        let businessMethod;
-        let bankName, bankTo;
-        let calculate;
-        let itemArr, payArr, cancelArr;
-        let itemNum, payNum, cancelNum;
-        let payObject;
-        let message;
-    
-        if (data.__ignorethis__ !== 1) {
-    
-          thisBill = await bill.getBillById(bilid, { selfMongo });
-          if (thisBill === null) {
-            throw new Error("there is no bill");
+          // 필수 파라미터(bilid, requestNumber, data)가 없을 경우 에러를 발생시킵니다.
+          if (req.body.bilid === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
           }
-          if (thisBill.links.cliid === undefined || thisBill.links.desid === undefined || thisBill.links.proid === undefined) {
-            throw new Error("invaild bill");
+
+          // MongoDB 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 bilid, requestNumber, data를 equalJson으로 깊은 복사하여 추출합니다.
+          const { bilid, requestNumber, data } = equalJson(req.body);
+
+          // data가 객체가 아니거나 MOID 필드가 없으면 에러를 발생시킵니다.
+          if (typeof data !== "object") {
+              throw new Error("invalid post: data must be object");
           }
-          thisBill = thisBill.toNormal();
-          cliid = thisBill.links.cliid;
-          desid = thisBill.links.desid;
-          proid = thisBill.links.proid;
-          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-          designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-          project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-          proposal = project.selectProposal(desid);
-    
-          if (client === null || designer === null || project === null) {
-            throw new Error("invaild id");
+          if (typeof data.MOID !== "string") {
+              throw new Error("invalid post");
           }
-    
-          if (Array.isArray(thisBill.links.oid)) {
-            oidArr = equalJson(JSON.stringify(thisBill.links.oid));
-            boo = false;
-            for (let o of oidArr) {
-              if (o === oid) {
-                boo = true;
-              }
-            }
-            if (!boo) {
-              oidArr.unshift(oid);
-            }
-          } else {
-            oidArr = [ oid ];
+          if (Number.isNaN(Number(requestNumber))) {
+              throw new Error("invalid request number");
           }
-    
-          infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
-          infoArr.unshift({ data });
-          infoArr.unshift({ oid });
-    
-          whereQuery = { bilid };
-          updateQuery = {};
-          updateQuery["links.oid"] = oidArr;
-          updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
-    
-          amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
-    
-          if (data.CARD_BankCode !== undefined) {
-    
-            itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
-            payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
-            cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
-            payObject = bill.returnBillDummies("pay");
-            payObject.amount = amount;
-            payObject.oid = oid;
-            payArr.unshift(payObject);
-    
-            updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-    
-            updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
-    
-            proofs = bill.returnBillDummies("proofs");
-            if (/card/gi.test(data.payMethod)) {
-              if (typeof data.P_FN_NM === "string") {
-                proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
-              } else {
-                proofs.method = "카드(알 수 없음)";
-              }
-            } else {
-              proofs.method = "가상계좌";
-            }
-            proofs.proof = inisis;
-            proofs.to = data.buyerName;
-            thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
-            updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
-    
-            message = client.name + " 고객님 (" + designer.designer + " 실장님" + ") 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-            messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-              console.log(err);
-            })
-            await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-            await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
-    
-          } else {
-    
-            if (data.REAL_Account === undefined) {
-    
-              instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
-                client: client.name,
-                goodName: data.goodName,
-                bankName: data.vactBankName,
-                account: data.VACT_Num,
-                to: data.VACT_Name,
-                amount: autoComma(amount),
-                date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
-              }).catch((err) => {
-                console.log(err);
-              });
-              message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
-              messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-                console.log(err);
-              });
-    
-            } else {
-    
-              instance.kakao.sendTalk("realAccount", client.name, client.phone, {
-                client: client.name,
-                goodName: data.goodName,
-                bankName: data.vactBankName,
-                account: data.VACT_Num,
-                to: data.VACT_Name,
-                amount: autoComma(amount),
-              }).catch((err) => {
-                console.log(err);
-              });
-    
-            }
-    
-            await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-    
-          }
-    
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-          });
-          res.send(JSON.stringify({ message: "success" }));
-    
-        } else {
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-          });
-          res.send(JSON.stringify({ message: "success" }));
-        }
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/webHookVAccount" ], async function (req, res) {
-      try {
-        const impWebhookUrl = "https://service.iamport.kr/inicis_payments/notice_vbank";
-        const oid = req.body.no_oid;
-        const inisis = "현금 영수증";
-        const bankFrom = req.body.nm_inputbank;
-        const nameFrom = req.body.nm_input;
-        const rawRequestNumber = Number(req.body.requestNumber);
-        let bills;
-        let accountTransferCollection;
-        let transferRows, transferRows2;
-        let impId;
-    
-        if (!/imp_/g.test(oid)) {
-    
-          bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
-    
-          if (bills.length === 0) {
-            accountTransferCollection = "accountTransfer";
-            transferRows = await back.mongoRead(accountTransferCollection, { "accountInfo.no_oid": oid }, { selfMongo: instance.mongolocal });
-            if (transferRows.length > 0) {
-              transferRows2 = await back.mongoRead(accountTransferCollection, {
-                $and: [
-                  { name: transferRows[0].name },
-                  { phone: transferRows[0].phone },
-                  { amount: transferRows[0].amount },
-                  { goodname: transferRows[0].goodname },
-                ]
-              }, { selfMongo: instance.mongolocal });
-              if (transferRows2.length > 0) {
-                transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-                for (let obj of transferRows2) {
-                  bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
-                  if (bills.length !== 0) {
-                    break;
-                  }
-                }
-                if (bills.length === 0) {
-                  bills = await bill.getBillsByQuery({ "bilid": transferRows[0].bilid }, { selfMongo: instance.mongolocal });
-                  if (bills.length === 0) {
-                    throw new Error("invaild oid 3");
-                  }
-                }
-              } else {
-                throw new Error("invaild oid 2");
-              }
-            } else {
-              throw new Error("invaild oid 1");
-            }
-          }
-    
-          if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
-            throw new Error("invaild bill");
-          }
-    
-          const { proid, cliid, desid, method } = bills[0].links;
-          let infoArr, index;
-          let bilid;
-          let client, designer, project, proposal;
-          let requestNumber;
-          let data;
+
+          const oid = data.MOID; // 결제 고유 ID(MOID)
+          const inisis = "이니시스"; // 결제 대행사 이름
+          let whereQuery, updateQuery, method;
           let thisBill;
+          let cliid, desid, proid;
+          let client, designer, project;
+          let proposal;
+          let oidArr, infoArr;
+          let index;
+          let boo;
+          let proofs;
           let projectQuery;
           let amount;
           let pureDesignFee;
@@ -13440,167 +13416,471 @@ class DataRouter {
           let businessMethod;
           let bankName, bankTo;
           let calculate;
-          let whereQuery, updateQuery;
-          let proofs;
           let itemArr, payArr, cancelArr;
           let itemNum, payNum, cancelNum;
           let payObject;
           let message;
-    
-          thisBill = bills[0];
-          thisBill = thisBill.toNormal();
-          bilid = thisBill.bilid;
-    
-          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-          designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-          project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-          proposal = project.selectProposal(desid);
-    
-          if (client === null || designer === null || project === null) {
-            throw new Error("invaild id");
-          }
-    
-          requestNumber = null;
-          for (let i = 0; i < thisBill.requests.length; i++) {
-            for (let obj of thisBill.requests[i].info) {
-              if (obj.oid === oid) {
-                requestNumber = i;
-                break;
+
+          // 무시할 데이터가 아닌 경우 결제 처리를 진행합니다.
+          if (data.__ignorethis__ !== 1) {
+
+              // 청구서 ID로 청구서를 조회합니다.
+              thisBill = await bill.getBillById(bilid, { selfMongo });
+              if (thisBill === null) {
+                  throw new Error("there is no bill"); // 청구서가 없으면 에러 발생
               }
-            }
-          }
-    
-          if (requestNumber === null) {
-            requestNumber = rawRequestNumber;
-            if (Number.isNaN(Number(requestNumber))) {
-              throw new Error("invalid request request number")
-            }
-          }
-    
-          for (let obj of thisBill.requests[requestNumber].info) {
-            if (obj.data !== undefined && typeof obj.data === "object" && obj.data !== null) {
-              data = equalJson(JSON.stringify(obj.data));
-              break;
-            }
-          }
-          if (data === null || data === undefined) {
-            data = { goodName: thisBill.requests[transferRows[0].requestNumber].name };
-          }
-    
-          infoArr = equalJson(JSON.stringify(thisBill.requests[requestNumber].info));
-          infoArr.unshift({ virtualAccount: equalJson(JSON.stringify(req.body)) });
-    
-          whereQuery = { bilid };
-          updateQuery = {};
-          updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
-    
-          amount = Number(equalJson(JSON.stringify(req.body)).amt_input.replace(/[^0-9]/gi, ''));
-    
-          itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
-          payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
-          cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
-          payObject = bill.returnBillDummies("pay");
-          payObject.oid = oid;
-          payObject.amount = amount;
-          payArr.unshift(payObject);
-    
-          updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-          updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
-    
-          proofs = bill.returnBillDummies("proofs");
-    
-          if (!(typeof req.body.real_account === "string")) {
-            if (typeof bankFrom === "string") {
-              proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
-            } else {
-              proofs.method = "무통장 입금(알 수 없음)";
-            }
-          } else {
-            proofs.method = "계좌 이체";
-          }
-    
-          proofs.proof = inisis;
-          proofs.to = nameFrom;
-          thisBill.requests[requestNumber].proofs.unshift(proofs);
-          updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
-    
-          message = client.name + " 고객님 (" + designer.designer + " 실장님" + ") 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-          messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-            console.log(err);
-          });
-          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-          await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
-    
-        } else {
-          const impId = req.body.no_oid;
-          const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-            imp_key: address.officeinfo.import.key,
-            imp_secret: address.officeinfo.import.secret
-          }, { headers: { "Content-Type": "application/json" } }));
-          const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
-            method: "get",
-            headers: { "Authorization": accessToken }
-          });
-    
-          const oid = paymentData.merchant_uid;
-    
-          if (/dreg_/g.test(oid)) {
-            const [ oidConst, aspid0, aspid1 ] = oid.split("_");
-            const aspid = aspid0 + "_" + aspid1;
-            if (/paid/g.test(paymentData.status)) {
-              if (paymentData.pay_method === "card") {
-                await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                  aspid,
-                  mode: "card",
-                  status: "paid"
-                }, { headers: { "Content-Type": "application/json" } });
+
+              // 청구서에 클라이언트, 디자이너, 프로젝트 정보가 없으면 에러를 발생시킵니다.
+              if (thisBill.links.cliid === undefined || thisBill.links.desid === undefined || thisBill.links.proid === undefined) {
+                  throw new Error("invalid bill");
+              }
+
+              thisBill = thisBill.toNormal(); // 청구서 데이터를 일반 형식으로 변환
+              cliid = thisBill.links.cliid;
+              desid = thisBill.links.desid;
+              proid = thisBill.links.proid;
+
+              // 클라이언트, 디자이너, 프로젝트 정보를 MongoDB에서 조회합니다.
+              client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+              designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+              project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+              // 프로젝트에서 디자이너와 관련된 제안서를 가져옵니다.
+              proposal = project.selectProposal(desid);
+
+              // 클라이언트, 디자이너, 프로젝트 정보가 없을 경우 에러 발생
+              if (client === null || designer === null || project === null) {
+                  throw new Error("invalid id");
+              }
+
+              // 청구서에 결제 고유 ID(oid) 배열이 있을 경우 중복을 확인하고, 중복되지 않으면 oid를 배열에 추가합니다.
+              if (Array.isArray(thisBill.links.oid)) {
+                  oidArr = equalJson(JSON.stringify(thisBill.links.oid)); // 깊은 복사
+                  boo = false;
+                  for (let o of oidArr) {
+                      if (o === oid) {
+                          boo = true;
+                      }
+                  }
+                  if (!boo) {
+                      oidArr.unshift(oid); // 중복되지 않으면 배열에 추가
+                  }
               } else {
-                await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                  aspid,
-                  mode: "vbank",
-                  status: "paid"
-                }, { headers: { "Content-Type": "application/json" } });
+                  oidArr = [oid]; // oid 배열이 없으면 새로 생성
               }
-            } else {
-              if (paymentData.pay_method !== "card") {
-                await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
-                  aspid,
-                  mode: "vbank",
-                  status: "paid"
-                }, { headers: { "Content-Type": "application/json" } });
+
+              // 결제 정보 배열에 새로운 결제 데이터를 추가합니다.
+              infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
+              infoArr.unshift({ data });
+              infoArr.unshift({ oid });
+
+              // MongoDB 업데이트를 위한 쿼리와 데이터를 설정합니다.
+              whereQuery = { bilid }; // 청구서 ID를 조건으로 설정
+              updateQuery = {};
+              updateQuery["links.oid"] = oidArr; // oid 배열 업데이트
+              updateQuery["requests." + String(requestNumber) + ".info"] = infoArr; // 결제 정보 업데이트
+
+              // 결제 금액을 추출하여 숫자로 변환합니다.
+              amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
+
+              // 카드 결제 정보가 있을 경우
+              if (data.CARD_BankCode !== undefined) {
+                  // 청구서 항목, 결제 정보, 취소 정보를 깊은 복사하여 처리합니다.
+                  itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+                  payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+                  cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+
+                  // 새로운 결제 객체를 생성하고 결제 금액과 oid를 설정합니다.
+                  payObject = bill.returnBillDummies("pay");
+                  payObject.amount = amount;
+                  payObject.oid = oid;
+                  payArr.unshift(payObject); // 새로운 결제 정보를 배열에 추가
+
+                  // 결제 상태를 "결제 완료"로 설정합니다.
+                  updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+
+                  // 결제 배열을 업데이트합니다.
+                  updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+
+                  // 결제 증명 정보를 생성하여 결제 방법과 증명 정보를 추가합니다.
+                  proofs = bill.returnBillDummies("proofs");
+                  if (/card/gi.test(data.payMethod)) {
+                      if (typeof data.P_FN_NM === "string") {
+                          proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+                      } else {
+                          proofs.method = "카드(알 수 없음)";
+                      }
+                  } else {
+                      proofs.method = "가상계좌";
+                  }
+                  proofs.proof = inisis; // 결제 대행사 정보를 추가
+                  proofs.to = data.buyerName; // 결제자의 이름을 추가
+                  thisBill.requests[Number(requestNumber)].proofs.unshift(proofs); // 결제 증명 정보를 추가
+                  updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
+
+                  // 결제 완료 메시지를 생성하고 전송합니다.
+                  message = client.name + " 고객님 (" + designer.designer + " 실장님) 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+                  messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+                      console.log(err); // 메시지 전송 오류 시 로그에 기록
+                  });
+
+                  // 청구서를 업데이트하고 결제 정보 동기화를 수행합니다.
+                  await bill.updateBill([whereQuery, updateQuery], { selfMongo });
+                  await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
+
+              } else {
+                  // 가상계좌 결제 처리
+                  if (data.REAL_Account === undefined) {
+                      // 가상계좌 정보를 고객에게 전송하는 메시지를 전송합니다.
+                      instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+                          client: client.name,
+                          goodName: data.goodName,
+                          bankName: data.vactBankName,
+                          account: data.VACT_Num,
+                          to: data.VACT_Name,
+                          amount: autoComma(amount),
+                          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+                      }).catch((err) => {
+                          console.log(err); // 메시지 전송 오류 시 로그에 기록
+                      });
+
+                      // 가상계좌 발급 메시지를 전송합니다.
+                      message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
+                      messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+                          console.log(err);
+                      });
+
+                  } else {
+                      // 실계좌 결제 처리
+                      instance.kakao.sendTalk("realAccount", client.name, client.phone, {
+                          client: client.name,
+                          goodName: data.goodName,
+                          bankName: data.vactBankName,
+                          account: data.VACT_Num,
+                          to: data.VACT_Name,
+                          amount: autoComma(amount),
+                      }).catch((err) => {
+                          console.log(err); // 메시지 전송 오류 시 로그에 기록
+                      });
+                  }
+
+                  // 청구서를 업데이트합니다.
+                  await bill.updateBill([whereQuery, updateQuery], { selfMongo });
               }
-            }
+
+              // 성공적으로 처리되었음을 클라이언트에 응답합니다.
+              res.set({
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+                  "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+              });
+              res.send(JSON.stringify({ message: "success" }));
+
+          } else {
+              // 데이터가 무시되는 경우에도 성공 응답을 보냅니다.
+              res.set({
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+                  "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+              });
+              res.send(JSON.stringify({ message: "success" }));
           }
-        }
-    
-        res.set({ "Content-Type": "text/plain" });
-        res.send("OK");
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set({ "Content-Type": "text/plain" });
-        res.send("FAIL");
+          // 오류가 발생한 경우 오류 메시지를 로깅하고 클라이언트에게 오류 메시지를 전송합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류를 로그에 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON 형식으로 클라이언트에 전송
+      }
+    });
+
+    /**
+     * @route POST /webHookVAccount
+     * @description 가상 계좌 결제에 대한 웹훅을 처리하는 라우터입니다. 결제 완료 후 청구서 정보를 업데이트하고 관련 데이터를 동기화합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 결제 관련 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 반환합니다.
+     */
+    router.post([ "/webHookVAccount" ], async function (req, res) {
+      try {
+          // 아임포트 웹훅 URL입니다.
+          const impWebhookUrl = "https://service.iamport.kr/inicis_payments/notice_vbank";
+
+          // 결제 고유 ID(oid)와 현금 영수증 관련 정보를 요청 본문에서 추출합니다.
+          const oid = req.body.no_oid; 
+          const inisis = "현금 영수증"; // 결제 방식
+          const bankFrom = req.body.nm_inputbank; // 입금 은행명
+          const nameFrom = req.body.nm_input; // 입금자명
+          const rawRequestNumber = Number(req.body.requestNumber); // 요청 번호
+
+          let bills; // 청구서 목록
+          let accountTransferCollection; // 계좌 이체 관련 데이터베이스 컬렉션
+          let transferRows, transferRows2; // 계좌 이체 데이터 조회 결과
+          let impId; // 아임포트 결제 ID
+
+          // 결제 고유 ID가 "imp_"로 시작하지 않는 경우
+          if (!/imp_/g.test(oid)) {
+
+              // 결제 고유 ID로 청구서 목록을 MongoDB에서 조회합니다.
+              bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+
+              // 청구서를 찾지 못한 경우 계좌 이체 데이터를 조회합니다.
+              if (bills.length === 0) {
+                  accountTransferCollection = "accountTransfer";
+                  transferRows = await back.mongoRead(accountTransferCollection, { "accountInfo.no_oid": oid }, { selfMongo: instance.mongolocal });
+
+                  // 계좌 이체 데이터가 존재하는 경우
+                  if (transferRows.length > 0) {
+                      transferRows2 = await back.mongoRead(accountTransferCollection, {
+                          $and: [
+                              { name: transferRows[0].name },
+                              { phone: transferRows[0].phone },
+                              { amount: transferRows[0].amount },
+                              { goodname: transferRows[0].goodname },
+                          ]
+                      }, { selfMongo: instance.mongolocal });
+
+                      // 가장 최근 계좌 이체 데이터를 기준으로 청구서를 조회합니다.
+                      if (transferRows2.length > 0) {
+                          transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+                          for (let obj of transferRows2) {
+                              bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
+                              if (bills.length !== 0) {
+                                  break;
+                              }
+                          }
+
+                          // 청구서를 찾지 못한 경우 에러 발생
+                          if (bills.length === 0) {
+                              bills = await bill.getBillsByQuery({ "bilid": transferRows[0].bilid }, { selfMongo: instance.mongolocal });
+                              if (bills.length === 0) {
+                                  throw new Error("invalid oid 3");
+                              }
+                          }
+                      } else {
+                          throw new Error("invalid oid 2");
+                      }
+                  } else {
+                      throw new Error("invalid oid 1");
+                  }
+              }
+
+              // 청구서에 프로젝트, 클라이언트, 디자이너 정보가 없으면 에러 발생
+              if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
+                  throw new Error("invalid bill");
+              }
+
+              // 청구서에서 필요한 정보를 추출합니다.
+              const { proid, cliid, desid, method } = bills[0].links;
+              let infoArr, index; // 결제 정보 배열
+              let bilid; // 청구서 ID
+              let client, designer, project, proposal; // 클라이언트, 디자이너, 프로젝트 정보
+              let requestNumber; // 요청 번호
+              let data; // 결제 데이터
+              let thisBill; // 현재 청구서
+              let amount; // 결제 금액
+
+              // 청구서를 일반 형식으로 변환하고 필요한 정보를 추출합니다.
+              thisBill = bills[0].toNormal();
+              bilid = thisBill.bilid;
+
+              // MongoDB에서 클라이언트, 디자이너, 프로젝트 정보를 조회합니다.
+              client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+              designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+              project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+              proposal = project.selectProposal(desid);
+
+              // 클라이언트, 디자이너, 프로젝트 정보가 없으면 에러 발생
+              if (client === null || designer === null || project === null) {
+                  throw new Error("invalid id");
+              }
+
+              // 결제 고유 ID를 기준으로 요청 번호를 찾습니다.
+              requestNumber = null;
+              for (let i = 0; i < thisBill.requests.length; i++) {
+                  for (let obj of thisBill.requests[i].info) {
+                      if (obj.oid === oid) {
+                          requestNumber = i;
+                          break;
+                      }
+                  }
+              }
+
+              // 요청 번호를 찾지 못한 경우 원시 요청 번호를 사용합니다.
+              if (requestNumber === null) {
+                  requestNumber = rawRequestNumber;
+                  if (Number.isNaN(Number(requestNumber))) {
+                      throw new Error("invalid request request number");
+                  }
+              }
+
+              // 요청 정보에서 결제 데이터를 찾습니다.
+              for (let obj of thisBill.requests[requestNumber].info) {
+                  if (obj.data !== undefined && typeof obj.data === "object" && obj.data !== null) {
+                      data = equalJson(JSON.stringify(obj.data));
+                      break;
+                  }
+              }
+
+              // 결제 데이터가 없으면 기본 데이터를 설정합니다.
+              if (data === null || data === undefined) {
+                  data = { goodName: thisBill.requests[transferRows[0].requestNumber].name };
+              }
+
+              // 결제 정보 배열을 업데이트합니다.
+              infoArr = equalJson(JSON.stringify(thisBill.requests[requestNumber].info));
+              infoArr.unshift({ virtualAccount: equalJson(JSON.stringify(req.body)) });
+
+              // MongoDB 업데이트 쿼리와 데이터를 설정합니다.
+              whereQuery = { bilid };
+              updateQuery = {};
+              updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+
+              // 결제 금액을 추출합니다.
+              amount = Number(equalJson(JSON.stringify(req.body)).amt_input.replace(/[^0-9]/gi, ''));
+
+              // 청구서 항목, 결제 정보, 취소 정보를 깊은 복사하여 처리합니다.
+              itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+              payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+              cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+
+              // 결제 객체를 생성하고 결제 정보를 추가합니다.
+              payObject = bill.returnBillDummies("pay");
+              payObject.oid = oid;
+              payObject.amount = amount;
+              payArr.unshift(payObject);
+
+              // 결제 상태를 "결제 완료"로 업데이트합니다.
+              updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+              updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+
+              // 결제 증명(proofs) 정보를 생성하여 결제 방식을 설정합니다.
+              proofs = bill.returnBillDummies("proofs");
+
+              if (!(typeof req.body.real_account === "string")) {
+                  if (typeof bankFrom === "string") {
+                      proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+                  } else {
+                      proofs.method = "무통장 입금(알 수 없음)";
+                  }
+              } else {
+                  proofs.method = "계좌 이체";
+              }
+
+              proofs.proof = inisis; // 결제 증명 정보를 설정
+              proofs.to = nameFrom; // 입금자 이름을 설정
+              thisBill.requests[requestNumber].proofs.unshift(proofs); // 결제 증명 정보를 추가
+              updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
+
+              // 결제 완료 메시지를 생성하고 전송합니다.
+              message = client.name + " 고객님 (" + designer.designer + " 실장님) 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+              messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+                  console.log(err);
+              });
+
+              // 청구서와 결제 정보를 업데이트하고 프로젝트 결제 정보를 동기화합니다.
+              await bill.updateBill([whereQuery, updateQuery], { selfMongo: instance.mongolocal });
+              await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
+
+          } else {
+              // 아임포트 결제 ID를 가져와 아임포트 API를 통해 결제 정보를 조회합니다.
+              const impId = req.body.no_oid;
+              const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+                  imp_key: address.officeinfo.import.key,
+                  imp_secret: address.officeinfo.import.secret
+              }, { headers: { "Content-Type": "application/json" } }));
+
+              const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+                  method: "get",
+                  headers: { "Authorization": accessToken }
+              });
+
+              // 결제 고유 ID를 설정하고 결제 상태를 확인합니다.
+              const oid = paymentData.merchant_uid;
+
+              if (/dreg_/g.test(oid)) {
+                  const [ oidConst, aspid0, aspid1 ] = oid.split("_");
+                  const aspid = aspid0 + "_" + aspid1;
+
+                  // 결제 상태가 완료된 경우 결제 정보를 동기화합니다.
+                  if (/paid/g.test(paymentData.status)) {
+                      if (paymentData.pay_method === "card") {
+                          await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
+                              aspid,
+                              mode: "card",
+                              status: "paid"
+                          }, { headers: { "Content-Type": "application/json" } });
+                      } else {
+                          await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
+                              aspid,
+                              mode: "vbank",
+                              status: "paid"
+                          }, { headers: { "Content-Type": "application/json" } });
+                      }
+                  } else {
+                      if (paymentData.pay_method !== "card") {
+                          await requestSystem("https://" + address.officeinfo.host + ":3002/aspirantPayment", {
+                              aspid,
+                              mode: "vbank",
+                              status: "paid"
+                          }, { headers: { "Content-Type": "application/json" } });
+                      }
+                  }
+              }
+          }
+
+          // 성공적으로 처리되었음을 응답합니다.
+          res.set({ "Content-Type": "text/plain" });
+          res.send("OK");
+
+      } catch (e) {
+          // 오류가 발생한 경우 오류를 로그에 기록하고, 실패 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set({ "Content-Type": "text/plain" });
+          res.send("FAIL");
       }
     });
     
+    /**
+     * @route POST /designerSelect
+     * @description 특정 프로젝트(proid)에 대해 지정된 디자이너(desid)를 선택하는 라우터입니다.
+     *              클라이언트에서 proid(프로젝트 ID)와 desid(디자이너 ID)를 제공하여 해당 디자이너를 프로젝트에 지정합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID)와 desid(디자이너 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerSelect" ], async function (req, res) {
       try {
-        if (req.body.proid === undefined || req.body.desid === undefined) {
-          throw new Error("invaild post, must be proid / desid : " + JSON.stringify(req.body, null, 2));
-        }
-        const selfMongo = instance.mongolocal;
-        const { proid, desid } = equalJson(req.body);
-        await bill.designerSelect(proid, desid, { selfMongo });
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send(JSON.stringify({ message: "success" }));
+          // 요청 본문에 proid(프로젝트 ID) 또는 desid(디자이너 ID)가 포함되지 않으면 에러를 발생시킵니다.
+          if (req.body.proid === undefined || req.body.desid === undefined) {
+              // 유효하지 않은 요청에 대한 에러 메시지를 발생시키고, 요청 본문을 포함하여 로그에 기록합니다.
+              throw new Error("invalid post, must be proid / desid : " + JSON.stringify(req.body, null, 2));
+          }
+
+          // MongoDB의 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 proid(프로젝트 ID)와 desid(디자이너 ID)를 추출하고, equalJson으로 깊은 복사하여 사용합니다.
+          const { proid, desid } = equalJson(req.body);
+
+          // bill.designerSelect 메서드를 호출하여 프로젝트에 디자이너를 지정합니다.
+          await bill.designerSelect(proid, desid, { selfMongo });
+
+          // 응답 헤더를 설정하여 클라이언트가 요청에 대한 응답을 받을 수 있도록 설정합니다.
+          res.set({
+              "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+              "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용합니다.
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 목록을 설정합니다.
+              "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
+          });
+
+          // 성공 메시지를 클라이언트에게 JSON 형식으로 응답합니다.
+          res.send(JSON.stringify({ message: "success" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 오류 메시지를 로그에 기록하고, 클라이언트에게 오류 메시지를 응답합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류 로그 기록
+          res.set("Content-Type", "application/json"); // 응답 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 클라이언트에 응답
       }
     });
     
@@ -13790,355 +14070,501 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /serviceConverting
+     * @description 프로젝트의 서비스 변경을 처리하는 라우터입니다. 프로젝트 ID(proid), 방법(method), 서비스 ID(serid)를 기반으로 서비스 변환을 처리합니다.
+     *              요청에 따라 새 가격을 설정할 수 있으며, 추가 비용 발생 시 고객에게 알림톡을 보냅니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID), method(변경 방법), serid(서비스 ID) 및 추가 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 반환합니다.
+     */
     router.post([ "/serviceConverting" ], async function (req, res) {
       try {
-        if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { proid, method, serid } = equalJson(req.body);
-        const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
-        const firstContract = project.process.contract.first.calculation.amount;
-        const pastService = equalJson(JSON.stringify(project.service));
-        const timeConst = 410;
-        let report, map;
-        let newPrice, confirmMode;
-    
-        if (req.body.mode === "confirm") {
-    
-          confirmMode = true;
-          if (req.body.newPrice === undefined) {
-            report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, confirmMode });
+          // 필수 파라미터(proid, method, serid)가 없으면 에러를 발생시킵니다.
+          if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // MongoDB 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 proid, method, serid를 equalJson으로 깊은 복사한 후 추출합니다.
+          const { proid, method, serid } = equalJson(req.body);
+
+          // MongoDB에서 프로젝트와 클라이언트 정보를 가져옵니다.
+          const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+          const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+
+          // 프로젝트 계약의 첫 번째 계산 금액을 추출합니다.
+          const firstContract = project.process.contract.first.calculation.amount;
+
+          // 과거 서비스 데이터를 복사하여 저장합니다.
+          const pastService = equalJson(JSON.stringify(project.service));
+
+          // 상수 값으로 410을 설정합니다.
+          const timeConst = 410;
+
+          let report, map; // 리포트와 맵 데이터를 저장할 변수
+          let newPrice, confirmMode; // 새로운 가격과 확인 모드 여부를 저장할 변수
+
+          // 요청 본문에 mode가 "confirm"이면 확인 모드로 동작합니다.
+          if (req.body.mode === "confirm") {
+
+              confirmMode = true; // 확인 모드를 true로 설정
+
+              // 새 가격이 정의되지 않았으면 기본 서비스 변환을 수행합니다.
+              if (req.body.newPrice === undefined) {
+                  report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, confirmMode });
+              } else {
+                  // 새 가격이 숫자가 아니면 에러를 발생시킵니다.
+                  if (Number.isNaN(Number(req.body.newPrice))) {
+                      throw new Error("must be newPrice(number) in confirm mode"); // 유효하지 않은 가격 에러 발생
+                  }
+                  // 새 가격을 반올림하여 설정하고 서비스 변환을 수행합니다.
+                  newPrice = Math.round(Number(req.body.newPrice));
+                  report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
+              }
+
+              // 응답 헤더를 설정하고 리포트를 JSON 형식으로 반환합니다.
+              res.set({
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+                  "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+              });
+              res.send(JSON.stringify(report));
+
           } else {
-            if (Number.isNaN(Number(req.body.newPrice))) {
-              throw new Error("must be newPrice(number) in confirm mode");
-            }
-            newPrice = Math.round(Number(req.body.newPrice));
-            report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
+              // 새 가격이 정의되어 있으면 해당 가격을 반올림하여 서비스 변환을 수행합니다.
+              if (req.body.newPrice !== undefined && !Number.isNaN(Number(req.body.newPrice))) {
+                  newPrice = Math.round(Number(req.body.newPrice));
+                  report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice });
+              } else {
+                  // 새 가격이 없으면 기본 서비스 변환을 수행합니다.
+                  report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
+              }
+
+              // 변환 후 프로젝트의 변경 사항을 맵(map) 배열로 저장합니다.
+              map = [
+                  {
+                      column: "service",
+                      position: "service",
+                      pastValue: report.service.from,
+                      finalValue: report.service.to,
+                  },
+                  {
+                      column: "remainSupply",
+                      position: "process.contract.remain.calculation.amount.supply",
+                      pastValue: report.request.from.supply,
+                      finalValue: report.request.to.supply,
+                  },
+                  {
+                      column: "remainVat",
+                      position: "process.contract.remain.calculation.amount.vat",
+                      pastValue: report.request.from.vat,
+                      finalValue: report.request.to.vat,
+                  },
+                  {
+                      column: "remainConsumer",
+                      position: "process.contract.remain.calculation.amount.consumer",
+                      pastValue: report.request.from.consumer,
+                      finalValue: report.request.to.consumer,
+                  },
+                  {
+                      column: "remainPure",
+                      position: "process.contract.remain.calculation.amount.consumer",
+                      pastValue: report.request.from.consumer - firstContract,
+                      finalValue: report.request.to.consumer - firstContract,
+                  },
+                  {
+                      column: "paymentsTotalAmount",
+                      position: "process.calculation.payments.totalAmount",
+                      pastValue: report.response.from.total,
+                      finalValue: report.response.to.total,
+                  },
+                  {
+                      column: "paymentsFirstAmount",
+                      position: "process.calculation.payments.first.amount",
+                      pastValue: report.response.from.first,
+                      finalValue: report.response.to.first,
+                  },
+                  {
+                      column: "paymentsRemainAmount",
+                      position: "process.calculation.payments.remain.amount",
+                      pastValue: report.response.from.remain,
+                      finalValue: report.response.to.remain,
+                  },
+              ];
+
+              // 추가 요청이 있는 경우 카카오톡 알림톡을 전송하고 관련 메시지를 전송합니다.
+              if (report.request.additional) {
+                  await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
+                      client: client.name,
+                      pastservice: serviceParsing(report.service.from),
+                      newservice: serviceParsing(report.service.to),
+                      total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
+                      host: address.officeinfo.host + ":3002",
+                      path: "estimation",
+                      cliid: client.cliid,
+                      needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+                  }).catch((err) => {
+                      console.log(err); // 알림톡 전송 실패 시 에러 로그 기록
+                  });
+                  messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
+                      console.log(err); // 메시지 전송 실패 시 로그에 기록
+                  });
+              }
+
+              // 응답 헤더를 설정하고 성공 메시지를 JSON 형식으로 반환합니다.
+              res.set({
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+                  "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+              });
+              res.send(JSON.stringify({ message: "success" }));
+
           }
-    
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-          });
-          res.send(JSON.stringify(report));
-    
-        } else {
-    
-          if (req.body.newPrice !== undefined && !Number.isNaN(Number(req.body.newPrice))) {
-            newPrice = Math.round(Number(req.body.newPrice));
-            report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice });
-          } else {
-            report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
-          }
-    
-          map = [
-            {
-              column: "service",
-              position: "service",
-              pastValue: report.service.from,
-              finalValue: report.service.to,
-            },
-            {
-              column: "remainSupply",
-              position: "process.contract.remain.calculation.amount.supply",
-              pastValue: report.request.from.supply,
-              finalValue: report.request.to.supply,
-            },
-            {
-              column: "remainVat",
-              position: "process.contract.remain.calculation.amount.vat",
-              pastValue: report.request.from.vat,
-              finalValue: report.request.to.vat,
-            },
-            {
-              column: "remainConsumer",
-              position: "process.contract.remain.calculation.amount.consumer",
-              pastValue: report.request.from.consumer,
-              finalValue: report.request.to.consumer,
-            },
-            {
-              column: "remainPure",
-              position: "process.contract.remain.calculation.amount.consumer",
-              pastValue: report.request.from.consumer - firstContract,
-              finalValue: report.request.to.consumer - firstContract,
-            },
-            {
-              column: "paymentsTotalAmount",
-              position: "process.calculation.payments.totalAmount",
-              pastValue: report.response.from.total,
-              finalValue: report.response.to.total,
-            },
-            {
-              column: "paymentsFirstAmount",
-              position: "process.calculation.payments.first.amount",
-              pastValue: report.response.from.first,
-              finalValue: report.response.to.first,
-            },
-            {
-              column: "paymentsRemainAmount",
-              position: "process.calculation.payments.remain.amount",
-              pastValue: report.response.from.remain,
-              finalValue: report.response.to.remain,
-            },
-          ];
-    
-          if (report.request.additional) {
-            await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
-              client: client.name,
-              pastservice: serviceParsing(report.service.from),
-              newservice: serviceParsing(report.service.to),
-              total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
-              host: address.officeinfo.host + ":3002",
-              path: "estimation",
-              cliid: client.cliid,
-              needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
-            }).catch((err) => {
-              console.log(err);
-            });
-            messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
-              console.log(err);
-            });
-          }
-    
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-          });
-          res.send(JSON.stringify({ message: "success" }));
-    
-        }
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /designerConverting
+     * @description 프로젝트에 할당된 디자이너를 변경하는 라우터입니다. 프로젝트 ID(proid), 변경할 방법(method), 새 디자이너 ID(desid)를 기반으로 디자이너를 변경합니다.
+     *              필요 시 추가 디자인 비용이 발생할 경우 고객에게 알림톡을 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID), method(변경 방법), desid(새 디자이너 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerConverting" ], async function (req, res) {
       try {
-        if (req.body.proid === undefined || req.body.method === undefined || req.body.desid === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { proid, method, desid } = equalJson(req.body);
-        const project = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
-        const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
-        const pastDesigner = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
-        const designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-        const firstContract = project.process.contract.first.calculation.amount;
-        const report = await bill.designerConverting(proid, method, desid, { selfMongo, selfCoreMongo: instance.mongo });
-        const newProject = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
-    
-        if (report.request.additional) {
-          await kakao.sendTalk("plusDesignerFee", client.name, client.phone, {
-            client: client.name,
-            pastdesigner: pastDesigner.designer,
-            newdesigner: designer.designer,
-            host: address.officeinfo.host + ":3002",
-            total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
-            path: "estimation",
-            cliid: client.cliid,
-            needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
-          }).catch((err) => {
-            console.log(err);
+          // 필수 파라미터(proid, method, desid)가 없으면 에러를 발생시킵니다.
+          if (req.body.proid === undefined || req.body.method === undefined || req.body.desid === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // MongoDB의 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 proid, method, desid를 equalJson으로 깊은 복사한 후 추출합니다.
+          const { proid, method, desid } = equalJson(req.body);
+
+          // MongoDB에서 프로젝트와 클라이언트 정보를 가져옵니다. 프로젝트는 toNormal()로 일반 형식으로 변환합니다.
+          const project = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
+          const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+
+          // MongoDB에서 현재 디자이너와 새 디자이너 정보를 가져옵니다.
+          const pastDesigner = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
+          const designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+
+          // 프로젝트 계약의 첫 번째 계산 금액을 추출합니다.
+          const firstContract = project.process.contract.first.calculation.amount;
+
+          // 디자이너 변경 작업을 수행하고 결과를 리포트에 저장합니다.
+          const report = await bill.designerConverting(proid, method, desid, { selfMongo, selfCoreMongo: instance.mongo });
+
+          // 변경 후 새로운 프로젝트 정보를 가져와서 일반 형식으로 변환합니다.
+          const newProject = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
+
+          // 추가 요청이 있는 경우 고객에게 알림톡을 전송하고 관련 메시지를 전송합니다.
+          if (report.request.additional) {
+              await kakao.sendTalk("plusDesignerFee", client.name, client.phone, {
+                  client: client.name,
+                  pastdesigner: pastDesigner.designer, // 이전 디자이너 이름
+                  newdesigner: designer.designer, // 새 디자이너 이름
+                  host: address.officeinfo.host + ":3002", // 호스트 주소
+                  total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)), // 총액
+                  path: "estimation", // 경로
+                  cliid: client.cliid, // 클라이언트 ID
+                  needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"), // 필요한 정보
+              }).catch((err) => {
+                  console.log(err); // 알림톡 전송 실패 시 에러 로그 기록
+              });
+
+              // 추가 디자인비 요청 알림톡 전송 후 메시지를 전송합니다.
+              messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
+                  console.log(err); // 메시지 전송 실패 시 로그에 기록
+              });
+          }
+
+          // 응답 헤더를 설정하고 성공 메시지를 JSON 형식으로 반환합니다.
+          res.set({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+              "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
-          messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
-            console.log(err);
-          });
-        }
-    
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-        });
-        res.send(JSON.stringify({ message: "success" }));
+          res.send(JSON.stringify({ message: "success" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /amountConverting
+     * @description 특정 청구서(bilid)를 기반으로 금액 변환 작업을 수행하는 라우터입니다. 청구서 ID(bilid)를 사용하여 MongoDB에서 청구서 데이터를 조회한 후,
+     *              금액 변환 작업을 수행하고 그 결과를 클라이언트에 응답합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 bilid(청구서 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/amountConverting" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트가 요청을 처리할 수 있도록 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 목록을 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
+
       try {
-        if (req.body.bilid === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { bilid } = equalJson(req.body);
-        await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
-        res.send(JSON.stringify({ message: "success" }));
+          // 요청 본문에 bilid(청구서 ID)가 포함되지 않으면 에러를 발생시킵니다.
+          if (req.body.bilid === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // MongoDB의 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 bilid(청구서 ID)를 equalJson으로 깊은 복사한 후 추출합니다.
+          const { bilid } = equalJson(req.body);
+
+          // 청구서 ID를 기반으로 금액 변환 작업을 수행합니다.
+          await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
+
+          // 성공 메시지를 JSON 형식으로 클라이언트에 응답합니다.
+          res.send(JSON.stringify({ message: "success" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 로그에 오류 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON으로 클라이언트에 전송
       }
     });
     
+    /**
+     * @route POST /requestRefund
+     * @description 특정 청구서(bilid)와 요청된 결제 방식(kind)을 기반으로 환불 처리를 수행하는 라우터입니다. 카드, 가상계좌, 현금 환불을 지원하며 요청에 따라 환불 금액, 계좌 정보 등을 설정할 수 있습니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 kind(환불 방식), bilid(청구서 ID), requestIndex(요청 인덱스), payIndex(결제 인덱스) 및 추가 정보가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/requestRefund" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 클라이언트 요청에 대한 허용 헤더 설정
       });
+
       try {
-        if (req.body.kind === undefined || req.body.bilid === undefined || req.body.requestIndex === undefined || req.body.payIndex === undefined) {
-          throw new Error("invaild post 0");
-        }
-        const selfMongo = instance.mongolocal;
-        const { kind, bilid } = equalJson(req.body);
-        const requestIndex = Number(req.body.requestIndex);
-        const payIndex = Number(req.body.payIndex);
-        if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial", "cashEntire", "cashPartial" ]).includes(kind)) {
-          throw new Error("invaild post, kind must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial, cashEntire, cashPartial ]");
-        }
-        if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
-          throw new Error("invaild post 1");
-        }
-        let refundPrice;
-        let report, option, client, designer, project, pastProject, proid;
-        let timeConst, map;
-    
-        if (req.body.refundPrice !== undefined) {
-          refundPrice = Number(req.body.refundPrice);
-          if (refundPrice === 0 || Number.isNaN(refundPrice)) {
-            refundPrice = null;
+          // 요청 본문에 필수 필드가 존재하지 않으면 에러를 발생시킵니다.
+          if (req.body.kind === undefined || req.body.bilid === undefined || req.body.requestIndex === undefined || req.body.payIndex === undefined) {
+              throw new Error("invalid post 0"); // 필수 필드 누락 시 에러 발생
           }
-        } else {
-          refundPrice = null;
-        }
-    
-        option = { selfMongo, selfCoreMongo: instance.mongo };
-        if (req.body.percentage !== undefined) {
-          if (typeof req.body.percentage === "string") {
-            if (!Number.isNaN(Number(req.body.percentage.replace(/[^0-9\.]/gi, '')))) {
-              option.percentage = Number(req.body.percentage);
-            }
-          } else if (typeof req.body.percentage === "number") {
-            if (!Number.isNaN(req.body.percentage)) {
-              option.percentage = Number(req.body.percentage);
-            }
+
+          // MongoDB 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 kind(환불 방식), bilid(청구서 ID)를 equalJson으로 깊은 복사한 후 추출합니다.
+          const { kind, bilid } = equalJson(req.body);
+
+          // 요청 인덱스와 결제 인덱스를 숫자로 변환합니다.
+          const requestIndex = Number(req.body.requestIndex);
+          const payIndex = Number(req.body.payIndex);
+
+          // kind 필드가 유효한 환불 방식인지 확인합니다.
+          if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial", "cashEntire", "cashPartial" ]).includes(kind)) {
+              throw new Error("invalid post, kind must be: [ cardEntire, cardPartial, vaccountEntire, vaccountPartial, cashEntire, cashPartial ]");
           }
-        }
-        if (req.body.accountNumber !== undefined && req.body.bankName !== undefined && req.body.accountName !== undefined) {
-          option.accountNumber = req.body.accountNumber;
-          option.bankName = req.body.bankName;
-          option.accountName = req.body.accountName;
-        }
-        if (refundPrice !== undefined && refundPrice !== null) {
-          if (typeof refundPrice === "number") {
-            option.refundPrice = refundPrice;
+
+          // 요청 인덱스와 결제 인덱스가 유효한 숫자인지 확인합니다.
+          if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
+              throw new Error("invalid post 1");
           }
-        }
+
+          let refundPrice; // 환불 금액
+          let report, option, client, designer, project, pastProject, proid; // 리포트, 옵션, 클라이언트, 디자이너, 프로젝트, 과거 프로젝트 정보
+          let timeConst, map; // 시간 상수 및 맵핑 변수
+
+          // 환불 금액이 제공된 경우 처리합니다.
+          if (req.body.refundPrice !== undefined) {
+              refundPrice = Number(req.body.refundPrice);
+              if (refundPrice === 0 || Number.isNaN(refundPrice)) {
+                  refundPrice = null; // 유효하지 않은 금액일 경우 null로 설정
+              }
+          } else {
+              refundPrice = null; // 환불 금액이 정의되지 않은 경우
+          }
+
+          // MongoDB 옵션을 설정합니다.
+          option = { selfMongo, selfCoreMongo: instance.mongo };
+
+          // 퍼센트 값이 요청에 존재하는 경우 처리합니다.
+          if (req.body.percentage !== undefined) {
+              if (typeof req.body.percentage === "string") {
+                  if (!Number.isNaN(Number(req.body.percentage.replace(/[^0-9\.]/gi, '')))) {
+                      option.percentage = Number(req.body.percentage); // 퍼센트 값을 숫자로 변환
+                  }
+              } else if (typeof req.body.percentage === "number") {
+                  if (!Number.isNaN(req.body.percentage)) {
+                      option.percentage = Number(req.body.percentage); // 퍼센트 값이 숫자인 경우 처리
+                  }
+              }
+          }
+
+          // 계좌 정보가 제공된 경우 옵션에 추가합니다.
+          if (req.body.accountNumber !== undefined && req.body.bankName !== undefined && req.body.accountName !== undefined) {
+              option.accountNumber = req.body.accountNumber;
+              option.bankName = req.body.bankName;
+              option.accountName = req.body.accountName;
+          }
+
+          // 환불 금액이 유효한 경우 옵션에 추가합니다.
+          if (refundPrice !== undefined && refundPrice !== null) {
+              if (typeof refundPrice === "number") {
+                  option.refundPrice = refundPrice;
+              }
+          }
+
+          // 현금 환불이 아닌 경우
+          if (!/^cash/i.test(kind)) {
+              // bill.requestRefund 메서드를 사용해 환불 요청을 처리합니다.
+              report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
+
+              // 환불 로그를 기록합니다.
+              await messageLog("환불 감지: " + JSON.stringify(report, null, 2));
+
+              // 청구서, 과거 프로젝트, 현재 프로젝트, 클라이언트 정보를 일반 형식으로 변환합니다.
+              report.bill = report.bill.toNormal();
+              report.pastProject = report.pastProject.toNormal();
+              report.project = report.project.toNormal();
+              report.client = report.client.toNormal();
+
+              // 클라이언트, 프로젝트 및 디자이너 정보를 가져옵니다.
+              client = report.client;
+              pastProject = report.pastProject;
+              project = report.project;
+              proid = project.proid;
+              designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+
+              // 카카오톡 알림을 전송하여 환불 완료를 알립니다.
+              kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
+                  client: client.name,
+                  designer: designer.designer,
+                  percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
+                  amount: report.price.refund
+              }).then(() => {
+                  return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
+              }).catch((err) => {
+                  console.log(err); // 알림톡 전송 실패 시 에러 로그 기록
+              });
+
+              // 처리된 결과를 클라이언트에게 JSON 형식으로 반환합니다.
+              res.send(JSON.stringify(report));
+
+          } else {
+              // 현금 환불 처리
+              if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "request") {
+                  // 현금 환불 요청 모드
+                  report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
+              } else if (req.body.mode === "execute") {
+                  // 현금 환불 실행 모드
+                  report = await bill.cashRefund("execute", bilid, requestIndex, payIndex, option);
+
+                  // 클라이언트와 디자이너 정보를 가져와 환불 완료 알림을 전송합니다.
+                  client = report.client;
+                  designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+
+                  // 환불 완료 알림톡을 전송합니다.
+                  kakao.sendTalk("refundVAccount", client.name, client.phone, {
+                      client: client.name,
+                      designer: designer.designer,
+                      percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
+                      amount: report.price.refund
+                  }).then(() => {
+                      return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
+                  }).catch((err) => {
+                      console.log(err); // 알림톡 전송 실패 시 로그에 기록
+                  });
+              }
+
+              // 성공적으로 처리되었는지 확인 후 클라이언트에 응답합니다.
+              if (report.message === "success") {
+                  res.send(JSON.stringify(report));
+              } else {
+                  throw new Error(report.message); // 처리 실패 시 에러 발생
+              }
+          }
+      } catch (e) {
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 로그에 오류 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON으로 클라이언트에 전송
+      }
+    });
     
-        if (!/^cash/i.test(kind)) {
-          report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
-          await messageLog("환불 감지 : " + JSON.stringify(report, null, 2));
+    /**
+     * @route POST /contractCancel
+     * @description 특정 청구서(bilid)를 기반으로 계약을 취소하는 라우터입니다. 청구서 ID(bilid)를 기반으로 MongoDB에서 관련 데이터를 가져와 계약 취소 처리를 수행합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 bilid(청구서 ID)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
+    router.post([ "/contractCancel" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
+      res.set({
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정
+      });
+
+      try {
+          // 요청 본문에 bilid(청구서 ID)가 없으면 에러를 발생시킵니다.
+          if (req.body.bilid === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
+          }
+
+          // MongoDB의 로컬 인스턴스를 selfMongo로 설정합니다.
+          const selfMongo = instance.mongolocal;
+
+          // 요청 본문에서 bilid(청구서 ID)를 equalJson으로 깊은 복사한 후 추출합니다.
+          const { bilid } = equalJson(req.body);
+
+          let report, option, project, pastProject, proid; // 리포트, 옵션, 프로젝트, 과거 프로젝트, 프로젝트 ID 변수 선언
+          let timeConst, map; // 시간 상수와 맵 변수 선언
+
+          // MongoDB 옵션을 설정합니다.
+          option = { selfMongo, selfCoreMongo: instance.mongo };
+
+          // 계약 취소 작업을 수행하고 리포트에 저장합니다.
+          report = await bill.contractCancel(bilid, option);
+
+          // 리포트 내 청구서, 과거 프로젝트, 현재 프로젝트 데이터를 일반 형식으로 변환합니다.
           report.bill = report.bill.toNormal();
           report.pastProject = report.pastProject.toNormal();
           report.project = report.project.toNormal();
-          report.client = report.client.toNormal();
-          client = report.client;
+
+          // 과거 프로젝트와 현재 프로젝트 정보를 저장합니다.
           pastProject = report.pastProject;
           project = report.project;
-          proid = project.proid;
-          designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
-    
-          kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
-            client: client.name,
-            designer: designer.designer,
-            percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
-            amount: report.price.refund
-          }).then(() => {
-            return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
-          }).catch((err) => {
-            console.log(err);
-          });
-    
+          proid = project.proid; // 프로젝트 ID 추출
+
+          // 처리된 리포트를 JSON 형식으로 클라이언트에 응답합니다.
           res.send(JSON.stringify(report));
-    
-        } else {
-    
-          if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "request") {
-            report = await bill.cashRefund("request", bilid, requestIndex, payIndex, option);
-          } else if (req.body.mode === "execute") {
-            report = await bill.cashRefund("execute", bilid, requestIndex, payIndex, option);
-    
-            client = report.client;
-            designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
-    
-            kakao.sendTalk("refundVAccount", client.name, client.phone, {
-              client: client.name,
-              designer: designer.designer,
-              percentage: (!Number.isNaN(Number(report.price.percentage)) ? report.price.percentage : 100),
-              amount: report.price.refund
-            }).then(() => {
-              return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
-            }).catch((err) => {
-              console.log(err);
-            });
-    
-          }
-          if (report.message === "success") {
-            res.send(JSON.stringify(report));
-          } else {
-            throw new Error(report.message);
-          }
-        }
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
-    
-    router.post([ "/contractCancel" ], async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        if (req.body.bilid === undefined) {
-          throw new Error("invaild post");
-        }
-        const selfMongo = instance.mongolocal;
-        const { bilid } = equalJson(req.body);
-        let report, option, project, pastProject, proid;
-        let timeConst, map;
-    
-        option = { selfMongo, selfCoreMongo: instance.mongo };
-    
-        report = await bill.contractCancel(bilid, option);
-        report.bill = report.bill.toNormal();
-        report.pastProject = report.pastProject.toNormal();
-        report.project = report.project.toNormal();
-    
-        pastProject = report.pastProject;
-        project = report.project;
-        proid = project.proid;
-    
-        res.send(JSON.stringify(report));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류를 로그에 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON으로 클라이언트에 반환
       }
     });
     
@@ -14524,24 +14950,41 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /weeklyCalculation
+     * @description 주간 디자이너 계산을 수행하는 라우터입니다. 주간 계산 작업이 완료되면 성공 로그를 기록하고, 오류가 발생하면 오류 로그를 기록합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 추가 정보가 포함될 수 있습니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/weeklyCalculation" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정
       });
+
       try {
-        work.designerCalculation().then(() => {
-          return logger.cron("weeklyCalculation success");
-        }).catch((e) => {
-          logger.error(e, req).catch((e) => { console.log(e); });
-        });
-        res.send(JSON.stringify({ message: "will do" }));
+          // 디자이너 계산 작업을 비동기적으로 수행합니다.
+          work.designerCalculation()
+              .then(() => {
+                  // 계산 작업이 성공적으로 완료되면 성공 로그를 기록합니다.
+                  return logger.cron("weeklyCalculation success");
+              })
+              .catch((e) => {
+                  // 계산 작업 중 오류가 발생하면 오류 로그를 기록합니다.
+                  logger.error(e, req).catch((e) => { console.log(e); });
+              });
+
+          // 클라이언트에게 작업이 실행 중임을 알리는 메시지를 JSON 형식으로 응답합니다.
+          res.send(JSON.stringify({ message: "will do" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // try 블록에서 발생한 오류를 기록하고 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); }); // 오류 로그 기록
+          res.set("Content-Type", "application/json"); // 응답 데이터 형식을 JSON으로 설정
+          res.send(JSON.stringify({ error: e.message })); // 오류 메시지를 JSON 형식으로 반환
       }
     });
     
@@ -14578,223 +15021,296 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /excuteResponse
+     * @description 청구서(bilid)의 응답(response)을 처리하는 라우터입니다. 청구서 ID, 응답 인덱스, 결제 날짜를 사용하여 청구서와 프로젝트 데이터를 업데이트하고, 
+     *              선금 또는 잔금 결제 완료 시 디자이너에게 알림톡을 전송합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, bilid(청구서 ID), responseIndex(응답 인덱스), date(결제 날짜)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/excuteResponse" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 요청을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 목록을 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
+
       try {
-        if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined) {
-          throw new Error("invaild post");
-        }
-        let { bilid, responseIndex, date } = equalJson(req.body);
-        let thisBill;
-        let oid;
-        let method;
-        let proid;
-        let thisProject;
-        let thisResponse;
-        let pay, name, target;
-        let whereQuery, updateQuery;
-        let projectWhereQuery, projectUpdateQuery;
-        let amount;
-        let type;
-        let thisClient, thisDesigner;
-    
-        responseIndex = Number(responseIndex);
-        if (Number.isNaN(responseIndex)) {
-          throw new Error("invaild post");
-        }
-    
-        thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
-        if (thisBill.responses[responseIndex] === undefined) {
-          throw new Error("invaild index");
-        }
-    
-        oid = "";
-        method = "계좌 이체";
-        proid = thisBill.links.proid;
-        thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-    
-        thisResponse = thisBill.responses[responseIndex];
-        ({ pay, name, target } = thisResponse);
-    
-        amount = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
-    
-        whereQuery = { bilid };
-        updateQuery = {};
-    
-        if (pay.length === 0) {
-          updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
-          updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
-        } else if (pay.length === 1) {
-          updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".amount"] = amount;
-          updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".date"] = date;
-          updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".date"] = date;
-          updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".method"] = method;
-          updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".proof"] = thisProject.process.calculation.info.proof;
-          updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".to"] = thisProject.process.calculation.info.to;
-        } else {
-          updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
-          updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
-        }
-    
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-        thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
-    
-        if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
-    
-          projectWhereQuery = { proid };
-          projectUpdateQuery = {};
-    
-          if (/홈리에종 선금/gi.test(name)) {
-            projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount);
-            projectUpdateQuery["process.calculation.payments.first.date"] = date;
-            projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
-            type = "first";
-          } else if (/홈리에종 잔금/gi.test(name)) {
-            projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
-            projectUpdateQuery["process.calculation.payments.remain.date"] = date;
-            type = "remain";
+          // 필수 파라미터가 없을 경우 에러를 발생시킵니다.
+          if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
           }
-    
-          await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
-          thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-          thisClient = await back.getClientById(thisProject.cliid, { selfMongo: instance.mongo });
-          thisDesigner = await back.getDesignerById(thisResponse.target.id, { selfMongo: instance.mongo });
-    
-          if (type === "first") {
-            await kakao.sendTalk("paymentFirstDesigner", thisDesigner.designer, thisDesigner.information.phone, {
-              designer: thisDesigner.designer,
-              client: thisClient.name,
-              host: address.frontinfo.host,
-              proid: thisProject.proid,
-            });
-            await messageSend({ text: thisDesigner.designer + " 실장님께 선금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
+
+          // 요청 본문에서 bilid, responseIndex, date를 equalJson으로 깊은 복사한 후 추출합니다.
+          let { bilid, responseIndex, date } = equalJson(req.body);
+
+          let thisBill; // 현재 처리 중인 청구서
+          let oid; // 고유 ID
+          let method; // 결제 방식
+          let proid; // 프로젝트 ID
+          let thisProject; // 현재 프로젝트
+          let thisResponse; // 현재 응답
+          let pay, name, target; // 결제 정보, 이름, 대상
+          let whereQuery, updateQuery; // MongoDB에서 사용할 쿼리
+          let projectWhereQuery, projectUpdateQuery; // 프로젝트 관련 쿼리
+          let amount; // 결제 금액
+          let type; // 결제 유형(선금 또는 잔금)
+          let thisClient, thisDesigner; // 클라이언트, 디자이너 정보
+
+          // 응답 인덱스를 숫자로 변환하고 유효한 값인지 확인합니다.
+          responseIndex = Number(responseIndex);
+          if (Number.isNaN(responseIndex)) {
+              throw new Error("invalid post"); // 유효하지 않은 응답 인덱스일 경우 에러 발생
+          }
+
+          // 청구서 ID를 사용하여 해당 청구서를 MongoDB에서 가져옵니다.
+          thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+          // 응답 인덱스가 유효하지 않으면 에러를 발생시킵니다.
+          if (thisBill.responses[responseIndex] === undefined) {
+              throw new Error("invalid index");
+          }
+
+          // 응답 정보에서 필요한 값을 추출합니다.
+          oid = ""; // 고유 ID는 빈 문자열로 초기화
+          method = "계좌 이체"; // 결제 방식은 기본적으로 계좌 이체로 설정
+          proid = thisBill.links.proid; // 청구서에서 프로젝트 ID를 추출
+          thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo }); // 프로젝트 정보를 MongoDB에서 가져옴
+
+          // 현재 응답 데이터를 가져옵니다.
+          thisResponse = thisBill.responses[responseIndex];
+          ({ pay, name, target } = thisResponse); // 결제 정보, 이름, 대상 추출
+
+          // 응답 항목에서 결제 금액을 계산합니다.
+          amount = Math.floor(thisResponse.items.reduce((acc, curr) => acc + curr.amount.pure, 0)); // 순수 금액 합산
+
+          // MongoDB 업데이트를 위한 쿼리 설정
+          whereQuery = { bilid };
+          updateQuery = {};
+
+          // 결제 배열이 비어 있을 경우 새 결제 정보와 증명 정보를 추가합니다.
+          if (pay.length === 0) {
+              updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ]; // 새 결제 정보 추가
+              updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ]; // 증명 정보 추가
+          } else if (pay.length === 1) {
+              // 결제 배열에 이미 데이터가 있는 경우 기존 데이터를 업데이트합니다.
+              updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".amount"] = amount;
+              updateQuery["responses." + String(responseIndex) + ".pay." + String(0) + ".date"] = date;
+              updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".date"] = date;
+              updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".method"] = method;
+              updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".proof"] = thisProject.process.calculation.info.proof;
+              updateQuery["responses." + String(responseIndex) + ".proofs." + String(0) + ".to"] = thisProject.process.calculation.info.to;
           } else {
-            await kakao.sendTalk("paymentRemainDesigner", thisDesigner.designer, thisDesigner.information.phone, {
-              designer: thisDesigner.designer,
-              client: thisClient.name,
-              host: address.frontinfo.host,
-              proid: thisProject.proid,
-            });
-            await messageSend({ text: thisDesigner.designer + " 실장님께 잔금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
+              // 결제 배열이 두 개 이상인 경우 다시 첫 번째 결제로 설정합니다.
+              updateQuery["responses." + String(responseIndex) + ".pay"] = [ { amount, date, oid } ];
+              updateQuery["responses." + String(responseIndex) + ".proofs"] = [ { date, method, proof: thisProject.process.calculation.info.proof, to: thisProject.process.calculation.info.to } ];
           }
-    
-        }
-    
-        res.send(JSON.stringify({
-          message: "success",
-          bilid,
-          proid,
-          bill: thisBill.toNormal(),
-          project: thisProject.toNormal(),
-        }));
-    
+
+          // 청구서 정보를 MongoDB에서 업데이트합니다.
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          // 업데이트된 청구서를 다시 가져옵니다.
+          thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+          // 선금 또는 잔금에 대한 결제라면 관련 프로젝트 정보를 업데이트합니다.
+          if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
+
+              // 프로젝트 업데이트를 위한 쿼리 설정
+              projectWhereQuery = { proid };
+              projectUpdateQuery = {};
+
+              // 선금 결제일 경우
+              if (/홈리에종 선금/gi.test(name)) {
+                  projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount); // 선금 금액 설정
+                  projectUpdateQuery["process.calculation.payments.first.date"] = date; // 선금 결제 날짜 설정
+                  projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount); // 잔액 설정
+                  type = "first"; // 결제 유형을 선금으로 설정
+              } else if (/홈리에종 잔금/gi.test(name)) {
+                  // 잔금 결제일 경우
+                  projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount); // 잔금 금액 설정
+                  projectUpdateQuery["process.calculation.payments.remain.date"] = date; // 잔금 결제 날짜 설정
+                  type = "remain"; // 결제 유형을 잔금으로 설정
+              }
+
+              // 프로젝트 정보를 업데이트합니다.
+              await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
+
+              // 업데이트된 프로젝트와 클라이언트, 디자이너 정보를 가져옵니다.
+              thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+              thisClient = await back.getClientById(thisProject.cliid, { selfMongo: instance.mongo });
+              thisDesigner = await back.getDesignerById(thisResponse.target.id, { selfMongo: instance.mongo });
+
+              // 선금 또는 잔금에 따라 디자이너에게 알림톡을 전송합니다.
+              if (type === "first") {
+                  await kakao.sendTalk("paymentFirstDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+                      designer: thisDesigner.designer,
+                      client: thisClient.name,
+                      host: address.frontinfo.host,
+                      proid: thisProject.proid,
+                  });
+                  await messageSend({ text: thisDesigner.designer + " 실장님께 선금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
+              } else {
+                  await kakao.sendTalk("paymentRemainDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+                      designer: thisDesigner.designer,
+                      client: thisClient.name,
+                      host: address.frontinfo.host,
+                      proid: thisProject.proid,
+                  });
+                  await messageSend({ text: thisDesigner.designer + " 실장님께 잔금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
+              }
+
+          }
+
+          // 처리 결과를 클라이언트에게 응답합니다.
+          res.send(JSON.stringify({
+              message: "success",
+              bilid,
+              proid,
+              bill: thisBill.toNormal(),
+              project: thisProject.toNormal(),
+          }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /excuteRepay
+     * @description 청구서(bilid)의 응답(response)에 대해 환불 처리를 수행하는 라우터입니다. 청구서 ID, 응답 인덱스, 결제 날짜 및 금액을 사용하여 청구서와 프로젝트 데이터를 업데이트하고, 선금 또는 잔금 환불을 처리합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, bilid(청구서 ID), responseIndex(응답 인덱스), date(결제 날짜), amount(환불 금액)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/excuteRepay" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
+
       try {
-        if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined || req.body.amount === undefined) {
-          throw new Error("invaild post");
-        }
-        let { bilid, responseIndex, date, amount } = equalJson(req.body);
-        let thisBill;
-        let oid;
-        let method;
-        let proid;
-        let thisProject;
-        let thisResponse;
-        let cancel, name, target, proofs;
-        let whereQuery, updateQuery;
-        let projectWhereQuery, projectUpdateQuery;
-        let cancelArr, proofsArr;
-        let proof, to;
-    
-        responseIndex = Number(responseIndex);
-        if (Number.isNaN(responseIndex)) {
-          throw new Error("invaild post");
-        }
-    
-        amount = Number(amount);
-        if (Number.isNaN(amount)) {
-          throw new Error("invaild post");
-        }
-    
-        thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
-        if (thisBill.responses[responseIndex] === undefined) {
-          throw new Error("invaild index");
-        }
-    
-        oid = "";
-        method = "계좌 이체 취소";
-        proof = "현금 영수증";
-        to = "주식회사 홈리에종";
-    
-        proid = thisBill.links.proid;
-        thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-    
-        thisResponse = thisBill.responses[responseIndex];
-        ({ cancel, proofs, name, target } = thisResponse);
-    
-        cancelArr = equalJson(JSON.stringify(cancel));
-        proofsArr = equalJson(JSON.stringify(proofs));
-    
-        whereQuery = { bilid };
-        updateQuery = {};
-    
-        cancelArr.unshift({ date, amount, oid });
-        proofsArr.unshift({ date, method, proof, to });
-    
-        updateQuery["responses." + String(responseIndex) + ".cancel"] = cancelArr;
-        updateQuery["responses." + String(responseIndex) + ".proofs"] = proofsArr;
-    
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-        thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
-    
-        if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
-    
-          projectWhereQuery = { proid };
-          projectUpdateQuery = {};
-    
-          if (/홈리에종 선금/gi.test(name)) {
-            projectUpdateQuery["process.calculation.payments.first.refund"] = Math.floor(amount);
-            projectUpdateQuery["process.calculation.payments.first.cancel"] = date;
-          } else if (/홈리에종 잔금/gi.test(name)) {
-            projectUpdateQuery["process.calculation.payments.remain.refund"] = Math.floor(amount);
-            projectUpdateQuery["process.calculation.payments.remain.cancel"] = date;
+          // 필수 파라미터가 없을 경우 에러를 발생시킵니다.
+          if (req.body.bilid === undefined || req.body.responseIndex === undefined || req.body.date === undefined || req.body.amount === undefined) {
+              throw new Error("invalid post"); // 유효하지 않은 요청 에러 발생
           }
-    
-          await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
+
+          // 요청 본문에서 bilid, responseIndex, date, amount를 equalJson으로 깊은 복사한 후 추출합니다.
+          let { bilid, responseIndex, date, amount } = equalJson(req.body);
+
+          let thisBill; // 현재 처리 중인 청구서
+          let oid; // 고유 ID
+          let method; // 결제 방식
+          let proid; // 프로젝트 ID
+          let thisProject; // 현재 프로젝트
+          let thisResponse; // 현재 응답
+          let cancel, name, target, proofs; // 취소 정보, 이름, 대상, 증명 정보
+          let whereQuery, updateQuery; // MongoDB에서 사용할 쿼리
+          let projectWhereQuery, projectUpdateQuery; // 프로젝트 관련 쿼리
+          let cancelArr, proofsArr; // 취소 배열, 증명 배열
+          let proof, to; // 증명 정보, 수취인
+
+          // 응답 인덱스를 숫자로 변환하고 유효한 값인지 확인합니다.
+          responseIndex = Number(responseIndex);
+          if (Number.isNaN(responseIndex)) {
+              throw new Error("invalid post"); // 유효하지 않은 응답 인덱스일 경우 에러 발생
+          }
+
+          // 환불 금액을 숫자로 변환하고 유효한 값인지 확인합니다.
+          amount = Number(amount);
+          if (Number.isNaN(amount)) {
+              throw new Error("invalid post"); // 유효하지 않은 금액일 경우 에러 발생
+          }
+
+          // 청구서 ID를 사용하여 해당 청구서를 MongoDB에서 가져옵니다.
+          thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+          // 응답 인덱스가 유효하지 않으면 에러를 발생시킵니다.
+          if (thisBill.responses[responseIndex] === undefined) {
+              throw new Error("invalid index");
+          }
+
+          // 응답 정보에서 필요한 값을 추출합니다.
+          oid = ""; // 고유 ID는 빈 문자열로 초기화
+          method = "계좌 이체 취소"; // 결제 취소 방식으로 설정
+          proof = "현금 영수증"; // 증명 방식으로 현금 영수증 설정
+          to = "주식회사 홈리에종"; // 수취인 설정
+
+          // 청구서에서 프로젝트 ID를 추출합니다.
+          proid = thisBill.links.proid;
+          // 프로젝트 정보를 MongoDB에서 가져옵니다.
           thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-    
-        }
-    
-        res.send(JSON.stringify({
-          message: "success",
-          bilid,
-          proid,
-          bill: thisBill.toNormal(),
-          project: thisProject.toNormal(),
-        }));
-    
+
+          // 현재 응답 데이터를 가져옵니다.
+          thisResponse = thisBill.responses[responseIndex];
+          ({ cancel, proofs, name, target } = thisResponse); // 취소 정보, 증명 정보, 이름, 대상 추출
+
+          // 취소 배열과 증명 배열을 깊은 복사하여 가져옵니다.
+          cancelArr = equalJson(JSON.stringify(cancel));
+          proofsArr = equalJson(JSON.stringify(proofs));
+
+          // MongoDB 업데이트를 위한 쿼리 설정
+          whereQuery = { bilid };
+          updateQuery = {};
+
+          // 취소 정보와 증명 정보를 배열의 맨 앞에 추가합니다.
+          cancelArr.unshift({ date, amount, oid }); // 새로운 취소 데이터를 배열에 추가
+          proofsArr.unshift({ date, method, proof, to }); // 새로운 증명 정보를 배열에 추가
+
+          // 업데이트 쿼리에 취소 배열과 증명 배열을 추가합니다.
+          updateQuery["responses." + String(responseIndex) + ".cancel"] = cancelArr;
+          updateQuery["responses." + String(responseIndex) + ".proofs"] = proofsArr;
+
+          // 청구서 정보를 MongoDB에서 업데이트합니다.
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          // 업데이트된 청구서를 다시 가져옵니다.
+          thisBill = await bill.getBillById(bilid, { selfMongo: instance.mongolocal });
+
+          // 선금 또는 잔금에 대한 환불일 경우 프로젝트 정보를 업데이트합니다.
+          if (/홈리에종 선금/gi.test(name) || /홈리에종 잔금/gi.test(name)) {
+
+              // 프로젝트 업데이트를 위한 쿼리 설정
+              projectWhereQuery = { proid };
+              projectUpdateQuery = {};
+
+              // 선금 환불일 경우
+              if (/홈리에종 선금/gi.test(name)) {
+                  projectUpdateQuery["process.calculation.payments.first.refund"] = Math.floor(amount); // 선금 환불 금액 설정
+                  projectUpdateQuery["process.calculation.payments.first.cancel"] = date; // 선금 취소 날짜 설정
+              } else if (/홈리에종 잔금/gi.test(name)) {
+                  // 잔금 환불일 경우
+                  projectUpdateQuery["process.calculation.payments.remain.refund"] = Math.floor(amount); // 잔금 환불 금액 설정
+                  projectUpdateQuery["process.calculation.payments.remain.cancel"] = date; // 잔금 취소 날짜 설정
+              }
+
+              // 프로젝트 정보를 업데이트합니다.
+              await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
+
+              // 업데이트된 프로젝트를 다시 가져옵니다.
+              thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+          }
+
+          // 처리된 결과를 클라이언트에게 JSON 형식으로 응답합니다.
+          res.send(JSON.stringify({
+              message: "success",
+              bilid,
+              proid,
+              bill: thisBill.toNormal(),
+              project: thisProject.toNormal(),
+          }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 오류가 발생한 경우 로그에 기록하고, 클라이언트에게 오류 메시지를 반환합니다.
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -14895,293 +15411,410 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /stylingFormSync
+     * @description 스타일링 폼 및 기타 폼 데이터를 동기화하는 라우터입니다. Widsign API에서 문서 데이터를 가져와 MongoDB에 업데이트합니다. 
+     *              계약이 완료된 경우 클라이언트와 디자이너에게 알림을 보냅니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 동기화 작업을 트리거합니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/stylingFormSync" ], async function (req, res) {
+      // 클라이언트 요청에 대한 응답 헤더를 설정합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 반환할 데이터 형식을 JSON으로 설정합니다.
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근을 허용합니다.
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정합니다.
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
+      // Mother 객체에서 여러 유틸리티 메서드와 주소 데이터를 가져옵니다.
       const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = instance.mother;
       const address = instance.address;
+
+      // Widsign API에 접근하기 위한 인증 정보(id, key, endPoint)를 설정합니다.
       const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+
+      // 동기화할 컬렉션 목록을 설정합니다.
       const collections = [ "stylingForm", "constructForm", "partnershipForm", "designerForm" ];
+
+      // 백엔드 모듈 접근을 위한 인스턴스를 가져옵니다.
       const back = instance.back;
+
+      /**
+       * @function formSync
+       * @description Widsign API에서 데이터를 동기화하여 MongoDB에 업데이트하는 함수입니다. 각 컬렉션에 대해 3개월 이내의 데이터를 가져오고, 
+       *              프로젝트와 클라이언트 정보, 디자이너 정보를 동기화합니다.
+       * @param {Object} MONGOC - MongoDB 연결 객체입니다.
+       * @param {Object} MONGOPYTHONC - Python MongoDB 연결 객체입니다.
+       * @returns {Promise<boolean>} 동기화 성공 여부를 반환합니다.
+       */
       const formSync = async (MONGOC, MONGOPYTHONC) => {
         try {
-          const selfMongo = MONGOPYTHONC;
-          let widsignResponse, token;
-          let num;
-          let forms, resultForms, finalForms;
-          let pageSize;
-          let monthAgoValue;
-          let boo;
-          let whereQuery, updateQuery;
-          let dbForms;
-          let target;
-          let formDetail;
-          let thisClient;
-          let thisProject, thisDesigner;
-          let text;
-    
-          for (let collection of collections) {
-            monthAgoValue = new Date();
-            monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
-            monthAgoValue = monthAgoValue.valueOf();
-    
-            pageSize = 30;
-            widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    
-            if (widsignResponse.data.result_code !== 200) {
-              throw new Error("access token error");
-            } else {
-              token = widsignResponse.data.access_token;
-              resultForms = [];
-              forms = [ null ];
-              num = 1;
-              while (forms.length > 0) {
-                widsignResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                forms = equalJson(JSON.stringify(widsignResponse.data.result)).map((obj) => {
-                  let newObj;
-                  newObj = {};
-                  newObj.form = obj.form_id;
-                  newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
-                  newObj.name = obj.title;
-                  newObj.date = stringToDate(obj.created_date);
-                  newObj.confirm = (obj.status === 'END');
-                  return newObj;
-                });
-                if (forms.length > 0) {
-                  forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-                  if (forms[0].date.valueOf() <= monthAgoValue) {
-                    break;
-                  }
-                  resultForms = resultForms.concat(forms);
-                }
-                num++;
-              }
-    
-              resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-    
-              finalForms = [];
-              for (let f of resultForms) {
-                boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
-                if (!boo) {
-                  finalForms.push(f);
-                }
-              }
-    
-              widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-              if (widsignResponse.data.result_code !== 200) {
-                throw new Error("access token error");
-              }
-              token = widsignResponse.data.access_token;
-    
-              if (/styling/gi.test(collection) || /construct/gi.test(collection)) {
-                whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-                dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-                for (let f of dbForms) {
-                  whereQuery = { proid: f.proid };
-                  updateQuery = {};
-      
-                  target = null;
-                  for (let i of finalForms) {
-                    if (i.name === f.name) {
-                      target = i;
-                    }
-                  }
-      
-                  if (target !== null) {
-                    widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                    if (typeof widsignResponse.data === "object") {
-                      if (widsignResponse.data.result !== undefined) {
-                        if (widsignResponse.data.result.receiver_list.length > 0) {
-                          updateQuery["id"] = target.id;
-                          updateQuery["date"] = target.date;
-                          updateQuery["confirm"] = target.confirm;
-                          updateQuery["form"] = target.form;
-                          updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
-                          widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                          if (typeof widsignResponse.data === "object") {
-                            if (Array.isArray(widsignResponse.data.result)) {
-                              updateQuery["history"] = widsignResponse.data.result.map((o) => {
-                                o.date = stringToDate(o.created_date);
-                                delete o.created_date;
-                                return o;
-                              });
-                              if (f.confirm !== true && target.confirm === true) {
-      
-                                thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
-                                thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
-                                thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
-      
-                                text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                                await messageSend({ text, channel: "#400_customer", voice: true });
-      
-                              }
-                              await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-      
-                              if (/styling/gi.test(collection)) {
-                                await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                              } else if (/construct/gi.test(collection)) {
-                                await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                              }
-      
+            const selfMongo = MONGOPYTHONC; // MongoDB 연결 객체로 Python MongoDB 인스턴스를 사용
+            let widsignResponse, token; // Widsign API 응답과 액세스 토큰을 저장할 변수
+            let num; // 페이지 넘버 변수
+            let forms, resultForms, finalForms; // 폼 데이터 관련 배열 변수
+            let pageSize; // 한 번에 가져올 폼 데이터의 개수 설정
+            let monthAgoValue; // 3개월 전의 날짜 값 저장
+            let boo; // 중복 체크용 부울 변수
+            let whereQuery, updateQuery; // MongoDB 쿼리 변수
+            let dbForms; // 데이터베이스에서 가져온 폼 데이터 배열
+            let target; // 대상 폼 데이터
+            let formDetail; // 폼 세부 정보
+            let thisClient; // 클라이언트 정보 저장
+            let thisProject, thisDesigner; // 프로젝트 및 디자이너 정보 저장
+            let text; // 알림 메시지 텍스트 변수
+
+            // 각 컬렉션에 대해 반복하여 동기화 작업을 수행
+            for (let collection of collections) {
+                monthAgoValue = new Date(); // 현재 날짜를 기준으로
+                monthAgoValue.setMonth(monthAgoValue.getMonth() - 3); // 3개월 전으로 설정
+                monthAgoValue = monthAgoValue.valueOf(); // 타임스탬프 형식으로 변환
+
+                pageSize = 30; // 한 페이지에 가져올 데이터 수를 30개로 설정
+
+                // Widsign API에서 액세스 토큰을 가져옴
+                widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+                
+                // 액세스 토큰을 제대로 가져오지 못했을 경우 에러 발생
+                if (widsignResponse.data.result_code !== 200) {
+                    throw new Error("access token error");
+                } else {
+                    token = widsignResponse.data.access_token; // 정상적으로 가져온 액세스 토큰 저장
+                    resultForms = []; // 결과 폼 배열 초기화
+                    forms = [ null ]; // 폼 데이터 초기값 설정
+                    num = 1; // 페이지 번호 초기화
+                    
+                    // 더 이상 폼 데이터가 없을 때까지 반복하여 문서 데이터를 가져옴
+                    while (forms.length > 0) {
+                        widsignResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                        
+                        // API에서 받은 폼 데이터를 equalJson으로 깊은 복사하여 배열에 저장
+                        forms = equalJson(JSON.stringify(widsignResponse.data.result)).map((obj) => {
+                            let newObj = {}; // 새로운 객체 생성
+                            newObj.form = obj.form_id; // 폼 ID 저장
+                            newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null; // 수신자 ID 저장
+                            newObj.name = obj.title; // 폼 이름(제목) 저장
+                            newObj.date = stringToDate(obj.created_date); // 생성 날짜를 문자열에서 Date 객체로 변환
+                            newObj.confirm = (obj.status === 'END'); // 폼 상태가 'END'이면 완료된 것으로 설정
+                            return newObj; // 변환된 폼 데이터 반환
+                        });
+
+                        // 가져온 폼 데이터가 있으면
+                        if (forms.length > 0) {
+                            forms.sort((a, b) => a.date.valueOf() - b.date.valueOf()); // 날짜를 기준으로 오름차순 정렬
+                            
+                            // 폼의 가장 오래된 날짜가 3개월 이전이면 반복 종료
+                            if (forms[0].date.valueOf() <= monthAgoValue) {
+                                break;
                             }
-                          }
+                            
+                            resultForms = resultForms.concat(forms); // 결과 배열에 폼 데이터 추가
                         }
-                      }
+                        num++; // 페이지 번호 증가
                     }
-                  }
-      
-                }
-              } else {
-    
-                whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-                dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-                for (let f of dbForms) {
-                  whereQuery = { aspid: f.aspid };
-                  updateQuery = {};
-      
-                  target = null;
-                  for (let i of finalForms) {
-                    if (i.name === f.name) {
-                      target = i;
+
+                    // 결과 폼 데이터를 최신 순으로 정렬
+                    resultForms.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+                    finalForms = []; // 최종 폼 배열 초기화
+
+                    // 중복된 폼을 제거하여 최종 배열에 저장
+                    for (let f of resultForms) {
+                        boo = (finalForms.find((obj) => obj.name === f.name) !== undefined); // 중복 여부 확인
+                        if (!boo) {
+                            finalForms.push(f); // 중복이 아닐 경우 최종 배열에 추가
+                        }
                     }
-                  }
-      
-                  if (target !== null) {
-                    widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                    if (typeof widsignResponse.data === "object") {
-                      if (widsignResponse.data.result !== undefined) {
-                        if (widsignResponse.data.result.receiver_list.length > 0) {
-                          updateQuery["id"] = target.id;
-                          updateQuery["date"] = target.date;
-                          updateQuery["confirm"] = target.confirm;
-                          updateQuery["form"] = target.form;
-                          updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
-                          widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                          if (typeof widsignResponse.data === "object") {
-                            if (Array.isArray(widsignResponse.data.result)) {
-                              updateQuery["history"] = widsignResponse.data.result.map((o) => {
-                                o.date = stringToDate(o.created_date);
-                                delete o.created_date;
-                                return o;
-                              });
-                              await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-                              if (f.confirm !== true && target.confirm === true) {
-                                thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC });
-                                text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!";
-                                await messageSend({ text, channel: "#301_apply", voice: true });
-                                if (/partnership/gi.test(collection)) {
-                                  await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
-                                } else if (/designer/gi.test(collection)) {
-                                  await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
+
+                    // 액세스 토큰을 다시 가져옴 (세션 만료 가능성에 대비)
+                    widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+                    if (widsignResponse.data.result_code !== 200) {
+                        throw new Error("access token error");
+                    }
+                    token = widsignResponse.data.access_token;
+
+                    // 스타일링 폼 또는 공사 폼에 대해 동기화 작업 수행
+                    if (/styling/gi.test(collection) || /construct/gi.test(collection)) {
+                        whereQuery = { $or: finalForms.map((obj) => ({ name: obj.name })) }; // MongoDB에서 조회할 쿼리 생성
+                        dbForms = await back.mongoRead(collection, whereQuery, { selfMongo }); // MongoDB에서 폼 데이터를 읽음
+                        
+                        // 데이터베이스의 폼 데이터를 각각 처리
+                        for (let f of dbForms) {
+                            whereQuery = { proid: f.proid }; // 프로젝트 ID로 조회 쿼리 생성
+                            updateQuery = {}; // 업데이트할 쿼리 초기화
+
+                            // 최종 폼 배열에서 일치하는 폼 데이터를 찾음
+                            target = null;
+                            for (let i of finalForms) {
+                                if (i.name === f.name) {
+                                    target = i;
                                 }
-                                await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
-                              }
                             }
-                          }
+
+                            // 일치하는 폼이 있을 경우 세부 정보 및 이력을 업데이트
+                            if (target !== null) {
+                                // Widsign API에서 해당 폼의 세부 정보를 가져옴
+                                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                                if (typeof widsignResponse.data === "object" && widsignResponse.data.result !== undefined) {
+                                    if (widsignResponse.data.result.receiver_list.length > 0) {
+                                        updateQuery["id"] = target.id; // 폼 ID 업데이트
+                                        updateQuery["date"] = target.date; // 폼 날짜 업데이트
+                                        updateQuery["confirm"] = target.confirm; // 폼 완료 여부 업데이트
+                                        updateQuery["form"] = target.form; // 폼 데이터 업데이트
+                                        updateQuery["detail"] = widsignResponse.data.result.receiver_list[0]; // 수신자 정보 업데이트
+
+                                        // 폼 이력을 가져와 업데이트
+                                        widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                                        if (typeof widsignResponse.data === "object" && Array.isArray(widsignResponse.data.result)) {
+                                            updateQuery["history"] = widsignResponse.data.result.map((o) => {
+                                                o.date = stringToDate(o.created_date); // 생성 날짜를 Date 객체로 변환
+                                                delete o.created_date; // 원래 날짜 필드는 삭제
+                                                return o;
+                                            });
+
+                                            // 계약 완료 여부를 확인하고 메시지를 전송
+                                            if (f.confirm !== true && target.confirm === true) {
+                                                thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC }); // 프로젝트 정보 가져오기
+                                                thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC }); // 클라이언트 정보 가져오기
+                                                thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC }); // 디자이너 정보 가져오기
+
+                                                text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!"; // 메시지 텍스트 생성
+                                                await messageSend({ text, channel: "#400_customer", voice: true }); // 메시지 전송
+                                            }
+
+                                            // MongoDB에 폼 데이터 업데이트
+                                            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+                                            // 스타일링 폼일 경우 프로젝트의 계약 정보 업데이트
+                                            if (/styling/gi.test(collection)) {
+                                                await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                                            } else if (/construct/gi.test(collection)) {
+                                                // 공사 폼일 경우 공사 계약 정보 업데이트
+                                                await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-                      }
+                    } else {
+                        // 파트너십 폼 또는 디자이너 폼에 대해 동기화 작업 수행
+                        whereQuery = { $or: finalForms.map((obj) => ({ name: obj.name })) }; // 조회 쿼리 생성
+                        dbForms = await back.mongoRead(collection, whereQuery, { selfMongo }); // MongoDB에서 폼 데이터 읽기
+
+                        // 각 폼 데이터를 처리
+                        for (let f of dbForms) {
+                            whereQuery = { aspid: f.aspid }; // 아스피란트 ID로 조회 쿼리 생성
+                            updateQuery = {}; // 업데이트할 쿼리 초기화
+
+                            // 최종 폼 배열에서 일치하는 폼을 찾음
+                            target = null;
+                            for (let i of finalForms) {
+                                if (i.name === f.name) {
+                                    target = i;
+                                }
+                            }
+
+                            // 일치하는 폼이 있을 경우 세부 정보 및 이력을 업데이트
+                            if (target !== null) {
+                                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                                if (typeof widsignResponse.data === "object" && widsignResponse.data.result !== undefined) {
+                                    if (widsignResponse.data.result.receiver_list.length > 0) {
+                                        updateQuery["id"] = target.id; // 폼 ID 업데이트
+                                        updateQuery["date"] = target.date; // 폼 날짜 업데이트
+                                        updateQuery["confirm"] = target.confirm; // 폼 완료 여부 업데이트
+                                        updateQuery["form"] = target.form; // 폼 데이터 업데이트
+                                        updateQuery["detail"] = widsignResponse.data.result.receiver_list[0]; // 수신자 정보 업데이트
+
+                                        // 폼 이력을 가져와 업데이트
+                                        widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                                        if (typeof widsignResponse.data === "object" && Array.isArray(widsignResponse.data.result)) {
+                                            updateQuery["history"] = widsignResponse.data.result.map((o) => {
+                                                o.date = stringToDate(o.created_date); // 생성 날짜를 변환
+                                                delete o.created_date; // 원래 필드를 삭제
+                                                return o;
+                                            });
+
+                                            // MongoDB에 폼 데이터 업데이트
+                                            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+                                            // 계약이 완료되었을 경우 메시지 전송 및 MongoDB 업데이트
+                                            if (f.confirm !== true && target.confirm === true) {
+                                                thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC }); // 디자이너 정보 가져오기
+                                                text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!"; // 메시지 텍스트 생성
+                                                await messageSend({ text, channel: "#301_apply", voice: true }); // 메시지 전송
+
+                                                // 파트너십 또는 디자이너 계약 정보 업데이트
+                                                if (/partnership/gi.test(collection)) {
+                                                    await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
+                                                } else if (/designer/gi.test(collection)) {
+                                                    await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
+                                                }
+
+                                                // 계약 완료 상태로 업데이트
+                                                await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                  }
-      
                 }
-    
-              }
-    
             }
-    
-          }
-        
-          return true;
-    
+
+            return true; // 동기화 성공 시 true 반환
+
         } catch (e) {
-          return false;
+            return false; // 오류 발생 시 false 반환
         }
-      }
+      };
       try {
-        formSync(instance.mongo, instance.mongolocal).then((boo) => {
-          if (boo) {
-            logger.cron("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-          }
-          return requestSystem("https://" + address.officeinfo.host + ":3002/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
-        }).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-        });
-        res.send(JSON.stringify({ message: "will do" }));
-      } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // formSync 함수를 호출하여 MongoDB 인스턴스와 로컬 인스턴스를 전달
+          formSync(instance.mongo, instance.mongolocal)
+              .then((boo) => { // formSync가 성공적으로 동작하면
+                  if (boo) { 
+                      // boo가 true일 때 로그를 기록
+                      // 성공적으로 스타일링 폼 동기화가 완료되었음을 나타내는 메시지와 현재 시간을 로그로 남김
+                      logger.cron("styling form sync success : " + JSON.stringify(new Date()))
+                          .catch((e) => { console.log(e); }); // 로그 기록 중 에러가 발생하면 콘솔에 출력
+                  }
+                  // 동기화가 완료된 후 특정 URL로 GET 요청을 보냄
+                  // "https://{host}/stylingFormFile"로 요청을 보내며 데이터는 null
+                  return requestSystem(
+                      "https://" + address.officeinfo.host + ":3002/stylingFormFile", // URL 설정
+                      { data: null }, // 요청 데이터는 null
+                      { headers: { "Content-Type": "application/json" } } // 헤더에 JSON 형식을 지정
+                  );
+              })
+              .catch((err) => { // formSync가 실패하거나 오류가 발생했을 경우 에러 처리
+                  // 에러가 발생하면 로그 기록
+                  logger.error(err, req).catch((e) => { console.log(e); }); // 에러 로그 기록 중 또 다른 에러가 발생하면 콘솔에 출력
+              });
+          // 클라이언트에 동기화 요청이 실행 중임을 알리는 메시지 응답
+          // formSync가 완료되었는지 여부에 관계없이 이 메시지가 반환됨
+          res.send(JSON.stringify({ message: "will do" })); // 클라이언트에게 성공적으로 요청이 처리 중임을 알리는 응답 반환
+      } catch (e) { // formSync 실행 중 발생한 에러 처리
+          // 에러가 발생하면 로그 기록
+          logger.error(e, req).catch((e) => { console.log(e); }); // 에러 로그 기록 중 또 다른 에러가 발생하면 콘솔에 출력
+          // 에러가 발생했음을 클라이언트에 알리는 응답 반환
+          res.set("Content-Type", "application/json"); // 응답 헤더 설정: JSON 형식으로 반환
+          res.send(JSON.stringify({ error: e.message })); // 에러 메시지를 JSON 형식으로 응답
       }
     });
     
+    /**
+     * @route POST /stylingFormFile
+     * @description 스타일링 폼 파일을 다운로드하고 서버에 업로드하는 라우터입니다. Widsign API를 통해 서명된 계약서를 다운로드하고, 특정 경로에 파일을 업로드한 후 
+     *              임시 파일을 삭제합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 파일 다운로드 작업을 트리거합니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/stylingFormFile" ], async function (req, res) {
+      // 응답 헤더를 설정하여 클라이언트에게 JSON 형식의 응답을 보낼 수 있도록 허용합니다.
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 응답 데이터 형식을 JSON으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서의 접근을 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 헤더 설정
       });
-      const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, messageSend } = instance.mother;
-      const address = instance.address;
-      const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-      const back = instance.back;
+
+      // Mother 객체에서 사용하는 다양한 유틸리티 메서드를 불러옴
+      const { 
+          requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, messageSend 
+      } = instance.mother; // Mother 메서드들이 사용됩니다.
+
+      const address = instance.address; // 서버 주소 정보를 담고 있는 객체
+      const { officeinfo: { widsign: { id, key, endPoint } } } = address; // Widsign API 사용을 위한 ID, key, endPoint 정보
+      const back = instance.back; // 백엔드 처리 모듈 가져옴
+
       try {
-        const selfMongo = instance.mongolocal;
-        const splitToken = "__split__";
-        const collection = "stylingForm";
-        let widsignResponse;
-        let token;
-        let rows;
-        let fileName;
-        let transRes;
-        let subtract;
-        let fileList;
-        let downloadTargets;
-        let fromArr, toArr;
-    
-        rows = await back.mongoRead(collection, {}, { selfMongo });
-        rows = rows.filter((obj) => { return obj.confirm });
-    
-        transRes = await requestSystem("https://" + address.secondinfo.host + ":3003/contractList", { data: null }, { headers: { "Content-Type": "application/json" } });
-    
-        fileList = transRes.data.map((obj) => { return obj.proid });
-        subtract = rows.map((obj) => { return obj.proid }).filter((proid) => {
-          return !fileList.includes(proid);
-        });
-        downloadTargets = rows.filter((obj) => {
-          return subtract.includes(obj.proid);
-        });
-    
-        for (let { id: formId, proid, client: { cliid, requestNumber } } of downloadTargets) {
-          widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-          if (widsignResponse.data.result_code !== 200) {
-            throw new Error("access token error");
+          const selfMongo = instance.mongolocal; // 로컬 MongoDB 인스턴스
+          const splitToken = "__split__"; // 파일 이름을 구성할 때 사용하는 구분자
+          const collection = "stylingForm"; // MongoDB에서 읽을 컬렉션 이름
+          let widsignResponse; // Widsign API 응답을 저장할 변수
+          let token; // 액세스 토큰을 저장할 변수
+          let rows; // MongoDB에서 읽어온 데이터를 저장할 변수
+          let fileName; // 파일 이름을 저장할 변수
+          let transRes; // 서버로부터의 응답을 저장할 변수
+          let subtract; // 차집합 배열을 저장할 변수
+          let fileList; // 파일 리스트를 저장할 배열
+          let downloadTargets; // 다운로드 대상 파일들을 저장할 배열
+          let fromArr, toArr; // 파일 경로 배열
+
+          // MongoDB에서 스타일링 폼 데이터를 읽어옴
+          rows = await back.mongoRead(collection, {}, { selfMongo });
+          // 'confirm' 필드가 true인 데이터만 필터링
+          rows = rows.filter((obj) => { return obj.confirm });
+
+          // contractList 엔드포인트에서 데이터를 받아옴
+          transRes = await requestSystem(
+              "https://" + address.secondinfo.host + ":3003/contractList", 
+              { data: null }, 
+              { headers: { "Content-Type": "application/json" } }
+          );
+
+          // 서버에서 받은 데이터를 바탕으로 파일 리스트 생성
+          fileList = transRes.data.map((obj) => { return obj.proid });
+
+          // MongoDB에서 받은 데이터와 서버에서 받은 데이터의 차집합을 계산 (아직 다운로드되지 않은 데이터)
+          subtract = rows.map((obj) => { return obj.proid }).filter((proid) => {
+              return !fileList.includes(proid);
+          });
+
+          // 다운로드 대상 목록을 생성
+          downloadTargets = rows.filter((obj) => {
+              return subtract.includes(obj.proid);
+          });
+
+          // 각 다운로드 대상에 대해 Widsign API를 사용하여 문서 파일을 다운로드
+          for (let { id: formId, proid, client: { cliid, requestNumber } } of downloadTargets) {
+              // Widsign API로부터 액세스 토큰을 가져옴
+              widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+              if (widsignResponse.data.result_code !== 200) {
+                  throw new Error("access token error"); // 액세스 토큰 오류 시 예외 처리
+              }
+
+              token = widsignResponse.data.access_token; // 정상적으로 토큰을 받아옴
+
+              // 다운로드할 파일 이름을 생성
+              fileName = `${proid}${splitToken}${cliid}${splitToken}${requestNumber}${splitToken}${formId}.zip`;
+
+              // Widsign API를 통해 서명된 문서 파일을 바이너리 형식으로 다운로드
+              widsignResponse = await binaryRequest(
+                  endPoint + "/v2/doc/download?receiver_meta_id=" + formId, 
+                  null, 
+                  { "x-api-key": key, "x-access-token": token }
+              );
+
+              // 다운로드한 파일을 임시 디렉토리에 저장
+              await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${fileName}`, widsignResponse ]);
+
+              // 업로드할 파일의 경로 설정
+              fromArr = [ `${process.cwd()}/temp/${fileName}` ]; // 로컬 경로
+              toArr = [ "/photo/contract/" + fileName ]; // 업로드할 서버 경로
+
+              // 파일을 지정된 서버로 업로드
+              await generalFileUpload("https://" + address.secondinfo.host + ":3003/generalFileUpload", fromArr, toArr);
+
+              // 서버에 파일 업로드 후 300ms 대기
+              await sleep(300);
+
+              // 임시 디렉토리에서 파일 삭제
+              await shellExec("rm", [ "-rf", `${process.cwd()}/temp/${fileName}` ]);
           }
-          token = widsignResponse.data.access_token;
-          fileName = `${proid}${splitToken}${cliid}${splitToken}${requestNumber}${splitToken}${formId}.zip`;
-          widsignResponse = await binaryRequest(endPoint + "/v2/doc/download?receiver_meta_id=" + formId, null, { "x-api-key": key, "x-access-token": token });
-          await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${fileName}`, widsignResponse ]);
-    
-          fromArr = [ `${process.cwd()}/temp/${fileName}` ];
-          toArr = [ "/photo/contract/" + fileName ];
-          await generalFileUpload("https://" + address.secondinfo.host + ":3003/generalFileUpload", fromArr, toArr);
-    
-          await sleep(300);
-          await shellExec("rm", [ "-rf", `${process.cwd()}/temp/${fileName}` ]);
-    
-        }
-    
-        logger.cron("styling form file success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-    
-        res.send(JSON.stringify({ message: "done" }));
+
+          // 동기화 성공 시 로그 기록
+          logger.cron("styling form file success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+
+          // 클라이언트에 성공 메시지를 JSON 형식으로 응답
+          res.send(JSON.stringify({ message: "done" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러가 발생했을 때 에러 로그를 기록하고, 클라이언트에게 에러 메시지를 반환
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -15354,140 +15987,237 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /ghostClient_updateAnalytics
+     * @description 클라이언트의 분석 데이터를 업데이트하는 라우터입니다. 
+     *              페이지 방문, 업데이트 정보, 제출, 이미지 등을 기반으로 분석 정보를 갱신합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 업데이트할 데이터를 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/ghostClient_updateAnalytics" ], async function (req, res) {
+      // 응답 헤더 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 응답 데이터 형식을 JSON으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더 설정
       });
+
       try {
-        if (req.body.mode === undefined || req.body.cliid === undefined || req.body.page === undefined) {
-          throw new Error("invaild post");
-        }
-        const { mode, cliid, page } = req.body;
-        const ip = String(req.headers['x-forwarded-for'] === undefined ? req.socket.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
-        const rawUserAgent = req.useragent;
-        const { source: userAgent, browser, os, platform } = rawUserAgent;
-        const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
-        let whereQuery, updateQuery;
-        let history;
-        let update;
-        let image;
-        let ipObj;
-    
-        whereQuery = { cliid };
-        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (history === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        }
-    
-        if (mode === "page") {
-    
-          ipObj = await ipParsing(ip);
-          if (Object.keys(ipObj).length === 0) {
-            ipObj = { ip };
+          // 필수 필드(mode, cliid, page)가 요청에 포함되어 있는지 확인
+          if (req.body.mode === undefined || req.body.cliid === undefined || req.body.page === undefined) {
+              throw new Error("invalid post"); // 필드가 없으면 에러를 던짐
           }
-    
-          history.curation.analytics.page.push({ page, date: new Date(), referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
-          updateQuery = {};
-          updateQuery["curation.analytics.page"] = history.curation.analytics.page;
-          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-    
-        } else if (mode === "update") {
-    
-          update = equalJson(req.body.update);
-          history.curation.analytics.update.push({ page, date: new Date(), update });
-          updateQuery = {};
-          updateQuery["curation.analytics.update"] = history.curation.analytics.update;
-          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-    
-          if (req.body.updateQuery !== undefined) {
-            const { history: historyQuery, core: coreQuery } = equalJson(req.body.updateQuery);
-            if (historyQuery !== null && typeof historyQuery === "object" && Object.keys(historyQuery).length > 0) {
-              await back.updateHistory("client", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
-            }
-            if (coreQuery !== null && typeof coreQuery === "object" && Object.keys(coreQuery).length > 0) {
-              await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
-            }
+
+          // 요청에서 mode, cliid, page 값을 추출
+          const { mode, cliid, page } = req.body;
+          
+          // 클라이언트의 IP 주소 추출 (헤더에 있으면 그 값을 사용, 없으면 소켓에서 추출)
+          const ip = String(req.headers['x-forwarded-for'] === undefined ? req.socket.remoteAddress : req.headers['x-forwarded-for'])
+              .trim().replace(/[^0-9\.]/gi, ''); // IP 형식에 맞게 정리
+
+          // 사용자 에이전트 정보 추출
+          const rawUserAgent = req.useragent; // 클라이언트의 사용자 에이전트 정보
+          const { source: userAgent, browser, os, platform } = rawUserAgent; // 에이전트, 브라우저, OS, 플랫폼 정보 분리
+
+          // 참조 URL (referer) 값을 설정, 없으면 빈 문자열로 설정
+          const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+          
+          let whereQuery, updateQuery; // MongoDB에서 사용할 조회 및 업데이트 쿼리
+          let history; // 클라이언트 히스토리 저장 변수
+          let update; // 업데이트 정보 저장 변수
+          let image; // 이미지 정보 저장 변수
+          let ipObj; // IP 관련 객체 저장 변수
+
+          // 클라이언트 ID로 히스토리 조회
+          whereQuery = { cliid }; 
+          history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal }); // 클라이언트의 히스토리를 조회
+          if (history === null) {
+              // 히스토리가 없으면 새로 생성
+              await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+              history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
           }
-    
-        } else if (mode === "submit") {
-    
-          history.curation.analytics.submit.push({ page, date: new Date() });
-          updateQuery = {};
-          updateQuery["curation.analytics.submit"] = history.curation.analytics.submit;
-          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-    
-        } else if (mode === "image") {
-    
-          image = equalJson(req.body.image);
-          updateQuery = {};
-          updateQuery["curation.image"] = image;
-          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-    
-        } else {
-          throw new Error("invaild mode");
-        }
-    
-        res.send(JSON.stringify({ message: "done" }));
-    
+
+          // mode에 따라 다른 처리 로직을 수행
+          if (mode === "page") {
+              // 페이지 방문 기록 업데이트 처리
+
+              // IP 주소 분석
+              ipObj = await ipParsing(ip); // IP 파싱 유틸리티 호출 (Mother 메서드가 사용될 수 있음)
+              if (Object.keys(ipObj).length === 0) {
+                  ipObj = { ip }; // IP 파싱 결과가 없으면 IP 주소만 저장
+              }
+
+              // 히스토리에 페이지 방문 정보 추가
+              history.curation.analytics.page.push({ 
+                  page, 
+                  date: new Date(), 
+                  referrer, 
+                  userAgent, 
+                  browser, 
+                  os, 
+                  platform, 
+                  mobile: rawUserAgent.isMobile, 
+                  ...ipObj // IP 관련 정보 추가
+              });
+
+              // 업데이트 쿼리 생성
+              updateQuery = {};
+              updateQuery["curation.analytics.page"] = history.curation.analytics.page; // 페이지 방문 정보 업데이트
+
+              // 클라이언트 히스토리 업데이트
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          } else if (mode === "update") {
+              // 업데이트 정보 기록 처리
+
+              // 업데이트 데이터를 equalJson을 통해 파싱 (deep copy 처리)
+              update = equalJson(req.body.update);
+
+              // 히스토리에 업데이트 정보 추가
+              history.curation.analytics.update.push({ page, date: new Date(), update });
+
+              // 업데이트 쿼리 생성
+              updateQuery = {};
+              updateQuery["curation.analytics.update"] = history.curation.analytics.update; // 업데이트 정보 저장
+
+              // 클라이언트 히스토리 업데이트
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+              // 추가로 updateQuery가 제공되면, 히스토리와 클라이언트 정보도 함께 업데이트
+              if (req.body.updateQuery !== undefined) {
+                  const { history: historyQuery, core: coreQuery } = equalJson(req.body.updateQuery);
+
+                  if (historyQuery !== null && typeof historyQuery === "object" && Object.keys(historyQuery).length > 0) {
+                      // 히스토리 데이터 업데이트
+                      await back.updateHistory("client", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
+                  }
+                  if (coreQuery !== null && typeof coreQuery === "object" && Object.keys(coreQuery).length > 0) {
+                      // 클라이언트의 코어 데이터 업데이트
+                      await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+                  }
+              }
+
+          } else if (mode === "submit") {
+              // 제출 정보 기록 처리
+
+              // 히스토리에 제출 정보 추가
+              history.curation.analytics.submit.push({ page, date: new Date() });
+
+              // 제출 정보 업데이트 쿼리 생성
+              updateQuery = {};
+              updateQuery["curation.analytics.submit"] = history.curation.analytics.submit;
+
+              // 클라이언트 히스토리 업데이트
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          } else if (mode === "image") {
+              // 이미지 정보 기록 처리
+
+              // 이미지를 equalJson을 통해 파싱 (deep copy 처리)
+              image = equalJson(req.body.image);
+
+              // 이미지 정보 업데이트 쿼리 생성
+              updateQuery = {};
+              updateQuery["curation.image"] = image;
+
+              // 클라이언트 히스토리 업데이트
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          } else {
+              // 올바르지 않은 mode 값이 주어졌을 때 에러 발생
+              throw new Error("invalid mode");
+          }
+
+          // 작업 완료 후 성공 메시지를 JSON 형식으로 응답
+          res.send(JSON.stringify({ message: "done" }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그 기록 후 클라이언트에 에러 메시지를 반환
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /designerProposal_submit
+     * @description 클라이언트가 디자이너를 선택했을 때, 해당 디자이너의 제안서를 제출하는 라우터입니다.
+     *              프로젝트와 클라이언트 정보를 업데이트하고, 카카오톡 알림을 보냅니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 프로젝트 ID(proid), 클라이언트 ID(cliid), 디자이너 ID(desid) 등의 정보를 포함합니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerProposal_submit" ], async function (req, res) {
+      // 응답 헤더 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 응답 데이터를 JSON 형식으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더 설정
       });
+
       try {
-        let { cliid, proid, desid, name, phone, designer, method } = req.body;
-        let thisProject, thisClient, requestNumber;
-        let action;
-    
-        thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        thisClient = await back.getClientById(cliid, { selfMongo: instance.mongo });
-        requestNumber = 0;
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
-            requestNumber = i;
-            break;
+          // 요청에서 필요한 데이터 추출
+          let { cliid, proid, desid, name, phone, designer, method } = req.body; 
+          let thisProject, thisClient, requestNumber;
+          let action;
+
+          // 프로젝트 ID로 프로젝트 정보를 가져옴
+          thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo }); 
+          // 클라이언트 ID로 클라이언트 정보를 가져옴
+          thisClient = await back.getClientById(cliid, { selfMongo: instance.mongo }); 
+          
+          // 클라이언트의 요청 중 프로젝트 타임라인과 일치하는 요청을 찾음
+          requestNumber = 0; 
+          for (let i = 0; i < thisClient.requests.length; i++) {
+              // 클라이언트 요청의 타임라인이 프로젝트 제안서 날짜와 같거나 이전이면 해당 요청을 찾음
+              if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+                  requestNumber = i;
+                  break;
+              }
           }
-        }
-        action = "디자이너 선택";
-    
-        await requestSystem("https://" + address.officeinfo.host + ":3002/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
-        await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
-    
-        messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
-          let updateObj;
-          updateObj = {};
-          updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
-          return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
-        }).catch((err) => {
-          logger.error(err, req).catch((e) => { console.log(e); });
-        });
-    
-        await instance.kakao.sendTalk("designerSelect", name, phone, {
-          client: name,
-          designer: designer,
-          host: address.frontinfo.host,
-          cliid: cliid,
-          needs: ("style," + desid + "," + proid + "," + method),
-        });
-    
-        res.send(JSON.stringify({ index: 0 }));
+
+          // 디자이너 선택에 따른 액션 명시
+          action = "디자이너 선택"; 
+
+          // 해당 디자이너에 대한 스타일링 청구서를 생성하기 위한 API 호출
+          await requestSystem("https://" + address.officeinfo.host + ":3002/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
+          
+          // 선택한 서비스가 온라인인지 여부에 따라 프로젝트 정보를 업데이트
+          await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
+
+          // 메시지 전송: 클라이언트가 선택한 디자이너 정보를 알림
+          messageSend({
+              text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, 
+              channel: "#400_customer", // 알림을 보낼 채널
+              voice: true // 음성 알림 설정
+          }).then(() => {
+              // 클라이언트 요청에 대한 응답 분석 업데이트
+              let updateObj = {};
+              updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action; // 선택한 디자이너 정보 업데이트
+              return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+          }).catch((err) => {
+              // 오류 발생 시 로그 기록
+              logger.error(err, req).catch((e) => { console.log(e); });
+          });
+
+          // 클라이언트에게 카카오톡 알림 전송 (디자이너 선택 관련)
+          await instance.kakao.sendTalk("designerSelect", name, phone, {
+              client: name, // 클라이언트 이름
+              designer: designer, // 선택한 디자이너 이름
+              host: address.frontinfo.host, // 프론트엔드 호스트 주소
+              cliid: cliid, // 클라이언트 ID
+              needs: ("style," + desid + "," + proid + "," + method), // 스타일링 요청 정보
+          });
+
+          // 작업 완료 후 성공 응답 반환
+          res.send(JSON.stringify({ index: 0 }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그 기록 후 클라이언트에 에러 메시지를 반환
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
@@ -15533,115 +16263,159 @@ class DataRouter {
       }
     });
     
+    /**
+     * @route POST /designerProposal_getDesigners
+     * @description 클라이언트가 디자이너 목록을 요청할 때 사용되는 라우터입니다. 
+     *              주어진 조건에 맞는 디자이너 목록을 반환하며, 실시간 매칭 상태를 확인할 수 있습니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 요청 본문에 proid(프로젝트 ID)와 whereQuery(디자이너 검색 조건)가 포함됩니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/designerProposal_getDesigners" ], async function (req, res) {
+      // 응답 헤더 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 응답 데이터를 JSON 형식으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더 설정
       });
+
       try {
-        if (req.body.whereQuery === undefined || req.body.proid === undefined) {
-          throw new Error("invaild post");
-        }
-        const { whereQuery, proid } = equalJson(req.body);
-        const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
-        let designersNormal;
-        let designerNormal;
-        let realtime;
-        let thisDesigner;
-        let designerMode;
-    
-        designerMode = false;
-        if (req.body.designerMode !== undefined) {
-          if (req.body.designerMode === 1 || req.body.designerMode === '1') {
-            designerMode = true;
+          // 요청에 필요한 데이터가 없으면 에러 처리
+          if (req.body.whereQuery === undefined || req.body.proid === undefined) {
+              throw new Error("invaild post"); // 필수 데이터가 없으면 오류를 던짐
           }
-        }
-    
-        if (!designerMode) {
-          designersNormal = [];
-          for (let { desid } of thisProject.proposal.detail) {
-            thisDesigner = designers.find((d) => { return d.desid === desid });
-            realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
-            designerNormal = thisDesigner.toNormal();
-            designerNormal.end = !realtime.result;
-            designersNormal.push(designerNormal);
+
+          // 요청 본문에서 데이터를 추출
+          const { whereQuery, proid } = equalJson(req.body); // equalJson은 JSON 파싱 및 복사에 사용됨
+          const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo }); // 프로젝트 ID로 프로젝트 데이터를 가져옴
+          const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo }); // 검색 조건에 맞는 디자이너 목록을 가져옴
+          let designersNormal; // 최종적으로 반환할 디자이너 목록
+          let designerNormal; // 개별 디자이너 데이터
+          let realtime; // 실시간 매칭 상태
+          let thisDesigner; // 현재 처리 중인 디자이너
+          let designerMode; // 디자이너 모드 설정
+
+          // 디자이너 모드 설정 (필수 입력이 아니며, 설정된 경우 그에 따라 처리)
+          designerMode = false; 
+          if (req.body.designerMode !== undefined) {
+              if (req.body.designerMode === 1 || req.body.designerMode === '1') {
+                  designerMode = true; // designerMode가 1이면 true로 설정
+              }
           }
-          res.send(JSON.stringify(designersNormal));
-        } else {
-          designersNormal = [];
-          for (let { desid } of designers) {
-            thisDesigner = designers.find((d) => { return d.desid === desid });
-            designerNormal = thisDesigner.toNormal();
-            designerNormal.end = false;
-            designersNormal.push(designerNormal);
+
+          // 디자이너 모드가 활성화되지 않은 경우
+          if (!designerMode) {
+              designersNormal = [];
+              // 프로젝트 제안서의 디자이너 목록에서 각 디자이너에 대해 처리
+              for (let { desid } of thisProject.proposal.detail) {
+                  thisDesigner = designers.find((d) => { return d.desid === desid }); // 프로젝트의 디자이너를 검색
+                  realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal }); // 실시간 매칭 상태 확인
+                  designerNormal = thisDesigner.toNormal(); // 디자이너 데이터를 일반 형식으로 변환
+                  designerNormal.end = !realtime.result; // 매칭 종료 여부 설정
+                  designersNormal.push(designerNormal); // 최종 디자이너 목록에 추가
+              }
+              res.send(JSON.stringify(designersNormal)); // 처리된 디자이너 목록을 클라이언트에 전송
+          } else {
+              // 디자이너 모드가 활성화된 경우
+              designersNormal = [];
+              for (let { desid } of designers) {
+                  thisDesigner = designers.find((d) => { return d.desid === desid }); // 디자이너 목록에서 각 디자이너를 처리
+                  designerNormal = thisDesigner.toNormal(); // 디자이너 데이터를 일반 형식으로 변환
+                  designerNormal.end = false; // 매칭 종료 여부 설정 (디자이너 모드에서는 항상 false)
+                  designersNormal.push(designerNormal); // 최종 디자이너 목록에 추가
+              }
+              res.send(JSON.stringify(designersNormal)); // 처리된 디자이너 목록을 클라이언트에 전송
           }
-          res.send(JSON.stringify(designersNormal));
-        }
-    
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그 기록 후 클라이언트에 에러 메시지를 반환
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
+    /**
+     * @route POST /styleCuration_getPhotos
+     * @description 스타일 큐레이션에서 사진을 가져오는 라우터입니다. 
+     *              디자이너의 스타일 분석 데이터를 함께 반환하며, 특정 조건에 따라 사진을 필터링합니다.
+     * @param {Object} req - 클라이언트 요청 객체로, 스타일 큐레이션 작업을 트리거합니다.
+     * @param {Object} res - 서버 응답 객체로, 처리 결과를 JSON 형식으로 반환합니다.
+     */
     router.post([ "/styleCuration_getPhotos" ], async function (req, res) {
+      // 응답 헤더 설정
       res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          "Content-Type": "application/json", // 응답 데이터를 JSON 형식으로 설정
+          "Access-Control-Allow-Origin": "*", // 모든 도메인에서 접근 허용
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", // 허용할 HTTP 메서드를 설정
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더 설정
       });
+
       try {
-        const selfMongo = instance.mongo;
-        const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
-        const designers = await back.getDesignersByQuery({}, { selfMongo });
-        const exceptionList = [
-          "t16a41.jpg",
-          "t1p36.jpg",
-          "t1a33.jpg",
-          "t1a20.jpg",
-          "t2a33.jpg",
-          "t5a27.jpg",
-          "t8p9.jpg",
-          "t13a27.jpg",
-          "t19a41.jpg",
-          "t1p12.jpg",
-          "t9a37.jpg"
-        ];
-    
-        let photos, sendingDesigners, temp;
-    
-        photos = contentsArr.getAllPhotos();
-        sendingDesigners = [];
-        for (let designer of designers) {
-          temp = designer.toNormal();
-          temp.tendency = designer.analytics.styling.tendency.toMatrix();
-          sendingDesigners.push(temp);
-        }
-        for (let obj of photos) {
+          const selfMongo = instance.mongo; // MongoDB 인스턴스 참조
+          // 콘텐츠 배열을 쿼리하여 가져옴
+          const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+          // 모든 디자이너 목록을 가져옴
+          const designers = await back.getDesignersByQuery({}, { selfMongo });
+
+          // 예외 처리할 파일 리스트 (필터링 대상)
+          const exceptionList = [
+              "t16a41.jpg", "t1p36.jpg", "t1a33.jpg", "t1a20.jpg", "t2a33.jpg",
+              "t5a27.jpg", "t8p9.jpg", "t13a27.jpg", "t19a41.jpg", "t1p12.jpg", 
+              "t9a37.jpg"
+          ];
+
+          let photos, sendingDesigners, temp;
+
+          // 콘텐츠 배열에서 모든 사진을 가져옴
+          photos = contentsArr.getAllPhotos();
+
+          // 디자이너 데이터를 담을 배열 초기화
+          sendingDesigners = [];
+
+          // 각 디자이너에 대해 처리
           for (let designer of designers) {
-            if (obj.desid === designer.desid) {
-              obj.tendency = designer.analytics.styling.tendency.toMatrix();
-              break;
-            }
+              temp = designer.toNormal(); // 디자이너 객체를 일반 형식으로 변환
+              temp.tendency = designer.analytics.styling.tendency.toMatrix(); // 디자이너 스타일 분석 데이터를 행렬로 변환
+              sendingDesigners.push(temp); // 변환된 디자이너 데이터를 추가
           }
-        }
-        photos = photos.filter((o) => { return !/before/gi.test(o.room) && !/withdesigner/gi.test(o.room) && !exceptionList.includes(o.file) });
-        photos = photos.map((o) => {
-          o.keywords = o.keywords.filter((s) => { return !/아파트/gi.test(s) && !/거주중/gi.test(s) && !/아기/gi.test(s) && !/아이/gi.test(s) && !/부부/gi.test(s) && !/가족/gi.test(s) && !/소품/gi.test(s) && !/거실/gi.test(s) && !/주방/gi.test(s) && !/신축/gi.test(s) && !/서재/gi.test(s) && !/톤앤/gi.test(s) && !/스타일링/gi.test(s) && !/조명/gi.test(s) && !/오피스텔/gi.test(s) && !/홈스타일링/gi.test(s) && !/홈퍼니싱/gi.test(s) && !/토탈/gi.test(s) && !/인테리어/gi.test(s) && !/인가구/gi.test(s) && !/다이닝/gi.test(s) && !/깔끔/gi.test(s) && !/인스타/gi.test(s) && !/아이/gi.test(s); });
-          return o;
-        });
-        photos = photos.filter((obj) => { return !obj.tendency.every((num) => { return num === 0; }); });
-    
-        res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
+
+          // 사진 배열에 각 디자이너의 스타일 분석 데이터를 추가
+          for (let obj of photos) {
+              for (let designer of designers) {
+                  if (obj.desid === designer.desid) { // 사진과 디자이너 매칭
+                      obj.tendency = designer.analytics.styling.tendency.toMatrix(); // 스타일 분석 데이터를 추가
+                      break; // 해당 디자이너 찾으면 반복 종료
+                  }
+              }
+          }
+
+          // 예외 목록에 포함된 파일을 제외한 사진을 필터링
+          photos = photos.filter((o) => {
+              return !/before/gi.test(o.room) && !/withdesigner/gi.test(o.room) && !exceptionList.includes(o.file);
+          });
+
+          // 사진의 키워드에서 특정 키워드를 제외하는 필터링 처리
+          photos = photos.map((o) => {
+              o.keywords = o.keywords.filter((s) => {
+                  return !/아파트|거주중|아기|아이|부부|가족|소품|거실|주방|신축|서재|톤앤|스타일링|조명|오피스텔|홈스타일링|홈퍼니싱|토탈|인테리어|인가구|다이닝|깔끔|인스타/gi.test(s);
+              });
+              return o; // 필터링된 사진 반환
+          });
+
+          // 스타일 분석 값이 모두 0인 사진을 제외하는 필터링 처리
+          photos = photos.filter((obj) => {
+              return !obj.tendency.every((num) => { return num === 0; });
+          });
+
+          // 처리된 사진, 콘텐츠 배열, 디자이너 목록을 클라이언트에 전송
+          res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
+
       } catch (e) {
-        logger.error(e, req).catch((e) => { console.log(e); });
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ error: e.message }));
+          // 에러 발생 시 에러 로그 기록 후 클라이언트에 에러 메시지를 반환
+          logger.error(e, req).catch((e) => { console.log(e); });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
       }
     });
     
