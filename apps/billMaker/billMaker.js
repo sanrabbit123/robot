@@ -8212,10 +8212,7 @@ BillMaker.prototype.taxBill = async function () {
         } else {
           throw new Error("invail index arr");
         }
-      } catch(e) {
-        // 오류가 발생하면 로그를 기록합니다.
-        await errorLog(e.message);
-      }
+      } catch {}
     }
 
     // 메일박스에서 각 메일을 하나씩 읽어들입니다.

@@ -111,37 +111,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const bar = "============================================================"; // 로그 출력을 위한 구분선
-    const rawLogTargetFolder = process.cwd() + "/temp/logs";
-    const rawLogFolderList = await fileSystem("readFolder", [ rawLogTargetFolder ]);
-    const serverLogDictionary = {
-      staticLounge: {
-        name: "robot",
-        files: [],
-      },
-      dataConsole: {
-        name: "robot2",
-        files: [],
-      },
-      transferLounge: {
-        name: "robot3",
-        files: [],
-      }
-    }
-    let fileContents, regex;
 
-    serverLogDictionary.staticLounge.files = rawLogFolderList.filter((s) => { return /^robot-out/g.test(s) });
-    serverLogDictionary.dataConsole.files = rawLogFolderList.filter((s) => { return /^robot2-out/g.test(s) });
-    serverLogDictionary.transferLounge.files = rawLogFolderList.filter((s) => { return /^robot3-out/g.test(s) });
+    
 
-    fileContents = "";
-    for (let fileName of serverLogDictionary.dataConsole.files) {
-      fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
-    }
-    fileContents = fileContents.replace(/\n/gi, "₩");
-
-    console.log(fileContents.replace(/\n/gi, "₩").matchAll())
-
+    
 
 
     

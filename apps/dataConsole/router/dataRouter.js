@@ -10999,6 +10999,130 @@ class DataRouter {
         res.send(JSON.stringify({ error: e.message }));
       }
     });
+
+    router.post([ "/storeServerLog" ], async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const bar = "============================================================"; // 로그 출력을 위한 구분선
+        const collection = "serverLog";
+        const selfMongo = instance.mongo;
+        const rawLogTargetFolder = "/home/ubuntu/.pm2/logs";
+        const rawLogFolderList = await fileSystem("readFolder", [ rawLogTargetFolder ]);
+        const serverLogDictionary = {
+          staticLounge: {
+            name: "robot",
+            files: [],
+          },
+          dataConsole: {
+            name: "robot2",
+            files: [],
+          },
+          transferLounge: {
+            name: "robot3",
+            files: [],
+          }
+        }
+        let fileContents;
+        let packetContents, packetDate, packetPlace;
+        let logPacketJson;
+        let logPacketTong;
+
+        serverLogDictionary.dataConsole.files = rawLogFolderList.filter((s) => { return /^robot2-out/g.test(s) });
+        fileContents = "";
+        for (let fileName of serverLogDictionary.dataConsole.files) {
+          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
+        }
+        logPacketTong = [];
+        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+          packetContents = bar + p1;
+          try {
+            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
+            packetDate = new Date(packetDate);
+            packetPlace = "dataConsole";
+            logPacketJson = {
+              date: packetDate,
+              server: packetPlace,
+              contents: packetContents
+            }
+            logPacketTong.push(logPacketJson);
+          } catch {}
+          return "";
+        })
+        for (let j of logPacketTong) {
+          await back.mongoCreate(collection, j, { selfMongo });
+        }
+        for (let fileName of serverLogDictionary.dataConsole.files) {
+          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
+        }
+
+        serverLogDictionary.staticLounge.files = rawLogFolderList.filter((s) => { return /^robot-out/g.test(s) });
+        fileContents = "";
+        for (let fileName of serverLogDictionary.staticLounge.files) {
+          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
+        }
+        logPacketTong = [];
+        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+          packetContents = bar + p1;
+          try {
+            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
+            packetDate = new Date(packetDate);
+            packetPlace = "staticLounge";
+            logPacketJson = {
+              date: packetDate,
+              server: packetPlace,
+              contents: packetContents
+            }
+            logPacketTong.push(logPacketJson);
+          } catch {}
+          return "";
+        })
+        for (let j of logPacketTong) {
+          await back.mongoCreate(collection, j, { selfMongo });
+        }
+        for (let fileName of serverLogDictionary.staticLounge.files) {
+          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
+        }
+
+        serverLogDictionary.transferLounge.files = rawLogFolderList.filter((s) => { return /^robot3-out/g.test(s) });
+        fileContents = "";
+        for (let fileName of serverLogDictionary.transferLounge.files) {
+          fileContents += (await fileSystem("readString", [ rawLogTargetFolder + "/" + fileName ]));
+        }
+        logPacketTong = [];
+        fileContents.replace(new RegExp(bar, "gi"), bar + "₩").replace(new RegExp(bar + "₩(" + "[^₩]+)", "gi"), (match, p1) => {
+          packetContents = bar + p1;
+          try {
+            packetDate = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z/gi.exec(packetContents)[0]
+            packetDate = new Date(packetDate);
+            packetPlace = "transferLounge";
+            logPacketJson = {
+              date: packetDate,
+              server: packetPlace,
+              contents: packetContents
+            }
+            logPacketTong.push(logPacketJson);
+          } catch {}
+          return "";
+        })
+        for (let j of logPacketTong) {
+          await back.mongoCreate(collection, j, { selfMongo });
+        }
+        for (let fileName of serverLogDictionary.transferLounge.files) {
+          await fileSystem("writeString", [ rawLogTargetFolder + "/" + fileName, "" ]);
+        }
+
+        res.send(JSON.stringify({ message: "success" }));
+      } catch (e) {
+        logger.error(e, req).catch((e) => { console.log(e); });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ error: e.message }));
+      }
+    });
     
     router.post([ "/designerCalculation" ], async function (req, res) {
       res.set({

@@ -672,12 +672,6 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
     ];
 
     /**
-     * 로봇 관련 요청에 사용할 기본 포트를 설정합니다.
-     * @type {number}
-     */
-    const robotPort = 3000;
-
-    /**
      * 디스크 상태를 요청할 경로를 상수로 설정합니다.
      * @type {string}
      */
@@ -702,6 +696,9 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
        */
       await requestSystem(protocol + "//" + instance.address.officeinfo.ghost.host + ":" + String(port) + pathConst);
     }
+
+    // log store를 위한 추가 request 발송
+    await requestSystem(protocol + "//" + instance.address.officeinfo.ghost.host + ":" + String(3002) + "/storeServerLog", { data: null }, { headers: { "Content-Type": "application/json" } });
 
   } catch (e) {
     /**
@@ -1187,7 +1184,7 @@ CronGhost.prototype.cronServer = async function () {
      *    - 각 작업은 비동기로 실행되며, catch 블록에서 오류를 처리합니다.
      * 2. 'setInterval' 함수는 각 작업이 설정된 간격으로 반복 실행되도록 설정합니다.
      *    - intervalFunc: 10분 간격으로 실행됩니다.
-     *    - intervalFunc0: 1시간 간격으로 실행됩니다.
+     *    - intervalFunc0: 2시간 간격으로 실행됩니다.
      *    - intervalFunc1: 20분 간격으로 실행됩니다.
      *    - intervalFunc2: 5분 간격으로 실행됩니다.
      *    - intervalFunc3: 10분 간격으로 실행됩니다.
@@ -1211,8 +1208,8 @@ CronGhost.prototype.cronServer = async function () {
       // 10분 간격으로 intervalFunc을 반복 실행합니다.
       setInterval(intervalFunc, interval);
       
-      // 1시간 간격으로 intervalFunc0을 반복 실행합니다.
-      setInterval(intervalFunc0, 1 * 60 * 60 * 1000);
+      // 2시간 간격으로 intervalFunc0을 반복 실행합니다.
+      setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
       
       // 20분 간격으로 intervalFunc1을 반복 실행합니다.
       setInterval(intervalFunc1, 1 * 20 * 60 * 1000);
