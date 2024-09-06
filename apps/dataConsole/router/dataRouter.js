@@ -4580,9 +4580,6 @@ class DataRouter {
               res.send(JSON.stringify({ message: "office" }));
 
           } else {
-              // 인증번호 요청 로그를 기록합니다.
-              logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
-              logger.alert("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
 
               /**
                * @description SMS 전송
@@ -4591,9 +4588,6 @@ class DataRouter {
               human.sendSms({
                   to: phone,  // 수신자의 전화번호
                   body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
-              }).then(() => {
-                  // SMS 전송 성공 로그를 기록합니다.
-                  return logger.log("인증번호 문자 전송 완료");
               }).catch((e) => { console.log(e); });
 
               /**
@@ -4604,9 +4598,6 @@ class DataRouter {
                   company: "홈리에종",  // 발신 회사명
                   name,  // 수신자 이름
                   certification  // 인증번호
-              }).then(() => {
-                  // 카카오톡 전송 성공 로그를 기록합니다.
-                  return logger.log("인증번호 카카오 전송 완료");
               }).catch((e) => { console.log(e); });
 
               // 작업 성공 메시지를 반환합니다.
@@ -4888,11 +4879,6 @@ class DataRouter {
                     resolve("fail");
                 });
             }
-          })
-          // 업데이트가 완료된 후 메시지를 기록
-          .then((message) => {
-            // 업데이트 결과를 로깅합니다.
-            logger.log(cliid, "case update " + message);
           })
           // 에러가 발생할 경우 이를 로그로 남깁니다.
           .catch((err) => {
@@ -7465,12 +7451,12 @@ class DataRouter {
               TotPrice: String(paymentData.amount.total), // 총 결제 금액
               buyerName: paymentData.customer.name, // 구매자 이름
               CARD_BankCode: (typeof responseFromPG.CARD_BankCode === "string") ? responseFromPG.CARD_BankCode : responseFromPG.P_CARD_ISSUER_CODE, // 카드 발급사 코드
-              CARD_Num: paymentData.method.card.number, // 카드 번호
+              CARD_Num: paymentData.method.card !== undefined ? paymentData.method.card.number : "", // 카드 번호
               CARD_ApplPrice: String(paymentData.amount.total), // 결제 승인 금액
               CARD_Code: (typeof responseFromPG.CARD_Code === "string") ? responseFromPG.CARD_Code : responseFromPG.P_CARD_PURCHASE_CODE, // 카드 코드
-              vactBankName: paymentData.method.card.name, // 카드 발급사 이름
+              vactBankName: paymentData.method.card !== undefined ? paymentData.method.card.name : "", // 카드 발급사 이름
               payDevice: "MOBILE", // 결제 기기 (모바일로 설정)
-              P_FN_NM: paymentData.method.card.name, // 카드 발급사 이름
+              P_FN_NM: paymentData.method.card !== undefined ? paymentData.method.card.name : "", // 카드 발급사 이름
               "__ignorethis__": 1, // 디버깅이나 테스트 용도로 무시할 필드
             };
 

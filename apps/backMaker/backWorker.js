@@ -2582,6 +2582,7 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
     }
 
     // 하나 이상의 프로젝트가 있을 경우, 첫 번째 프로젝트에 대해 디자이너 추천을 초기화합니다.
+    update = [];
     if (projects.length > 0) {
       const project = projects[0];  // 첫 번째 프로젝트를 선택합니다.
       const { proid, cliid: id, service: { serid } } = project;  // 프로젝트 정보에서 필요한 데이터를 추출합니다.

@@ -24134,9 +24134,15 @@ GeneralJs.prototype.greenBar = function () {
     const loading = instance.grayLoading();
     await GeneralJs.ajaxJson({ data: null }, BACKHOST + "/storeServerLog");
     loading.remove();
-    GeneralJs.blankHref(BACKHOST + "/tools/log/staticLounge");
-    GeneralJs.blankHref(BACKHOST + "/tools/log/dataConsole");
-    GeneralJs.blankHref(BACKHOST + "/tools/log/transferLounge");
+    setTimeout(() => {
+      GeneralJs.blankHref(BACKHOST + "/tools/log/staticLounge");
+    }, 0);
+    setTimeout(() => {
+      GeneralJs.blankHref(BACKHOST + "/tools/log/dataConsole")
+    }, 1000);
+    setTimeout(() => {
+      GeneralJs.blankHref(BACKHOST + "/tools/log/transferLounge")
+    }, 3000);
   });
   svg_icon.addEventListener("contextmenu", (e) => {
     e.preventDefault();
