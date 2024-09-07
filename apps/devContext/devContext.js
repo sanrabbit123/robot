@@ -269,19 +269,297 @@ DevContext.prototype.launching = async function () {
       "partnershipForm",
       "stylingForm",
       "taxBill"
+    ];
+    const collectionDictionary = [
+      {
+        "collection": "projectDesignerSchedule",
+        "description": "디자이너가 디자이너 콘솔에서 일정표를 적은 정보에 대한 기록"
+      },
+      {
+        "collection": "accountSms",
+        "description": "푸쉬 블렛이 법인폰으로부터 읽은 홈리에종 계좌 알림을 분석한 정보가 쌓여 있는 디비"
+      },
+      {
+        "collection": "addressComplex",
+        "description": "네이버 부동산에서 끌고 온 아파트 단지 정보를 JSON 형태로 변환하여 저장한 기록"
+      },
+      {
+        "collection": "projectDesignerSend",
+        "description": "디자이너가 디자이너 콘솔에서 고객에게 특정 파일을 알림톡을 통해 보낸 기록"
+      },
+      {
+        "collection": "foreContents",
+        "description": "앞으로 발행 예정인 컨텐츠에 대한 정보가 적혀 있는 기록"
+      },
+      {
+        "collection": "contentsHistory",
+        "description": "홈리에종에서 발행한 컨텐츠에 대한 추가적인 정보"
+      },
+      {
+        "collection": "proposalLog",
+        "description": "홈리에종에서 고객님들께 보낸 추천서에 대한 정보와 시간에 대한 기록이 쌓여 있는 디비"
+      },
+      {
+        "collection": "dailyAspirantCampaign",
+        "description": "매일 그 날 디자이너 신청자 캠패인이 돌아가고 있는 모든 채널에 대한 캠패인 정보 기록"
+      },
+      {
+        "collection": "evaluationNotice",
+        "description": "홈리에종이 촬영이 끝난 고객에게 보낸 홈리에종 서비스 평가지를 전송한 기록"
+      },
+      {
+        "collection": "folderDesigner",
+        "description": "협업 디자이너의 구글 드라이브와 구글 문서(디자이너 메모)의 주소와 아이디가 적혀 있는 디비"
+      },
+      {
+        "collection": "addressLog",
+        "description": "주소 연산에 대한 기록과 중간 데이터"
+      },
+      {
+        "collection": "impPaymentTempStore",
+        "description": "홈리에종 미니 서비스 결제시 imp 정보에 대해 잠시 기록해 놓는 디비"
+      },
+      {
+        "collection": "dailyChannel",
+        "description": "매일 홈리에종 인스타와 메타, 그리고 유튜브 조회수와 클릭수 등에 대한 정보 기록"
+      },
+      {
+        "collection": "kakaoComplex",
+        "description": "카카오 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비"
+      },
+      {
+        "collection": "designerRepresentativePhotos",
+        "description": "디자이너 체크리스트에서 추천서에 보여질 대표 세로 사진 번호에 대한 기록"
+      },
+      {
+        "collection": "clientEvaluation",
+        "description": "홈리에종이 촬영이 끝난 고객에게 보낸 홈리에종 서비스 평가지에 대해 고객이 기입한 평가 기록"
+      },
+      {
+        "collection": "contentsView",
+        "description": "하루 단위로 그 날의 홈리에종 프론트 웹에서 각각의 컨텐츠들의 조회수 상태가 어땠는지를 기록한 디비"
+      },
+      {
+        "collection": "dailyClients",
+        "description": "매일 그날 문의한 고객들의 세션 번호와 웹 히스토리데 대한 기록 신버전"
+      },
+      {
+        "collection": "noticeAspirantCommon",
+        "description": "홈리에종 콘솔에서 디자이너 신청자에게 공통 교육 날짜를 전송한 알림톡에 대한 기록"
+      },
+      {
+        "collection": "contentsStatus",
+        "description": "홈리에종에서 발행한 컨텐츠에 대한 발행 날짜에 대한 정보 (사용되지 않음)"
+      },
+      {
+        "collection": "realtimeDesigner",
+        "description": "디자이너의 프로젝트 가능 일정에 대한 정보가 쌓여 있는 디비"
+      },
+      {
+        "collection": "googleComplex",
+        "description": "구글 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비"
+      },
+      {
+        "collection": "holidayList",
+        "description": "해당 년도에 대해 휴일이 언제인지 적어놓은 디비"
+      },
+      {
+        "collection": "projectHistory",
+        "description": "홈리에종에서 진행하고 있는 인테리어 프로젝트에 대한 정보에 대한 추가적인 기록"
+      },
+      {
+        "collection": "realtimeClient",
+        "description": "해당 날짜에 고객님들을 응대해야 하는 상황과 응대 예약 상태를 기록하는 디비 (사용되지 않음)"
+      },
+      {
+        "collection": "complexAnalytics",
+        "description": "매일 그 날 웹에 대해서 구글 Analytics를 통해 기록한 모든 유저와 이벤트에 대한 정보"
+      },
+      {
+        "collection": "projectDesignerStatus",
+        "description": "디자이너가 디자이너 콘솔에서 특정 프로젝트의 상태 체크를 체크한 기록"
+      },
+      {
+        "collection": "dailySales",
+        "description": "해당 영업일 기준 세일즈 대상 (고객 아이디 배열) 추리는 연산 결과를 저장하는 디비"
+      },
+      {
+        "collection": "shareGoogleId",
+        "description": "해당 pid(포트폴리오 아이디)에 대해서 관련 사진들을 공유하는 공유 폴더의 구글 아이디를 저장한 기록"
+      },
+      {
+        "collection": "projectDesignerDownload",
+        "description": "디자이너가 디자이너 콘솔에서 해당 프로젝트 상세의 자신이 올린 파일을 다운로드한 기록"
+      },
+      {
+        "collection": "designerChecklistLog",
+        "description": "디자이너가 디자이너 콘솔을 통해서 자신의 체크리스트를 수정한 기록"
+      },
+      {
+        "collection": "designerHistory",
+        "description": "홈리에종과 협약 계약을 맺은 인테리어 디자이너님들에 대한 추가적인 정보"
+      },
+      {
+        "collection": "noticeDesignerConsole",
+        "description": "홈리에종 콘솔에서 협업 디자이너에게 콘솔 사용법 안내 내용을 전송한 알림톡 기록"
+      },
+      {
+        "collection": "clientAnalytics",
+        "description": "매일 그 날 문의한 고객들의 세션 번호와 프론트 웹에서 무엇을 했는지에 대해 기록한 디비"
+      },
+      {
+        "collection": "designerRepresentativeKeywords",
+        "description": "디자이너 체크리스트에서 디자이너의 대표 키워드 리스트를 기록한 디비"
+      },
+      {
+        "collection": "designerRepresentativePaper",
+        "description": "디자이너 체크리스트에서 추천서에 보여질 대표 페이퍼워크 번호에 대한 기록"
+      },
+      {
+        "collection": "queryAnalytics",
+        "description": "매일 그 날 홈리에종 웹에 들어온 유저들이 어떤 검색어를 적고 들어왔는지에 대한 기록"
+      },
+      {
+        "collection": "costLog",
+        "description": "AWS 비용 기록에 대한 디비, 사용되지 않음"
+      },
+      {
+        "collection": "designerRawContents",
+        "description": "디자이너가 디자이너 콘솔을 통해 해당 프로젝트의 디자이너 글을 업로드한 내용과 기록"
+      },
+      {
+        "collection": "naverComplex",
+        "description": "네이버 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비"
+      },
+      {
+        "collection": "constructInvoice",
+        "description": "시공 견적서에 대한 디비 현재 개발중단되어 사용되지 않음"
+      },
+      {
+        "collection": "realtimeAnalytics",
+        "description": "지금 현재 10분간 어떤 세션이 홈리에종 웹에서 활동하고 있는지에 사용되는 디비"
+      },
+      {
+        "collection": "clientEvaluationSendHistory",
+        "description": "고객에게 홈리에종 서비스 평가지를 보낸 기록에 대한 히스토리"
+      },
+      {
+        "collection": "clientHistory",
+        "description": "홈리에종에 상담 신청을 남긴 고객님들의 응대 기록과 큐레이션 기록"
+      },
+      {
+        "collection": "hiddenContents",
+        "description": "홈리에종에서 PH콘솔을 통해 포트폴리오를 컨텐츠를 의도적으로 숨김 처리한 포트폴리오 데이터에 대한 기록"
+      },
+      {
+        "collection": "accountHistory",
+        "description": "Pushbullet으로부터 계좌 이체 기록을 긁어온 RAW 데이터를 배열로 저장해놓은 JSON"
+      },
+      {
+        "collection": "metaComplex",
+        "description": "메타 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비"
+      },
+      {
+        "collection": "dailyCampaign",
+        "description": "매일 그 날 고객 대상으로 캠패인이 돌아가고 있는 모든 채널에 대한 캠패인 정보 기록"
+      },
+      {
+        "collection": "noticeAspirantConsole",
+        "description": "홈리에종 콘솔에서 디자이너 신청자에게 콘솔 관련 안내 내용을 전송한 알림톡 기록"
+      },
+      {
+        "collection": "distanceLog",
+        "description": "고객 주소, 디자이너 주소 간 거리 연산에 대한 기록과 중간 데이터"
+      },
+      {
+        "collection": "styleEstimation",
+        "description": "홈리에종 발행 컨텐츠의 스타일 경향성을 평가한 수치가 저장되는 디비"
+      },
+      {
+        "collection": "designerTransfer",
+        "description": "디자이너가 디자이너 콘솔을 통해 촬영비 등을 결제할 때 (특히 계좌이체에서) 쓰이는 중간 데이터"
+      },
+      {
+        "collection": "metaInstantForm",
+        "description": "메타 인스턴스 문의를 JSON으로 변환하여 저장해놓은 기록"
+      },
+      {
+        "collection": "projectDesignerMemo",
+        "description": "디자이너가 디자이너 콘솔에서 해당 프로젝트의 상태에 각각 메모를 적은 기록"
+      },
+      {
+        "collection": "dailyAnalytics",
+        "description": "매일 그 날 웹에 대해서 구글 Analytics를 통해 기록한 문의 고객에 대한 정보"
+      },
+      {
+        "collection": "serverLog",
+        "description": "서버에서 에러 로그를 출력한 패킷에 대해 시간순으로 저장해놓은 콜렉션"
+      },
+      {
+        "collection": "aliveLog",
+        "description": "서버가 살아 있는지 죽어 있는지에 대한 로그가 기록되어 있는 콜렉션"
+      },
+      {
+        "collection": "blackButtonsClick",
+        "description": "고객님들이 스타일 체크를 모두 진행 완료했을 시 자동 추천 버튼을 눌렀는지에 대한 여부"
+      },
+      {
+        "collection": "timeAspirantCommon",
+        "description": "디자이너 신청자들의 공통 교육 날짜 지정과 신청자가 어떤 것을 선택했는지에 대한 기록"
+      },
+      {
+        "collection": "homeliaisonAnalytics",
+        "description": "구글 Analytics나 메타 픽셀처럼 자체적으로 만들어진 홈리에종 Analytics 중심 디비"
+      },
+      {
+        "collection": "simpleAnalytics",
+        "description": "구글 Analytics가 종합적인 연산을 할 때 잠시 구글 API를 통해 일시적으로 만든 보고서의 디비"
+      },
+      {
+        "collection": "frontMemberHistory",
+        "description": "홈리에종의 직원이 홈리에종 프론트 웹서버에 접속한 기록과 세션에 대한 정보"
+      },
+      {
+        "collection": "designerPrice",
+        "description": "스타일링 레벨, 시공 레벨에 의한 디자이너 가격 정보가 담겨 있는 디비"
+      }
     ]
 
     const selfMongo = this.MONGOC;
     const collections = await back.mongoListCollections({ selfMongo });
     const targetCollections = collections.filter((s) => { return !exceptionList.includes(s) });
+    const targetFolder = process.cwd() + "/manual/collectionSchema";
+    let tong;
+    let tempObj;
+    let rows;
+    let sampleData;
+    let thisScript;
+
+    const target = await fileSystem("readJson", [ `${process.cwd()}/temp/collectionTarget.json` ]);
+
+    for (let obj of target) {
+      thisScript = "";
+      thisScript += "const collectionName = \"" + obj.collection + "\";";
+      thisScript += "\n\n";
+      thisScript += "const collectionDescription = \"" + obj.description + "\"";
+      thisScript += "\n\n";
+
+      if (obj.sample.length > 0) {
+        thisScript += "const collectionSampleData0 = " + JSON.stringify(obj.sample[0], null, 2);
+        thisScript += "\n\n";
+        if (obj.sample.length > 1) {
+          thisScript += "const collectionSampleData1 = " + JSON.stringify(obj.sample[1], null, 2);
+          thisScript += "\n\n";
+          if (obj.sample.length > 2) {
+            thisScript += "const collectionSampleData2 = " + JSON.stringify(obj.sample[2], null, 2);
+            thisScript += "\n\n";
+          }
+        }
+      }
+
+      await fileSystem("writeString", [ targetFolder + "/" + obj.collection + ".js", thisScript ]);
+    }
     
-
-    console.log(targetCollections);
-
-
-    
-
-
 
 
 
