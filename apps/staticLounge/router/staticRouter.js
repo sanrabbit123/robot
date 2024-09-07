@@ -11121,7 +11121,7 @@ class StaticRouter {
          * @description 웹 콘텐츠 뷰 정보를 MongoDB에 저장하는 비동기 함수입니다.
          * @param {Object} selfMongo - MongoDB 연결 객체입니다.
          * @param {Object} logger - 로깅을 처리하는 객체입니다.
-         * @returns {Object} - 작업 결과 메시지를 반환합니다.
+         * @returns {Object|null} - 작업 결과 메시지를 반환합니다.
          */
         const storeContentsView = async function (selfMongo, logger) {
           try {
@@ -11139,6 +11139,7 @@ class StaticRouter {
             let dateTypeString; // 날짜 문자열을 저장할 변수입니다.
             let finalJson; // 최종 JSON 데이터를 저장할 변수입니다.
             let finalRows, key; // 최종 행 데이터를 저장할 변수와 키 값입니다.
+            let thisPid; // 현재 포트폴리오 아이디를 담는 변수입니다.
 
             // 키 값을 현재 날짜를 기준으로 생성합니다. 형식은 "YYYYMMDD_web"입니다.
             key = dateToString(new Date()).replace(/[^0-9]/gi, '') + "_web";
@@ -11384,10 +11385,7 @@ class StaticRouter {
                 }
               }
             }
-        
-            // 예산 동기화 작업이 완료되었음을 로깅합니다.
-            logger.log("budget sync done").catch((err) => { console.log(err) });
-        
+                
           } catch (e) {
             // 오류가 발생한 경우, 콘솔에 오류를 출력합니다.
             console.log(e);
