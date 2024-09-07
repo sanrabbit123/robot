@@ -378,7 +378,7 @@ GoogleCalendar.prototype.getSchedule = async function (from, id) {
 
     // 조회 결과가 배열이 아닌 경우, 에러를 발생시킵니다.
     if (!Array.isArray(items)) {
-      throw new Error("google calendar error : python error(getSchedule)");
+      throw new Error("google calendar error : python error(getSchedule) " + String(items));
     }
 
     // 조회된 일정 목록에서 주어진 ID와 일치하는 일정의 인덱스를 찾습니다.
@@ -393,8 +393,7 @@ GoogleCalendar.prototype.getSchedule = async function (from, id) {
 
   } catch (e) {
     // 오류 발생 시 에러 로그를 기록하고, 콘솔에 오류 메시지를 출력한 후 null을 반환합니다.
-    await errorLog("google calendar api error(getSchedule) : " + e.message);
-    console.log(e);
+    await errorLog(e);
     return null;
   }
 }

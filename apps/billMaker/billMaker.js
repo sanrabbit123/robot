@@ -8582,9 +8582,10 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
     return true; // 작업이 성공적으로 완료되면 true 반환
 
   } catch (e) {
-    // 오류가 발생하면 긴급 경고 메시지 발송
-    await emergencyAlarm("cashReceipt fail : " + e.message + " / " + JSON.stringify(new Date()));
-    await errorLog(e);
+    if ((new Date()).getHours() > 10) {
+      // 오류가 발생하면 긴급 경고 메시지 발송
+      await errorLog(e);
+    }
     return false; // 작업 실패 시 false 반환
   }
 }
