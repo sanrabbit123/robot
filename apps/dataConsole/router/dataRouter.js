@@ -1961,32 +1961,6 @@ class DataRouter {
           raw_data = await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         }
 
-        // 업데이트 정보를 로그에 남기기 위한 객체 설정
-        updateTong = {
-          user: {
-            name: "unknown",
-            email: "unknown"
-          },
-          where: Object.values(whereQuery)[0], // 업데이트 조건 저장
-          update: { updateQuery: JSON.stringify(updateQuery) }, // 업데이트 쿼리 저장
-          date: new Date() // 로그 날짜 저장
-        };
-
-        // 요청의 쿠키에서 사용자 정보를 파싱
-        cookies = cookieParsing(req);
-        if (cookies !== null) {
-          // 사용자 이름과 이메일이 쿠키에 존재할 경우 로그에 반영
-          if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
-            updateTong.user.name = cookies.homeliaisonConsoleLoginedName;
-            updateTong.user.email = cookies.homeliaisonConsoleLoginedEmail;
-          }
-        }
-
-        // 업데이트 로그를 저장
-        back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
-          throw new Error(e);
-        });
-
         // 업데이트 결과를 클라이언트에 응답
         res.send(JSON.stringify({ message: raw_data }));
 
@@ -15405,7 +15379,7 @@ class DataRouter {
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me", // 허용할 요청 헤더를 설정합니다.
       });
       // Mother 객체에서 여러 유틸리티 메서드와 주소 데이터를 가져옵니다.
-      const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = instance.mother;
+      const { requestSystem, equalJson, stringToDate, messageSend } = instance.mother;
       const address = instance.address;
 
       // Widsign API에 접근하기 위한 인증 정보(id, key, endPoint)를 설정합니다.

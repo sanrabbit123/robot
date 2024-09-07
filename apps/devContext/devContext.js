@@ -252,14 +252,31 @@ DevContext.prototype.launching = async function () {
     // await this.certRefreshing(); // certbot 인증서를 갱신하는 작업을 수행합니다.
     // =====================================================================================================================
     
+    const exceptionList = [
+      "aspirant",
+      "builder",
+      "client",
+      "contents",
+      "designer",
+      "project",
+      "service",
+      "info",
+      "accountTransfer",
+      "cashReceipt",
+      "constructForm",
+      "designerForm",
+      "generalBill",
+      "partnershipForm",
+      "stylingForm",
+      "taxBill"
+    ]
 
+    const selfMongo = this.MONGOC;
+    const collections = await back.mongoListCollections({ selfMongo });
+    const targetCollections = collections.filter((s) => { return !exceptionList.includes(s) });
+    
 
-
-
-
-
-
-
+    console.log(targetCollections);
 
 
     
