@@ -1,361 +1,120 @@
+/**
+ * 콜렉션 이름
+ * @type {string}
+ * @description 메타 채널에 대한 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록하는 데이터베이스
+ */
 const collectionName = "metaComplex";
 
-const collectionDescription = "메타 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비"
+/**
+ * 콜렉션 설명
+ * @type {string}
+ * @description 메타 채널에서의 광고 비용, 노출수, 클릭수 등 광고 성과 데이터를 기록하는 데이터베이스
+ */
+const collectionDescription = "메타 채널에 대해 종합적인 정보 (광고 비용부터 노출수, 클릭수 등) 를 날마다 기록한 디비";
 
+/**
+ * @typedef {Object} MetaComplex
+ * @property {string} _id MongoDB에서 자동 생성된 고유 ID
+ * @property {string} camid 메타 캠페인 ID
+ * @property {string} key 메타 채널 데이터의 고유 키 (날짜와 메타 채널 식별자를 포함)
+ * @property {Object} date 데이터 수집의 시작과 끝 날짜
+ * @property {string} date.from 데이터 수집 시작 날짜 및 시간
+ * @property {string} date.to 데이터 수집 종료 날짜 및 시간
+ * @property {Object} advertisement 광고에 대한 정보
+ * @property {Object} advertisement.value 광고비와 성과 정보
+ * @property {number} advertisement.value.charge 광고비
+ * @property {Object} advertisement.value.performance 광고 성과 정보
+ * @property {number} advertisement.value.performance.reach 광고 도달수
+ * @property {number} advertisement.value.performance.impressions 광고 노출수
+ * @property {number} advertisement.value.performance.clicks 광고 클릭수
+ * @property {Object} advertisement.value.length 캠페인, 광고 세트, 광고의 개수
+ * @property {number} advertisement.value.length.campaign 캠페인의 개수
+ * @property {number} advertisement.value.length.adset 광고 세트의 개수
+ * @property {number} advertisement.value.length.ad 광고의 개수
+ * @property {Array<Object>} advertisement.campaign 광고 캠페인 정보 배열
+ * @property {Object} instagram 인스타그램 성과 정보
+ * @property {Object} instagram.profile 인스타그램 계정 정보
+ * @property {number} instagram.profile.views 계정 조회수
+ * @property {number} instagram.profile.followers 팔로워 수
+ * @property {Object} instagram.performance 인스타그램 성과 정보
+ * @property {number} instagram.performance.impressions 노출 수
+ * @property {number} instagram.performance.clicks 클릭 수
+ * @property {number} instagram.performance.likes 좋아요 수
+ * @property {number} instagram.performance.comments 댓글 수
+ * @property {number} instagram.performance.saves 저장 수
+ * @property {number} instagram.performance.shares 공유 수
+ */
+
+/**
+ * 샘플 데이터 0
+ * @type {MetaComplex}
+ */
 const collectionSampleData0 = {
-  "_id": "66bd4a268e33158330329aa5",
-  "camid": "f2408_fa13s",
-  "key": "20240813_meta",
-  "date": {
-    "from": "2024-08-12T15:00:00.000Z",
-    "to": "2024-08-13T15:00:00.000Z"
+  _id: "66bd4a268e33158330329aa5", // MongoDB에서 자동 생성된 고유 ID
+  camid: "f2408_fa13s", // 메타 캠페인 ID
+  key: "20240813_meta", // 데이터의 고유 키 (날짜와 메타 채널 식별자를 조합한 값)
+  date: {
+    from: "2024-08-12T15:00:00.000Z", // 데이터 수집 시작 날짜 및 시간
+    to: "2024-08-13T15:00:00.000Z" // 데이터 수집 종료 날짜 및 시간
   },
-  "advertisement": {
-    "value": {
-      "charge": 213925,
-      "performance": {
-        "reach": 5461,
-        "impressions": 6705,
-        "clicks": 260
+  advertisement: {
+    value: {
+      charge: 213925, // 광고비 (단위: 원)
+      performance: {
+        reach: 5461, // 광고 도달 수 (광고를 본 유저 수)
+        impressions: 6705, // 광고 노출 수 (광고가 표시된 횟수)
+        clicks: 260 // 광고 클릭 수
       },
-      "length": {
-        "campaign": 4,
-        "adset": 7,
-        "ad": 10
+      length: {
+        campaign: 4, // 총 캠페인 수 (4개)
+        adset: 7, // 총 광고 세트 수 (7개)
+        ad: 10 // 총 광고 수 (10개)
       }
     },
-    "campaign": [
+    campaign: [
       {
-        "value": {
-          "charge": 10093,
-          "performance": {
-            "reach": 538,
-            "impressions": 584,
-            "clicks": 25
+        value: {
+          charge: 10093, // 해당 캠페인의 광고비 (10,093원)
+          performance: {
+            reach: 538, // 광고 도달 수
+            impressions: 584, // 광고 노출 수
+            clicks: 25 // 광고 클릭 수
           }
         },
-        "information": {
-          "id": "23854725673120375",
-          "account": "505249990112820",
-          "name": "전환_관심사타겟_디자이너_2306"
+        information: {
+          id: "23854725673120375", // 캠페인 ID
+          account: "505249990112820", // 광고 계정 ID
+          name: "전환_관심사타겟_디자이너_2306" // 캠페인 이름
         },
-        "children": [
+        children: [
           {
-            "value": {
-              "charge": 10093,
-              "performance": {
-                "reach": 538,
-                "impressions": 584,
-                "clicks": 25
+            value: {
+              charge: 10093, // 해당 광고 세트의 광고비 (10,093원)
+              performance: {
+                reach: 538, // 광고 도달 수
+                impressions: 584, // 광고 노출 수
+                clicks: 25 // 광고 클릭 수
               }
             },
-            "information": {
-              "id": "120206005775340376",
-              "campaign": "23854725673120375",
-              "name": "selling point_디자인 드로잉_2402"
+            information: {
+              id: "120206005775340376", // 광고 세트 ID
+              campaign: "23854725673120375", // 상위 캠페인 ID
+              name: "selling point_디자인 드로잉_2402" // 광고 세트 이름
             },
-            "children": [
+            children: [
               {
-                "value": {
-                  "charge": 10093,
-                  "performance": {
-                    "reach": 538,
-                    "impressions": 584,
-                    "clicks": 25
+                value: {
+                  charge: 10093, // 해당 광고의 광고비 (10,093원)
+                  performance: {
+                    reach: 538, // 광고 도달 수
+                    impressions: 584, // 광고 노출 수
+                    clicks: 25 // 광고 클릭 수
                   }
                 },
-                "information": {
-                  "id": "120206005775330376",
-                  "adset": "120206005775340376",
-                  "name": "drawing_01_carousel"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "value": {
-          "charge": 102711,
-          "performance": {
-            "reach": 1912,
-            "impressions": 2281,
-            "clicks": 99
-          }
-        },
-        "information": {
-          "id": "23862022566240375",
-          "account": "505249990112820",
-          "name": "잠재고객_관심사타겟_일반_인스턴트양식_2403 캠페인"
-        },
-        "children": [
-          {
-            "value": {
-              "charge": 51106,
-              "performance": {
-                "reach": 773,
-                "impressions": 891,
-                "clicks": 34
-              }
-            },
-            "information": {
-              "id": "120205838266970376",
-              "campaign": "23862022566240375",
-              "name": "selling point_인스턴트광고_test_2404"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 46880,
-                  "performance": {
-                    "reach": 707,
-                    "impressions": 820,
-                    "clicks": 32
-                  }
-                },
-                "information": {
-                  "id": "120207991043680376",
-                  "adset": "120205838266970376",
-                  "name": "instant_04_single"
-                }
-              },
-              {
-                "value": {
-                  "charge": 4226,
-                  "performance": {
-                    "reach": 66,
-                    "impressions": 71,
-                    "clicks": 2
-                  }
-                },
-                "information": {
-                  "id": "120205842787320376",
-                  "adset": "120205838266970376",
-                  "name": "instant_02_single"
-                }
-              }
-            ]
-          },
-          {
-            "value": {
-              "charge": 51605,
-              "performance": {
-                "reach": 1287,
-                "impressions": 1390,
-                "clicks": 65
-              }
-            },
-            "information": {
-              "id": "120211087328680376",
-              "campaign": "23862022566240375",
-              "name": "selling point_인스턴트광고_스토리_현장정보_2407"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 47334,
-                  "performance": {
-                    "reach": 1204,
-                    "impressions": 1298,
-                    "clicks": 58
-                  }
-                },
-                "information": {
-                  "id": "120211087328710376",
-                  "adset": "120211087328680376",
-                  "name": "instant_15_single"
-                }
-              },
-              {
-                "value": {
-                  "charge": 4271,
-                  "performance": {
-                    "reach": 83,
-                    "impressions": 92,
-                    "clicks": 7
-                  }
-                },
-                "information": {
-                  "id": "120211087328700376",
-                  "adset": "120211087328680376",
-                  "name": "instant_14_single"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "value": {
-          "charge": 60295,
-          "performance": {
-            "reach": 1687,
-            "impressions": 2103,
-            "clicks": 92
-          }
-        },
-        "information": {
-          "id": "120204485499390376",
-          "account": "505249990112820",
-          "name": "전환_관심사타겟_일반_2402 캠페인"
-        },
-        "children": [
-          {
-            "value": {
-              "charge": 50127,
-              "performance": {
-                "reach": 1422,
-                "impressions": 1654,
-                "clicks": 79
-              }
-            },
-            "information": {
-              "id": "120209510209500376",
-              "campaign": "120204485499390376",
-              "name": "selling point_\b서비스H_2405"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 50127,
-                  "performance": {
-                    "reach": 1422,
-                    "impressions": 1654,
-                    "clicks": 79
-                  }
-                },
-                "information": {
-                  "id": "120209510209490376",
-                  "adset": "120209510209500376",
-                  "name": "service_homestyling_01_single"
-                }
-              }
-            ]
-          },
-          {
-            "value": {
-              "charge": 10168,
-              "performance": {
-                "reach": 397,
-                "impressions": 449,
-                "clicks": 13
-              }
-            },
-            "information": {
-              "id": "120211463799380376",
-              "campaign": "120204485499390376",
-              "name": "selling point_\b서비스_2408"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 4059,
-                  "performance": {
-                    "reach": 139,
-                    "impressions": 148,
-                    "clicks": 4
-                  }
-                },
-                "information": {
-                  "id": "120211463799390376",
-                  "adset": "120211463799380376",
-                  "name": "service_H_single"
-                }
-              },
-              {
-                "value": {
-                  "charge": 6109,
-                  "performance": {
-                    "reach": 258,
-                    "impressions": 301,
-                    "clicks": 9
-                  }
-                },
-                "information": {
-                  "id": "120211463819000376",
-                  "adset": "120211463799380376",
-                  "name": "service_T_single"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "value": {
-          "charge": 40826,
-          "performance": {
-            "reach": 1324,
-            "impressions": 1737,
-            "clicks": 44
-          }
-        },
-        "information": {
-          "id": "120210976671700376",
-          "account": "505249990112820",
-          "name": "전환_관심사타겟_일반_홈스타일링/지역_2407_LightVer"
-        },
-        "children": [
-          {
-            "value": {
-              "charge": 8899,
-              "performance": {
-                "reach": 268,
-                "impressions": 351,
-                "clicks": 16
-              }
-            },
-            "information": {
-              "id": "120210976671690376",
-              "campaign": "120210976671700376",
-              "name": "selling point_홈스타일링_판교_2407"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 8899,
-                  "performance": {
-                    "reach": 268,
-                    "impressions": 351,
-                    "clicks": 16
-                  }
-                },
-                "information": {
-                  "id": "120210976671750376",
-                  "adset": "120210976671690376",
-                  "name": "pg_homestyling_01_single"
-                }
-              }
-            ]
-          },
-          {
-            "value": {
-              "charge": 31927,
-              "performance": {
-                "reach": 1071,
-                "impressions": 1386,
-                "clicks": 28
-              }
-            },
-            "information": {
-              "id": "120210976671790376",
-              "campaign": "120210976671700376",
-              "name": "selling point_홈스타일링_용산한남_2407"
-            },
-            "children": [
-              {
-                "value": {
-                  "charge": 31927,
-                  "performance": {
-                    "reach": 1071,
-                    "impressions": 1386,
-                    "clicks": 28
-                  }
-                },
-                "information": {
-                  "id": "120210976671710376",
-                  "adset": "120210976671790376",
-                  "name": "yshn_homestyling_01_single"
+                information: {
+                  id: "120206005775330376", // 광고 ID
+                  adset: "120206005775340376", // 상위 광고 세트 ID
+                  name: "drawing_01_carousel" // 광고 이름
                 }
               }
             ]
@@ -364,19 +123,18 @@ const collectionSampleData0 = {
       }
     ]
   },
-  "instagram": {
-    "profile": {
-      "views": 173,
-      "followers": 0
+  instagram: {
+    profile: {
+      views: 173, // 인스타그램 프로필 조회 수
+      followers: 0 // 인스타그램 팔로워 수
     },
-    "performance": {
-      "impressions": 9390,
-      "clicks": 16,
-      "likes": 7,
-      "comments": 0,
-      "saves": 31,
-      "shares": 2
+    performance: {
+      impressions: 9390, // 인스타그램 노출 수
+      clicks: 16, // 인스타그램 클릭 수
+      likes: 7, // 좋아요 수
+      comments: 0, // 댓글 수
+      saves: 31, // 저장 수
+      shares: 2 // 공유 수
     }
   }
-}
-
+};

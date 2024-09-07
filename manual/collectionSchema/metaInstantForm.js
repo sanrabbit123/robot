@@ -1,251 +1,94 @@
+/**
+ * 콜렉션 이름
+ * @type {string}
+ * @description 메타 인스턴스 문의를 JSON으로 변환하여 저장해 놓은 기록을 관리하는 데이터베이스
+ */
 const collectionName = "metaInstantForm";
 
-const collectionDescription = "메타 인스턴스 문의를 JSON으로 변환하여 저장해놓은 기록"
+/**
+ * 콜렉션 설명
+ * @type {string}
+ * @description 메타 인스턴트 광고를 통해 수집된 문의 데이터를 JSON 형식으로 변환하여 저장한 기록을 저장하는 데이터베이스
+ */
+const collectionDescription = "메타 인스턴스 문의를 JSON으로 변환하여 저장해놓은 기록";
 
+/**
+ * @typedef {Object} MetaInstantForm
+ * @property {string} _id MongoDB에서 자동 생성된 고유 ID
+ * @property {string} id 메타에서 제공된 고유 ID
+ * @property {string} ad 광고 ID
+ * @property {string} date 데이터가 수집된 날짜 및 시간 (ISO 포맷)
+ * @property {number} injection 데이터가 주입되었는지를 나타내는 값 (1: 주입됨, 0: 주입되지 않음)
+ * @property {Array<Object>} raw 원본 데이터 배열, 각각의 문의 필드와 그 값들을 포함
+ * @property {Object} data 문의 데이터를 변환하여 저장한 최종 결과
+ */
+
+/**
+ * 샘플 데이터 0
+ * @type {MetaInstantForm}
+ */
 const collectionSampleData0 = {
-  "_id": "66d26dcf4e4783dad4284e14",
-  "id": "795384742644905",
-  "ad": "120209589249670376",
-  "date": "2024-07-31T01:58:51.000Z",
-  "injection": 1,
-  "raw": [
+  _id: "66d26dcf4e4783dad4284e14", // MongoDB에서 자동 생성된 고유 ID
+  id: "795384742644905", // 메타에서 제공된 고유 ID
+  ad: "120209589249670376", // 광고 ID
+  date: "2024-07-31T01:58:51.000Z", // 데이터가 수집된 날짜 및 시간 (ISO 형식)
+  injection: 1, // 데이터가 성공적으로 주입되었는지 여부를 나타내는 값 (1: 주입됨)
+  raw: [
     {
-      "name": "serid",
-      "values": [
-        "s2011_aa02s"
-      ]
+      name: "serid", // 문의 필드 이름
+      values: ["s2011_aa02s"] // 문의 필드 값
     },
     {
-      "name": "purchase",
-      "values": [
-        "기존_가구_사용"
-      ]
+      name: "purchase", // 구매 계획 필드
+      values: ["기존_가구_사용"] // 구매 계획에 대한 값 (기존 가구 사용)
     },
     {
-      "name": "budget",
-      "values": [
-        "1,000만원"
-      ]
+      name: "budget", // 예산 필드
+      values: ["1,000만원"] // 예산 값 (1,000만원)
     },
     {
-      "name": "contract",
-      "values": [
-        "전월세"
-      ]
+      name: "contract", // 계약 유형 필드
+      values: ["전월세"] // 계약 유형 값 (전월세)
     },
     {
-      "name": "time",
-      "values": [
-        "9:30_-_11:00"
-      ]
+      name: "time", // 선호 상담 시간 필드
+      values: ["9:30_-_11:00"] // 선호 상담 시간 (9:30 - 11:00)
     },
     {
-      "name": "name",
-      "values": [
-        "신한진"
-      ]
+      name: "name", // 문의자의 이름
+      values: ["신한진"] // 이름 값 (신한진)
     },
     {
-      "name": "phone",
-      "values": [
-        "01033728865"
-      ]
+      name: "phone", // 문의자의 전화번호
+      values: ["01033728865"] // 전화번호 값 (010-3372-8865)
     },
     {
-      "name": "email",
-      "values": [
-        "shj9707@naver.com"
-      ]
+      name: "email", // 문의자의 이메일 주소
+      values: ["shj9707@naver.com"] // 이메일 값 (shj9707@naver.com)
     },
     {
-      "name": "address",
-      "values": [
-        "잠실주공5단지 519동"
-      ]
+      name: "address", // 주소 필드
+      values: ["잠실주공5단지 519동"] // 주소 값 (잠실주공 5단지 519동)
     },
     {
-      "name": "pyeong",
-      "values": [
-        "35b"
-      ]
+      name: "pyeong", // 평수 필드
+      values: ["35b"] // 평수 값 (35평형)
     },
     {
-      "name": "expected",
-      "values": [
-        "24년 12월"
-      ]
+      name: "expected", // 예상 입주일 필드
+      values: ["24년 12월"] // 예상 입주일 값 (2024년 12월)
     }
   ],
-  "data": {
-    "serid": "s2011_aa02s",
-    "purchase": "기존_가구_사용",
-    "budget": "1,000만원",
-    "name": "신한진",
-    "phone": "01033728865",
-    "address": "잠실주공5단지 519동",
-    "pyeong": "35b",
-    "expected": "24년 12월",
-    "email": "shj9707@naver.com",
-    "contract": "전월세"
+  data: {
+    serid: "s2011_aa02s", // 서비스 ID
+    purchase: "기존_가구_사용", // 구매 계획
+    budget: "1,000만원", // 예산
+    name: "신한진", // 문의자의 이름
+    phone: "01033728865", // 문의자의 전화번호
+    address: "잠실주공5단지 519동", // 문의자의 주소
+    pyeong: "35b", // 평수
+    expected: "24년 12월", // 예상 입주일
+    email: "shj9707@naver.com", // 문의자의 이메일
+    contract: "전월세" // 계약 유형
   }
-}
-
-const collectionSampleData1 = {
-  "_id": "668e7ccc3950bc467a964a88",
-  "id": "386033807820816",
-  "ad": "120209589249670376",
-  "date": "2024-07-04T13:38:30.000Z",
-  "injection": 1,
-  "raw": [
-    {
-      "name": "serid",
-      "values": [
-        "s2011_aa03s"
-      ]
-    },
-    {
-      "name": "purchase",
-      "values": [
-        "2"
-      ]
-    },
-    {
-      "name": "budget",
-      "values": [
-        "3,000만원"
-      ]
-    },
-    {
-      "name": "contract",
-      "values": [
-        "자가"
-      ]
-    },
-    {
-      "name": "time",
-      "values": [
-        "1"
-      ]
-    },
-    {
-      "name": "name",
-      "values": [
-        "양서윤"
-      ]
-    },
-    {
-      "name": "phone",
-      "values": [
-        "01035676404"
-      ]
-    },
-    {
-      "name": "email",
-      "values": [
-        "goddko1004@naver.com"
-      ]
-    },
-    {
-      "name": "address",
-      "values": [
-        "경기도 군포시 산본천로34 세종주공6단지아파트"
-      ]
-    },
-    {
-      "name": "pyeong",
-      "values": [
-        "24"
-      ]
-    },
-    {
-      "name": "expected",
-      "values": [
-        "공사끝나는데러"
-      ]
-    }
-  ],
-  "data": {
-    "serid": "s2011_aa03s",
-    "purchase": "2",
-    "budget": "3,000만원",
-    "name": "양서윤",
-    "phone": "01035676404",
-    "address": "경기도 군포시 산본천로34 세종주공6단지아파트",
-    "pyeong": "24",
-    "expected": "공사끝나는데러",
-    "email": "goddko1004@naver.com",
-    "contract": "자가",
-    "time": "11:00 - 12:30"
-  }
-}
-
-const collectionSampleData2 = {
-  "_id": "6629bf9beeea00fbc4dbf704",
-  "id": "2108276132899303",
-  "ad": "120207991043680376",
-  "date": "2024-04-24T15:56:41.000Z",
-  "injection": 1,
-  "raw": [
-    {
-      "name": "serid",
-      "values": [
-        "s2011_aa01s"
-      ]
-    },
-    {
-      "name": "purchase",
-      "values": [
-        "1"
-      ]
-    },
-    {
-      "name": "budget",
-      "values": [
-        "1,000만원"
-      ]
-    },
-    {
-      "name": "name",
-      "values": [
-        "최예흠"
-      ]
-    },
-    {
-      "name": "phone",
-      "values": [
-        "01050191324"
-      ]
-    },
-    {
-      "name": "address",
-      "values": [
-        "입주할 아파트  춘천시 학곡리 모아엘가"
-      ]
-    },
-    {
-      "name": "pyeong",
-      "values": [
-        "32평"
-      ]
-    },
-    {
-      "name": "expected",
-      "values": [
-        "25년2월  입주예정"
-      ]
-    }
-  ],
-  "data": {
-    "serid": "s2011_aa01s",
-    "purchase": "1",
-    "budget": "1,000만원",
-    "name": "최예흠",
-    "phone": "01050191324",
-    "address": "입주할 아파트  춘천시 학곡리 모아엘가",
-    "pyeong": "32평",
-    "expected": "25년2월  입주예정",
-    "email": "",
-    "contract": "자가"
-  }
-}
-
+};

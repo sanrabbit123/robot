@@ -1,1089 +1,472 @@
-const collectionName = "complexAnalytics";
+/**
+ * @const {string} collectionName - 콜렉션 이름
+ * @description 매일 웹에 대한 구글 Analytics의 모든 유저 및 이벤트 기록을 저장한 데이터베이스
+ */
+const collectionName = "complexAnalytics"; // 복합 분석 데이터를 기록하는 콜렉션 이름
 
-const collectionDescription = "매일 그 날 웹에 대해서 구글 Analytics를 통해 기록한 모든 유저와 이벤트에 대한 정보"
+/**
+ * @const {string} collectionDescription - 콜렉션 설명
+ * @description 구글 Analytics를 통해 기록한 모든 유저와 이벤트에 대한 정보를 저장하는 콜렉션
+ */
+const collectionDescription = "매일 그 날 웹에 대해서 구글 Analytics를 통해 기록한 모든 유저와 이벤트에 대한 정보"; // 구글 Analytics 데이터를 기록하는 설명
 
+/**
+ * @const {Object} collectionSampleData0 - 첫 번째 샘플 데이터
+ * @property {string} _id - MongoDB 고유 식별자
+ * @property {string} key - 복합 분석 키 (기간을 포함)
+ * @property {Object} date - 분석 데이터의 시작일과 종료일
+ * @property {Object} data - 유저, 조회수, 이벤트, 전환 데이터 등 상세 분석 결과
+ */
 const collectionSampleData0 = {
-  "_id": "66c1c641414481dd471757ee",
-  "key": "complex_analytics_20240801_20240817",
-  "date": {
-    "from": "2024-07-31T15:00:00.000Z",
-    "to": "2024-08-17T15:00:00.000Z"
+  _id: "66c1c641414481dd471757ee", // MongoDB의 고유 식별자
+  key: "complex_analytics_20240801_20240817", // 분석 데이터 키, 기간을 포함한 고유값
+  date: {
+    from: "2024-07-31T15:00:00.000Z", // 분석 시작 날짜 (UTC)
+    to: "2024-08-17T15:00:00.000Z" // 분석 종료 날짜 (UTC)
   },
-  "data": {
-    "users": {
-      "total": 7330,
-      "detail": {
-        "userType": {
-          "cases": [
+  data: {
+    users: {
+      total: 7330, // 전체 유저 수
+      detail: {
+        userType: {
+          cases: [
             {
-              "case": "New Visitor",
-              "value": 6000
+              case: "New Visitor", // 새 방문자 유형
+              value: 6000 // 새 방문자 수
             },
             {
-              "case": "Returning Visitor",
-              "value": 1040
-            },
-            {
-              "case": "(not set)",
-              "value": 290
+              case: "Returning Visitor", // 재방문자 유형
+              value: 1040 // 재방문자 수
             }
           ],
-          "total": 7330,
-          "kinds": 3
+          total: 7330, // 유저 유형별 총합
+          kinds: 3 // 유저 유형의 종류 수
         },
-        "country": {
-          "cases": [
+        country: {
+          cases: [
             {
-              "case": "South Korea",
-              "value": 6407
-            },
-            {
-              "case": "United States",
-              "value": 45
-            },
-          ],
-          "total": 6500,
-          "kinds": 23
-        },
-        "city": {
-          "cases": [
-            {
-              "case": "Seoul",
-              "value": 3220
-            },
-            {
-              "case": "Busan",
-              "value": 526
-            },
-            {
-              "case": "Seongnam-si",
-              "value": 226
-            },
-          ],
-          "total": 6934,
-          "kinds": 152
-        },
-        "campaign": {
-          "cases": [
-            {
-              "case": "ads03",
-              "value": 1586
-            },
-            {
-              "case": "(direct)",
-              "value": 742
-            },
-            {
-              "case": "(organic)",
-              "value": 723
-            },
-            {
-              "case": "service_homestyling_01_single",
-              "value": 633
+              case: "South Korea", // 방문 국가
+              value: 6407 // 해당 국가에서 방문한 유저 수
             }
           ],
-          "total": 6741,
-          "kinds": 79
+          total: 6500, // 국가별 유저 총합
+          kinds: 23 // 국가의 종류 수
         },
-        "source": {
-          "cases": [
+        city: {
+          cases: [
             {
-              "case": "naver",
-              "value": 1685
-            },
-            {
-              "case": "carrot",
-              "value": 1646
-            },
-            {
-              "case": "meta",
-              "value": 1436
-            },
+              case: "Seoul", // 도시명
+              value: 3220 // 해당 도시에서 방문한 유저 수
+            }
           ],
-          "total": 6622,
-          "kinds": 45
+          total: 6934, // 도시별 유저 총합
+          kinds: 152 // 도시의 종류 수
         },
-        "sourceDetail": {
-          "cases": [
+        campaign: {
+          cases: [
             {
-              "case": "carrot / 2408",
-              "value": 1646
+              case: "ads03", // 캠페인명
+              value: 1586 // 해당 캠페인을 통해 방문한 유저 수
             },
             {
-              "case": "meta / interest_all_test",
-              "value": 1100
-            },
-            {
-              "case": "(direct) / (none)",
-              "value": 742
-            },
+              case: "(direct)", // 직접 방문
+              value: 742 // 직접 방문한 유저 수
+            }
           ],
-          "total": 6662,
-          "kinds": 65
+          total: 6741, // 캠페인별 유저 총합
+          kinds: 79 // 캠페인의 종류 수
+        },
+        source: {
+          cases: [
+            {
+              case: "naver", // 유입 경로 소스명
+              value: 1685 // 해당 소스를 통해 방문한 유저 수
+            }
+          ],
+          total: 6622, // 소스별 유저 총합
+          kinds: 45 // 소스의 종류 수
+        },
+        sourceDetail: {
+          cases: [
+            {
+              case: "carrot / 2408", // 세부 소스명
+              value: 1646 // 해당 소스의 유저 수
+            },
+            {
+              case: "meta / interest_all_test", // 세부 소스명
+              value: 1100 // 해당 소스의 유저 수
+            }
+          ],
+          total: 6662, // 세부 소스별 유저 총합
+          kinds: 65 // 세부 소스의 종류 수
         }
       }
     },
-    "views": {
-      "total": 38654,
-      "detail": {
-        "pagePath": {
-          "cases": [
+    views: {
+      total: 38654, // 전체 조회수
+      detail: {
+        pagePath: {
+          cases: [
             {
-              "case": "/portfolio.php",
-              "value": 2234
+              case: "/portfolio.php", // 페이지 경로
+              value: 2234 // 해당 페이지의 조회수
             },
             {
-              "case": "/",
-              "value": 1489
-            },
-            {
-              "case": "/review.php",
-              "value": 1181
-            },
-          ],
-          "total": 38654,
-          "kinds": 6327
-        },
-        "referer": {
-          "cases": [
-            {
-              "case": "https://home-liaison.com/portfolio.php",
-              "value": 2691
-            },
-            {
-              "case": "https://home-liaison.com/designer.php",
-              "value": 1615
-            },
-            {
-              "case": "http://instagram.com/",
-              "value": 1415
-            },
-          ],
-          "total": 38654,
-          "kinds": 4098
-        },
-        "deviceCategory": {
-          "cases": [
-            {
-              "case": "mobile",
-              "value": 25941
-            },
-            {
-              "case": "desktop",
-              "value": 11922
-            },
-            {
-              "case": "tablet",
-              "value": 791
+              case: "/", // 홈페이지
+              value: 1489 // 해당 페이지의 조회수
             }
           ],
-          "total": 38654,
-          "kinds": 3
+          total: 38654, // 페이지 경로별 조회수 총합
+          kinds: 6327 // 페이지 경로의 종류 수
         },
-        "operatingSystem": {
-          "cases": [
+        referer: {
+          cases: [
             {
-              "case": "Android",
-              "value": 16454
+              case: "https://home-liaison.com/portfolio.php", // 참조한 페이지 경로
+              value: 2691 // 해당 페이지에서 유입된 조회수
             },
             {
-              "case": "iOS",
-              "value": 10270
-            },
-            {
-              "case": "Windows",
-              "value": 7569
-            },
-            {
-              "case": "Macintosh",
-              "value": 4271
-            },
-            {
-              "case": "Linux",
-              "value": 87
-            },
-            {
-              "case": "(not set)",
-              "value": 1
-            },
-            {
-              "case": "Chrome OS",
-              "value": 1
-            },
-            {
-              "case": "Tizen",
-              "value": 1
+              case: "https://home-liaison.com/designer.php", // 참조한 페이지 경로
+              value: 1615 // 해당 페이지에서 유입된 조회수
             }
           ],
-          "total": 38654,
-          "kinds": 8
+          total: 38654, // 참조 페이지 경로별 조회수 총합
+          kinds: 4098 // 참조 경로의 종류 수
         },
-        "browser": {
-          "cases": [
+        deviceCategory: {
+          cases: [
             {
-              "case": "Android Webview",
-              "value": 9869
+              case: "mobile", // 디바이스 카테고리
+              value: 25941 // 해당 디바이스에서 발생한 조회수
             },
             {
-              "case": "Chrome",
-              "value": 8410
-            },
-            {
-              "case": "Safari (in-app)",
-              "value": 5361
-            },
-            {
-              "case": "Safari",
-              "value": 5323
-            },
-            {
-              "case": "Whale Browser",
-              "value": 5112
-            },
-            {
-              "case": "Edge",
-              "value": 3110
-            },
-            {
-              "case": "Samsung Internet",
-              "value": 1448
-            },
-            {
-              "case": "Firefox",
-              "value": 10
-            },
-            {
-              "case": "Mozilla Compatible Agent",
-              "value": 7
-            },
-            {
-              "case": "Opera",
-              "value": 2
-            },
-            {
-              "case": "(not set)",
-              "value": 1
-            },
-            {
-              "case": "Phoenix Browser",
-              "value": 1
+              case: "desktop", // 디바이스 카테고리
+              value: 11922 // 해당 디바이스에서 발생한 조회수
             }
           ],
-          "total": 38654,
-          "kinds": 12
+          total: 38654, // 디바이스별 조회수 총합
+          kinds: 3 // 디바이스 카테고리의 종류 수
         },
-        "campaign": {
-          "cases": [
+        operatingSystem: {
+          cases: [
             {
-              "case": "(referral)",
-              "value": 6288
+              case: "Android", // 운영체제명
+              value: 16454 // 해당 운영체제에서 발생한 조회수
             },
             {
-              "case": "(organic)",
-              "value": 6249
-            },
-            {
-              "case": "(direct)",
-              "value": 6209
-            },
+              case: "iOS", // 운영체제명
+              value: 10270 // 해당 운영체제에서 발생한 조회수
+            }
           ],
-          "total": 38654,
-          "kinds": 79
+          total: 38654, // 운영체제별 조회수 총합
+          kinds: 8 // 운영체제의 종류 수
         },
-        "source": {
-          "cases": [
+        browser: {
+          cases: [
             {
-              "case": "naver",
-              "value": 11578
+              case: "Android Webview", // 브라우저명
+              value: 9869 // 해당 브라우저에서 발생한 조회수
             },
             {
-              "case": "(direct)",
-              "value": 6209
-            },
-            {
-              "case": "meta",
-              "value": 5945
-            },
+              case: "Chrome", // 브라우저명
+              value: 8410 // 해당 브라우저에서 발생한 조회수
+            }
           ],
-          "total": 38654,
-          "kinds": 45
+          total: 38654, // 브라우저별 조회수 총합
+          kinds: 12 // 브라우저 종류 수
         },
-        "sourceDetail": {
-          "cases": [
+        campaign: {
+          cases: [
             {
-              "case": "(direct) / (none)",
-              "value": 6209
+              case: "(referral)", // 캠페인 유형
+              value: 6288 // 해당 캠페인에서 발생한 조회수
             },
             {
-              "case": "meta / interest_all_test",
-              "value": 5127
-            },
+              case: "(organic)", // 자연 검색 유입
+              value: 6249 // 해당 캠페인에서 발생한 조회수
+            }
           ],
-          "total": 38654,
-          "kinds": 65
+          total: 38654, // 캠페인별 조회수 총합
+          kinds: 79 // 캠페인의 종류 수
+        },
+        source: {
+          cases: [
+            {
+              case: "naver", // 유입 경로 소스
+              value: 11578 // 해당 소스에서 발생한 조회수
+            },
+            {
+              case: "(direct)", // 직접 유입
+              value: 6209 // 직접 유입에서 발생한 조회수
+            }
+          ],
+          total: 38654, // 소스별 조회수 총합
+          kinds: 45 // 소스의 종류 수
+        },
+        sourceDetail: {
+          cases: [
+            {
+              case: "(direct) / (none)", // 세부 소스
+              value: 6209 // 해당 소스에서 발생한 조회수
+            }
+          ],
+          total: 38654, // 세부 소스별 조회수 총합
+          kinds: 65 // 세부 소스의 종류 수
         }
       }
     },
-    "events": {
-      "total": 240514,
-      "detail": {
-        "pagePath": {
-          "cases": [
+    events: {
+      total: 240514, // 전체 이벤트 수
+      detail: {
+        pagePath: {
+          cases: [
             {
-              "case": "/",
-              "value": 18393
-            },
-            {
-              "case": "/index.php",
-              "value": 14775
-            },
-            {
-              "case": "/portfolio.php",
-              "value": 11583
-            },
-          ],
-          "total": 240514,
-          "kinds": 6328
-        },
-        "eventName": {
-          "cases": [
-            {
-              "case": "readTimer",
-              "value": 55510
-            },
-            {
-              "case": "page_view",
-              "value": 38654
-            },
-            {
-              "case": "pageInit",
-              "value": 32989
-            },
-          ],
-          "total": 240514,
-          "kinds": 55
-        },
-        "campaign": {
-          "cases": [
-            {
-              "case": "(organic)",
-              "value": 61790
-            },
-            {
-              "case": "(direct)",
-              "value": 32702
-            },
-            {
-              "case": "(referral)",
-              "value": 31203
-            },
-          ],
-          "total": 240514,
-          "kinds": 79
-        },
-        "source": {
-          "cases": [
-            {
-              "case": "naver",
-              "value": 79321
-            },
-            {
-              "case": "meta",
-              "value": 33435
-            },
-            {
-              "case": "(direct)",
-              "value": 32702
-            },
-            {
-              "case": "google",
-              "value": 21078
-            },
-            {
-              "case": "home-liaison.org",
-              "value": 18607
-            },
-            {
-              "case": "carrot",
-              "value": 16914
-            },
-            {
-              "case": "kakao",
-              "value": 12239
-            },
-            {
-              "case": "instagram",
-              "value": 7452
-            },
-            {
-              "case": "(not set)",
-              "value": 5453
-            },
-            {
-              "case": "naver.com",
-              "value": 2862
-            },
-            {
-              "case": "localhost:3000",
-              "value": 1791
-            },
-            {
-              "case": "ksmobile.inicis.com",
-              "value": 1553
-            },
-            {
-              "case": "m.search.naver.com",
-              "value": 1474
-            },
-            {
-              "case": "m.blog.naver.com",
-              "value": 899
-            },
-            {
-              "case": "youtube.com",
-              "value": 817
-            },
-            {
-              "case": "blog.naver.com",
-              "value": 789
-            },
-            {
-              "case": "home-liaison.org:3000",
-              "value": 575
-            },
-            {
-              "case": "m.search.daum.net",
-              "value": 316
-            },
-            {
-              "case": "link.naver.com",
-              "value": 291
-            },
-            {
-              "case": "memo.naver.com",
-              "value": 288
-            },
-            {
-              "case": "yul-do.com",
-              "value": 251
-            },
-            {
-              "case": "yahoo",
-              "value": 244
-            },
-            {
-              "case": "daum",
-              "value": 240
-            },
-            {
-              "case": "bing",
-              "value": 223
-            },
-            {
-              "case": "fcmobile.inicis.com",
-              "value": 206
-            },
-            {
-              "case": "l.instagram.com",
-              "value": 193
-            },
-            {
-              "case": "facebook.com",
-              "value": 60
-            },
-            {
-              "case": "l.facebook.com",
-              "value": 54
-            },
-            {
-              "case": "m.youtube.com",
-              "value": 30
-            },
-            {
-              "case": "ntp.msn.com",
-              "value": 27
-            },
-            {
-              "case": "homeliaison.tistory.com",
-              "value": 16
-            },
-            {
-              "case": "instagram.com",
-              "value": 12
-            },
-            {
-              "case": "m.naver.com",
-              "value": 12
-            },
-            {
-              "case": "saramin.co.kr",
-              "value": 12
-            },
-            {
-              "case": "m.keep.naver.com",
-              "value": 10
-            },
-            {
-              "case": "facebook",
-              "value": 9
-            },
-            {
-              "case": "drive.kakao.com",
-              "value": 8
-            },
-            {
-              "case": "gdn",
-              "value": 8
-            },
-            {
-              "case": "br.nate.com",
-              "value": 7
-            },
-            {
-              "case": "m.facebook.com",
-              "value": 7
-            },
-            {
-              "case": "pcmap.place.naver.com",
-              "value": 7
-            },
-            {
-              "case": "dailytodaily.com",
-              "value": 6
-            },
-            {
-              "case": "sopoong.net",
-              "value": 6
-            },
-            {
-              "case": "center-pf.kakao.com",
-              "value": 5
-            },
-            {
-              "case": "scrub.sourcescrub.com",
-              "value": 5
+              case: "/", // 페이지 경로
+              value: 18393 // 해당 페이지에서 발생한 이벤트 수
             }
           ],
-          "total": 240514,
-          "kinds": 45
+          total: 240514, // 페이지별 이벤트 총합
+          kinds: 6328 // 페이지 경로의 종류 수
         },
-        "sourceDetail": {
-          "cases": [
+        eventName: {
+          cases: [
             {
-              "case": "naver / organic",
-              "value": 40011
+              case: "readTimer", // 이벤트 이름
+              value: 55510 // 해당 이벤트 발생 수
             },
             {
-              "case": "(direct) / (none)",
-              "value": 32702
-            },
-            {
-              "case": "meta / interest_all_test",
-              "value": 27794
-            },
-            {
-              "case": "google / organic",
-              "value": 21072
-            },
-            {
-              "case": "naver / brand",
-              "value": 18683
-            },
-            {
-              "case": "home-liaison.org / referral",
-              "value": 18607
-            },
-            {
-              "case": "carrot / 2408",
-              "value": 16914
-            },
-            {
-              "case": "instagram / profile",
-              "value": 7441
-            },
-            {
-              "case": "kakao / chat",
-              "value": 7419
-            },
-            {
-              "case": "naver / PO2_cpc",
-              "value": 7338
-            },
-            {
-              "case": "(not set)",
-              "value": 5453
-            },
-            {
-              "case": "naver / review_cpc",
-              "value": 4790
-            },
-            {
-              "case": "kakao / message",
-              "value": 4345
-            },
-            {
-              "case": "meta / designer",
-              "value": 4145
-            },
-            {
-              "case": "naver / PO2",
-              "value": 3682
-            },
-            {
-              "case": "naver.com / referral",
-              "value": 2862
-            },
-            {
-              "case": "naver / display_conversion",
-              "value": 2594
-            },
-            {
-              "case": "localhost:3000 / referral",
-              "value": 1791
-            },
-            {
-              "case": "ksmobile.inicis.com / referral",
-              "value": 1553
-            },
-            {
-              "case": "meta / instant",
-              "value": 1485
-            },
-            {
-              "case": "m.search.naver.com / referral",
-              "value": 1474
-            },
-            {
-              "case": "naver / blog",
-              "value": 984
-            },
-            {
-              "case": "m.blog.naver.com / referral",
-              "value": 899
-            },
-            {
-              "case": "youtube.com / referral",
-              "value": 817
-            },
-            {
-              "case": "blog.naver.com / referral",
-              "value": 789
-            },
-            {
-              "case": "home-liaison.org:3000 / referral",
-              "value": 575
-            },
-            {
-              "case": "kakao / promotion",
-              "value": 475
-            },
-            {
-              "case": "m.search.daum.net / referral",
-              "value": 316
-            },
-            {
-              "case": "naver / reviewcpc",
-              "value": 315
-            },
-            {
-              "case": "naver / PO2_serve_cpc",
-              "value": 296
-            },
-            {
-              "case": "link.naver.com / referral",
-              "value": 291
-            },
-            {
-              "case": "memo.naver.com / referral",
-              "value": 288
-            },
-            {
-              "case": "naver / promotion",
-              "value": 285
-            },
-            {
-              "case": "naver / po",
-              "value": 266
-            },
-            {
-              "case": "yul-do.com / referral",
-              "value": 251
-            },
-            {
-              "case": "yahoo / organic",
-              "value": 244
-            },
-            {
-              "case": "daum / organic",
-              "value": 240
-            },
-            {
-              "case": "bing / organic",
-              "value": 223
-            },
-            {
-              "case": "fcmobile.inicis.com / referral",
-              "value": 206
-            },
-            {
-              "case": "l.instagram.com / referral",
-              "value": 193
-            },
-            {
-              "case": "facebook.com / referral",
-              "value": 60
-            },
-            {
-              "case": "l.facebook.com / referral",
-              "value": 54
-            },
-            {
-              "case": "naver / cpc_servelink",
-              "value": 49
-            },
-            {
-              "case": "m.youtube.com / referral",
-              "value": 30
-            },
-            {
-              "case": "naver / cafe",
-              "value": 28
-            },
-            {
-              "case": "ntp.msn.com / referral",
-              "value": 27
-            },
-            {
-              "case": "homeliaison.tistory.com / referral",
-              "value": 16
-            },
-            {
-              "case": "instagram.com / referral",
-              "value": 12
-            },
-            {
-              "case": "m.naver.com / referral",
-              "value": 12
-            },
-            {
-              "case": "saramin.co.kr / referral",
-              "value": 12
-            },
-            {
-              "case": "meta / meta",
-              "value": 11
-            },
-            {
-              "case": "m.keep.naver.com / referral",
-              "value": 10
-            },
-            {
-              "case": "facebook / interior",
-              "value": 9
-            },
-            {
-              "case": "drive.kakao.com / referral",
-              "value": 8
-            },
-            {
-              "case": "gdn / image",
-              "value": 8
-            },
-            {
-              "case": "br.nate.com / referral",
-              "value": 7
-            },
-            {
-              "case": "instagram / referral",
-              "value": 7
-            },
-            {
-              "case": "m.facebook.com / referral",
-              "value": 7
-            },
-            {
-              "case": "pcmap.place.naver.com / referral",
-              "value": 7
-            },
-            {
-              "case": "dailytodaily.com / referral",
-              "value": 6
-            },
-            {
-              "case": "google / youtubefeed",
-              "value": 6
-            },
-            {
-              "case": "sopoong.net / referral",
-              "value": 6
-            },
-            {
-              "case": "center-pf.kakao.com / referral",
-              "value": 5
-            },
-            {
-              "case": "scrub.sourcescrub.com / referral",
-              "value": 5
-            },
-            {
-              "case": "instagram / sns",
-              "value": 4
+              case: "page_view", // 이벤트 이름
+              value: 38654 // 해당 이벤트 발생 수
             }
           ],
-          "total": 240514,
-          "kinds": 65
+          total: 240514, // 이벤트명별 총합
+          kinds: 55 // 이벤트 종류 수
+        },
+        campaign: {
+          cases: [
+            {
+              case: "(organic)", // 자연 검색 캠페인
+              value: 61790 // 해당 캠페인에서 발생한 이벤트 수
+            }
+          ],
+          total: 240514, // 캠페인별 이벤트 총합
+          kinds: 79 // 캠페인 종류 수
+        },
+        source: {
+          cases: [
+            {
+              case: "naver", // 이벤트 발생 소스
+              value: 79321 // 해당 소스에서 발생한 이벤트 수
+            },
+            {
+              case: "meta", // 이벤트 발생 소스
+              value: 33435 // 해당 소스에서 발생한 이벤트 수
+            }
+          ],
+          total: 240514, // 소스별 이벤트 총합
+          kinds: 45 // 소스의 종류 수
+        },
+        sourceDetail: {
+          cases: [
+            {
+              case: "naver / organic", // 세부 소스
+              value: 40011 // 해당 소스에서 발생한 이벤트 수
+            },
+            {
+              case: "(direct) / (none)", // 세부 소스
+              value: 32702 // 해당 소스에서 발생한 이벤트 수
+            }
+          ],
+          total: 240514, // 세부 소스별 이벤트 총합
+          kinds: 65 // 세부 소스의 종류 수
         }
       }
     },
-    "conversion": {
-      "popupOpen": {
-        "total": 157,
-        "detail": {
-          "pagePath": {
-            "cases": [
+    conversion: {
+      popupOpen: {
+        total: 157, // 전체 팝업 오픈 횟수
+        detail: {
+          pagePath: {
+            cases: [
               {
-                "case": "/about.php",
-                "value": 15
+                case: "/about.php", // 페이지 경로
+                value: 15 // 해당 페이지에서 팝업 오픈 횟수
               },
               {
-                "case": "/portfolio.php",
-                "value": 10
-              },
-            ],
-            "total": 157,
-            "kinds": 100
-          },
-          "deviceCategory": {
-            "cases": [
-              {
-                "case": "mobile",
-                "value": 124
-              },
-              {
-                "case": "desktop",
-                "value": 29
-              },
-              {
-                "case": "tablet",
-                "value": 4
+                case: "/portfolio.php", // 페이지 경로
+                value: 10 // 해당 페이지에서 팝업 오픈 횟수
               }
             ],
-            "total": 157,
-            "kinds": 3
+            total: 157, // 페이지 경로별 팝업 오픈 총합
+            kinds: 100 // 페이지 경로의 종류 수
           },
-          "operatingSystem": {
-            "cases": [
+          deviceCategory: {
+            cases: [
               {
-                "case": "Android",
-                "value": 71
+                case: "mobile", // 디바이스 카테고리
+                value: 124 // 해당 디바이스에서 팝업 오픈 횟수
               },
               {
-                "case": "iOS",
-                "value": 57
-              },
-              {
-                "case": "Windows",
-                "value": 19
-              },
-              {
-                "case": "Macintosh",
-                "value": 10
+                case: "desktop", // 디바이스 카테고리
+                value: 29 // 해당 디바이스에서 팝업 오픈 횟수
               }
             ],
-            "total": 157,
-            "kinds": 4
+            total: 157, // 디바이스별 팝업 오픈 총합
+            kinds: 3 // 디바이스 카테고리의 종류 수
           },
-          "browser": {
-            "cases": [
+          operatingSystem: {
+            cases: [
               {
-                "case": "Android Webview",
-                "value": 46
-              },
-              {
-                "case": "Safari (in-app)",
-                "value": 35
-              },
+                case: "Android", // 운영체제
+                value: 71 // 해당 운영체제에서 팝업 오픈 횟수
+              }
             ],
-            "total": 157,
-            "kinds": 7
+            total: 157, // 운영체제별 팝업 오픈 총합
+            kinds: 4 // 운영체제의 종류 수
           },
-          "campaign": {
-            "cases": [
+          browser: {
+            cases: [
               {
-                "case": "service_homestyling_01_single",
-                "value": 34
+                case: "Android Webview", // 브라우저
+                value: 46 // 해당 브라우저에서 팝업 오픈 횟수
               },
               {
-                "case": "(organic)",
-                "value": 23
-              },
+                case: "Safari (in-app)", // 브라우저
+                value: 35 // 해당 브라우저에서 팝업 오픈 횟수
+              }
             ],
-            "total": 157,
-            "kinds": 27
+            total: 157, // 브라우저별 팝업 오픈 총합
+            kinds: 7 // 브라우저 종류 수
           },
-          "source": {
-            "cases": [
+          campaign: {
+            cases: [
               {
-                "case": "meta",
-                "value": 58
+                case: "service_homestyling_01_single", // 캠페인 이름
+                value: 34 // 해당 캠페인에서 팝업 오픈 횟수
               },
               {
-                "case": "naver",
-                "value": 50
-              },
+                case: "(organic)", // 자연 검색 유입
+                value: 23 // 해당 캠페인에서 팝업 오픈 횟수
+              }
             ],
-            "total": 157,
-            "kinds": 12
+            total: 157, // 캠페인별 팝업 오픈 총합
+            kinds: 27 // 캠페인 종류 수
           },
-          "sourceDetail": {
-            "cases": [
+          source: {
+            cases: [
               {
-                "case": "meta / interest_all_test",
-                "value": 54
+                case: "meta", // 소스 이름
+                value: 58 // 해당 소스에서 팝업 오픈 횟수
               },
               {
-                "case": "naver / brand",
-                "value": 17
-              },
-              {
-                "case": "naver / organic",
-                "value": 17
-              },
+                case: "naver", // 소스 이름
+                value: 50 // 해당 소스에서 팝업 오픈 횟수
+              }
             ],
-            "total": 157,
-            "kinds": 22
+            total: 157, // 소스별 팝업 오픈 총합
+            kinds: 12 // 소스의 종류 수
+          },
+          sourceDetail: {
+            cases: [
+              {
+                case: "meta / interest_all_test", // 세부 소스 이름
+                value: 54 // 해당 소스에서 팝업 오픈 횟수
+              },
+              {
+                case: "naver / brand", // 세부 소스 이름
+                value: 17 // 해당 소스에서 팝업 오픈 횟수
+              }
+            ],
+            total: 157, // 세부 소스별 팝업 오픈 총합
+            kinds: 22 // 세부 소스의 종류 수
           }
         }
       },
-      "consultingPage": {
-        "total": 655,
-        "detail": {
-          "deviceCategory": {
-            "cases": [
+      consultingPage: {
+        total: 655, // 전체 상담 페이지 접속 횟수
+        detail: {
+          deviceCategory: {
+            cases: [
               {
-                "case": "mobile",
-                "value": 475
+                case: "mobile", // 디바이스 카테고리
+                value: 475 // 해당 디바이스에서 상담 페이지 접속 횟수
               },
               {
-                "case": "desktop",
-                "value": 174
+                case: "desktop", // 디바이스 카테고리
+                value: 174 // 해당 디바이스에서 상담 페이지 접속 횟수
               },
               {
-                "case": "tablet",
-                "value": 6
+                case: "tablet", // 디바이스 카테고리
+                value: 6 // 해당 디바이스에서 상담 페이지 접속 횟수
               }
             ],
-            "total": 655,
-            "kinds": 3
+            total: 655, // 디바이스별 상담 페이지 접속 총합
+            kinds: 3 // 디바이스 종류 수
           },
-          "operatingSystem": {
-            "cases": [
+          operatingSystem: {
+            cases: [
               {
-                "case": "Android",
-                "value": 251
-              },
-              {
-                "case": "iOS",
-                "value": 230
-              },
-              {
-                "case": "Windows",
-                "value": 122
-              },
-              {
-                "case": "Macintosh",
-                "value": 49
-              },
-              {
-                "case": "Linux",
-                "value": 3
+                case: "Android", // 운영체제
+                value: 251 // 해당 운영체제에서 상담 페이지 접속 횟수
               }
             ],
-            "total": 655,
-            "kinds": 5
+            total: 655, // 운영체제별 상담 페이지 접속 총합
+            kinds: 5 // 운영체제의 종류 수
           },
-          "browser": {
-            "cases": [
+          browser: {
+            cases: [
               {
-                "case": "Safari (in-app)",
-                "value": 158
+                case: "Safari (in-app)", // 브라우저 이름
+                value: 158 // 해당 브라우저에서 상담 페이지 접속 횟수
               },
               {
-                "case": "Chrome",
-                "value": 157
-              },
-              {
-                "case": "Android Webview",
-                "value": 151
-              },
-              {
-                "case": "Whale Browser",
-                "value": 77
-              },
-              {
-                "case": "Safari",
-                "value": 72
-              },
-              {
-                "case": "Samsung Internet",
-                "value": 21
-              },
-              {
-                "case": "Edge",
-                "value": 19
+                case: "Chrome", // 브라우저 이름
+                value: 157 // 해당 브라우저에서 상담 페이지 접속 횟수
               }
             ],
-            "total": 655,
-            "kinds": 7
+            total: 655, // 브라우저별 상담 페이지 접속 총합
+            kinds: 7 // 브라우저의 종류 수
           },
-          "campaign": {
-            "cases": [
+          campaign: {
+            cases: [
               {
-                "case": "(organic)",
-                "value": 123
+                case: "(organic)", // 자연 검색 유입
+                value: 123 // 해당 캠페인에서 상담 페이지 접속 횟수
               },
               {
-                "case": "(referral)",
-                "value": 80
-              },
-              {
-                "case": "consulting",
-                "value": 78
-              },
+                case: "(referral)", // 참조 캠페인
+                value: 80 // 해당 캠페인에서 상담 페이지 접속 횟수
+              }
             ],
-            "total": 655,
-            "kinds": 39
+            total: 655, // 캠페인별 상담 페이지 접속 총합
+            kinds: 39 // 캠페인의 종류 수
           },
-          "source": {
-            "cases": [
+          source: {
+            cases: [
               {
-                "case": "naver",
-                "value": 168
+                case: "naver", // 소스 이름
+                value: 168 // 해당 소스에서 상담 페이지 접속 횟수
               },
               {
-                "case": "kakao",
-                "value": 139
-              },
+                case: "kakao", // 소스 이름
+                value: 139 // 해당 소스에서 상담 페이지 접속 횟수
+              }
             ],
-            "total": 655,
-            "kinds": 18
+            total: 655, // 소스별 상담 페이지 접속 총합
+            kinds: 18 // 소스 종류 수
           },
-          "sourceDetail": {
-            "cases": [
+          sourceDetail: {
+            cases: [
               {
-                "case": "instagram / profile",
-                "value": 95
-              },
-              {
-                "case": "kakao / message",
-                "value": 89
-              },
+                case: "instagram / profile", // 세부 소스
+                value: 95 // 해당 소스에서 상담 페이지 접속 횟수
+              }
             ],
-            "total": 655,
-            "kinds": 30
+            total: 655, // 세부 소스별 상담 페이지 접속 총합
+            kinds: 30 // 세부 소스 종류 수
           }
         }
       }
     }
   }
-}
+};
