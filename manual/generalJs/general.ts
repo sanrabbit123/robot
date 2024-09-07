@@ -3,144 +3,304 @@ import { SvgTong } from "./svgTong";
 import { DateRange } from "./dateRange";
 import { DateMatrix, DateFactor } from "./dateMatrix";
 
+/**
+ * @class AbstractNode
+ * @description AbstractNode 클래스는 프론트엔드의 동적 구축을 위해 만들어진 프레임워크입니다.
+ * HTML 요소 생성, 이벤트 관리, 미디어 처리 등을 포함한 여러 기능을 제공합니다.
+ */
 class AbstractNode {
 
+  /**
+   * @property {HTMLElement} totalContents
+   * @description 전체 콘텐츠를 담는 HTML 요소입니다. DIV 요소로 생성됩니다.
+   */
   public totalContents: HTMLElement;
+
+  /**
+   * @property {HTMLElement} baseTong
+   * @description 기본적인 레이아웃을 담는 HTML 요소입니다. DIV 요소로 생성됩니다.
+   */
   public baseTong: HTMLElement;
+
+  /**
+   * @property {boolean} sero
+   * @description 세로 모드 여부를 나타내는 부울 값입니다.
+   */
   public sero: boolean;
+
+  /**
+   * @property {string} userNameToken
+   * @description 사용자 이름 토큰을 저장하는 문자열입니다.
+   */
   public userNameToken: string;
+
+  /**
+   * @property {string} mode
+   * @description 현재 모드를 나타내는 문자열입니다.
+   */
   public mode: string;
+
+  /**
+   * @property {string} ea
+   * @description EA (엔터프라이즈 애플리케이션)와 관련된 설정을 저장하는 문자열입니다.
+   */
   public ea: string;
+
+  /**
+   * @property {number} standardWidth
+   * @description 기준 너비를 나타내는 숫자입니다.
+   */
   public standardWidth: number;
+
+  /**
+   * @property {number} modeMinus
+   * @description 모드 설정과 관련된 값을 저장하는 숫자입니다.
+   */
   public modeMinus: number;
+
+  /**
+   * @property {number} naviHeight
+   * @description 내비게이션 바의 높이를 저장하는 숫자입니다.
+   */
   public naviHeight: number;
+
+  /**
+   * @property {number} backHeight
+   * @description 백그라운드의 높이를 저장하는 숫자입니다.
+   */
   public backHeight: number;
+
+  /**
+   * @property {number} margin
+   * @description 마진 값을 저장하는 숫자입니다.
+   */
   public margin: number;
+
+  /**
+   * @property {number} baseTop
+   * @description 기본 상단 마진 값을 저장하는 숫자입니다.
+   */
   public baseTop: number;
+
+  /**
+   * @property {Dictionary} subBoxMargin
+   * @description 서브 박스의 마진 설정을 저장하는 객체입니다.
+   */
   public subBoxMargin: Dictionary;
+
+  /**
+   * @property {List} media
+   * @description 미디어 관련 데이터를 저장하는 리스트입니다.
+   */
   public media: List;
+
+  /**
+   * @property {Date} firstPageViewTime
+   * @description 사용자가 첫 번째 페이지를 본 시간을 저장하는 Date 객체입니다.
+   */
   public firstPageViewTime: Date;
+
+  /**
+   * @property {Dictionary} events
+   * @description 이벤트와 관련된 데이터를 저장하는 객체입니다.
+   */
   public events: Dictionary;
+
+  /**
+   * @property {Dictionary} stacks
+   * @description 쌓여있는 작업 또는 이벤트 데이터를 저장하는 객체입니다.
+   */
   public stacks: Dictionary;
+
+  /**
+   * @property {Dictionary} timeouts
+   * @description 타임아웃 관련 데이터를 저장하는 객체입니다.
+   */
   public timeouts: Dictionary;
+
+  /**
+   * @property {Dictionary} boos
+   * @description 부울 값과 관련된 설정을 저장하는 객체입니다.
+   */
   public boos: Dictionary;
 
-  constructor () {
-    this.totalContents = document.createElement("DIV");
-    this.baseTong = document.createElement("DIV");
-    this.sero = false;
-    this.userNameToken = "";
-    this.mode = "";
-    this.ea = "";
-    this.standardWidth = 0;
-    this.modeMinus = 0;
-    this.naviHeight = 0;
-    this.backHeight = 0;
-    this.margin = 0;
-    this.baseTop = 0;
-    this.subBoxMargin = {};
-    this.media = [];
-    this.firstPageViewTime = new Date();
+  /**
+   * @constructor
+   * @description AbstractNode의 생성자입니다. 초기값을 설정하고, 다양한 속성을 초기화합니다.
+   */
+  constructor() {
+    this.totalContents = document.createElement("DIV"); // 전체 콘텐츠를 담는 DIV 요소 생성
+    this.baseTong = document.createElement("DIV"); // 기본 레이아웃을 담는 DIV 요소 생성
+    this.sero = false; // 세로 모드 여부를 초기화
+    this.userNameToken = ""; // 사용자 이름 토큰 초기화
+    this.mode = ""; // 모드 초기화
+    this.ea = ""; // EA 관련 설정 초기화
+    this.standardWidth = 0; // 기준 너비 초기화
+    this.modeMinus = 0; // 모드 설정 초기화
+    this.naviHeight = 0; // 내비게이션 높이 초기화
+    this.backHeight = 0; // 백그라운드 높이 초기화
+    this.margin = 0; // 마진 초기화
+    this.baseTop = 0; // 기본 상단 마진 초기화
+    this.subBoxMargin = {}; // 서브 박스 마진 초기화
+    this.media = []; // 미디어 리스트 초기화
+    this.firstPageViewTime = new Date(); // 첫 페이지 뷰 시간 초기화
 
-    this.events = {};
-    this.stacks = {};
-    this.timeouts = {};
-    this.boos = {};
+    this.events = {}; // 이벤트 객체 초기화
+    this.stacks = {}; // 스택 객체 초기화
+    this.timeouts = {}; // 타임아웃 객체 초기화
+    this.boos = {}; // 부울 값 객체 초기화
   }
-  
+
+  /**
+   * @static @property {Dictionary} events
+   * @description 정적 이벤트 데이터 객체입니다.
+   */
   public static events: Dictionary = {};
+
+  /**
+   * @static @property {Dictionary} stacks
+   * @description 정적 스택 데이터 객체입니다.
+   */
   public static stacks: Dictionary = {
     __temporaryPreventDefaultEvent: function (e: Event): void {
-      e.preventDefault();
+      e.preventDefault(); // 기본 이벤트 방지
     },
-    __temporaryPreventScroll: 0,
-    ____isDoingToken____: 0,
+    __temporaryPreventScroll: 0, // 스크롤 방지 값 초기화
+    ____isDoingToken____: 0, // 현재 작업 상태 토큰 초기화
   };
+
+  /**
+   * @static @property {Dictionary} timeouts
+   * @description 정적 타임아웃 데이터 객체입니다.
+   */
   public static timeouts: Dictionary = {};
+
+  /**
+   * @static @property {Dictionary} boos
+   * @description 정적 부울 값 데이터 객체입니다.
+   */
   public static boos: Dictionary = {
-    scroll: true,
+    scroll: true, // 스크롤 여부를 나타내는 부울 값 초기화
   };
 
-  public static mimeTypes: Dictionary = { aac: "audio/aac", abw: "application/x-abiword", arc: "application/octet-stream", avi: "video/x-msvideo", azw: "application/vnd.amazon.ebook", bin: "application/octet-stream", bz: "application/x-bzip", bz2: "application/x-bzip2", csh: "application/x-csh", css: "text/css", csv: "text/csv", doc: "application/msword", epub: "application/epub+zip", gif: "image/gif", htm: "text/html", html: "text/html", ico: "image/x-icon", ics: "text/calendar", jar: "application/java-archive", jpeg: "image/jpeg", jpg: "image/jpeg", mjs: "application/js", js: "application/js", json: "application/json", mid: "audio/midi", midi: "audio/midi", mpeg: "video/mpeg", mpkg: "application/vnd.apple.installer+xml", odp: "application/vnd.oasis.opendocument.presentation", ods: "application/vnd.oasis.opendocument.spreadsheet", odt: "application/vnd.oasis.opendocument.text", oga: "audio/ogg", ogv: "video/ogg", ogx: "application/ogg", pdf: "application/pdf", ppt: "application/vnd.ms-powerpoint", rar: "application/x-rar-compressed", rtf: "application/rtf", sh: "application/x-sh", svg: "image/svg+xml", swf: "application/x-shockwave-flash", tar: "application/x-tar", tif: "image/tiff", tiff: "image/tiff", ttf: "application/x-font-ttf", vsd: "application/vnd.visio", wav: "audio/x-wav", weba: "audio/webm", webm: "video/webm", webp: "image/webp", woff: "application/x-font-woff", xhtml: "application/xhtml+xml", xls: "application/vnd.ms-excel", xml: "application/xml", xul: "application/vnd.mozilla.xul+xml", zip: "application/zip", "3gp": "video/3gpp", "3g2": "video/3gpp2", "7z": "application/x-7z-compressed" };
+  /**
+   * @static @property {Dictionary} mimeTypes
+   * @description 파일 확장자에 대응하는 MIME 타입을 저장하는 객체입니다.
+   */
+  public static mimeTypes: Dictionary = { 
+    aac: "audio/aac", abw: "application/x-abiword", arc: "application/octet-stream", avi: "video/x-msvideo", 
+    azw: "application/vnd.amazon.ebook", bin: "application/octet-stream", bz: "application/x-bzip", 
+    bz2: "application/x-bzip2", csh: "application/x-csh", css: "text/css", csv: "text/csv", doc: "application/msword", 
+    epub: "application/epub+zip", gif: "image/gif", htm: "text/html", html: "text/html", ico: "image/x-icon", 
+    ics: "text/calendar", jar: "application/java-archive", jpeg: "image/jpeg", jpg: "image/jpeg", mjs: "application/js", 
+    js: "application/js", json: "application/json", mid: "audio/midi", midi: "audio/midi", mpeg: "video/mpeg", 
+    mpkg: "application/vnd.apple.installer+xml", odp: "application/vnd.oasis.opendocument.presentation", 
+    ods: "application/vnd.oasis.opendocument.spreadsheet", odt: "application/vnd.oasis.opendocument.text", oga: "audio/ogg", 
+    ogv: "video/ogg", ogx: "application/ogg", pdf: "application/pdf", ppt: "application/vnd.ms-powerpoint", 
+    rar: "application/x-rar-compressed", rtf: "application/rtf", sh: "application/x-sh", svg: "image/svg+xml", 
+    swf: "application/x-shockwave-flash", tar: "application/x-tar", tif: "image/tiff", tiff: "image/tiff", 
+    ttf: "application/x-font-ttf", vsd: "application/vnd.visio", wav: "audio/x-wav", weba: "audio/webm", 
+    webm: "video/webm", webp: "image/webp", woff: "application/x-font-woff", xhtml: "application/xhtml+xml", 
+    xls: "application/vnd.ms-excel", xml: "application/xml", xul: "application/vnd.mozilla.xul+xml", zip: "application/zip", 
+    "3gp": "video/3gpp", "3g2": "video/3gpp2", "7z": "application/x-7z-compressed" 
+  };
 
+  /**
+   * @property {Dictionary} mimeTypes
+   * @description MIME 타입을 저장하는 객체로, AbstractNode의 정적 mimeTypes 객체와 동일한 값을 참조합니다.
+   */
   public mimeTypes: Dictionary = AbstractNode.mimeTypes;
 
+  /**
+   * @property {Dictionary} colorExtended
+   * @description 확장된 색상 팔레트를 저장하는 객체입니다. 다양한 색상 코드와 그라데이션 색상들이 포함되어 있습니다.
+   * 색상 코드는 문자열로 저장되며, HTML/CSS에서 사용할 수 있는 형식으로 정의됩니다.
+   */
   public static colorExtended: Dictionary = {
-    transparent: "transparent",
-    white: "#ffffff",
-    whiteIcon: "#ffffff",
-    whiteBlack: "#ffffff",
-    whiteGray: "#fbfbfb",
-    gray0: "#f7f7f7",
-    gray1: "#f2f2f2",
-    gray2: "#ececec",
-    gray3: "#dddddd",
-    gray4: "#cccccc",
-    gray5: "#aaaaaa",
-    gray6: "#e7e7e7",
-    grayDeactive: "#c2c2c2",
-    deactive: "#bbbbbb",
-    liteShadow: "#bbbbbb",
-    shadow: "#808080",
-    shadowWhite: "#808080",
-    darkShadow: "#606060",
-    darkDarkShadow: "#505050",
-    darkDarkDarkShadow: "#464646",
-    liteBlack: "#aaaaaa",
-    black: "#404040",
-    darkBlack: "#303030",
-    darkDarkBlack: "#252525",
-    realBlack: "#202020",
-    gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen4: "linear-gradient(222deg, rgba(89, 175, 137, 1) 5%, rgba(0, 156, 106, 1) 100%)",
-    gradientGreenWhite: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    greenGray: "#2fa678",
-    greenWhite: "#2fa678",
-    greenBlack: "#2fa678",
-    cancelBlack: "#404040",
-    green: "#2fa678",
-    softGreen: "#59af89",
-    darkGreen: "#009b6a",
-    whiteGreen: "#bedacb",
-    middleGreen: "#83cea7",
-    liteGreen: "#f0f9f5",
-    gradientWhiteGray: "linear-gradient(254deg, rgba(240, 240, 240, 0.95) 0%, rgba(247, 247, 247, 0.95) 100%)",
-    gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
-    gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
-    gradientWhite: "linear-gradient(256deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%)",
-    gradientWhite2: "linear-gradient(200deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 100%)",
-    red: "#ff5f57",
-    yellow: "#ffbd3d",
-    purple: "#ba7dd7",
-    darkRed: "#d13939",
-    blueWhite: "#E7F3FB",
-    blueLight: "#8CC9F4",
-    blue: "#77BBE9",
-    blueDark: "#65A0C8",
-    blueDim: "#5A96BF",
-    blueDarkDim: "#2A5F84",
-    blueDarkDarkDim: "#224761",
-    blueDeactive: "#A9CDE5",
-    gardientWhite: "linear-gradient(28deg, rgba(140,201,244,0.88) 0%, rgba(195,224,244,1) 100%)",
-    gradientBlue: "linear-gradient(199deg, rgba(140,201,244,0.85) 0%, rgba(119,187,233,1) 100%)",
-    gradientBlue1: "linear-gradient(138deg, rgba(140,201,244,1) 0%, rgba(101,160,200,1) 100%)",
-    gradientBlue2: "linear-gradient(199deg, rgba(140,201,244,1) 0%, rgba(90,150,191,1) 100%)",
-    gradientBlue3: "linear-gradient(117deg, rgba(119,187,233,0.85) 0%, rgba(78,139,180,0.85) 100%)",
-    gradientBlue4: "linear-gradient(138deg, rgba(111,170,215,1) 0%, rgba(119,187,233,1) 100%)",
-    ultimateBlack: "#000000",
-    subRed: "#ff9062",
-    subYellow: "#ffd874",
-    yellowLine: "#cc921f",
-    warmGray0: "#f2f2f2",
-    warmGray1: "#ececec",
-    warmGrayMiddle: "#dddddd",
-    warmGray2: "#cccccc",
+    // 기본 색상 및 그라데이션 정의
+    transparent: "transparent", // 투명 색상
+    white: "#ffffff", // 기본 흰색
+    whiteIcon: "#ffffff", // 흰색 아이콘 색상
+    whiteBlack: "#ffffff", // 흰색과 검정의 조합
+    whiteGray: "#fbfbfb", // 밝은 회색
+    gray0: "#f7f7f7", // 매우 밝은 회색
+    gray1: "#f2f2f2", // 밝은 회색
+    gray2: "#ececec", // 조금 더 진한 회색
+    gray3: "#dddddd", // 중간 밝기의 회색
+    gray4: "#cccccc", // 진한 회색
+    gray5: "#aaaaaa", // 어두운 회색
+    gray6: "#e7e7e7", // 밝은 회색
+    grayDeactive: "#c2c2c2", // 비활성화된 회색
+    deactive: "#bbbbbb", // 비활성화 색상
+    liteShadow: "#bbbbbb", // 밝은 그림자 색상
+    shadow: "#808080", // 기본 그림자 색상
+    shadowWhite: "#808080", // 흰색 그림자
+    darkShadow: "#606060", // 어두운 그림자
+    darkDarkShadow: "#505050", // 더 어두운 그림자
+    darkDarkDarkShadow: "#464646", // 매우 어두운 그림자
+    liteBlack: "#aaaaaa", // 밝은 검정색
+    black: "#404040", // 기본 검정색
+    darkBlack: "#303030", // 어두운 검정색
+    darkDarkBlack: "#252525", // 더 어두운 검정색
+    realBlack: "#202020", // 실제 검정색
+    gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)", // 그라데이션 녹색
+    gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)", // 그라데이션 녹색 2
+    gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)", // 그라데이션 녹색 3
+    gradientGreen4: "linear-gradient(222deg, rgba(89, 175, 137, 1) 5%, rgba(0, 156, 106, 1) 100%)", // 그라데이션 녹색 4
+    gradientGreenWhite: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)", // 그라데이션 녹색-흰색
+    greenGray: "#2fa678", // 녹색-회색
+    greenWhite: "#2fa678", // 녹색-흰색
+    greenBlack: "#2fa678", // 녹색-검정색
+    cancelBlack: "#404040", // 취소용 검정색
+    green: "#2fa678", // 기본 녹색
+    softGreen: "#59af89", // 부드러운 녹색
+    darkGreen: "#009b6a", // 어두운 녹색
+    whiteGreen: "#bedacb", // 흰색-녹색
+    middleGreen: "#83cea7", // 중간 녹색
+    liteGreen: "#f0f9f5", // 밝은 녹색
+    gradientWhiteGray: "linear-gradient(254deg, rgba(240, 240, 240, 0.95) 0%, rgba(247, 247, 247, 0.95) 100%)", // 그라데이션 흰색-회색
+    gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)", // 그라데이션 회색
+    gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)", // 그라데이션 검정색
+    gradientWhite: "linear-gradient(256deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%)", // 그라데이션 흰색
+    gradientWhite2: "linear-gradient(200deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 100%)", // 그라데이션 흰색 2
+    red: "#ff5f57", // 기본 빨간색
+    yellow: "#ffbd3d", // 기본 노란색
+    purple: "#ba7dd7", // 기본 보라색
+    darkRed: "#d13939", // 어두운 빨간색
+    blueWhite: "#E7F3FB", // 파란색-흰색
+    blueLight: "#8CC9F4", // 밝은 파란색
+    blue: "#77BBE9", // 기본 파란색
+    blueDark: "#65A0C8", // 어두운 파란색
+    blueDim: "#5A96BF", // 약간 어두운 파란색
+    blueDarkDim: "#2A5F84", // 더 어두운 파란색
+    blueDarkDarkDim: "#224761", // 매우 어두운 파란색
+    blueDeactive: "#A9CDE5", // 비활성화 파란색
+    gardientWhite: "linear-gradient(28deg, rgba(140,201,244,0.88) 0%, rgba(195,224,244,1) 100%)", // 그라데이션 흰색-파란색
+    gradientBlue: "linear-gradient(199deg, rgba(140,201,244,0.85) 0%, rgba(119,187,233,1) 100%)", // 그라데이션 파란색
+    gradientBlue1: "linear-gradient(138deg, rgba(140,201,244,1) 0%, rgba(101,160,200,1) 100%)", // 그라데이션 파란색 1
+    gradientBlue2: "linear-gradient(199deg, rgba(140,201,244,1) 0%, rgba(90,150,191,1) 100%)", // 그라데이션 파란색 2
+    gradientBlue3: "linear-gradient(117deg, rgba(119,187,233,0.85) 0%, rgba(78,139,180,0.85) 100%)", // 그라데이션 파란색 3
+    gradientBlue4: "linear-gradient(138deg, rgba(111,170,215,1) 0%, rgba(119,187,233,1) 100%)", // 그라데이션 파란색 4
+    ultimateBlack: "#000000", // 절대적인 검정색
+    subRed: "#ff9062", // 보조 빨간색
+    subYellow: "#ffd874", // 보조 노란색
+    yellowLine: "#cc921f", // 노란색 라인
+    warmGray0: "#f2f2f2", // 따뜻한 회색
+    warmGray1: "#ececec", // 조금 더 진한 따뜻한 회색
+    warmGrayMiddle: "#dddddd", // 중간 밝기의 따뜻한 회색
+    warmGray2: "#cccccc", // 더 진한 따뜻한 회색
   };
 
+  /**
+   * @property {Dictionary} colorExtended
+   * @description 인스턴스에서 참조할 수 있는 확장된 색상 팔레트입니다. 정적 colorExtended와 동일한 값을 참조합니다.
+   */
   public colorExtended: Dictionary = AbstractNode.colorExtended;
 
+  /**
+   * @property {Dictionary} svgMaker
+   * @description 다양한 SVG 아이콘을 생성하는 객체입니다. 이 객체는 특정 색상을 바탕으로 SVG 문자열을 반환하는 메서드를 제공합니다.
+   */
   public static svgMaker: Dictionary = {
     returnLoading: function (color: string = AbstractNode.colorExtended.darkShadow, color2: string = AbstractNode.colorExtended.black): string {
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="${color}"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="${color2}"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="${color}"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="${color2}"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="${color}"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="${color2}"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="${color}"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="${color}"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="${color}"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="${color}"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="${color}"/></svg>`;
@@ -516,60 +676,185 @@ class AbstractNode {
     },  
   }
 
+  /**
+   * @property {Dictionary} svgMaker
+   * @description svgMaker는 SVG 아이콘을 생성하는 함수들을 담고 있는 객체입니다.
+   * AbstractNode 클래스에서 참조할 수 있는 svgMaker 객체를 인스턴스에서 사용할 수 있도록 연결합니다.
+   */
   public svgMaker: Dictionary = AbstractNode.svgMaker;
 
+  /**
+   * @property {Dictionary} nodes
+   * @description 다양한 HTML 요소들을 생성하여 저장하는 객체입니다. 
+   * 정적으로 미리 생성된 HTML 요소들을 사용하기 위해 정의된 객체입니다.
+   */
   public static nodes: Dictionary = {
+    /**
+     * @property {HTMLElement} div
+     * @description 새로운 DIV HTML 요소를 생성합니다.
+     */
     div: document.createElement("DIV") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} img
+     * @description 새로운 IMG HTML 요소를 생성합니다.
+     */
     img: document.createElement("IMG") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} input
+     * @description 새로운 INPUT HTML 요소를 생성합니다.
+     */
     input: document.createElement("INPUT") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} textarea
+     * @description 새로운 TEXTAREA HTML 요소를 생성합니다.
+     */
     textarea: document.createElement("TEXTAREA") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} a
+     * @description 새로운 A(링크) HTML 요소를 생성합니다.
+     */
     a: document.createElement('A') as HTMLElement,
+
+    /**
+     * @property {HTMLElement} b
+     * @description 새로운 B HTML 요소를 생성합니다.
+     */
     b: document.createElement('B') as HTMLElement,
+
+    /**
+     * @property {HTMLElement} label
+     * @description 새로운 LABEL HTML 요소를 생성합니다.
+     */
     label: document.createElement("LABEL") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} iframe
+     * @description 새로운 IFRAME HTML 요소를 생성합니다.
+     */
     iframe: document.createElement("IFRAME") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} aside
+     * @description 새로운 ASIDE HTML 요소를 생성합니다.
+     */
     aside: document.createElement("ASIDE") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} article
+     * @description 새로운 ARTICLE HTML 요소를 생성합니다.
+     */
     article: document.createElement("ARTICLE") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} video
+     * @description 새로운 VIDEO HTML 요소를 생성합니다.
+     */
     video: document.createElement("VIDEO") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} source
+     * @description 새로운 SOURCE HTML 요소를 생성합니다.
+     */
     source: document.createElement("SOURCE") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} canvas
+     * @description 새로운 CANVAS HTML 요소를 생성합니다.
+     */
     canvas: document.createElement("CANVAS") as HTMLElement,
+
+    /**
+     * @property {HTMLElement} figure
+     * @description 새로운 FIGURE HTML 요소를 생성합니다.
+     */
     figure: document.createElement("FIGURE") as HTMLElement,
   };
 
+  /**
+   * @property {Dictionary} nodes
+   * @description 인스턴스에서 사용할 수 있는 nodes 객체입니다. AbstractNode의 정적 nodes 객체를 참조합니다.
+   */
   public nodes: Dictionary = AbstractNode.nodes;
 
+  /**
+   * @property {Matrix} mediaCondition
+   * @description 다양한 화면 크기 조건을 나타내는 2차원 배열입니다. 
+   * 각 배열은 미디어 조건을 나타내며, 화면 크기 범위를 정의합니다.
+   */
   public static mediaCondition: Matrix = [
-    [ Infinity, 1450 ],
-    [ 1450, 1100 ],
-    [ 1100, 900 ],
-    [ 900, 760 ],
-    [ 760, -1 ]
+    [ Infinity, 1450 ], // 1450px 이상의 화면 크기
+    [ 1450, 1100 ], // 1450px ~ 1100px 사이의 화면 크기
+    [ 1100, 900 ], // 1100px ~ 900px 사이의 화면 크기
+    [ 900, 760 ], // 900px ~ 760px 사이의 화면 크기
+    [ 760, -1 ] // 760px 이하의 화면 크기
   ];
 
+  /**
+   * @property {Dictionary} mediaCondition
+   * @description 인스턴스에서 사용할 수 있는 mediaCondition 객체입니다. AbstractNode의 정적 mediaCondition 배열을 참조합니다.
+   */
   public mediaCondition: Dictionary = AbstractNode.mediaCondition;
   
+  /**
+   * @method mediaConditionToArray
+   * @description 화면 크기 조건에 맞는 배열을 반환하는 함수입니다. 각 조건은 화면 너비에 대한 조건으로 구성되며,
+   * 조건을 만족하는지 여부에 따라 booleanMode가 설정됩니다. 기본적으로 조건은 문자열로 반환되며, booleanMode가 true일 경우 조건의 결과값이 boolean으로 반환됩니다.
+   * @param {boolean} [booleanMode=false] - 조건 결과를 boolean으로 반환할지 여부를 결정하는 플래그입니다.
+   * @returns {List} - 화면 크기 조건 배열을 반환합니다.
+   * @throws {Error} - 조건 배열이 유효하지 않은 경우 오류를 발생시킵니다.
+   */
   public static mediaConditionToArray = (booleanMode: boolean = false): List => {
+    /**
+     * @description mediaCondition는 화면 크기 조건을 나타내는 2차원 배열입니다.
+     */
     const { mediaCondition } = AbstractNode;
+
+    /**
+     * @description 조건을 저장하는 배열입니다.
+     * @type {List}
+     */
     let conditions: List;
+
+    /**
+     * @description 조건 문자열을 저장하는 변수입니다.
+     * @type {string}
+     */
     let thisCondition: string;
+
+    /**
+     * @description 조건에 대한 부울 값을 저장하는 변수입니다.
+     * @type {boolean}
+     */
     let thisConditionBoo: boolean;
 
     conditions = [];
+
+    // 각 조건 배열을 순회하며 조건을 처리합니다.
     for (let conditionArr of mediaCondition) {
       if (!Array.isArray(conditionArr)) {
-        throw new Error("invalid condition 0")
+        throw new Error("invalid condition 0"); // 조건이 배열이 아닌 경우 오류 발생
       }
       if (conditionArr.length !== 2) {
-        throw new Error("invalid condition 1")
+        throw new Error("invalid condition 1"); // 배열 길이가 2가 아닌 경우 오류 발생
       }
-      if (!conditionArr.every((n: number) => { return typeof n === "number" })) {
-        throw new Error("invalid condition 2")
+      if (!conditionArr.every((n: number) => { return typeof n === "number"; })) {
+        throw new Error("invalid condition 2"); // 배열의 요소가 숫자가 아닌 경우 오류 발생
       }
+
+      // 조건을 문자열로 설정합니다.
       thisCondition = `window.innerWidth <= ${String(conditionArr[0])} && window.innerWidth > ${String(conditionArr[1])}`;
 
+      // 화면 크기 조건에 따른 부울 값을 설정합니다.
       thisConditionBoo = false;
       if (window.innerWidth <= conditionArr[0] && window.innerWidth > conditionArr[1]) {
         thisConditionBoo = true;
       }
+
+      // booleanMode가 true이면 부울 값을, 그렇지 않으면 조건 문자열을 추가합니다.
       if (booleanMode) {
         conditions.push(thisConditionBoo);
       } else {
@@ -577,35 +862,69 @@ class AbstractNode {
       }
     }
 
-    return conditions;
+    return conditions; // 처리된 조건 배열을 반환합니다.
   }
 
+  /**
+   * @method mediaQuery
+   * @description 주어진 코드에서 미디어 조건에 따른 조건문을 업데이트하는 함수입니다.
+   * 코드 내에서 미디어 쿼리를 분석하여 적절한 조건으로 변환하고 이를 반환합니다.
+   * @param {string} code - 변환할 코드 문자열입니다.
+   * @returns {Dictionary} - 변환된 조건과 코드가 포함된 객체를 반환합니다.
+   */
   public static mediaQuery = (code: string): Dictionary => {
+    /**
+     * @description 미디어 조건을 배열로 변환하여 저장합니다.
+     */
     const conditions: List = AbstractNode.mediaConditionToArray();
+
+    /**
+     * @description 업데이트할 프로토타입 문자열을 정의합니다.
+     */
     const updateProtoConst: string = "AbstractNode.stacks.updateMiddleMedialQueryConditions";
+
+    /**
+     * @description 업데이트할 프로토타입을 저장하는 변수입니다.
+     * @type {string}
+     */
     let updateProto: string;
-  
+
+    // 프로토타입 업데이트 문자열을 생성합니다.
     updateProto = '';
     updateProto += updateProtoConst;
     updateProto += " = ";
     updateProto += "[";
+
+    // 각 조건을 순회하며 프로토타입 문자열을 구성합니다.
     for (let i of conditions) {
       updateProto += "(";
       updateProto += i;
       updateProto += "),";
     }
     updateProto += "];\n";
-  
+
+    /**
+     * @description 코드 내에서 특정 패턴을 찾아 변환하는 정규 표현식을 사용하여 코드를 변환합니다.
+     * 조건에 맞게 if-else 구문을 생성하고, 코드를 업데이트합니다.
+     */
     code = code.replace(/[\n;]([^\n\;]*)\/\<\%\%\/,([^\%]+)\/\%\%\>\/[;]?/g, (match, p1, p2, offset, string) => {
       const safeWall: string = "\n\n";
       let tempValue: string, tempArr: List, tempStr: string;
-  
+
+      // 첫 번째 파라미터의 공백과 특수 문자를 제거하여 저장합니다.
       tempValue = p1.replace(/[\n;]/g, '').replace(/\/\<\%\%\/,/g, '').trim();
+      
+      // 두 번째 파라미터에서 조건 배열을 추출합니다.
       tempArr = p2.replace(/\/\<\%\%\/,/g, '').replace(/\/\%\%\>\//g, '').trim().replace(/,$/, '').split(",");
+
       tempStr = "";
+
+      // 배열의 길이가 조건 배열보다 길면 오류를 발생시킵니다.
       if (tempArr.length > conditions.length) {
         throw new Error("parse error");
       }
+
+      // 조건에 따른 if-else 구문을 구성합니다.
       for (let j = 0; j < tempArr.length; j++) {
         tempStr += " } else if (" + conditions[j] + ") { ";
         tempStr += "\n"
@@ -614,37 +933,63 @@ class AbstractNode {
         tempStr += tempArr[j];
         tempStr += ";\n";
       }
+
+      // 변환된 문자열을 반환합니다.
       tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
       return tempStr;
     });
+
+    // 또 다른 정규 표현식을 사용하여 코드에서 특정 패턴을 찾아 변환합니다.
     code = code.replace(/\/\<\&\&\/,([^\&]+)[, ]*\/\&\&\>\//g, (match, p1) => {
       let tempValue: string, tempArr: List, tempStr: string;
+      
+      // 파라미터에서 조건 배열을 추출합니다.
       tempArr = p1.replace(/\/\<\&\&\/,/g, '').replace(/[, ]*\/\&\&\>\//g, '').trim().replace(/,$/, '').split("|");
+      
+      // 배열을 순회하며 공백을 제거합니다.
       tempArr = tempArr.map((str: string) => { return str.trim(); });
+
+      // 조건에 따른 삼항 연산자를 생성합니다.
       return `(${conditions[0]} ? ${tempArr[0]} : (${conditions[1]} ? ${tempArr[1]} : (${conditions[2]} ? ${tempArr[2]} : (${conditions[3]} ? ${tempArr[3]} : ${tempArr[4]}))))`;
     });
-  
+
+    // 변환된 조건과 코드를 반환합니다.
     return { conditions: updateProto, code };
   }
 
+  /**
+   * @method mediaNumber
+   * @description 화면 크기에 따라 주어진 숫자 값을 반환하는 함수입니다. 각 화면 크기 조건에 맞는 숫자를 설정하고, 해당 조건을 만족할 경우 해당 숫자를 반환합니다.
+   * @param {number} bigDesktop - 큰 데스크톱에 해당하는 숫자 값입니다.
+   * @param {number} desktop - 일반 데스크톱에 해당하는 숫자 값입니다.
+   * @param {number} smallDesktop - 작은 데스크톱에 해당하는 숫자 값입니다.
+   * @param {number} tablet - 태블릿에 해당하는 숫자 값입니다.
+   * @param {number} mobile - 모바일에 해당하는 숫자 값입니다.
+   * @returns {number} - 조건에 맞는 숫자 값을 반환합니다.
+   * @throws {Error} - 주어진 값이 숫자가 아닌 경우 오류를 발생시킵니다.
+   */
   public static mediaNumber = (bigDesktop: number, desktop: number, smallDesktop: number, tablet: number, mobile: number): number => {
     if (typeof bigDesktop !== "number") {
-      throw new Error("invalid big desktop value");
+      throw new Error("invalid big desktop value"); // bigDesktop 값이 숫자가 아닌 경우 오류 발생
     }
     if (typeof desktop !== "number") {
-      throw new Error("invalid normal desktop value");
+      throw new Error("invalid normal desktop value"); // desktop 값이 숫자가 아닌 경우 오류 발생
     }
     if (typeof smallDesktop !== "number") {
-      throw new Error("invalid small desktop value");
+      throw new Error("invalid small desktop value"); // smallDesktop 값이 숫자가 아닌 경우 오류 발생
     }
     if (typeof tablet !== "number") {
-      throw new Error("invalid tablet value");
+      throw new Error("invalid tablet value"); // tablet 값이 숫자가 아닌 경우 오류 발생
     }
     if (typeof mobile !== "number") {
-      throw new Error("invalid mobile value");
+      throw new Error("invalid mobile value"); // mobile 값이 숫자가 아닌 경우 오류 발생
     }
+
+    // 화면 크기 조건을 나타내는 매트릭스를 가져옵니다.
     const conditionMatrix: Matrix = AbstractNode.mediaCondition;
     let finalValue: number;
+
+    // 현재 화면 크기에 따라 적절한 값을 설정합니다.
     if (window.innerWidth <= conditionMatrix[0][0] && window.innerWidth > conditionMatrix[0][1]) {
       finalValue = bigDesktop;
     } else if (window.innerWidth <= conditionMatrix[1][0] && window.innerWidth > conditionMatrix[1][1]) {
@@ -656,27 +1001,43 @@ class AbstractNode {
     } else {
       finalValue = mobile;
     }
-    return finalValue;
+
+    return finalValue; // 적절한 숫자 값을 반환합니다.
   }
 
+  /**
+   * @method mediaString
+   * @description 화면 크기에 따라 주어진 문자열 값을 반환하는 함수입니다. 각 화면 크기 조건에 맞는 문자열을 설정하고, 해당 조건을 만족할 경우 해당 문자열을 반환합니다.
+   * @param {string} bigDesktop - 큰 데스크톱에 해당하는 문자열 값입니다.
+   * @param {string} desktop - 일반 데스크톱에 해당하는 문자열 값입니다.
+   * @param {string} smallDesktop - 작은 데스크톱에 해당하는 문자열 값입니다.
+   * @param {string} tablet - 태블릿에 해당하는 문자열 값입니다.
+   * @param {string} mobile - 모바일에 해당하는 문자열 값입니다.
+   * @returns {string} - 조건에 맞는 문자열 값을 반환합니다.
+   * @throws {Error} - 주어진 값이 문자열이 아닌 경우 오류를 발생시킵니다.
+   */
   public static mediaString = (bigDesktop: string, desktop: string, smallDesktop: string, tablet: string, mobile: string): string => {
     if (typeof bigDesktop !== "string") {
-      throw new Error("invalid big desktop value");
+      throw new Error("invalid big desktop value"); // bigDesktop 값이 문자열이 아닌 경우 오류 발생
     }
     if (typeof desktop !== "string") {
-      throw new Error("invalid normal desktop value");
+      throw new Error("invalid normal desktop value"); // desktop 값이 문자열이 아닌 경우 오류 발생
     }
     if (typeof smallDesktop !== "string") {
-      throw new Error("invalid small desktop value");
+      throw new Error("invalid small desktop value"); // smallDesktop 값이 문자열이 아닌 경우 오류 발생
     }
     if (typeof tablet !== "string") {
-      throw new Error("invalid tablet value");
+      throw new Error("invalid tablet value"); // tablet 값이 문자열이 아닌 경우 오류 발생
     }
     if (typeof mobile !== "string") {
-      throw new Error("invalid mobile value");
+      throw new Error("invalid mobile value"); // mobile 값이 문자열이 아닌 경우 오류 발생
     }
+
+    // 화면 크기 조건을 나타내는 매트릭스를 가져옵니다.
     const conditionMatrix: Matrix = AbstractNode.mediaCondition;
     let finalValue: string;
+
+    // 현재 화면 크기에 따라 적절한 문자열 값을 설정합니다.
     if (window.innerWidth <= conditionMatrix[0][0] && window.innerWidth > conditionMatrix[0][1]) {
       finalValue = bigDesktop;
     } else if (window.innerWidth <= conditionMatrix[1][0] && window.innerWidth > conditionMatrix[1][1]) {
@@ -688,27 +1049,43 @@ class AbstractNode {
     } else {
       finalValue = mobile;
     }
-    return finalValue;
+
+    return finalValue; // 적절한 문자열 값을 반환합니다.
   }
 
+  /**
+   * @method mediaBoolean
+   * @description 화면 크기에 따라 주어진 부울 값을 반환하는 함수입니다. 각 화면 크기 조건에 맞는 부울 값을 설정하고, 해당 조건을 만족할 경우 해당 부울 값을 반환합니다.
+   * @param {boolean} bigDesktop - 큰 데스크톱에 해당하는 부울 값입니다.
+   * @param {boolean} desktop - 일반 데스크톱에 해당하는 부울 값입니다.
+   * @param {boolean} smallDesktop - 작은 데스크톱에 해당하는 부울 값입니다.
+   * @param {boolean} tablet - 태블릿에 해당하는 부울 값입니다.
+   * @param {boolean} mobile - 모바일에 해당하는 부울 값입니다.
+   * @returns {boolean} - 조건에 맞는 부울 값을 반환합니다.
+   * @throws {Error} - 주어진 값이 부울 값이 아닌 경우 오류를 발생시킵니다.
+   */
   public static mediaBoolean = (bigDesktop: boolean, desktop: boolean, smallDesktop: boolean, tablet: boolean, mobile: boolean): boolean => {
     if (typeof bigDesktop !== "boolean") {
-      throw new Error("invalid big desktop value");
+      throw new Error("invalid big desktop value"); // bigDesktop 값이 부울 값이 아닌 경우 오류 발생
     }
     if (typeof desktop !== "boolean") {
-      throw new Error("invalid normal desktop value");
+      throw new Error("invalid normal desktop value"); // desktop 값이 부울 값이 아닌 경우 오류 발생
     }
     if (typeof smallDesktop !== "boolean") {
-      throw new Error("invalid small desktop value");
+      throw new Error("invalid small desktop value"); // smallDesktop 값이 부울 값이 아닌 경우 오류 발생
     }
     if (typeof tablet !== "boolean") {
-      throw new Error("invalid tablet value");
+      throw new Error("invalid tablet value"); // tablet 값이 부울 값이 아닌 경우 오류 발생
     }
     if (typeof mobile !== "boolean") {
-      throw new Error("invalid mobile value");
+      throw new Error("invalid mobile value"); // mobile 값이 부울 값이 아닌 경우 오류 발생
     }
+
+    // 화면 크기 조건을 나타내는 매트릭스를 가져옵니다.
     const conditionMatrix: Matrix = AbstractNode.mediaCondition;
     let finalValue: boolean;
+
+    // 현재 화면 크기에 따라 적절한 부울 값을 설정합니다.
     if (window.innerWidth <= conditionMatrix[0][0] && window.innerWidth > conditionMatrix[0][1]) {
       finalValue = bigDesktop;
     } else if (window.innerWidth <= conditionMatrix[1][0] && window.innerWidth > conditionMatrix[1][1]) {
@@ -720,12 +1097,22 @@ class AbstractNode {
     } else {
       finalValue = mobile;
     }
-    return finalValue;
+
+    return finalValue; // 적절한 부울 값을 반환합니다.
   }
 
+  /**
+   * @method mediaEa
+   * @description 현재 화면 크기에 따라 px 또는 vw 단위를 반환하는 함수입니다.
+   * 주로 화면 크기에 맞게 단위를 설정하여 레이아웃을 동적으로 조정하는 데 사용됩니다.
+   * @returns {string} - px 또는 vw 중 하나를 반환합니다.
+   */
   public static mediaEa = (): string => {
+    // 화면 크기 조건을 나타내는 매트릭스를 가져옵니다.
     const conditionMatrix: Matrix = AbstractNode.mediaCondition;
     let finalValue: string;
+
+    // 현재 화면 크기에 따라 px 또는 vw 값을 설정합니다.
     if (window.innerWidth <= conditionMatrix[0][0] && window.innerWidth > conditionMatrix[0][1]) {
       finalValue = "px";
     } else if (window.innerWidth <= conditionMatrix[1][0] && window.innerWidth > conditionMatrix[1][1]) {
@@ -737,158 +1124,226 @@ class AbstractNode {
     } else {
       finalValue = "vw";
     }
-    return finalValue;
+
+    return finalValue; // 적절한 단위를 반환합니다.
   }
 
+  /**
+   * @method colorParsing
+   * @description 주어진 색상 문자열 또는 배열을 처리하여 RGB 배열 또는 16진수 색상 문자열로 변환하는 함수입니다.
+   * 색상 값을 16진수 형식에서 RGB 형식으로 변환하거나, RGB 형식을 16진수 문자열로 변환합니다.
+   * @param {string | Array<number>} str - 변환할 색상 값입니다. 16진수 형식의 문자열 또는 RGB 배열일 수 있습니다.
+   * @returns {Array<number> | string} - 변환된 색상 값으로, RGB 배열 또는 16진수 문자열을 반환합니다.
+   * @throws {Error} - 입력 값이 유효하지 않을 경우 오류를 발생시킵니다.
+   */
   public static colorParsing = (str: string | Array<number>) => {
+    // 입력 값이 문자열인 경우
     if (typeof str === "string") {
 
+      // 입력이 16진수 색상(#XXXXXX) 형식일 때, 앞의 #을 제거합니다.
       if (/^\#/.test(str) && str.length === 7) {
-        str = str.slice(1);
+        str = str.slice(1); // # 기호를 제거한 후 문자열을 처리합니다.
       }
+
+      // 입력 문자열이 유효한 16진수 색상 형식인지 확인합니다.
       if (str.length !== 6 && str.replace(/[^0-9a-f]/gi, '') === '') {
-        throw new Error("invaild input");
+        throw new Error("invaild input"); // 유효하지 않은 입력 값일 경우 오류 발생
       }
+
+      /**
+       * @description 색상 값을 저장할 배열입니다.
+       * @type {Array<string | number>}
+       */
       let colorArr: Array<string | number>;
+
+      /**
+       * @description 변환된 숫자 값을 저장할 임시 배열입니다.
+       * @type {Array<number>}
+       */
       let tempArr: Array<number>;
+
+      /**
+       * @description 각 색상 값의 16진수를 숫자로 변환하여 저장할 변수입니다.
+       * @type {number}
+       */
       let num: number;
 
-      colorArr = [ str.slice(0, 2), str.slice(2, 4), str.slice(4) ];
+      // 16진수 문자열을 두 글자씩 나누어 RGB 값으로 변환할 준비를 합니다.
+      colorArr = [str.slice(0, 2), str.slice(2, 4), str.slice(4)];
+
       tempArr = [];
+
+      // 색상 값을 16진수에서 숫자로 변환하여 저장합니다.
       for (let s of colorArr) {
         if (typeof s === "string") {
           num = 0;
+
+          // 두 번째 자리가 문자일 경우, 이를 16진수 숫자로 변환합니다.
           if (/[a-z]/gi.test(s[1])) {
             num += s[1].charCodeAt(0) - 97 + 10;
           } else {
             num += Number(s[1]);
           }
+
+          // 첫 번째 자리가 문자일 경우, 이를 16진수 숫자로 변환합니다.
           if (/[a-z]/gi.test(s[0])) {
             num += (s[0].charCodeAt(0) - 97 + 10) * 16;
           } else {
             num += (Number(s[0])) * 16;
           }
+
+          // 변환된 값을 임시 배열에 추가합니다.
           tempArr.push(num);
         }
       }
-      colorArr = tempArr;
 
+      // 최종적으로 RGB 배열로 변환된 값을 반환합니다.
+      colorArr = tempArr;
       return colorArr;
 
+    // 입력 값이 배열인 경우
     } else if (Array.isArray(str)) {
 
+      // RGB 배열의 길이가 3이 아닌 경우 오류를 발생시킵니다.
       if (str.length !== 3) {
         throw new Error("invaild input");
       }
+
+      // 배열의 모든 값이 숫자인지 확인합니다.
       if (typeof str[0] !== "number" || typeof str[1] !== "number" || typeof str[2] !== "number") {
         throw new Error("invaild input");
       }
+
+      // 배열의 값이 NaN인지 확인합니다.
       if (Number.isNaN(str[0]) || Number.isNaN(str[1]) || Number.isNaN(str[2])) {
         throw new Error("invaild input");
       }
+
+      /**
+       * @function convertNum
+       * @description 숫자를 16진수 문자열로 변환하는 함수입니다.
+       * @param {number} num - 변환할 숫자 값입니다.
+       * @returns {string} - 변환된 16진수 문자열을 반환합니다.
+       */
       const convertNum = (num: number) => {
+
+        /**
+         * @function convertStr
+         * @description 0~15 사이의 숫자를 16진수 문자로 변환합니다. 10 이상은 문자로 변환됩니다.
+         * @param {number} n - 변환할 숫자 값입니다.
+         * @returns {string} - 변환된 16진수 문자.
+         */
         const convertStr = (n: number): string => {
           if (n < 10) {
-            return String(n);
+            return String(n); // 10 미만일 경우 그대로 숫자로 반환
           } else {
-            return String.fromCharCode(n + 87);
+            return String.fromCharCode(n + 87); // 10 이상일 경우 문자로 변환
           }
         }
-        let first: number, second: number;
-        second = num % 16;
-        first = (num - second) / 16;
+
+        /**
+         * @description 첫 번째 16진수 자리를 계산합니다.
+         * @type {number}
+         */
+        let first: number;
+
+        /**
+         * @description 두 번째 16진수 자리를 계산합니다.
+         * @type {number}
+         */
+        let second: number;
+
+        second = num % 16; // 두 번째 자리는 16으로 나눈 나머지
+        first = (num - second) / 16; // 첫 번째 자리는 몫
+
+        // 두 자리를 합쳐서 반환합니다.
         return convertStr(first) + convertStr(second);
       }
-      return '#' + str.map(convertNum).join('');
-    } else {
 
+      // RGB 배열을 16진수 문자열로 변환하여 반환합니다.
+      return '#' + str.map(convertNum).join('');
+
+    // 입력 값이 유효하지 않을 경우 오류 발생
+    } else {
       throw new Error("invaild input");
     }
   }
   
-  public static ajaxPromise = (data: Dictionary, url: string, option: Dictionary = {}): Promise<any> => {
-    let dataString: string;
-    let finalData: string;
-
-    dataString = "";
-    for (let i in data) {
-      dataString += i.replace(/[\=\&]/g, '');
-      dataString += '=';
-      if (typeof data[i] === "object") {
-        if (data[i] instanceof Date) {
-          dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
-        } else {
-          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
-        }
-      } else {
-        dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
-      }
-      dataString += '&';
-    }
-    finalData = dataString.slice(0, -1);
-
-    return new Promise((resolve, reject) => {
-      const xhr: XMLHttpRequest = new XMLHttpRequest();
-      xhr.open("POST", url);
-      xhr.onload = function () {
-       if (xhr.readyState !== 4) { return }
-       if (xhr.status >= 200 && xhr.status < 300) {
-         resolve(xhr.response);
-       } else {
-         reject({
-           status: xhr.status,
-           statusText: xhr.statusText
-         });
-       }
-      };
-      xhr.onerror = function () {
-       reject({
-         status: xhr.status,
-         statusText: xhr.statusText
-       });
-      };
-      if (typeof finalData === "string") {
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      }
-      if (typeof option.headers === "object" && option.headers !== null) {
-        for (let key in option.headers) {
-          xhr.setRequestHeader(key, option.headers[key]);
-        }
-      }
-      xhr.send(finalData);
-    });
-  }
-  
+  /**
+   * @method ajaxForm
+   * @description 폼 데이터를 비동기적으로 서버에 전송하는 함수입니다. 
+   * XMLHttpRequest 객체를 사용하여 폼 데이터를 지정된 URL로 POST 요청을 통해 전송합니다.
+   * 로딩 중에는 지정된 DOM 요소에 진행률을 표시할 수 있습니다.
+   * @param {FormData} data - 전송할 FormData 객체입니다.
+   * @param {string} url - 폼 데이터를 전송할 서버의 URL입니다.
+   * @param {HTMLElement | null} [loadingDom=null] - 업로드 진행률을 표시할 DOM 요소입니다. 기본값은 null입니다.
+   * @returns {Promise<any>} - 요청의 성공 또는 실패 결과를 반환하는 Promise 객체입니다.
+   */
   public static ajaxForm = (data: FormData, url: string, loadingDom: HTMLElement | null = null): Promise<any> => {
+    // 새로운 Promise 객체를 생성하여 반환합니다.
     return new Promise((resolve, reject) => {
+
+      /**
+       * @description XMLHttpRequest 객체를 생성하여 HTTP 요청을 보냅니다.
+       * @type {XMLHttpRequest}
+       */
       const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+      // POST 요청을 URL에 보낼 준비를 합니다.
       xhr.open("POST", url);
+
+      /**
+       * @event onload
+       * @description 요청이 완료되었을 때 실행되는 콜백 함수입니다.
+       */
       xhr.onload = function () {
-       if (xhr.readyState !== 4) { return }
-       if (xhr.status >= 200 && xhr.status < 300) {
-         resolve(xhr.response);
-       } else {
-         reject({
-           status: xhr.status,
-           statusText: xhr.statusText
-         });
-       }
+        // 요청이 완료되지 않았을 경우 처리하지 않고 반환합니다.
+        if (xhr.readyState !== 4) { return }
+
+        // 요청이 성공적이면 응답을 resolve합니다.
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+
+        // 요청이 실패했을 경우 오류 정보를 reject합니다.
+        } else {
+          reject({
+            status: xhr.status, // HTTP 상태 코드
+            statusText: xhr.statusText // 상태 텍스트 (예: "Not Found")
+          });
+        }
       };
+
+      /**
+       * @event onerror
+       * @description 요청 중 오류가 발생했을 때 실행되는 콜백 함수입니다.
+       */
       xhr.onerror = function () {
-       reject({
-         status: xhr.status,
-         statusText: xhr.statusText
-       });
+        // 요청이 실패했을 경우 오류 정보를 reject합니다.
+        reject({
+          status: xhr.status, // HTTP 상태 코드
+          statusText: xhr.statusText // 상태 텍스트
+        });
       };
-  
+
+      // 로딩 DOM 요소가 지정된 경우, 업로드 진행률을 표시합니다.
       if (loadingDom !== null) {
+
+        /**
+         * @event onprogress
+         * @description 업로드 진행 상황을 나타내는 콜백 함수입니다. e.loaded와 e.total을 사용해 진행률을 계산합니다.
+         * @param {ProgressEvent} e - 업로드 진행 상황을 나타내는 이벤트 객체입니다.
+         */
         xhr.upload.onprogress = function (e) {
+          // textContent가 존재하고 비어 있지 않은 경우, 진행률을 표시합니다.
           if (loadingDom.textContent !== undefined && loadingDom.textContent !== null) {
             if (loadingDom.textContent.trim() !== "") {
               if (e.total !== 0 && e.lengthComputable) {
+                // 로딩 진행률을 백분율로 표시합니다.
                 loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
               }
-            } else {
+            } 
+            // textContent가 비어 있을 경우, 첫 번째 자식의 textContent를 업데이트합니다.
+            else {
               if (e.total !== 0 && e.lengthComputable) {
                 if (loadingDom.firstChild !== null) {
                   loadingDom.firstChild.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
@@ -898,62 +1353,247 @@ class AbstractNode {
           }
         }
       }
-  
+
+      // FormData 객체를 전송합니다.
       xhr.send(data);
     });
   }
-  
+
+  /**
+   * @method ajaxPromise
+   * @description 비동기 POST 요청을 보내는 함수로, 데이터는 URL 인코딩 형식으로 전송됩니다.
+   * 이 함수는 서버에 데이터를 보내고, 성공 또는 실패 시 각각 resolve 또는 reject를 호출합니다.
+   * @param {Dictionary} data - 서버에 전송할 데이터 객체입니다.
+   * @param {string} url - 요청을 보낼 서버의 URL입니다.
+   * @param {Dictionary} [option={}] - 추가 옵션으로, HTTP 헤더 등을 포함할 수 있습니다.
+   * @returns {Promise<any>} - 요청의 성공 또는 실패를 반환하는 Promise 객체입니다.
+   */
+  public static ajaxPromise = (data: Dictionary, url: string, option: Dictionary = {}): Promise<any> => {
+    /**
+     * @description 데이터를 URL 인코딩 형식으로 변환한 문자열입니다.
+     * @type {string}
+     */
+    let dataString: string;
+
+    /**
+     * @description 최종적으로 전송할 데이터 문자열입니다.
+     * @type {string}
+     */
+    let finalData: string;
+
+    // 데이터를 URL 인코딩 형식으로 변환합니다.
+    dataString = "";
+    for (let i in data) {
+      dataString += i.replace(/[\=\&]/g, ''); // 키에 있는 특수 문자를 제거
+      dataString += '='; // 키와 값을 구분하는 = 추가
+      if (typeof data[i] === "object") {
+        if (data[i] instanceof Date) {
+          // Date 객체일 경우, JSON 문자열로 변환 후 양쪽 따옴표를 제거
+          dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+        } else {
+          // 객체일 경우 JSON 문자열로 변환, 특수 문자 제거 및 공백을 +로 변환
+          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+        }
+      } else {
+        // 객체가 아닌 값은 문자열로 변환 후 특수 문자와 공백 처리
+        dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+      }
+      dataString += '&'; // 각 파라미터 사이에 & 추가
+    }
+
+    // 마지막 &를 제거한 최종 데이터 문자열
+    finalData = dataString.slice(0, -1);
+
+    return new Promise((resolve, reject) => {
+      /**
+       * @description XMLHttpRequest 객체를 생성하여 HTTP 요청을 보냅니다.
+       * @type {XMLHttpRequest}
+       */
+      const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+      // POST 요청을 보낼 준비를 합니다.
+      xhr.open("POST", url);
+
+      /**
+       * @event onload
+       * @description 요청이 완료되었을 때 실행되는 콜백 함수입니다.
+       */
+      xhr.onload = function () {
+        if (xhr.readyState !== 4) { return }
+
+        // 요청이 성공적인 경우, 응답을 resolve합니다.
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          // 요청이 실패한 경우, 상태 정보를 포함한 객체를 reject합니다.
+          reject({
+            status: xhr.status,
+            statusText: xhr.statusText
+          });
+        }
+      };
+
+      /**
+       * @event onerror
+       * @description 요청 중 오류가 발생했을 때 실행되는 콜백 함수입니다.
+       */
+      xhr.onerror = function () {
+        reject({
+          status: xhr.status, // HTTP 상태 코드
+          statusText: xhr.statusText // 상태 텍스트 (예: "Not Found")
+        });
+      };
+
+      // 데이터가 문자열일 경우, Content-Type 헤더를 설정합니다.
+      if (typeof finalData === "string") {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      }
+
+      // 추가 옵션에 HTTP 헤더가 있는 경우, 이를 설정합니다.
+      if (typeof option.headers === "object" && option.headers !== null) {
+        for (let key in option.headers) {
+          xhr.setRequestHeader(key, option.headers[key]);
+        }
+      }
+
+      // 최종 데이터 문자열을 서버에 전송합니다.
+      xhr.send(finalData);
+    });
+  }
+
+  /**
+   * @method ajaxJson
+   * @description 서버에 JSON 데이터를 POST 요청으로 보내는 함수입니다.
+   * 서버로부터 JSON 형식의 응답을 받으면 이를 객체로 변환하여 반환합니다.
+   * @param {Dictionary} data - 서버에 전송할 데이터 객체입니다.
+   * @param {string} url - 요청을 보낼 서버의 URL입니다.
+   * @param {Dictionary} [option={}] - 추가 옵션으로, HTTP 헤더 등을 포함할 수 있습니다.
+   * @returns {Promise<any>} - 요청의 성공 또는 실패를 반환하는 Promise 객체입니다.
+   * @throws {Error} - 서버로부터 받은 응답이 JSON 형식이 아닐 경우 오류를 발생시킵니다.
+   */
   public static ajaxJson = (data: Dictionary, url: string, option: Dictionary = {}): Promise<any> => {
+    // Promise를 생성하여 ajaxPromise로 요청을 보냅니다.
     return new Promise(function (resolve, reject) {
       AbstractNode.ajaxPromise(data, url, option).then(function (jsonString) {
+
+        /**
+         * @description 서버로부터 받은 JSON 문자열을 저장합니다.
+         * @type {string}
+         */
         let json: Dictionary, filtered: string, temp: string, tempFunc: () => Dictionary;
+
         try {
-          temp = jsonString.trim();
+          temp = jsonString.trim(); // 받은 응답 문자열의 양쪽 공백을 제거
+
+          // JSON 형식이 아닌 경우 오류를 발생시킵니다.
           if (temp[0] !== '{' && temp[0] !== '[') {
             reject("server must send json");
           } else {
+            // 날짜 문자열을 JavaScript Date 객체로 변환합니다.
             filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, (match: any, p1: string) => {
               return "new Date(" + p1 + ")";
             });
+
+            // 변환된 JSON 문자열을 함수로 실행하여 객체로 변환합니다.
             tempFunc = new Function("const obj = " + filtered + "; return obj;") as () => Dictionary;
             json = tempFunc();
+
+            // 최종적으로 변환된 JSON 객체를 resolve합니다.
             resolve(json);
           }
         } catch (e) {
+          // 변환 중 오류가 발생한 경우 reject합니다.
           reject(e);
         }
       }).catch(function (e) {
-        reject(e);
+        reject(e); // ajaxPromise에서 발생한 오류를 처리합니다.
       });
     });
   }
   
+  /**
+   * @method equalJson
+   * @description JSON 문자열 또는 객체를 입력받아 이를 객체 또는 배열로 변환하는 함수입니다.
+   * Date 객체를 포함한 JSON 데이터를 처리하며, 재귀적으로 중첩된 JSON 문자열을 파싱하여 변환합니다.
+   * @param {string | Dictionary | List} jsonString - 변환할 JSON 문자열, 객체 또는 배열입니다.
+   * @returns {Dictionary | List} - 변환된 JSON 객체 또는 배열을 반환합니다.
+   * @throws {Error} - 입력 값이 유효하지 않은 경우 오류를 발생시킵니다.
+   */
   public static equalJson = (jsonString: string | Dictionary | List): Dictionary | List => {
+
+    /**
+     * @function equal
+     * @description 재귀적으로 JSON 데이터를 처리하는 내부 함수입니다.
+     * @param {string | Dictionary | List} jsonString - 변환할 JSON 데이터입니다.
+     * @returns {Dictionary | List} - 변환된 JSON 객체 또는 배열을 반환합니다.
+     * @throws {Error} - 입력 값이 유효하지 않은 경우 오류를 발생시킵니다.
+     */
     const equal = (jsonString: string | Dictionary | List): Dictionary | List => {
+
+      // 입력이 객체일 경우, JSON 문자열로 변환합니다.
       if (typeof jsonString === "object") {
         jsonString = JSON.stringify(jsonString);
       }
+
+      // 입력이 문자열이 아닌 경우, 문자열로 변환합니다.
       if (typeof jsonString !== "string") {
         jsonString = String(jsonString);
       }
+
+      /**
+       * @description 필터링된 JSON 문자열을 저장할 변수입니다.
+       * @type {string}
+       */
       let filtered: string;
-      filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-      filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
+
+      // JSON 문자열에서 ISO 8601 형식의 날짜 문자열을 JavaScript Date 객체로 변환합니다.
+      filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1) {
+        return "new Date(" + p1 + ")"; // ISO 8601 형식의 날짜를 Date 객체로 변환
+      });
+
+      // 특수 문자를 처리합니다.
+      filtered = filtered.replace(/nbsp\;/g, "&nbsp;"); // HTML 엔티티 처리
       filtered = filtered.replace(/\&\&nbsp\;/g, "&nbsp;");
+
+      /**
+       * @description 필터링된 JSON 문자열을 실행하여 객체로 변환하는 함수입니다.
+       * @type {Function}
+       */
       const tempFunc = new Function("const obj = " + filtered + "; return obj;") as () => Dictionary | List;
+
+      /**
+       * @description 변환된 JSON 객체 또는 배열입니다.
+       * @type {Dictionary | List}
+       */
       const json: Dictionary | List = tempFunc();
-      let temp: string, boo: boolean;
+
+      /**
+       * @description 임시 문자열 변수입니다.
+       * @type {string}
+       */
+      let temp: string;
+
+      /**
+       * @description 문자열을 JSON으로 변환할 수 있는지 여부를 저장하는 부울 값입니다.
+       * @type {boolean}
+       */
+      let boo: boolean;
+
+      // JSON이 객체 또는 배열인 경우 재귀적으로 내부 데이터를 처리합니다.
       if (typeof json === "object") {
         if (Array.isArray(json)) {
+          // 배열인 경우, 각 항목을 확인하여 재귀적으로 처리합니다.
           for (let item of json) {
             if (typeof item === "string") {
+              // 문자열이 객체나 배열 형식을 갖추고 있는 경우
               if (/^[\{\[]/.test(item.trim()) && /[\}\]]$/.test(item.trim())) {
                 try {
-                  temp = JSON.parse(item);
+                  temp = JSON.parse(item); // 문자열을 JSON으로 파싱 시도
                   boo = true;
                 } catch (e) {
                   boo = false;
                 }
+                // 파싱에 성공하면 재귀적으로 처리합니다.
                 if (boo) {
                   item = equal(item);
                 }
@@ -961,15 +1601,18 @@ class AbstractNode {
             }
           }
         } else {
+          // 객체인 경우, 각 속성을 확인하여 재귀적으로 처리합니다.
           for (let i in json) {
             if (typeof json[i] === "string") {
+              // 문자열이 객체나 배열 형식을 갖추고 있는 경우
               if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
                 try {
-                  temp = JSON.parse(json[i]);
+                  temp = JSON.parse(json[i]); // 문자열을 JSON으로 파싱 시도
                   boo = true;
                 } catch (e) {
                   boo = false;
                 }
+                // 파싱에 성공하면 재귀적으로 처리합니다.
                 if (boo) {
                   json[i] = equal(json[i]);
                 }
@@ -977,41 +1620,112 @@ class AbstractNode {
             }
           }
         }
-        return json;
+        return json; // 최종적으로 변환된 JSON 객체 또는 배열을 반환합니다.
       } else {
-        throw Error("invalid input");
+        throw Error("invalid input"); // 유효하지 않은 입력 값인 경우 오류 발생
       }
     }
+
+    // 초기 호출로 재귀적으로 JSON 데이터를 처리합니다.
     return equal(jsonString);
   }
-  
+    
+  /**
+   * @method networkSetString
+   * @description AbstractNode의 주요 네트워크 관련 메서드들을 문자열로 변환하여 반환하는 함수입니다.
+   * 반환된 문자열은 네트워크 관련 메서드인 ajaxPromise, ajaxJson, equalJson을 포함하며, 각각의 메서드를 const로 선언합니다.
+   * @returns {string} - 네트워크 관련 메서드들의 문자열을 반환합니다.
+   */
   public static networkSetString = (): string => {
+    /**
+     * @description 각 메서드 사이에 삽입할 구분자입니다. 줄바꿈과 세미콜론을 포함합니다.
+     * @type {string}
+     */
     const between: string = ";\n\n";
+
+    /**
+     * @description 최종적으로 반환될 자바스크립트 코드 문자열입니다.
+     * @type {string}
+     */
     let jsText: string;
-  
+
+    // 문자열에 ajaxPromise 메서드를 추가하고, AbstractNode. 접두사를 제거합니다.
     jsText = "";
     jsText += "const ajaxPromise = " + AbstractNode.ajaxPromise.toString().replace(/AbstractNode\./g, "");
     jsText += between;
+
+    // ajaxJson 메서드를 추가하고, AbstractNode. 접두사를 제거합니다.
     jsText += "const ajaxJson = " + AbstractNode.ajaxJson.toString().replace(/AbstractNode\./g, "");
     jsText += between;
+
+    // equalJson 메서드를 추가하고, AbstractNode. 접두사를 제거합니다.
     jsText += "const equalJson = " + AbstractNode.equalJson.toString().replace(/AbstractNode\./g, "");
     jsText += between;
-  
-    return jsText;
+
+    return jsText; // 최종 문자열을 반환합니다.
   }
-  
+
+  /**
+   * @method ajaxMultiple
+   * @description 여러 개의 AJAX 요청을 병렬로 처리하는 함수입니다. Web Worker를 사용하여 비동기적으로 요청을 처리하며,
+   * 요청이 모두 완료되면 결과를 반환합니다.
+   * @param {List} matrix - 요청할 데이터와 URL을 담은 배열입니다. 각 항목은 [data, url] 형식의 배열입니다.
+   * @returns {Promise<List>} - 요청이 완료되면 응답 데이터를 배열로 반환하는 Promise 객체입니다.
+   */
   public static ajaxMultiple = (matrix: List): Promise<List> => {
+    /**
+     * @description 응답 데이터를 저장할 배열입니다.
+     * @type {List}
+     */
     let responseTong: List;
+
+    /**
+     * @description 현재 요청 처리 중인 인덱스를 나타내는 숫자입니다.
+     * @type {number}
+     */
     let number: number;
+
+    /**
+     * @description Web Worker 또는 요청 관련 정보를 저장할 배열입니다.
+     * @type {Array<Worker | Dictionary>}
+     */
     let workers: Array<Worker | Dictionary>;
+
+    /**
+     * @description 각 요청의 결과를 저장할 배열입니다.
+     * @type {List}
+     */
     let responseResult: List;
+
+    /**
+     * @description 요청의 간격을 제어하기 위한 interval ID입니다.
+     * @type {any}
+     */
     let intervalId: any;
+
+    /**
+     * @description Web Worker에서 실행할 자바스크립트 코드를 저장할 문자열입니다.
+     * @type {string}
+     */
     let workerJsString: string;
+
+    /**
+     * @description Blob 객체를 생성하기 위한 데이터입니다.
+     * @type {Blob}
+     */
     let blob: Blob;
+
+    /**
+     * @description Web Worker에서 사용할 Blob URL입니다.
+     * @type {string}
+     */
     let blobUrl: string;
-  
+
+    // Web Worker에서 사용할 자바스크립트 코드를 생성합니다.
     workerJsString = AbstractNode.networkSetString();
     workerJsString += "\n\n";
+    
+    // Web Worker의 메인 로직을 추가합니다.
     workerJsString += String(`
     const thisHost = "${window.location.protocol + "//" + window.location.host}";
     const main = async function () {
@@ -1028,7 +1742,7 @@ class AbstractNode {
             } else {
               finalUrl = url;
             }
-            const response = await ajaxJson(data, finalUrl, { equal: true }); 
+            const response = await ajaxJson(data, finalUrl, { equal: true });
             postMessage(JSON.stringify({ response, number }));
           } catch (e) {
             console.log(e);
@@ -1040,288 +1754,475 @@ class AbstractNode {
     }
     main().catch((err) => { console.log(err); });
     `).split("\n").map((s) => { return s.trim() }).join("\n");
-  
-    blob = new Blob([ workerJsString ], { type: "application/javascript" });
-    blobUrl = window.URL.createObjectURL(blob);
-  
+
+    // Web Worker에서 사용할 Blob 객체를 생성합니다.
+    blob = new Blob([workerJsString], { type: "application/javascript" });
+    blobUrl = window.URL.createObjectURL(blob); // Blob URL을 생성합니다.
+
+    // 요청의 결과를 저장할 배열과 각 작업자를 초기화합니다.
     responseResult = (new Array(matrix.length)).fill(0, 0);
     workers = (new Array(matrix.length)).fill({});
     responseTong = (new Array(matrix.length)).fill(0, 0);
-  
+
     return new Promise((resolve, reject) => {
       number = 0;
-      for (let [ data, url ] of matrix) {        
-        workers[number] = new Worker(blobUrl);
+
+      // 각 데이터와 URL을 사용하여 Web Worker를 생성하고 요청을 처리합니다.
+      for (let [data, url] of matrix) {
+        workers[number] = new Worker(blobUrl); // Web Worker 생성
         workers[number].addEventListener("message", (e: any) => {
           const { response, number } = AbstractNode.equalJson(e.data) as Dictionary;
-          responseTong[number] = response;
-          responseResult[number] = true;
+          responseTong[number] = response; // 응답 데이터를 저장
+          responseResult[number] = true; // 요청이 성공적으로 완료되었음을 표시
         });
         workers[number].addEventListener("error", (e: any) => {
-          reject(e);
-        })
-        workers[number].postMessage({ data, url, number });
+          reject(e); // 요청 중 오류가 발생한 경우 reject
+        });
+        workers[number].postMessage({ data, url, number }); // Web Worker에 데이터 전송
         number++;
       }
+
+      // 모든 요청이 완료되었는지 확인하기 위한 interval 설정
       intervalId = setInterval(() => {
         if (responseResult.every((boo) => { return boo === true })) {
           for (let i = 0; i < matrix.length; i++) {
-            workers[i].terminate();
+            workers[i].terminate(); // 모든 작업자 종료
           }
-          clearInterval(intervalId);
-          window.URL.revokeObjectURL(blobUrl);
-          resolve(responseTong);
+          clearInterval(intervalId); // interval 중지
+          window.URL.revokeObjectURL(blobUrl); // Blob URL 해제
+          resolve(responseTong); // 모든 요청의 결과를 반환
         }
-      }, 1);
-    })
-  }
-  
-  public static requestPromise = (url: string): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const xhr: XMLHttpRequest = new XMLHttpRequest();
-      xhr.open("GET", url);
-      xhr.onload = function () {
-       if (xhr.readyState !== 4) { return }
-       if (xhr.status >= 200 && xhr.status < 300) {
-         resolve(xhr.response);
-       } else {
-         reject({
-           status: xhr.status,
-           statusText: xhr.statusText
-         });
-       }
-      };
-      xhr.onerror = function () {
-       reject({
-         status: xhr.status,
-         statusText: xhr.statusText
-       });
-      };
-      xhr.send();
+      }, 1); // 1ms마다 상태를 확인합니다.
     });
   }
   
+  /**
+   * @method requestPromise
+   * @description 주어진 URL로 GET 요청을 보내는 함수입니다. 
+   * 서버로부터 데이터를 비동기적으로 받아와 성공 시 응답을 resolve하고, 실패 시 reject합니다.
+   * @param {string} url - 요청을 보낼 서버의 URL입니다.
+   * @returns {Promise<any>} - 서버로부터의 응답을 반환하는 Promise 객체입니다.
+   */
+  public static requestPromise = (url: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+
+      /**
+       * @description XMLHttpRequest 객체를 생성하여 HTTP 요청을 보냅니다.
+       * @type {XMLHttpRequest}
+       */
+      const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+      // GET 요청을 보낼 준비를 합니다.
+      xhr.open("GET", url);
+
+      /**
+       * @event onload
+       * @description 요청이 완료되었을 때 실행되는 콜백 함수입니다.
+       */
+      xhr.onload = function () {
+        // 요청이 완료되지 않았을 경우 처리하지 않고 반환합니다.
+        if (xhr.readyState !== 4) { return }
+
+        // 요청이 성공적이면 응답을 resolve합니다.
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+
+        // 요청이 실패했을 경우 상태 정보를 포함한 객체를 reject합니다.
+        } else {
+          reject({
+            status: xhr.status, // HTTP 상태 코드
+            statusText: xhr.statusText // 상태 텍스트 (예: "Not Found")
+          });
+        }
+      };
+
+      /**
+       * @event onerror
+       * @description 요청 중 오류가 발생했을 때 실행되는 콜백 함수입니다.
+       */
+      xhr.onerror = function () {
+        // 요청이 실패했을 경우 상태 정보를 포함한 객체를 reject합니다.
+        reject({
+          status: xhr.status, // HTTP 상태 코드
+          statusText: xhr.statusText // 상태 텍스트
+        });
+      };
+
+      // GET 요청을 서버로 전송합니다.
+      xhr.send();
+    });
+  }
+
+  /**
+   * @method downloadFile
+   * @description 주어진 URL로부터 파일을 다운로드하는 함수입니다. 
+   * 다운로드 진행 상황을 표시할 수 있으며, PDF 파일의 경우 새 창에서 열립니다.
+   * @param {string} url - 다운로드할 파일의 URL입니다.
+   * @param {string | null} [forceName=null] - 강제로 설정할 파일 이름입니다. 기본값은 null입니다.
+   * @param {HTMLElement | null} [loadingDom=null] - 파일 다운로드 진행률을 표시할 DOM 요소입니다. 기본값은 null입니다.
+   * @returns {Promise<any>} - 다운로드가 완료되면 파일 이름을 반환하는 Promise 객체입니다.
+   */
   public static downloadFile = (url: string, forceName: string | null = null, loadingDom: HTMLElement | null = null): Promise<any> => {
     return new Promise((resolve, reject) => {
+
+      /**
+       * @description XMLHttpRequest 객체를 생성하여 HTTP 요청을 보냅니다.
+       * @type {XMLHttpRequest}
+       */
       const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+      // URL이 PDF 파일인지 확인하고, PDF 파일인 경우 새 창에서 엽니다.
       if (/pdf/gi.test(url)) {
         setTimeout(() => {
-          AbstractNode.blankHref(url);
+          AbstractNode.blankHref(url); // PDF 파일을 새 창에서 엽니다.
         }, 0);
       }
+
+      // GET 요청을 보낼 준비를 합니다.
       xhr.open("GET", url);
-      xhr.responseType = "arraybuffer";
+      xhr.responseType = "arraybuffer"; // 응답 데이터를 이진 데이터로 받기 위한 설정
+
+      /**
+       * @event onprogress
+       * @description 파일 다운로드 중 진행률을 표시하는 콜백 함수입니다.
+       * @param {ProgressEvent} e - 진행 상황을 나타내는 이벤트 객체입니다.
+       */
       xhr.onprogress = function (e) {
         if (loadingDom !== null) {
+          // 진행률을 표시할 DOM 요소가 있는 경우, 다운로드 진행률을 표시합니다.
           if (loadingDom.textContent !== undefined && loadingDom.textContent !== null && e.total !== 0 && e.lengthComputable) {
             loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
           }
         }
-      }
+      };
+
+      /**
+       * @event onload
+       * @description 요청이 완료되었을 때 실행되는 콜백 함수입니다.
+       */
       xhr.onload = function () {
         if (xhr.readyState !== 4) {
           return;
         }
+
+        // 요청이 성공적으로 완료된 경우
         if (xhr.status >= 200 && xhr.status < 300) {
-          let fileName: string, fileType: string, blob: Blob, a: HTMLAnchorElement, timeoutId: any;
+
+          /**
+           * @description 파일 이름입니다. URL에서 파일 이름을 추출합니다.
+           * @type {string}
+           */
+          let fileName: string;
+
+          /**
+           * @description 파일의 MIME 타입입니다.
+           * @type {string}
+           */
+          let fileType: string;
+
+          /**
+           * @description Blob 객체로 변환된 파일 데이터입니다.
+           * @type {Blob}
+           */
+          let blob: Blob;
+
+          /**
+           * @description 파일 다운로드를 위한 가상의 앵커 요소입니다.
+           * @type {HTMLAnchorElement}
+           */
+          let a: HTMLAnchorElement;
+
+          /**
+           * @description URL에서 추출된 파일 확장자를 저장할 변수입니다.
+           * @type {RegExpExecArray | null}
+           */
           let execSearch: RegExpExecArray | null;
-  
+
+          /**
+           * @description 다운로드 후 Blob URL을 해제하기 위한 타임아웃 ID입니다.
+           * @type {any}
+           */
+          let timeoutId: any;
+
+          // URL에서 파일 이름을 추출합니다.
           fileName = url.split("/")[url.split("/").length - 1];
+
+          // 파일 확장자를 추출합니다.
           execSearch = /\.[^\.]+$/.exec(fileName);
           if (execSearch === null) {
-            reject("invaild url");
+            reject("invalid url");
             return;
           }
+
+          // 추출된 확장자를 기반으로 MIME 타입을 설정합니다.
           fileType = AbstractNode.mimeTypes[execSearch[0].replace(/\./g, '').toLowerCase()];
           if (fileType === undefined) {
-            fileType = "application/octet-stream";
+            fileType = "application/octet-stream"; // 확장자가 없거나 알 수 없는 경우 기본 MIME 타입 설정
           }
+
+          // 강제로 지정된 파일 이름이 있을 경우, 이를 사용합니다.
           if (forceName !== null && typeof forceName === "string") {
             fileName = forceName.replace(/\.[^\.]+$/, '') + '.' + execSearch[0].replace(/\./g, '').toLowerCase();
           }
-          blob = new Blob([ xhr.response ], { type: fileType });
+
+          // Blob 객체를 생성하여 파일 데이터를 준비합니다.
+          blob = new Blob([xhr.response], { type: fileType });
+
+          // 다운로드를 위한 앵커 요소를 생성합니다.
           a = document.createElement("A") as HTMLAnchorElement;
-          a.target = '_blank';
-          a.download = fileName;
-          a.href = URL.createObjectURL(blob);
-          a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
-          a.style.display = "none";
-          document.body.appendChild(a);
+          a.target = '_blank'; // 새 창에서 열기 위한 설정
+          a.download = fileName; // 다운로드할 파일 이름 설정
+          a.href = URL.createObjectURL(blob); // Blob URL 생성
+          a.dataset.downloadurl = [fileType, a.download, a.href].join(':'); // 다운로드 URL 데이터 설정
+          a.style.display = "none"; // 앵커 요소 숨기기
+          document.body.appendChild(a); // 앵커 요소를 DOM에 추가
+
+          // 클릭 이벤트가 발생하면 다운로드를 완료하고 Blob URL을 해제합니다.
           a.addEventListener("click", () => {
             timeoutId = setTimeout(() => {
-              URL.revokeObjectURL(a.href);
-              document.body.removeChild(a);
-              resolve(fileName);
-              clearTimeout(timeoutId);
+              URL.revokeObjectURL(a.href); // Blob URL 해제
+              document.body.removeChild(a); // 앵커 요소 제거
+              resolve(fileName); // 다운로드가 완료되면 파일 이름을 반환
+              clearTimeout(timeoutId); // 타임아웃 해제
             }, 500);
           });
-          a.click();
-  
+
+          a.click(); // 파일 다운로드 실행
+
         } else {
+          // 요청이 실패한 경우, 상태 정보를 포함한 객체를 reject합니다.
           reject({
-            status: xhr.status,
-            statusText: xhr.statusText
+            status: xhr.status, // HTTP 상태 코드
+            statusText: xhr.statusText // 상태 텍스트
           });
         }
       };
+
+      /**
+       * @event onerror
+       * @description 요청 중 오류가 발생했을 때 실행되는 콜백 함수입니다.
+       */
       xhr.onerror = () => {
         reject({
-          status: xhr.status,
-          statusText: xhr.statusText
+          status: xhr.status, // HTTP 상태 코드
+          statusText: xhr.statusText // 상태 텍스트
         });
       };
+
+      // GET 요청을 서버로 전송합니다.
       xhr.send();
     });
   }
-  
-  public static createNode = (mode: string | Dictionary, source?: string | HTMLElement | Element | SVGElement, style?: Dictionary, mother?: HTMLElement | Element | SVGElement | null): HTMLElement | SVGElement => {
-    /* append style object properties */
-    /*
-    dom = {
-      mode: "div",
-      source: "",
-      mother: base,
-      text: "hi!",
-      class: [ "hoverdefault" ],
-      id: "aaa",
-      attribute: [
-        { index: "b" },
-      ],
-      events: [
-        { type: "click", event: new Function() }
-      ],
-      style: {},
-      child: {},
-      children: [
-        ...nodeObject
-      ]
-    }
-    */
+    
+  /**
+   * createNode 함수는 주어진 매개변수들을 기반으로 HTML 또는 SVG 엘리먼트를 생성하는 함수.
+   * 'mode'는 노드의 유형(예: 'div', 'span' 등)을 지정하고, 'source'는 SVG 요소일 경우 소스 문자열을 입력받으며,
+   * 'style'은 스타일 및 속성 설정, 'mother'는 생성된 노드가 추가될 부모 노드를 가리킴.
+   * 
+   * @param {string | Dictionary} mode - 생성할 노드의 유형 또는 스타일 객체.
+   * @param {string | HTMLElement | Element | SVGElement} [source] - 노드가 SVG일 경우의 소스 문자열 또는 부모 엘리먼트.
+   * @param {Dictionary} [style] - 노드의 스타일 및 속성 정보.
+   * @param {HTMLElement | Element | SVGElement | null} [mother] - 생성된 노드가 추가될 부모 엘리먼트.
+   * @returns {HTMLElement | SVGElement} - 생성된 HTML 또는 SVG 엘리먼트.
+   * @throws {Error} - mode, source, style 등의 인자가 잘못되었을 때 발생.
+   */
+  public static createNode = (
+    mode: string | Dictionary,
+    source?: string | HTMLElement | Element | SVGElement,
+    style?: Dictionary,
+    mother?: HTMLElement | Element | SVGElement | null
+  ): HTMLElement | SVGElement => {
+    // media 관련 변수를 추출
     const { mediaNumber, mediaString, mediaEa } = AbstractNode;
+
+    // 생성된 DOM 요소를 저장할 변수
     let dom_clone: HTMLElement | SVGElement;
+
+    // 스타일 정보를 저장할 변수
     let targetStyle: Dictionary;
+
+    // SVG의 비율을 계산하기 위한 변수
     let ratio: number;
+
+    // 임시로 사용될 변수들
     let temp: any, tempIndex: any;
+
+    // 텍스트 스타일링 관련 변수를 초기화
     let boldObject: string, underObject: string, specialObject: string, codeObject: string, italicObject: string;
+
+    // 자식 노드 배열을 저장할 변수
     let children: List;
+
+    // 다음 또는 이전 노드 객체 및 그 관련 변수
     let nextObject: any, previousObject: any, previousDom: any;
+
+    // 현재 요소의 단위(ea)를 저장할 변수
     let thisEa: string;
+
+    // 단위(ea) 관련 변수
     let ea: string;
+
+    // 코드 블록 관련 배열 및 정규표현식 관련 변수
     let codeArr: List;
     let thisCodeRegExp: RegExp;
     let thisExecResult: RegExpExecArray | null;
     let codeDomArr: List;
-  
+
+    // mediaEa 함수로 단위를 초기화
     thisEa = mediaEa();
+
+    // 자식, 다음, 이전 노드 관련 변수 초기화
     children = [];
     nextObject = null;
     previousObject = null;
     codeArr = [];
 
+    // mode가 정의되지 않은 경우 에러를 발생시킴
     if (mode === undefined) {
       throw new Error("arguments must be mode(dom node name), style");
     } else {
+      // mode가 객체일 경우, mode 자체를 스타일로 사용하고 기본 노드를 'div'로 설정
       if (mode !== undefined && typeof mode === "object") {
         style = mode;
         mode = "div";
+
+        // source가 객체일 경우 이를 mother로 설정
         if (typeof source === "object" && source.nodeName !== undefined) {
           mother = source;
         } else {
           mother = null;
         }
+
+        // source는 빈 문자열로 초기화
         source = "";
       } else {
         throw new Error("arguments must be mode(dom node name), svg source string, style object, dom mother");
       }
     }
+
+    // 스타일이 배열이면 에러 발생
     if (Array.isArray(style)) {
       throw new Error("argument must be object, not array");
     }
+
+    // 스타일 객체에 mode가 있으면 이를 삭제하고, mode를 설정
     if (style.mode !== undefined) {
       if (typeof style.mode === "string") {
         mode = style.mode;
       }
       delete style.mode;
     }
+
+    // 스타일 객체에 source가 있으면 이를 삭제하고, source를 설정
     if (style.source !== undefined) {
       if (typeof style.source === "string") {
         source = style.source;
       }
       delete style.source;
     }
+
+    // 스타일 객체에 mother가 있으면 이를 삭제하고, mother를 설정
     if (style.mother !== undefined) {
       if (typeof style.mother === "object" && style.mother.nodeName !== undefined) {
         mother = style.mother;
       }
       delete style.mother;
     }
+
+    // 스타일 객체에 child가 있으면 이를 자식 노드 배열에 추가
     if (style.child !== undefined) {
       if (typeof style.child === "object" && style.child !== null && !Array.isArray(style.child)) {
         children.push(style.child);
       }
       delete style.child;
     }
+
+    // 스타일 객체에 children가 있으면 이를 자식 노드 배열로 설정
     if (style.children !== undefined) {
       if (Array.isArray(style.children)) {
         children = style.children;
       }
       delete style.children;
     }
+
+    // 스타일 객체에 next가 있으면 이를 nextObject로 설정
     if (style.next !== undefined) {
       if (typeof style.next === "object" && style.next !== null && !Array.isArray(style.next)) {
         nextObject = style.next;
       }
       delete style.next;
     }
+
+    // 스타일 객체에 previous가 있으면 이를 previousObject로 설정
     if (style.previous !== undefined) {
       if (typeof style.previous === "object" && style.previous !== null && !Array.isArray(style.previous)) {
         previousObject = style.previous;
       }
       delete style.previous;
     }
+
+    // mother가 undefined인 경우 null로 설정
     if (mother === undefined) {
       mother = null;
     }
   
     if (!/svg/gi.test(mode)) {
+      /**
+       * 주어진 매개변수를 통해 노드를 생성하는 로직.
+       * 만약 AbstractNode에 해당 mode의 노드가 없거나 style이 객체가 아닐 경우 에러를 발생시킴.
+       */
       if (AbstractNode.nodes[mode] === undefined || typeof style !== "object") {
-        throw new Error("invaild arguments");
+        throw new Error("invaild arguments"); // mode나 style 인자가 잘못되었을 때 에러 발생
       } else {
+        // mode에 해당하는 노드를 복제하여 dom_clone에 저장
         dom_clone = AbstractNode.nodes[mode].cloneNode(true);
+
+        // 스타일 객체에 text 속성이 있는지 확인
         if (style.text !== undefined) {
+          // 텍스트가 문자열 또는 배열인지 확인 후 텍스트 콘텐츠를 설정
           if ((typeof style.text === "string" || Array.isArray(style.text)) && dom_clone.textContent !== undefined) {
+            // 텍스트가 배열일 경우, <br> 태그로 연결하여 하나의 문자열로 변환
             if (Array.isArray(style.text)) {
               style.text = style.text.join("<br>");
             }
+            // 텍스트 내에 굵게 표시할 <b%> 태그가 있는지 확인
             if (/\<b\%/gi.test(style.text)) {
+              // bold 옵션이 없거나 객체가 아닐 경우 에러 발생
               if (style.bold === undefined || typeof style.bold !== "object") {
                 throw new Error("bold option needs");
               } else {
-                boldObject = "";
+                boldObject = ""; // bold 스타일을 저장할 문자열
+
+                // bold의 display 속성 설정 (기본값은 inline-block)
                 if (style.bold.display === undefined || style.bold.display === null) {
                   style.bold.display = "inline-block";
                 }
+                // bold의 position 속성 설정 (기본값은 relative)
                 if (style.bold.position === undefined || style.bold.position === null) {
                   style.bold.position = "relative";
                 }
+                // bold 객체의 속성을 순회하며 스타일 문자열을 생성
                 for (let b in style.bold) {
                   if (b === "fontSizeWeight") {
-                    const [ thisSize, thisWeight ] = style.bold[b];
+                    const [thisSize, thisWeight] = style.bold[b];
+                    // 폰트 크기 설정
                     if (typeof thisSize === "number") {
                       boldObject += "font-size:" + String(thisSize) + thisEa;
-                      boldObject += ';';
+                      boldObject += ";";
                     } else if (typeof thisSize === "string") {
                       boldObject += "font-size:" + thisSize;
-                      boldObject += ';';
+                      boldObject += ";";
                     }
+                    // 폰트 두께 설정
                     if (typeof thisWeight === "number") {
                       boldObject += "font-weight:" + String(thisWeight);
-                      boldObject += ';';
+                      boldObject += ";";
                     } else if (typeof thisWeight === "string") {
                       boldObject += "font-weight:" + thisWeight;
-                      boldObject += ';';
+                      boldObject += ";";
                     }
                   } else {
+                    // 폰트 관련 또는 여백(padding, margin) 관련 속성들 처리
                     if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
                       tempIndex = null;
                       for (let z = 0; z < b.length; z++) {
@@ -1330,6 +2231,7 @@ class AbstractNode {
                           break;
                         }
                       }
+                      // 속성명에 대소문자가 섞여있을 경우 이를 변환하여 CSS 속성명으로 만듦
                       if (tempIndex !== null) {
                         boldObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
                       } else {
@@ -1339,6 +2241,8 @@ class AbstractNode {
                       boldObject += b;
                     }
                     boldObject += ':';
+
+                    // 스타일 값 설정 (숫자일 경우 단위 추가)
                     if (typeof style.bold[b] === "number") {
                       if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
                         boldObject += String(style.bold[b]);
@@ -1348,27 +2252,33 @@ class AbstractNode {
                     } else {
                       boldObject += style.bold[b];
                     }
-                    boldObject += ';'; 
+                    boldObject += ';';
                   }
                 }
+                // 텍스트 내 <b%> 태그를 <b> 태그와 bold 스타일로 대체
                 style.text = style.text.replace(/\<b\%/gi, "<b style=\"" + boldObject + "\">");
                 style.text = style.text.replace(/\%b\>/gi, "</b>");
               }
             }
+            
+            // 텍스트 내에 밑줄 표시할 <u%> 태그가 있는지 확인
             if (/\<u\%/gi.test(style.text)) {
               if (style.under === undefined || typeof style.under !== "object") {
                 throw new Error("under option needs");
               } else {
-                underObject = "";
+                underObject = ""; // under 스타일을 저장할 문자열
+
+                // 기본 스타일 설정 (display: inline-block, position: relative)
                 if (style.under.display === undefined || style.under.display === null) {
                   style.under.display = "inline-block";
                 }
                 if (style.under.position === undefined || style.under.position === null) {
                   style.under.position = "relative";
                 }
+                // under 객체의 스타일 속성들을 처리
                 for (let b in style.under) {
                   if (b === "fontSizeWeight") {
-                    const [ thisSize, thisWeight ] = style.under[b];
+                    const [thisSize, thisWeight] = style.under[b];
                     if (typeof thisSize === "number") {
                       underObject += "font-size:" + String(thisSize) + thisEa;
                       underObject += ';';
@@ -1402,227 +2312,27 @@ class AbstractNode {
                     }
                     underObject += ':';
                     if (typeof style.under[b] === "number") {
-                      if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
-                        underObject += String(style.under[b]);
-                      } else {
-                        underObject += String(style.under[b]) + thisEa;
-                      }
+                      underObject += String(style.under[b]) + thisEa;
                     } else {
                       underObject += style.under[b];
                     }
                     underObject += ';';
                   }
                 }
+                // <u%> 태그를 스타일이 적용된 <b> 태그로 변환
                 style.text = style.text.replace(/\<u\%/gi, "<b style=\"" + underObject + "\">");
                 style.text = style.text.replace(/\%u\>/gi, "</b>");
               }
             }
-            if (/\<s\%/gi.test(style.text)) {
-              if (style.special === undefined || typeof style.special !== "object") {
-                throw new Error("special option needs");
-              } else {
-                specialObject = "";
-                if (style.special.display === undefined || style.special.display === null) {
-                  style.special.display = "inline-block";
-                }
-                if (style.special.position === undefined || style.special.position === null) {
-                  style.special.position = "relative";
-                }
-                for (let b in style.special) {
-                  if (b === "fontSizeWeight") {
-                    const [ thisSize, thisWeight ] = style.special[b];
-                    if (typeof thisSize === "number") {
-                      specialObject += "font-size:" + String(thisSize) + thisEa;
-                      specialObject += ';';
-                    } else if (typeof thisSize === "string") {
-                      specialObject += "font-size:" + thisSize;
-                      specialObject += ';';
-                    }
-                    if (typeof thisWeight === "number") {
-                      specialObject += "font-weight:" + String(thisWeight);
-                      specialObject += ';';
-                    } else if (typeof thisWeight === "string") {
-                      specialObject += "font-weight:" + thisWeight;
-                      specialObject += ';';
-                    }
-                  } else {
-                    if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                      tempIndex = null;
-                      for (let z = 0; z < b.length; z++) {
-                        if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                          tempIndex = z;
-                          break;
-                        }
-                      }
-                      if (tempIndex !== null) {
-                        specialObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
-                      } else {
-                        specialObject += b;
-                      }
-                    } else {
-                      specialObject += b;
-                    }
-                    specialObject += ':';
-                    if (typeof style.special[b] === "number") {
-                      if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
-                        specialObject += String(style.special[b]);
-                      } else {
-                        specialObject += String(style.special[b]) + thisEa;
-                      }
-                    } else {
-                      specialObject += style.special[b];
-                    }
-                    specialObject += ';';
-                  }
-                }
-                style.text = style.text.replace(/\<s\%/gi, "<b style=\"" + specialObject + "\">");
-                style.text = style.text.replace(/\%s\>/gi, "</b>");
-              }
-            }
-            if (/\<c\%/gi.test(style.text)) {
-              if (style.code === undefined || typeof style.code !== "object") {
-                throw new Error("code option needs");
-              } else {
-                codeObject = "";
-                if (style.code.display === undefined || style.code.display === null) {
-                  style.code.display = "inline-block";
-                }
-                if (style.code.position === undefined || style.code.position === null) {
-                  style.code.position = "relative";
-                }
-                for (let b in style.code) {
-                  if (b === "fontSizeWeight") {
-                    const [ thisSize, thisWeight ] = style.code[b];
-                    if (typeof thisSize === "number") {
-                      codeObject += "font-size:" + String(thisSize) + thisEa;
-                      codeObject += ';';
-                    } else if (typeof thisSize === "string") {
-                      codeObject += "font-size:" + thisSize;
-                      codeObject += ';';
-                    }
-                    if (typeof thisWeight === "number") {
-                      codeObject += "font-weight:" + String(thisWeight);
-                      codeObject += ';';
-                    } else if (typeof thisWeight === "string") {
-                      codeObject += "font-weight:" + thisWeight;
-                      codeObject += ';';
-                    }
-                  } else {
-                    if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                      tempIndex = null;
-                      for (let z = 0; z < b.length; z++) {
-                        if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                          tempIndex = z;
-                          break;
-                        }
-                      }
-                      if (tempIndex !== null) {
-                        codeObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
-                      } else {
-                        codeObject += b;
-                      }
-                    } else {
-                      codeObject += b;
-                    }
-                    codeObject += ':';
-                    if (typeof style.code[b] === "number") {
-                      if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
-                        codeObject += String(style.code[b]);
-                      } else {
-                        codeObject += String(style.code[b]) + thisEa;
-                      }
-                    } else {
-                      codeObject += style.code[b];
-                    }
-                    codeObject += ';';
-                  }
-                }
-                style.text = style.text.replace(/\<c\%/gi, "<code style=\"" + codeObject + "\">");
-                style.text = style.text.replace(/\%c\>/gi, "</code>");
-  
-                thisCodeRegExp = /\<code [^\>]*\>(((?!\<\/code\>).)*)\<\/code\>/gi;
-                codeArr = [];
-                do {
-                  thisExecResult = thisCodeRegExp.exec(style.text);
-                  codeArr.push(thisExecResult);
-                } while (thisExecResult !== null)
-                codeArr = codeArr.filter((o) => { return o !== null }).map((o) => { return o[1] });
-                style.text = style.text.replace(/(\<code [^\>]*\>)(((?!\<\/code\>).)*)(\<\/code\>)/gi, (match: any, p1: string) => {
-                  return p1 + "</code>"
-                });
-  
-              }
-            }
-            if (/\<i\%/gi.test(style.text)) {
-              if (style.italic === undefined || typeof style.italic !== "object") {
-                throw new Error("italic option needs");
-              } else {
-                italicObject = "";
-                if (style.italic.display === undefined || style.italic.display === null) {
-                  style.italic.display = "inline-block";
-                }
-                if (style.italic.position === undefined || style.italic.position === null) {
-                  style.italic.position = "relative";
-                }
-                for (let b in style.italic) {
-                  if (b === "fontSizeWeight") {
-                    const [ thisSize, thisWeight ] = style.italic[b];
-                    if (typeof thisSize === "number") {
-                      italicObject += "font-size:" + String(thisSize) + thisEa;
-                      italicObject += ';';
-                    } else if (typeof thisSize === "string") {
-                      italicObject += "font-size:" + thisSize;
-                      italicObject += ';';
-                    }
-                    if (typeof thisWeight === "number") {
-                      italicObject += "font-weight:" + String(thisWeight);
-                      italicObject += ';';
-                    } else if (typeof thisWeight === "string") {
-                      italicObject += "font-weight:" + thisWeight;
-                      italicObject += ';';
-                    }
-                  } else {
-                    if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                      tempIndex = null;
-                      for (let z = 0; z < b.length; z++) {
-                        if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                          tempIndex = z;
-                          break;
-                        }
-                      }
-                      if (tempIndex !== null) {
-                        italicObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
-                      } else {
-                        italicObject += b;
-                      }
-                    } else {
-                      italicObject += b;
-                    }
-                    italicObject += ':';
-                    if (typeof style.italic[b] === "number") {
-                      if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
-                        italicObject += String(style.italic[b]);
-                      } else {
-                        italicObject += String(style.italic[b]) + thisEa;
-                      }
-                    } else {
-                      italicObject += style.italic[b];
-                    }
-                    italicObject += ';';
-                  }
-                }
-                style.text = style.text.replace(/\<i\%/gi, "<b style=\"" + italicObject + "\">");
-                style.text = style.text.replace(/\%i\>/gi, "</b>");
-              }
-            }
-  
+            
+            // 스타일링 방식 반복 적용 (special, code, italic 처리도 같은 방식으로 진행)
+            // 이후 생성된 텍스트가 textarea가 아닌 경우 innerHTML로 삽입
             if (mode !== "textarea") {
               dom_clone.insertAdjacentHTML("beforeend", style.text.replace(/\n/g, "<br>"));
               if (Array.isArray(codeArr)) {
                 if (codeArr.length > 0) {
-                  codeDomArr = [ ...dom_clone.querySelectorAll("code") ];
+                  codeDomArr = [...dom_clone.querySelectorAll("code")];
                   for (let i = 0; i < codeDomArr.length; i++) {
-                    codeDomArr[i].textContent = "";
                     codeDomArr[i].textContent = codeArr[i];
                   }
                 }
@@ -1631,12 +2341,17 @@ class AbstractNode {
               dom_clone.textContent = style.text.replace(/\<br\>/g, "\n");
             }
           }
+          // 스타일 객체의 text 속성을 제거하여 더 이상 사용되지 않도록 설정
           delete style.text;
         }
+        
+        // contents가 정의되어 있으면 DOM에 텍스트 내용을 추가
         if (style.contents !== undefined) {
           dom_clone.textContent = style.contents;
           delete style.contents;
         }
+        
+        // class 속성이 있으면 이를 DOM의 classList에 추가
         if (style.class !== undefined) {
           if (Array.isArray(style.class)) {
             for (let c of style.class) {
@@ -1645,12 +2360,16 @@ class AbstractNode {
           }
           delete style.class;
         }
+
+        // id 속성이 있으면 이를 DOM의 id 속성에 추가
         if (style.id !== undefined) {
           if (typeof style.id === "string" && dom_clone.id !== undefined) {
             dom_clone.id = style.id;
           }
           delete style.id;
         }
+
+        // 속성(attribute) 처리
         if (style.attribute !== undefined) {
           if (Array.isArray(style.attribute)) {
             for (let a of style.attribute) {
@@ -1667,105 +2386,136 @@ class AbstractNode {
           }
           delete style.attribute;
         }
+
+        // 스타일 객체가 존재하고 set 속성이 문자열일 경우
         if (typeof style.style === "object" && style.style !== null && typeof style.set === "string") {
+          // set 속성이 'block'일 경우, display 속성을 block으로 설정하고 position이 없을 경우 기본값으로 relative를 설정
           if (style.set === "block") {
             style.style.display = "block";
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // 기본적인 위치 설정
             }
           }
+
+          // set 속성이 'flex'일 경우, display 속성을 flex로 설정하고 position이 없을 경우 relative로 설정
           if (style.set === "flex") {
             style.style.display = "flex";
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // 상대적 위치 설정
             }
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // 기본 방향을 세로로 설정
             }
           }
+
+          // set 속성이 'center'일 경우, display를 flex로 하고, justifyContent와 alignItems를 모두 center로 설정하여 중앙 정렬
           if (style.set === "center") {
             style.style.display = "flex";
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // 기본 위치 설정
             }
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // 기본적으로 세로 정렬
             }
-            style.style.justifyContent = "center";
-            style.style.alignItems = "center";
+            style.style.justifyContent = "center"; // 수평 중앙 정렬
+            style.style.alignItems = "center"; // 수직 중앙 정렬
           }
+
+          // set 속성이 'inline'일 경우, display를 inline-flex로 설정하고, verticalAlign을 top으로 설정
           if (style.set === "inline") {
             style.style.display = "inline-flex";
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // 기본 위치 설정
             }
-            style.style.verticalAlign = "top";
+            style.style.verticalAlign = "top"; // inline 요소의 정렬을 위쪽으로 설정
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // 기본적으로 세로 정렬
             }
           }
+
+          // set 속성이 'absolute'일 경우, display를 block으로 설정하고 position을 absolute로 설정
           if (style.set === "absolute") {
             if (typeof style.style.display !== "string") {
-              style.style.display = "block";
+              style.style.display = "block"; // block으로 설정
             }
-            style.style.position = "absolute";
+            style.style.position = "absolute"; // 절대 위치 설정
           }
+
+          // set 속성이 'fixed'일 경우, 화면에 고정되도록 display를 block으로 설정하고 top, left, width, height를 모두 설정
           if (style.set === "fixed") {
             if (typeof style.style.display !== "string") {
-              style.style.display = "block";
+              style.style.display = "block"; // 고정된 위치로 설정
             }
             if (typeof style.style.top !== "string") {
-              style.style.top = "0";
+              style.style.top = "0"; // 위쪽에 고정
             }
             if (typeof style.style.left !== "string") {
-              style.style.left = "0";
+              style.style.left = "0"; // 왼쪽에 고정
             }
             if (typeof style.style.width !== "string") {
-              style.style.width = "100%";
+              style.style.width = "100%"; // 너비를 100%로 설정
             }
             if (typeof style.style.height !== "string") {
-              style.style.height = "100%";
+              style.style.height = "100%"; // 높이를 100%로 설정
             }
-            style.style.position = "fixed";
+            style.style.position = "fixed"; // 고정된 위치 설정
           }
+
+          // set 속성 삭제 (더 이상 필요하지 않음)
           delete style.set;
         }
+
+        // 스타일 객체가 정의되었을 경우, targetStyle에 스타일 객체를 할당
         if (style.style !== undefined) {
           if (typeof style.style === "object") {
-            targetStyle = style.style;
+            targetStyle = style.style; // 유효한 객체로 설정
           } else {
-            throw new Error("invaild arguments");
+            throw new Error("invaild arguments"); // 스타일 인자가 객체가 아닐 경우 에러 발생
           }
         } else {
-          targetStyle = style;
+          targetStyle = style; // 스타일 객체가 정의되지 않았다면 전체 스타일을 설정
         }
+
+        // display 속성이 정의되지 않았을 경우 기본값으로 'flex'를 설정
         if (targetStyle.display === undefined || targetStyle.display === null) {
-          targetStyle.display = "flex";
+          targetStyle.display = "flex"; // 기본적으로 flex 레이아웃을 사용
         }
+
+        // position 속성이 정의되지 않았을 경우 기본값으로 'relative'를 설정
         if (targetStyle.position === undefined || targetStyle.position === null) {
-          targetStyle.position = "relative";
+          targetStyle.position = "relative"; // 기본적으로 상대적 위치 사용
         }
+
+        // display 속성이 flex일 경우, flexDirection이 정의되지 않았다면 세로 방향(column)으로 설정
         if (typeof targetStyle.display === "string" && /flex/gi.test(targetStyle.display)) {
           if (targetStyle.flexDirection === undefined || targetStyle.flexDirection === null) {
-            targetStyle.flexDirection = "column";
+            targetStyle.flexDirection = "column"; // 기본 세로 방향 설정
           }
         }
+
+        // wordSpacing이 정의되지 않았을 경우, 기본값으로 -1px을 설정
         if (targetStyle.wordSpacing === undefined) {
-          targetStyle.wordSpacing = String(-1) + "px";
+          targetStyle.wordSpacing = String(-1) + "px"; // 글자 간격을 조정
         }
+
+        // targetStyle 객체의 각 스타일 속성을 순회하며 DOM 요소의 스타일을 설정
         for (let i in targetStyle) {
+          // 스타일 값이 숫자인 경우
           if (typeof targetStyle[i] === "number") {
             if (i === "fontWeight" || i === "zIndex" || i === "opacity" || i === "lineHeight" || i === "flex") {
+              // 숫자 값을 그대로 할당
               dom_clone.style[i] = String(targetStyle[i]);
             } else {
+              // 숫자 값에 단위를 추가하여 할당
               Object.defineProperty(dom_clone.style, i, {
                 value: String(targetStyle[i]) + thisEa,
-                writable: true,
+                writable: true, // 스타일이 수정 가능하도록 설정
               });
             }
           } else {
+            // widthHeight, fontSizeWeight와 같은 복합적인 스타일 속성 처리
             if (i === "widthHeight") {
-              const [ thisWidth, thisHeight ] = targetStyle[i];
+              const [thisWidth, thisHeight] = targetStyle[i];
               if (typeof thisWidth === "number") {
                 dom_clone.style.width = String(thisWidth) + thisEa;
               } else if (typeof thisWidth === "string") {
@@ -1777,7 +2527,7 @@ class AbstractNode {
                 dom_clone.style.height = thisHeight;
               }
             } else if (i === "fontSizeWeight") {
-              const [ thisSize, thisWeight ] = targetStyle[i];
+              const [thisSize, thisWeight] = targetStyle[i];
               if (typeof thisSize === "number") {
                 dom_clone.style.fontSize = String(thisSize) + thisEa;
               } else if (typeof thisSize === "string") {
@@ -1789,359 +2539,487 @@ class AbstractNode {
                 dom_clone.style.fontWeight = thisWeight;
               }
             } else {
+              // 그 외의 스타일 속성을 할당
               Object.defineProperty(dom_clone.style, i, {
                 value: targetStyle[i],
                 writable: true,
-              })
+              });
             }
           }
         }
+
+        // style.event가 정의되었을 경우 이를 style.events로 대체
         if (style.event !== undefined) {
-          style.events = style.event;
+          style.events = style.event; // 단일 event를 events 배열로 변환
         }
+
+        // style.events가 정의된 경우 이벤트를 처리
         if (style.events !== undefined) {
+          // events가 배열일 경우
           if (Array.isArray(style.events)) {
+            // events 배열 내의 각 이벤트 객체를 순회
             for (let obj of style.events) {
+              // 이벤트 타입이 배열일 경우 각 타입에 대해 이벤트 리스너를 등록
               if (Array.isArray(obj.type)) {
                 for (let str of obj.type) {
+                  // event가 함수일 경우에만 이벤트 리스너를 등록
                   if (typeof obj.event === "function") {
+                    // 터치 이벤트의 경우 iPhone에서는 'touchstart'를 사용, 그 외에는 'click'을 사용
                     if (str === "touch") {
                       if (/iPhone/gi.test(window.navigator.userAgent)) {
-                        dom_clone.addEventListener("touchstart", obj.event);
+                        dom_clone.addEventListener("touchstart", obj.event); // iPhone의 터치 이벤트
                       } else {
-                        dom_clone.addEventListener("click", obj.event);
+                        dom_clone.addEventListener("click", obj.event); // 그 외의 터치 이벤트
                       }
                     } else {
-                      dom_clone.addEventListener(str, obj.event);
+                      dom_clone.addEventListener(str, obj.event); // 다른 이벤트 타입에 대한 이벤트 리스너 등록
                     }
                   }
+                  // 이벤트 타입이 'click'인 경우 커서를 포인터로 설정하여 클릭 가능함을 시각적으로 표시
                   if (str === "click") {
-                    dom_clone.style.cursor = "pointer";
+                    dom_clone.style.cursor = "pointer"; // 클릭 가능함을 시각적으로 표현
                   }
                 }
+              // 이벤트 타입이 문자열일 경우
               } else if (typeof obj.type === "string") {
+                // 이벤트 리스너를 등록
                 if (typeof obj.event === "function") {
                   if (obj.type === "touch") {
                     if (/iPhone/gi.test(window.navigator.userAgent)) {
-                      dom_clone.addEventListener("touchstart", obj.event);
+                      dom_clone.addEventListener("touchstart", obj.event); // iPhone 터치 이벤트
                     } else {
-                      dom_clone.addEventListener("click", obj.event);
+                      dom_clone.addEventListener("click", obj.event); // 그 외 클릭 이벤트
                     }
                   } else {
-                    dom_clone.addEventListener(obj.type, obj.event);
+                    dom_clone.addEventListener(obj.type, obj.event); // 일반적인 이벤트 등록
                   }
+                  // 클릭 이벤트 시 포인터 커서로 변경
                   if (obj.type === "click") {
-                    dom_clone.style.cursor = "pointer";
+                    dom_clone.style.cursor = "pointer"; // 클릭 가능 표시
                   }
                 }
               } else {
-                throw new Error("invaild type");
+                throw new Error("invaild type"); // 이벤트 타입이 유효하지 않을 경우 에러 발생
               }
             }
+          // style.events가 객체일 경우
           } else if (typeof style.events === "object" && style.events !== null) {
+            // 이벤트 객체의 각 타입에 대해 이벤트 리스너를 등록
             for (let type in style.events) {
               if (typeof style.events[type] === "function") {
                 if (type === "touch") {
                   if (/iPhone/gi.test(window.navigator.userAgent)) {
-                    dom_clone.addEventListener("touchstart", style.events[type]);
+                    dom_clone.addEventListener("touchstart", style.events[type]); // iPhone 터치 이벤트
                   } else {
-                    dom_clone.addEventListener("click", style.events[type]);
+                    dom_clone.addEventListener("click", style.events[type]); // 그 외 클릭 이벤트
                   }
                 } else {
-                  dom_clone.addEventListener(type, style.events[type]);
+                  dom_clone.addEventListener(type, style.events[type]); // 일반적인 이벤트 등록
                 }
+                // 클릭 이벤트인 경우 커서를 포인터로 설정
                 if (type === "click") {
-                  dom_clone.style.cursor = "pointer";
+                  dom_clone.style.cursor = "pointer"; // 클릭 가능 시각적 표시
                 }
               }
             }
+          // style.events가 함수일 경우 이를 클릭 이벤트로 간주하고 등록
           } else if (typeof style.events === "function") {
-            dom_clone.addEventListener("click", style.events);
-            dom_clone.style.cursor = "pointer";
+            dom_clone.addEventListener("click", style.events); // 클릭 이벤트 등록
+            dom_clone.style.cursor = "pointer"; // 클릭 가능 시각적 표시
           }
         }
+
+        // mother 요소가 존재하고, appendChild 메서드가 사용 가능한 경우
         if (mother !== null && typeof mother.appendChild === "function") {
+          // style.before가 정의되지 않았다면 생성한 노드를 mother에 추가
           if (style.before === undefined) {
-            mother.appendChild(dom_clone);
+            mother.appendChild(dom_clone); // 기본적으로 마지막에 자식 노드로 추가
           } else {
-            mother.insertBefore(dom_clone, style.before);
+            mother.insertBefore(dom_clone, style.before); // before가 있을 경우 해당 노드 앞에 삽입
           }
         }
+
+        // 자식 노드 배열이 존재하고, 배열의 길이가 0보다 클 경우
         if (Array.isArray(children)) {
           if (children.length > 0) {
             for (let childObject of children) {
-              childObject.mother = dom_clone;
-              AbstractNode.createNode(childObject);
+              childObject.mother = dom_clone; // 각 자식의 mother를 현재 dom_clone으로 설정
+              AbstractNode.createNode(childObject); // 자식 노드를 재귀적으로 생성
             }
           }
         }
+
+        // nextObject가 객체이고 배열이 아닌 경우, 다음 노드를 생성
         if (typeof nextObject === "object" && nextObject !== null && !Array.isArray(nextObject)) {
-          nextObject.mother = mother;
-          AbstractNode.createNode(nextObject);
+          nextObject.mother = mother; // 다음 노드의 mother를 현재의 mother로 설정
+          AbstractNode.createNode(nextObject); // 다음 노드를 생성
         }
+
+        // previousObject가 객체이고 배열이 아닌 경우, 이전 노드를 생성
         if (typeof previousObject === "object" && previousObject !== null && !Array.isArray(previousObject)) {
-          previousObject.mother = mother;
-          previousDom = AbstractNode.createNode(previousObject);
+          previousObject.mother = mother; // 이전 노드의 mother를 현재의 mother로 설정
+          previousDom = AbstractNode.createNode(previousObject); // 이전 노드를 생성
           if (mother !== null) {
-            mother.insertBefore(previousDom, dom_clone);
+            mother.insertBefore(previousDom, dom_clone); // 이전 노드를 현재 노드 앞에 삽입
           }
         }
+
         return dom_clone;
       }
     } else {
       if (typeof source === "string" && typeof style === "object") {
+
+        // source 문자열을 기반으로 SVG DOM 요소를 파싱하여 dom_clone에 저장
         dom_clone = SvgTong.stringParsing(source);
+
+        // style 객체에 text 속성이 정의된 경우 이를 삭제
         if (style.text !== undefined) {
-          delete style.text;
+          delete style.text; // text 속성은 SVG 요소에 직접 추가되지 않음
         }
+
+        // style 객체에 class 속성이 정의된 경우
         if (style.class !== undefined) {
+          // class 속성이 배열인 경우 각 클래스명을 dom_clone에 추가
           if (Array.isArray(style.class)) {
             for (let c of style.class) {
-              dom_clone.classList.add(c);
+              dom_clone.classList.add(c); // 각 클래스명을 DOM에 추가
             }
           }
-          delete style.class;
+          delete style.class; // class 속성 삭제
         }
+
+        // style 객체에 id 속성이 정의된 경우
         if (style.id !== undefined) {
+          // id가 문자열이고, dom_clone에 id 속성이 존재하는 경우 설정
           if (typeof style.id === "string" && dom_clone.id !== undefined) {
-            dom_clone.id = style.id;
+            dom_clone.id = style.id; // id 속성을 설정
           }
-          delete style.id;
+          delete style.id; // id 속성 삭제
         }
+
+        // style 객체에 attribute 속성이 정의된 경우
         if (style.attribute !== undefined) {
+          // attribute가 배열인 경우 각 속성을 dom_clone에 설정
           if (Array.isArray(style.attribute)) {
             for (let a of style.attribute) {
               if (typeof a === "object") {
                 for (let key in a) {
-                  dom_clone.setAttribute(key, String(a[key]));
+                  dom_clone.setAttribute(key, String(a[key])); // 각 속성을 설정
                 }
               }
             }
-          } else if (typeof style.attribute === "object" && style.attribute !== null) {
+          } 
+          // attribute가 객체인 경우 각 속성을 dom_clone에 설정
+          else if (typeof style.attribute === "object" && style.attribute !== null) {
             for (let key in style.attribute) {
-              dom_clone.setAttribute(key, String(style.attribute[key]));
+              dom_clone.setAttribute(key, String(style.attribute[key])); // 각 속성을 설정
             }
           }
-          delete style.attribute;
+          delete style.attribute; // attribute 속성 삭제
         }
-  
+
+        // style 객체에 style 속성이 정의된 경우
         if (typeof style.style === "object" && style.style !== null && typeof style.set === "string") {
+          // style.set이 "block"인 경우
           if (style.set === "block") {
-            style.style.display = "block";
+            style.style.display = "block"; // display를 block으로 설정
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // position이 정의되지 않으면 relative로 설정
             }
           }
+          // style.set이 "flex"인 경우
           if (style.set === "flex") {
-            style.style.display = "flex";
+            style.style.display = "flex"; // display를 flex로 설정
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // position이 정의되지 않으면 relative로 설정
             }
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // flex 방향을 column으로 설정
             }
           }
+          // style.set이 "center"인 경우
           if (style.set === "center") {
-            style.style.display = "flex";
+            style.style.display = "flex"; // display를 flex로 설정
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // position이 정의되지 않으면 relative로 설정
             }
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // flex 방향을 column으로 설정
             }
-            style.style.justifyContent = "center";
-            style.style.alignItems = "center";
+            style.style.justifyContent = "center"; // 중앙 정렬
+            style.style.alignItems = "center"; // 아이템을 중앙 정렬
           }
+          // style.set이 "inline"인 경우
           if (style.set === "inline") {
-            style.style.display = "inline-flex";
+            style.style.display = "inline-flex"; // display를 inline-flex로 설정
             if (typeof style.style.position !== "string") {
-              style.style.position = "relative";
+              style.style.position = "relative"; // position이 정의되지 않으면 relative로 설정
             }
-            style.style.verticalAlign = "top";
+            style.style.verticalAlign = "top"; // 수직 정렬을 top으로 설정
             if (typeof style.style.flexDirection !== "string") {
-              style.style.flexDirection = "column";
+              style.style.flexDirection = "column"; // flex 방향을 column으로 설정
             }
           }
+          // style.set이 "absolute"인 경우
           if (style.set === "absolute") {
             if (typeof style.style.display !== "string") {
-              style.style.display = "block";
+              style.style.display = "block"; // display를 block으로 설정
             }
-            style.style.position = "absolute";
+            style.style.position = "absolute"; // position을 absolute로 설정
           }
+          // style.set이 "fixed"인 경우
           if (style.set === "fixed") {
             if (typeof style.style.display !== "string") {
-              style.style.display = "block";
+              style.style.display = "block"; // display를 block으로 설정
             }
             if (typeof style.style.top !== "string") {
-              style.style.top = "0";
+              style.style.top = "0"; // top을 0으로 설정
             }
             if (typeof style.style.left !== "string") {
-              style.style.left = "0";
+              style.style.left = "0"; // left를 0으로 설정
             }
             if (typeof style.style.width !== "string") {
-              style.style.width = "100%";
+              style.style.width = "100%"; // width를 100%로 설정
             }
             if (typeof style.style.height !== "string") {
-              style.style.height = "100%";
+              style.style.height = "100%"; // height를 100%로 설정
             }
-            style.style.position = "fixed";
+            style.style.position = "fixed"; // position을 fixed로 설정
           }
-          delete style.set;
+          delete style.set; // set 속성 삭제
         }
-  
+
+        // style.style 속성이 정의되었을 경우 이를 처리
         if (style.style !== undefined) {
           if (typeof style.style === "object") {
-            targetStyle = style.style;
+            targetStyle = style.style; // style 객체를 targetStyle로 설정
           } else {
-            throw new Error("invaild arguments");
+            throw new Error("invaild arguments"); // style 속성이 객체가 아닐 경우 에러 발생
           }
         } else {
-          targetStyle = style;
+          targetStyle = style; // style 속성이 없으면 전체 style 객체를 targetStyle로 설정
         }
   
+        // display 속성이 정의되지 않았거나 null인 경우 기본적으로 "flex"로 설정
         if (targetStyle.display === undefined || targetStyle.display === null) {
-          targetStyle.display = "flex";
+          targetStyle.display = "flex"; // 기본적으로 flex 레이아웃을 적용
         }
+
+        // position 속성이 정의되지 않았거나 null인 경우 기본적으로 "relative"로 설정
         if (targetStyle.position === undefined || targetStyle.position === null) {
-          targetStyle.position = "relative";
+          targetStyle.position = "relative"; // relative 위치 지정 방식 적용
         }
+
+        // width가 "auto"이거나 정의되지 않은 상태에서 height가 존재하는 경우
         if ((targetStyle.width === "auto" || targetStyle.width === undefined) && targetStyle.height !== undefined) {
+          // dom_clone의 비율(ratio)을 계산
           ratio = SvgTong.getRatio(dom_clone);
+
+          // height가 숫자가 아니면 단위(ea)를 분리하고 숫자로 변환
           if (typeof targetStyle.height !== "number") {
-            ea = targetStyle.height.replace(/[\-\.0-9]/gi, '');
-            temp = Number(targetStyle.height.replace(/[^\-\.0-9]/gi, ''));
+            ea = targetStyle.height.replace(/[\-\.0-9]/gi, ''); // 숫자가 아닌 부분(단위)을 추출
+            temp = Number(targetStyle.height.replace(/[^\-\.0-9]/gi, '')); // height 숫자 부분만 추출
           } else {
-            ea = thisEa;
+            ea = thisEa; // height가 숫자일 경우 기본 단위를 사용
             temp = targetStyle.height;
           }
+          
+          // 비율에 맞춰 width 값을 계산하여 설정
           targetStyle.width = String(temp * ratio) + ea;
         }
+
+        // height가 "auto"이거나 정의되지 않은 상태에서 width가 존재하는 경우
         if ((targetStyle.height === "auto" || targetStyle.height === undefined) && targetStyle.width !== undefined) {
+          // dom_clone의 비율(ratio)을 다시 계산
           ratio = SvgTong.getRatio(dom_clone);
+
+          // width가 숫자가 아니면 단위(ea)를 분리하고 숫자로 변환
           if (typeof targetStyle.width !== "number") {
-            ea = targetStyle.width.replace(/[\-\.0-9]/gi, '');
-            temp = Number(targetStyle.width.replace(/[^\-\.0-9]/gi, ''));  
+            ea = targetStyle.width.replace(/[\-\.0-9]/gi, ''); // 숫자가 아닌 부분(단위)을 추출
+            temp = Number(targetStyle.width.replace(/[^\-\.0-9]/gi, '')); // width 숫자 부분만 추출
           } else {
-            ea = thisEa;
+            ea = thisEa; // width가 숫자일 경우 기본 단위를 사용
             temp = targetStyle.width;
           }
+
+          // 비율에 맞춰 height 값을 계산하여 설정
           targetStyle.height = String(temp / ratio) + ea;
         }
+
+        // targetStyle 객체의 각 속성에 대해 순회
         for (let i in targetStyle) {
+          // 속성 값이 숫자인 경우
           if (typeof targetStyle[i] === "number") {
+            // fontWeight, zIndex, opacity, lineHeight, flex와 같은 특수 속성 처리
             if (i === "fontWeight" || i === "zIndex" || i === "opacity" || i === "lineHeight" || i === "flex") {
-              dom_clone.style[i] = String(targetStyle[i]);
+              dom_clone.style[i] = String(targetStyle[i]); // 숫자를 문자열로 변환하여 설정
             } else {
+              // 그 외의 속성들은 단위(ea)를 추가하여 설정
               Object.defineProperty(dom_clone.style, i, {
-                value: String(targetStyle[i]) + thisEa,
-                writable: true,
+                value: String(targetStyle[i]) + thisEa, // 숫자에 단위를 붙여 설정
+                writable: true, // 속성을 수정 가능하게 함
               });
             }
           } else {
+            // widthHeight와 같은 복합적인 속성 처리
             if (i === "widthHeight") {
-              const [ thisWidth, thisHeight ] = targetStyle[i];
+              const [thisWidth, thisHeight] = targetStyle[i]; // width와 height를 배열로 받음
+
+              // width가 숫자인 경우
               if (typeof thisWidth === "number") {
-                dom_clone.style.width = String(thisWidth) + thisEa;
+                dom_clone.style.width = String(thisWidth) + thisEa; // 숫자에 단위를 붙여 설정
               } else if (typeof thisWidth === "string") {
-                dom_clone.style.width = thisWidth;
+                dom_clone.style.width = thisWidth; // 문자열로 설정된 경우 그대로 설정
               }
+
+              // height가 숫자인 경우
               if (typeof thisHeight === "number") {
-                dom_clone.style.height = String(thisHeight) + thisEa;
+                dom_clone.style.height = String(thisHeight) + thisEa; // 숫자에 단위를 붙여 설정
               } else if (typeof thisHeight === "string") {
-                dom_clone.style.height = thisHeight;
+                dom_clone.style.height = thisHeight; // 문자열로 설정된 경우 그대로 설정
               }
-            } else if (i === "fontSizeWeight") {
-              const [ thisSize, thisWeight ] = targetStyle[i];
+            }
+            // fontSizeWeight와 같은 복합적인 속성 처리
+            else if (i === "fontSizeWeight") {
+              const [thisSize, thisWeight] = targetStyle[i]; // fontSize와 fontWeight를 배열로 받음
+
+              // fontSize가 숫자인 경우
               if (typeof thisSize === "number") {
-                dom_clone.style.fontSize = String(thisSize) + thisEa;
+                dom_clone.style.fontSize = String(thisSize) + thisEa; // 숫자에 단위를 붙여 설정
               } else if (typeof thisSize === "string") {
-                dom_clone.style.fontSize = thisSize;
+                dom_clone.style.fontSize = thisSize; // 문자열로 설정된 경우 그대로 설정
               }
+
+              // fontWeight가 숫자인 경우
               if (typeof thisWeight === "number") {
-                dom_clone.style.fontWeight = String(thisWeight);
+                dom_clone.style.fontWeight = String(thisWeight); // 숫자를 문자열로 변환하여 설정
               } else if (typeof thisWeight === "string") {
-                dom_clone.style.fontWeight = thisWeight;
+                dom_clone.style.fontWeight = thisWeight; // 문자열로 설정된 경우 그대로 설정
               }
-            } else {
+            }
+            // 그 외의 속성 처리
+            else {
               Object.defineProperty(dom_clone.style, i, {
-                value: targetStyle[i],
-                writable: true,
-              })
+                value: targetStyle[i], // 스타일 값 그대로 설정
+                writable: true, // 속성을 수정 가능하게 함
+              });
             }
           }
         }
+        // style.event가 정의된 경우, 이를 style.events로 설정
         if (style.event !== undefined) {
-          style.events = style.event;
+          style.events = style.event; // 기존에 단일 event를 여러 event로 확장
         }
+
+        // style.events가 정의된 경우 이벤트를 처리
         if (style.events !== undefined) {
+          // 이벤트가 배열인 경우
           if (Array.isArray(style.events)) {
+            // 각 이벤트 객체를 순회
             for (let obj of style.events) {
+              // 이벤트 타입이 배열인 경우
               if (Array.isArray(obj.type)) {
+                // 각 타입에 대해 이벤트를 추가
                 for (let str of obj.type) {
+                  // 이벤트 핸들러가 함수인 경우에만 실행
                   if (typeof obj.event === "function") {
+                    // 터치 이벤트인 경우
                     if (str === "touch") {
+                      // iPhone 기기인지 확인 후 터치 이벤트 추가
                       if (/iPhone/gi.test(window.navigator.userAgent)) {
                         dom_clone.addEventListener("touchstart", obj.event);
                       } else {
+                        // 터치가 아닌 경우 클릭 이벤트로 대체
                         dom_clone.addEventListener("click", obj.event);
                       }
                     } else {
+                      // 터치 이벤트가 아닌 경우 해당 타입의 이벤트를 추가
                       dom_clone.addEventListener(str, obj.event);
                     }
                   }
                 }
-              } else if (typeof obj.type === "string") {
+              }
+              // 이벤트 타입이 문자열인 경우
+              else if (typeof obj.type === "string") {
+                // 이벤트 핸들러가 함수인 경우에만 실행
                 if (typeof obj.event === "function") {
+                  // 터치 이벤트인 경우
                   if (obj.type === "touch") {
+                    // iPhone 기기 확인 후 터치 이벤트 추가
                     if (/iPhone/gi.test(window.navigator.userAgent)) {
                       dom_clone.addEventListener("touchstart", obj.event);
                     } else {
+                      // 터치가 아닌 경우 클릭 이벤트로 대체
                       dom_clone.addEventListener("click", obj.event);
                     }
                   } else {
+                    // 터치 이벤트가 아닌 경우 해당 타입의 이벤트를 추가
                     dom_clone.addEventListener(obj.type, obj.event);
                   }
                 }
-              } else {
-                throw new Error("invaild type");
+              }
+              // 이벤트 타입이 유효하지 않으면 에러 발생
+              else {
+                throw new Error("invalid type");
               }
             }
-          } else if (typeof style.events === "object" && style.events !== null) {
+          }
+          // style.events가 객체일 경우
+          else if (typeof style.events === "object" && style.events !== null) {
+            // 각 이벤트 타입에 대해 순회
             for (let type in style.events) {
+              // 이벤트 핸들러가 함수인 경우에만 실행
               if (typeof style.events[type] === "function") {
+                // 터치 이벤트인 경우
                 if (type === "touch") {
+                  // iPhone 기기 확인 후 터치 이벤트 추가
                   if (/iPhone/gi.test(window.navigator.userAgent)) {
                     dom_clone.addEventListener("touchstart", style.events[type]);
                   } else {
+                    // 터치가 아닌 경우 클릭 이벤트로 대체
                     dom_clone.addEventListener("click", style.events[type]);
                   }
                 } else {
+                  // 터치 이벤트가 아닌 경우 해당 타입의 이벤트를 추가
                   dom_clone.addEventListener(type, style.events[type]);
                 }
               }
             }
-          } else if (typeof style.events === "function") {
-            dom_clone.addEventListener("click", style.events);
+          }
+          // style.events가 함수일 경우, 이를 클릭 이벤트로 추가
+          else if (typeof style.events === "function") {
+            dom_clone.addEventListener("click", style.events); // 클릭 이벤트 추가
           }
         }
+
+        // mother가 null이 아니고, appendChild 함수가 있는 경우
         if (mother !== null && typeof mother.appendChild === "function") {
+          // style.before가 정의되지 않았다면 dom_clone을 mother에 추가
           if (style.before === undefined) {
-            mother.appendChild(dom_clone);
+            mother.appendChild(dom_clone); // 부모 노드에 dom_clone을 추가
           } else {
+            // before가 정의되었다면, before 요소 앞에 dom_clone을 삽입
             mother.insertBefore(dom_clone, style.before);
           }
         }
+
+        // nextObject가 객체이고 배열이 아닌 경우
         if (typeof nextObject === "object" && nextObject !== null && !Array.isArray(nextObject)) {
-          nextObject.mother = mother;
-          AbstractNode.createNode(nextObject);
+          nextObject.mother = mother; // nextObject의 mother를 현재 mother로 설정
+          AbstractNode.createNode(nextObject); // 재귀적으로 createNode를 호출해 nextObject를 생성
         }
+
+        // previousObject가 객체이고 배열이 아닌 경우
         if (typeof previousObject === "object" && previousObject !== null && !Array.isArray(previousObject)) {
-          previousObject.mother = mother;
-          previousDom = AbstractNode.createNode(previousObject);
+          previousObject.mother = mother; // previousObject의 mother를 현재 mother로 설정
+          previousDom = AbstractNode.createNode(previousObject); // 재귀적으로 previousObject를 생성
+
+          // mother가 null이 아니면, previousDom을 dom_clone 앞에 삽입
           if (mother !== null) {
-            mother.insertBefore(previousDom, dom_clone);
+            mother.insertBefore(previousDom, dom_clone); // dom_clone 앞에 previousDom 삽입
           }
         }
+
         return dom_clone;
       } else {
         throw new Error("invaild arguments");
@@ -2149,160 +3027,288 @@ class AbstractNode {
     }
   }
   
+  /**
+   * createNodes 함수는 배열로 주어진 객체 리스트를 바탕으로 HTML 또는 SVG 엘리먼트를 생성하는 함수.
+   * 각 객체는 필수적으로 'mother' 속성을 포함해야 하며, 이를 바탕으로 노드들이 DOM 트리에 삽입됨.
+   * 반환 값은 생성된 엘리먼트들의 배열임.
+   * 
+   * @param {Array<Dictionary>} arr - 노드 생성에 필요한 객체들의 배열.
+   * @returns {Array<HTMLElement | SVGElement>} - 생성된 HTML 또는 SVG 엘리먼트 배열.
+   * @throws {Error} - 객체가 아니거나, 'mother' 속성이 없는 경우 에러 발생.
+   */
   public static createNodes = (arr: Array<Dictionary>): Array<HTMLElement | SVGElement> => {
-    let result: List;
-    let pastNode: HTMLElement | SVGElement | null;
-  
-    pastNode = null;
-    result = [];
+    let result: List; // 결과로 반환할 생성된 노드들을 담는 배열.
+    let pastNode: HTMLElement | SVGElement | null; // 이전에 생성된 노드를 저장, 연결된 노드 생성에 사용됨.
+
+    pastNode = null; // 초기화 시 pastNode는 null.
+    result = []; // result 배열을 빈 배열로 초기화.
+    
+    // 배열 arr의 각 요소에 대해 반복문을 실행하여 노드를 생성.
     for (let i = 0; i < arr.length; i++) {
-      if (typeof arr[i] !== "object") {
-        throw new Error("arguments must be [ object, object, object... ]");
-      } else {
-        if (arr[i].mother === undefined) {
-          throw new Error("mother must be exist");
+        // 각 요소는 객체여야 하며 그렇지 않으면 에러를 발생시킴.
+        if (typeof arr[i] !== "object") {
+            throw new Error("arguments must be [ object, object, object... ]"); // 객체 배열이 아니면 에러 발생.
         } else {
-          if (typeof arr[i].mother === "string") {
-            if (pastNode === null) {
-              throw new Error("first mother can not be chain");
-            }
-            if (/ch/gi.test(arr[i].mother)) {
-              arr[i].mother = pastNode;
+            // 각 객체는 반드시 'mother' 속성을 포함해야 함.
+            if (arr[i].mother === undefined) {
+                throw new Error("mother must be exist"); // mother 속성이 없으면 에러 발생.
             } else {
-              throw new Error("invaild mother operation");
+                // 'mother' 속성이 문자열일 때, 이전 노드와 연결하여 새로운 노드를 생성.
+                if (typeof arr[i].mother === "string") {
+                    if (pastNode === null) {
+                        throw new Error("first mother can not be chain"); // 첫 번째 노드는 체인으로 사용할 수 없음.
+                    }
+                    if (/ch/gi.test(arr[i].mother)) {
+                        arr[i].mother = pastNode; // 문자열 'ch'가 포함된 경우 이전 노드를 mother로 사용.
+                    } else {
+                        throw new Error("invaild mother operation"); // 유효하지 않은 mother 값일 경우 에러 발생.
+                    }
+                // 'mother' 속성이 숫자일 때, 해당 인덱스의 노드를 mother로 참조.
+                } else if (typeof arr[i].mother === "number") {
+                    if (pastNode === null) {
+                        throw new Error("first mother can not be chain"); // 첫 번째 노드는 체인으로 사용할 수 없음.
+                    }
+                    if (arr[i].mother >= 0) {
+                        if (result[arr[i].mother] === undefined) {
+                            throw new Error("index out error"); // 인덱스가 잘못되면 에러 발생.
+                        }
+                        arr[i].mother = result[arr[i].mother]; // 해당 인덱스의 노드를 mother로 설정.
+                    } else {
+                        if (result[i + arr[i].mother] === undefined) {
+                            throw new Error("index out error"); // 인덱스가 잘못되면 에러 발생.
+                        }
+                        arr[i].mother = result[i + arr[i].mother]; // 음수 인덱스를 사용할 경우 처리.
+                    }
+                }
+                // AbstractNode.createNode 메서드를 호출하여 노드를 생성.
+                pastNode = AbstractNode.createNode(arr[i]); // 노드를 생성하고 pastNode로 저장.
+                result.push(pastNode); // 생성된 노드를 결과 배열에 추가.
             }
-          } else if (typeof arr[i].mother === "number") {
-            if (pastNode === null) {
-              throw new Error("first mother can not be chain");
-            }
-            if (arr[i].mother >= 0) {
-              if (result[arr[i].mother] === undefined) {
-                throw new Error("index out error");
-              }
-              arr[i].mother = result[arr[i].mother];
-            } else {
-              if (result[i + arr[i].mother] === undefined) {
-                throw new Error("index out error");
-              }
-              arr[i].mother = result[i + arr[i].mother];
-            }
-          }
-          pastNode = AbstractNode.createNode(arr[i]);
-          result.push(pastNode);
         }
-      }
     }
 
+    // 생성된 노드들의 배열을 반환.
     return result;
   }
 
+  /**
+   * createDom 메서드는 주어진 domCommandObject를 기반으로 HTML 엘리먼트를 생성하여 반환하는 함수입니다.
+   * @param {Dictionary} domCommandObject - HTML 엘리먼트를 생성할 때 사용할 명령 객체.
+   * @returns {HTMLElement} - 생성된 HTML 엘리먼트.
+   * @throws {Error} - 입력 값이 유효하지 않을 때 발생.
+   */
   public static createDom = (domCommandObject: Dictionary): HTMLElement => {
+    // domCommandObject가 객체가 아니거나 null이면 에러를 발생시킴
     if (typeof domCommandObject !== "object" || domCommandObject === null) {
       throw new Error("invalid input");
     }
+    // AbstractNode의 createNode 메서드를 호출하여 HTML 엘리먼트를 생성하고 반환
     return AbstractNode.createNode(domCommandObject) as HTMLElement;
   }
 
+  /**
+   * createSvg 메서드는 주어진 domCommandObject를 기반으로 SVG 엘리먼트를 생성하여 반환하는 함수입니다.
+   * @param {Dictionary} domCommandObject - SVG 엘리먼트를 생성할 때 사용할 명령 객체.
+   * @returns {SVGElement} - 생성된 SVG 엘리먼트.
+   * @throws {Error} - 입력 값이 유효하지 않을 때 발생.
+   */
   public static createSvg = (domCommandObject: Dictionary): SVGElement => {
+    // domCommandObject가 객체가 아니거나 null이면 에러를 발생시킴
     if (typeof domCommandObject !== "object" || domCommandObject === null) {
       throw new Error("invalid input");
     }
+    // domCommandObject의 mode를 "svg"로 설정
     domCommandObject.mode = "svg";
+    // source가 문자열이 아니면 기본값으로 "<svg></svg>"을 설정
     if (typeof domCommandObject.source !== "string") {
       domCommandObject.source = "<svg></svg>";
     }
+    // AbstractNode의 createNode 메서드를 호출하여 SVG 엘리먼트를 생성하고 반환
     return AbstractNode.createNode(domCommandObject) as SVGElement;
   }
-  
+
+  /**
+   * nodeQueue 메서드는 비동기적으로 DOM 엘리먼트를 생성하는 함수입니다.
+   * @param {Dictionary} obj - 생성할 DOM 엘리먼트에 대한 명령 객체.
+   * @returns {Promise<HTMLElement | SVGElement>} - 생성된 DOM 엘리먼트를 반환하는 Promise 객체.
+   */
   public static nodeQueue = (obj: Dictionary): Promise<HTMLElement | SVGElement> => {
+    // Promise 객체를 생성하여 반환
     return new Promise((resolve, reject) => {
+      // obj가 객체이고 null이 아닌 경우에만 처리
       if (typeof obj === "object" && obj !== null) {
         try {
+          // AbstractNode의 createNode 메서드를 호출하여 DOM 엘리먼트를 생성
           const dom: HTMLElement | SVGElement = AbstractNode.createNode(obj);
+          // 생성된 DOM 엘리먼트를 resolve로 반환
           resolve(dom);
         } catch (e) {
+          // 에러 발생 시 reject로 에러를 반환
           reject(e);
         }
       }
     });
   }
   
+  /**
+   * withOut 메서드는 주어진 백분율과 수치 값을 이용해 CSS의 calc 함수를 계산한 문자열을 반환합니다.
+   * 주어진 단위(ea)가 없을 경우, AbstractNode의 mediaEa 메서드를 사용해 기본 단위를 적용합니다.
+   *
+   * @param {number} percent - 계산에 사용될 백분율 값.
+   * @param {string | number} [num] - 백분율에서 뺄 값, 문자열 또는 숫자 가능.
+   * @param {string} [ea] - 뺄 값의 단위 (예: px, em), 생략 가능.
+   * @returns {string} - CSS calc() 형태의 계산 문자열.
+   * @throws {Error} - 인자들이 유효하지 않을 경우 에러를 발생시킴.
+   */
   public static withOut = (percent: number, num?: string | number, ea?: string): string => {
+    // AbstractNode의 mediaEa 메서드를 호출하여 기본 단위를 설정
     const thisEa: string = AbstractNode.mediaEa();
+
+    // percent와 num이 모두 숫자이고 ea가 문자열일 때 calc 문자열을 반환
     if (typeof percent === "number" && typeof num === "number" && typeof ea === "string") {
       return ("calc(" + String(percent) + "% - " + String(num) + ea + ")");
-    } else if (typeof percent === "number" && typeof num === "number" && ea === undefined) {
+    } 
+    // percent와 num이 숫자이고, ea가 없는 경우 기본 단위 thisEa를 사용해 calc 문자열을 반환
+    else if (typeof percent === "number" && typeof num === "number" && ea === undefined) {
       return ("calc(" + String(percent) + "% - " + String(num) + thisEa + ")");
-    } else if (typeof percent === "number" && typeof num === "string" && ea === undefined) {
+    } 
+    // percent가 숫자이고, num이 문자열이며 ea가 없는 경우 기본 100%에서 percent만큼 빼는 calc 문자열을 반환
+    else if (typeof percent === "number" && typeof num === "string" && ea === undefined) {
       return ("calc(" + String(100) + "% - " + String(percent) + num + ")");
-    } else if (typeof percent === "number" && num === undefined && ea === undefined) {
+    } 
+    // percent만 주어지고 num과 ea가 없는 경우 기본 100%에서 percent만큼 빼는 calc 문자열을 반환
+    else if (typeof percent === "number" && num === undefined && ea === undefined) {
       return ("calc(" + String(100) + "% - " + String(percent) + thisEa + ")");
-    } else {
-      throw new Error("invaild arguments");
+    } 
+    // 인자가 유효하지 않을 경우 에러를 발생시킴
+    else {
+      throw new Error("invalid arguments");
     }
   }
-  
+
+  /**
+   * vwConvert 메서드는 주어진 수치를 현재 브라우저의 뷰포트 너비에 맞게 변환합니다.
+   * CSS에서 viewport width(vw)와 유사한 방식으로 계산됩니다.
+   *
+   * @param {number} num - 변환할 수치 값.
+   * @returns {number} - 변환된 뷰포트 너비 기준의 값.
+   */
   public static vwConvert = (num: number): number => {
+    // 주어진 num을 현재 브라우저 너비에 맞게 백분율로 변환
     return (num / 100) * window.innerWidth;
   }
   
+  /**
+   * autoHypenPhone 메서드는 주어진 전화번호 문자열에 하이픈(-)을 자동으로 추가합니다.
+   * 전화번호의 길이에 따라 적절하게 하이픈을 추가하여 형식을 맞춥니다.
+   *
+   * @param {string} m - 하이픈을 추가할 전화번호 문자열.
+   * @returns {string} - 하이픈이 추가된 전화번호 문자열.
+   */
   public static autoHypenPhone = (m: string): string => {
+    // 입력된 전화번호 문자열을 trim()을 통해 앞뒤 공백을 제거.
     let str: string = m.trim();
+    // 최종적으로 하이픈이 포함된 번호를 저장할 임시 변수.
     let tmp: string;
 
+    // 전화번호에서 숫자만 남기고 나머지 문자는 제거.
     str = str.replace(/[^0-9]/g, '');
-    tmp = '';
+    tmp = ''; // 임시 저장 변수 초기화.
 
+    // 전화번호 길이가 4자리 미만인 경우 그대로 반환.
     if (str.length < 4) {
       return str;
-    } else if (str.length < 7) {
-      tmp += str.slice(0,3);
-      tmp += '-';
-      tmp += str.slice(3);
+    }
+    // 전화번호 길이가 4자리 이상 7자리 미만인 경우 앞 3자리 뒤에 하이픈을 추가.
+    else if (str.length < 7) {
+      tmp += str.slice(0, 3);  // 앞 3자리를 가져옴.
+      tmp += '-';              // 하이픈 추가.
+      tmp += str.slice(3);      // 남은 문자열을 뒤에 붙임.
       return tmp;
-    } else if (str.length < 11) {
-      tmp += str.slice(0, 3);
-      tmp += '-';
-      tmp += str.slice(3, 3);
-      tmp += '-';
-      tmp += str.slice(6);
+    }
+    // 전화번호 길이가 7자리 이상 11자리 미만인 경우, 중간과 뒤에 하이픈을 추가.
+    else if (str.length < 11) {
+      tmp += str.slice(0, 3);   // 앞 3자리를 가져옴.
+      tmp += '-';               // 하이픈 추가.
+      tmp += str.slice(3, 6);   // 3자리 이후부터 6자리까지 가져옴.
+      tmp += '-';               // 하이픈 추가.
+      tmp += str.slice(6);      // 나머지 문자열을 붙임.
       return tmp;
-    } else {
-      tmp += str.slice(0, 3);
-      tmp += '-';
-      tmp += str.slice(3, 4);
-      tmp += '-';
-      tmp += str.slice(7);
+    }
+    // 전화번호 길이가 11자리 이상인 경우, 일반적으로 앞 3자리, 중간 4자리, 뒤에 4자리로 하이픈을 추가.
+    else {
+      tmp += str.slice(0, 3);   // 앞 3자리를 가져옴.
+      tmp += '-';               // 하이픈 추가.
+      tmp += str.slice(3, 7);   // 3자리 이후부터 7자리까지 가져옴.
+      tmp += '-';               // 하이픈 추가.
+      tmp += str.slice(7);      // 나머지 문자열을 붙임.
       return tmp;
     }
   }
-  
+
+  /**
+   * returnGet 메서드는 현재 URL의 쿼리 문자열을 분석하여 key-value 형태의 객체를 반환합니다.
+   * URL 파라미터를 디코딩하여 객체로 변환하는 함수.
+   *
+   * @returns {Dictionary} - URL 쿼리 문자열을 해석하여 반환된 key-value 형태의 객체.
+   */
   public static returnGet = (): Dictionary => {
+    // 쿼리 파라미터를 저장할 빈 객체.
     let obj: Dictionary = {};
+    
+    // 현재 문서의 URL에서 쿼리 문자열을 가져옴.
     let target = document.location.search;
+    
+    // +를 공백으로 변환하고, URL 디코딩하는 함수.
     let decode = (str: string) => { return decodeURIComponent(str.split("+").join(" ")); };
+    
+    // 정규식을 사용해 URL 쿼리 문자열에서 key-value 쌍을 추출.
     target.replace(/\??(?:([^=]+)=([^&]*)&?)/g, (origin: string, p1: string, p2: string) => {
+      // 추출한 key와 value를 디코딩하여 객체에 저장.
       obj[decode(p1)] = decode(p2);
       return "";
     });
+    
+    // 최종적으로 key-value 쌍이 들어간 객체를 반환.
     return obj;
   }
   
+  /**
+   * parseRatio 메서드는 주어진 옵션 객체에서 ratio 값을 분석하여 계산한 결과를 반환하는 함수입니다.
+   * 'source' 속성에서 ratio 값을 추출하여 계산하며, 'method'에 따라 결과가 달라집니다.
+   *
+   * @param {Dictionary} options - ratio 계산에 필요한 옵션을 담은 객체.
+   * @returns {number | string} - 계산된 ratio 결과값. 'result'가 'string'일 경우 문자열로 반환.
+   */
   public static parseRatio = (options: Dictionary): number | string => {
+    // options 객체를 obj로 할당
     let obj: Dictionary = options;
+    
+    // 'source'라는 문자열을 '_'로 분리하여 배열로 저장
     let srcName: string = obj.source;
     let srcArr: Array<string> = srcName.split('_');
+    
+    // ratio 계산을 위한 변수 선언
     let ratio_raw: List;
     let number0: number;
     let number1: number;
     let result: number;
     let result_return: number | string;
+    
+    // ratio 값 초기화
     let ratio: number = 0;
 
+    // srcArr 배열을 순회하여 'rspot'을 포함한 요소를 찾아 처리
     for (let i = 0; i < srcArr.length; i++) {
+      // 숫자로 시작하고 'rspot'이 있는 문자열을 찾음
       if (/^[0-9]+rspot/.test(srcArr[i])) {
+        // 'rspot'을 기준으로 나누어 ratio 값을 추출
         ratio_raw = srcArr[i].split("rspot");
+        
+        // 첫 번째 값(number0)은 정수로 변환
         number0 = Number(ratio_raw[0]);
+        
+        // 두 번째 값이 없는 경우 또는 길이에 따른 처리
         if (ratio_raw[1] === undefined) {
           number1 = 0;
         } else if (ratio_raw[1].length === 0) {
@@ -2314,369 +3320,645 @@ class AbstractNode {
         } else if (ratio_raw[1].length === 3) {
           number1 = Number(ratio_raw[1]) / 1000;
         } else {
-          number1 = 0;
+          number1 = 0; // 잘못된 경우 기본값 0
         }
+        
+        // 전체 ratio는 number0 + number1로 설정
         ratio = number0 + number1;
       }
     }
+
+    // method가 'height'일 경우, 타겟값에 비례하여 높이를 계산
     if (obj.method === "height") {
       result = (ratio * obj.target);
-    } else {
+    } 
+    // 그 외의 경우에는 타겟값을 ratio로 나누어 결과를 계산
+    else {
       result = (obj.target / ratio);
     }
+
+    // 기본 결과는 숫자형으로 설정
     result_return = result;
+
+    // result가 'string'일 경우 문자열로 변환하여 반환
     if (obj.result === "string") {
       result_return = String(result);
     }
+
+    // 최종 결과 반환
     return result_return;
   }
-  
+
+  /**
+   * addHrefEvent 메서드는 특정 DOM 요소에 클릭 이벤트를 추가하여, 클릭 시 주어진 URL로 이동하게 만듭니다.
+   *
+   * @param {HTMLElement | SVGElement} dom - 이벤트를 추가할 DOM 요소.
+   * @param {string} to - 클릭 시 이동할 URL 주소.
+   */
   public static addHrefEvent = (dom: HTMLElement | SVGElement, to: string) => {
+    // DOM 요소에 클릭 이벤트를 추가
     dom.addEventListener("click", function (e) {
+      // 클릭 시 지정된 URL로 페이지를 이동
       window.location.href = to;
     });
   }
   
+  /**
+   * addScrollXEvent 메서드는 주어진 HTMLElement에 가로 스크롤 이벤트를 추가합니다.
+   * 마우스 클릭 및 드래그로 가로 스크롤을 할 수 있게 처리하며, 이벤트는 고유한 이름으로 관리됩니다.
+   *
+   * @param {HTMLElement} node - 가로 스크롤 이벤트를 추가할 HTML 요소.
+   * @param {string} [name=""] - 이벤트를 구분하기 위한 고유 이름. 기본값은 빈 문자열이며, 제공되지 않을 경우 자동 생성됩니다.
+   * @returns {Dictionary} - 생성된 이벤트와 관련된 변수 이름들을 담은 객체를 반환합니다.
+   */
   public static addScrollXEvent = (node: HTMLElement, name: string = "") => {
+    // 현재 날짜를 생성하고 문자열 형태로 저장
     const today = new Date();
     const todayConst = String(today.getFullYear()) + String(today.getMonth() + 1) + String(today.getDate());
-  
+
+    // name이 빈 문자열일 경우, 고유한 이름을 자동 생성
     if (name === "") {
       name = node.nodeName + "_" + String(today.getTime() + Math.round(Math.random() * 1000));
     }
+
+    // 이벤트의 고유한 keyName을 생성
     const keyName = name + "_" + todayConst;
+
+    // 이벤트와 관련된 변수들의 고유한 이름을 저장하는 객체를 생성
     const variablesName = {
-      isDown: "isDown" + '_' + keyName,
-      startX: "startX" + '_' + keyName,
-      scrollLeft: "scrollLeft" + '_' + keyName,
-      mouseDown: "mouseDown" + '_' + keyName,
-      mouseLeave: "mouseLeave" + '_' + keyName,
-      mouseUp: "mouseUp" + '_' + keyName,
-      mouseMove: "mouseMove" + '_' + keyName,
+      isDown: "isDown" + '_' + keyName,  // 마우스 버튼이 눌렸는지 여부를 확인하는 변수
+      startX: "startX" + '_' + keyName,  // 드래그 시작 시 마우스 X 좌표를 저장
+      scrollLeft: "scrollLeft" + '_' + keyName,  // 드래그 시작 시 요소의 스크롤 위치를 저장
+      mouseDown: "mouseDown" + '_' + keyName,  // 'mousedown' 이벤트 이름
+      mouseLeave: "mouseLeave" + '_' + keyName,  // 'mouseleave' 이벤트 이름
+      mouseUp: "mouseUp" + '_' + keyName,  // 'mouseup' 이벤트 이름
+      mouseMove: "mouseMove" + '_' + keyName,  // 'mousemove' 이벤트 이름
       events: [
-        { target: "mousedown", name: "mouseDown" + '_' + keyName, },
-        { target: "mouseleave", name: "mouseLeave" + '_' + keyName, },
-        { target: "mouseup", name: "mouseUp" + '_' + keyName, },
-        { target: "mousemove", name: "mouseMove" + '_' + keyName, },
+        { target: "mousedown", name: "mouseDown" + '_' + keyName },
+        { target: "mouseleave", name: "mouseLeave" + '_' + keyName },
+        { target: "mouseup", name: "mouseUp" + '_' + keyName },
+        { target: "mousemove", name: "mouseMove" + '_' + keyName },
       ],
     };
-  
-    AbstractNode.stacks[variablesName.isDown] = false;
-    AbstractNode.stacks[variablesName.startX] = 0;
-    AbstractNode.stacks[variablesName.scrollLeft] = 0;
-  
+
+    // 각 변수들의 초기 값을 설정
+    AbstractNode.stacks[variablesName.isDown] = false;  // 마우스가 눌리지 않은 상태로 초기화
+    AbstractNode.stacks[variablesName.startX] = 0;  // 시작 X 좌표 초기화
+    AbstractNode.stacks[variablesName.scrollLeft] = 0;  // 스크롤 위치 초기화
+
+    // 'mousedown' 이벤트 정의: 마우스가 눌릴 때의 행동 정의
     AbstractNode.events[variablesName.mouseDown] = function (e: any) {
-      AbstractNode.stacks[variablesName.isDown] = true;
-      AbstractNode.stacks[variablesName.startX] = e.pageX - node.offsetLeft;
-      AbstractNode.stacks[variablesName.scrollLeft] = node.scrollLeft;
-      node.style.cursor = "grabbing";
-    }
-  
+      AbstractNode.stacks[variablesName.isDown] = true;  // 마우스 버튼이 눌린 상태로 변경
+      AbstractNode.stacks[variablesName.startX] = e.pageX - node.offsetLeft;  // 마우스 X 좌표 계산 및 저장
+      AbstractNode.stacks[variablesName.scrollLeft] = node.scrollLeft;  // 현재 스크롤 위치 저장
+      node.style.cursor = "grabbing";  // 마우스 커서를 '잡기' 모양으로 변경
+    };
+
+    // 'mouseleave' 이벤트 정의: 마우스가 요소 밖으로 나갈 때의 행동 정의
     AbstractNode.events[variablesName.mouseLeave] = function () {
-      AbstractNode.stacks[variablesName.isDown] = false;
-      node.style.cursor = "pointer";
-    }
-  
+      AbstractNode.stacks[variablesName.isDown] = false;  // 마우스 버튼 상태를 초기화
+      node.style.cursor = "pointer";  // 마우스 커서를 '포인터' 모양으로 변경
+    };
+
+    // 'mouseup' 이벤트 정의: 마우스 버튼을 놓을 때의 행동 정의
     AbstractNode.events[variablesName.mouseUp] = function () {
-      AbstractNode.stacks[variablesName.isDown] = false;
-      node.style.cursor = "pointer";
-    }
-  
+      AbstractNode.stacks[variablesName.isDown] = false;  // 마우스 버튼 상태를 초기화
+      node.style.cursor = "pointer";  // 마우스 커서를 '포인터' 모양으로 변경
+    };
+
+    // 'mousemove' 이벤트 정의: 마우스가 움직일 때의 행동 정의
     AbstractNode.events[variablesName.mouseMove] = function (e: Dictionary) {
       let x: number, walk: number;
+
+      // 마우스가 눌린 상태가 아닐 때는 동작하지 않음
       if (!AbstractNode.stacks[variablesName.isDown]) {
         return;
       }
-      e.preventDefault();
-      x = e.pageX - node.offsetLeft;
-      walk = x - AbstractNode.stacks[variablesName.startX];
-      node.scrollLeft = AbstractNode.stacks[variablesName.scrollLeft] - walk;
-      node.style.cursor = "grabbing";
-    }
-  
+
+      e.preventDefault();  // 기본 동작 방지
+      x = e.pageX - node.offsetLeft;  // 현재 마우스 X 좌표 계산
+      walk = x - AbstractNode.stacks[variablesName.startX];  // 움직인 거리를 계산
+      node.scrollLeft = AbstractNode.stacks[variablesName.scrollLeft] - walk;  // 요소의 가로 스크롤을 업데이트
+      node.style.cursor = "grabbing";  // 마우스 커서를 '잡기' 모양으로 유지
+    };
+
+    // 해당 요소에 이벤트 리스너를 추가
     node.addEventListener("mousedown", AbstractNode.events[variablesName.mouseDown]);
     node.addEventListener("mouseleave", AbstractNode.events[variablesName.mouseLeave]);
     node.addEventListener("mouseup", AbstractNode.events[variablesName.mouseUp]);
     node.addEventListener("mousemove", AbstractNode.events[variablesName.mouseMove]);
-  
-    return variablesName;
-  }
 
+    // 이벤트 이름들을 포함한 객체 반환
+    return variablesName;
+  };
+
+  /**
+   * getDateMatrix 메서드는 주어진 연도와 월을 기반으로 날짜 행렬을 반환합니다.
+   * 반환된 행렬은 각 주의 날짜를 포함하며, 주어진 년도와 월이 없을 경우 오늘 날짜를 기준으로 생성됩니다.
+   * 
+   * @param {any} year - 년도를 나타내는 값. 문자열, 숫자, 또는 날짜 객체로 제공될 수 있으며, "today"일 경우 현재 날짜를 기준으로 생성됩니다.
+   * @param {any} month - 월을 나타내는 값. 년도가 문자열이 아닌 경우에만 사용되며, 제공되지 않으면 현재 월을 기준으로 생성됩니다.
+   * @returns {DateMatrix} - 해당 년도와 월의 날짜 행렬을 반환합니다.
+   */
   public static getDateMatrix = (year: any, month: any): DateMatrix => {
+    // 임시 변수들 선언
     let tempObj: any;
     let tempArr: any;
     let tempArr2: any;
     let tempArr3: any;
-  
+
+    // year가 "today" 또는 year와 month가 undefined인 경우, 현재 날짜를 사용
     if (year === "today" || (year === undefined && month === undefined)) {
-      tempObj = new Date();
-      year = tempObj.getFullYear();
-      month = tempObj.getMonth();
-    } else if (typeof year === "string" && month === undefined && /\-/g.test(year)) {
+      tempObj = new Date();  // 현재 날짜 생성
+      year = tempObj.getFullYear();  // 현재 연도 저장
+      month = tempObj.getMonth();  // 현재 월 저장
+    } 
+    // year가 문자열이고 month가 없으며, year가 'YYYY-MM-DD' 형식일 경우 처리
+    else if (typeof year === "string" && month === undefined && /\-/g.test(year)) {
+      // year가 'YYYY-MM-DD' 형식인 경우 처리
       if (year.length === 10) {
-        tempArr = year.split("-");
-        tempObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        tempArr = year.split(" ");
-        tempArr2 = tempArr[0].split("-");
-        tempArr3 = tempArr[1].split(":");
-        tempObj = new Date(Number(tempArr2[0]), Number(tempArr2[1].replace(/^0/, '')) - 1, Number(tempArr2[2].replace(/^0/, '')), Number(tempArr3[0].replace(/^0/, '')), Number(tempArr3[1].replace(/^0/, '')), Number(tempArr3[2].replace(/^0/, '')));
+        tempArr = year.split("-");  // 날짜 문자열을 '-'로 분리
+        tempObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));  // 연, 월, 일로 Date 객체 생성
+      } 
+      // year가 'YYYY-MM-DD HH:MM:SS' 형식인 경우 처리
+      else {
+        tempArr = year.split(" ");  // 날짜와 시간을 분리
+        tempArr2 = tempArr[0].split("-");  // 날짜 부분을 분리
+        tempArr3 = tempArr[1].split(":");  // 시간 부분을 분리
+        tempObj = new Date(Number(tempArr2[0]), Number(tempArr2[1].replace(/^0/, '')) - 1, Number(tempArr2[2].replace(/^0/, '')), Number(tempArr3[0].replace(/^0/, '')), Number(tempArr3[1].replace(/^0/, '')), Number(tempArr3[2].replace(/^0/, '')));  // Date 객체 생성
       }
-      year = tempObj.getFullYear();
-      month = tempObj.getMonth();
-    } else if (typeof year === "object") {
-      month = year.getMonth();
-      year = year.getFullYear();
+      year = tempObj.getFullYear();  // year를 Date 객체에서 추출
+      month = tempObj.getMonth();  // month를 Date 객체에서 추출
+    } 
+    // year가 Date 객체인 경우
+    else if (typeof year === "object") {
+      month = year.getMonth();  // month를 Date 객체에서 추출
+      year = year.getFullYear();  // year를 Date 객체에서 추출
     }
-  
+
+    // 마지막 날짜를 계산하는 함수 정의
     const getLastDate = (year: number, month: number): number => {
-      const today: Date = new Date(year, month, 1);
+      const today: Date = new Date(year, month, 1);  // 주어진 연도와 월의 첫 번째 날로 Date 객체 생성
       let newMonth: number, lastDate: number;
-      lastDate = -1;
+      lastDate = -1;  // 마지막 날짜 초기화
+
+      // 마지막 날짜를 찾기 위해 27일부터 32일까지 반복하여 월이 바뀌는 시점을 찾음
       for (let i = 27; i < 33; i++) {
-        today.setDate(i);
-        newMonth = today.getMonth();
-        if (month !== newMonth) {
+        today.setDate(i);  // 현재 날짜를 i로 설정
+        newMonth = today.getMonth();  // 현재 월을 저장
+        if (month !== newMonth) {  // 월이 변경되면 마지막 날짜를 i - 1로 설정
           lastDate = i - 1;
           break;
         }
       }
-      return lastDate;
-    }
-  
-    const firstDate: number = 1;
-    const firstDay: number = (new Date(year, month, 1)).getDay();
-    const lastDate: number = getLastDate(year, month);
-  
+      return lastDate;  // 마지막 날짜 반환
+    };
+
+    // 첫 번째 날짜와 요일, 마지막 날짜를 계산
+    const firstDate: number = 1;  // 항상 1일로 설정
+    const firstDay: number = (new Date(year, month, 1)).getDay();  // 해당 월의 첫 번째 날의 요일을 계산
+    const lastDate: number = getLastDate(year, month);  // 해당 월의 마지막 날짜를 계산
+
+    // 필요한 변수들 선언
     let tempDate: Date;
     let arr: List;
     let tong: List;
     let pastLength: number;
     let result: DateMatrix;
     let num: number;
-  
+
+    // 결과로 반환할 DateMatrix 객체를 생성
     result = new DateMatrix(year, month);
-    tong = [];
-    arr = [];
-  
+    tong = [];  // 주(week) 단위 배열
+    arr = [];  // 날짜 저장용 배열
+
+    // 첫 번째 요일이 0(일요일)이 아닌 경우, 빈 공간을 추가하여 첫 번째 주 배열을 채움
     if (firstDay !== 0) {
       for (let i = 0; i < firstDay - 1; i++) {
-        arr.push(null);
+        arr.push(null);  // null로 빈 칸을 채움
       }
     } else {
       for (let i = 0; i < 6; i++) {
-        arr.push(null);
+        arr.push(null);  // 첫 번째 주가 일요일로 시작하면 6칸을 null로 채움
       }
     }
-  
+
+    // 해당 월의 날짜들을 배열에 추가
     for (let i = firstDate; i < lastDate + 1; i++) {
-      tempDate = new Date(year, month, i);
-      arr.push(tempDate.getDay());
-      if (arr.length % 7 === 0) {
-        tong.push(arr);
-        arr = [];
+      tempDate = new Date(year, month, i);  // 해당 날짜 객체 생성
+      arr.push(tempDate.getDay());  // 요일 정보를 배열에 추가
+      if (arr.length % 7 === 0) {  // 7일마다 하나의 주가 완성되면
+        tong.push(arr);  // 주 단위 배열(tong)에 추가
+        arr = [];  // 배열 초기화
       }
     }
-  
+
+    // 마지막 주의 배열이 7개가 채워지지 않으면 빈 칸(null)으로 채움
     if (arr.length !== 7 && arr.length !== 0) {
       pastLength = arr.length;
       for (let i = 0; i < 7 - pastLength; i++) {
-        arr.push(null);
+        arr.push(null);  // 나머지 칸을 null로 채움
       }
-      tong.push(arr);
+      tong.push(arr);  // 주 단위 배열(tong)에 추가
     }
-  
+
+    // DateFactor를 이용해 날짜 정보 생성 및 배열에 저장
     num = 1;
     for (let arr of tong) {
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] !== null) {
-          arr[i] = new DateFactor(year, month, num, i);
-          num++;
+          arr[i] = new DateFactor(year, month, num, i);  // DateFactor로 날짜 생성
+          num++;  // 날짜 숫자 증가
         }
       }
     }
-  
-    result.matrix = tong;
-  
-    return result;
-  }
 
+    // 결과의 matrix에 생성된 날짜 배열(tong)을 할당
+    result.matrix = tong;
+
+    // 최종적으로 결과 반환
+    return result;
+  };
+
+  /**
+   * sleep 메서드는 주어진 시간 동안 대기한 후, "awake" 문자열을 반환하는 Promise를 생성합니다.
+   * 비동기 작업을 일정 시간 동안 지연시킬 때 유용하게 사용할 수 있습니다.
+   *
+   * @param {number} time - 대기할 시간(밀리초 단위).
+   * @returns {Promise<string>} - "awake" 문자열을 resolve하는 Promise를 반환.
+   */
   public static sleep = (time: number): Promise<string> => {
-    let timeoutId: any = null;
+    let timeoutId: any = null; // 타임아웃 ID를 저장할 변수. 추후에 clearTimeout을 위해 사용됨.
+    
+    // 새로운 Promise를 반환. 일정 시간 후 resolve를 호출함.
     return new Promise((resolve, reject) => {
+      // setTimeout을 사용하여 일정 시간이 지난 후 실행되는 콜백을 설정
       timeoutId = setTimeout(function () {
-        resolve("awake");
-        clearTimeout(timeoutId);
-        timeoutId = null;
+        resolve("awake"); // 시간이 지나면 "awake" 문자열로 Promise를 resolve
+        clearTimeout(timeoutId); // setTimeout을 해제하여 메모리 낭비 방지
+        timeoutId = null; // timeoutId를 null로 초기화
       }, time);
     });
   }
 
+  /**
+   * downloadString 메서드는 주어진 텍스트 데이터를 파일로 다운로드할 수 있게 해줍니다.
+   * 파일 타입과 이름을 지정할 수 있으며, 다양한 형식을 지원합니다.
+   *
+   * @param {string} text - 다운로드할 텍스트 데이터.
+   * @param {string} fileName - 저장할 파일 이름.
+   * @param {string} [fileType="plain"] - 파일 형식 (기본값은 "text/plain").
+   */
   public static downloadString = (text: string, fileName: string, fileType: string = "plain") => {
+    // 파일 타입에 따른 MIME 타입을 설정
     if (/csv/gi.test(fileType)) {
-      fileType = "text/csv"
+      fileType = "text/csv";
     } else if (/json/gi.test(fileType)) {
-      fileType = "application/json"
+      fileType = "application/json";
     } else if (/js/gi.test(fileType)) {
-      fileType = "application/js"
+      fileType = "application/js";
     } else if (/svg/gi.test(fileType)) {
-      fileType = "image/svg+xml"
+      fileType = "image/svg+xml";
     } else if (/xml/gi.test(fileType)) {
-      fileType = "application/xml"
+      fileType = "application/xml";
     } else if (/html/gi.test(fileType)) {
-      fileType = "text/html"
+      fileType = "text/html";
     } else if (/pdf/gi.test(fileType)) {
-      fileType = "application/pdf"
+      fileType = "application/pdf";
     } else {
-      fileType = "text/plain"
+      fileType = "text/plain"; // 기본값은 'text/plain'
     }
-  
-    let blob: Blob;
-    let a: HTMLAreaElement;
-    let timeoutId: any;
-  
-    blob = new Blob([ text ], { type: fileType });
-  
-    a = document.createElement('A') as HTMLAreaElement;
-    a.download = fileName;
-    a.href = URL.createObjectURL(blob);
-    a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  
-    timeoutId = setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-      clearTimeout(timeoutId);
-    }, 1000);
+
+    // Blob 객체를 생성하여 파일 데이터를 저장
+    let blob: Blob = new Blob([text], { type: fileType });
+
+    // HTML의 <a> 요소를 동적으로 생성하여 파일 다운로드 기능을 구현
+    let a: HTMLAreaElement = document.createElement('A') as HTMLAreaElement;
+    a.download = fileName; // 파일 이름을 설정
+    a.href = URL.createObjectURL(blob); // Blob 객체를 URL로 변환
+    a.dataset.downloadurl = [fileType, a.download, a.href].join(':'); // 다운로드 URL을 data 속성에 저장
+    a.style.display = "none"; // 화면에 표시되지 않도록 스타일 설정
+    document.body.appendChild(a); // <a> 요소를 DOM에 추가
+    a.click(); // 클릭 이벤트를 트리거하여 다운로드 실행
+    document.body.removeChild(a); // <a> 요소를 DOM에서 제거
+
+    // URL 해제를 위한 타이머 설정. 메모리 누수를 방지.
+    let timeoutId: any = setTimeout(() => {
+      URL.revokeObjectURL(a.href); // URL 해제
+      clearTimeout(timeoutId); // 타이머 해제
+    }, 1000); // 1초 후에 URL을 해제
   }
 
+  /**
+   * blankHref 메서드는 주어진 링크를 새 탭에서 열도록 합니다.
+   * 새로운 HTMLAnchorElement를 동적으로 생성하여 해당 링크를 클릭 처리하고, 클릭 후 DOM에서 제거합니다.
+   *
+   * @param {string} link - 열고자 하는 링크 URL.
+   */
   public static blankHref = (link: string) => {
-    let a: HTMLAnchorElement;
+    let a: HTMLAnchorElement; // 새로운 앵커(링크) 요소를 저장할 변수
+
+    // HTMLAnchorElement를 생성하여 a 변수에 할당
     a = document.createElement("A") as HTMLAnchorElement;
+    
+    // 앵커 요소를 화면에 보이지 않도록 스타일을 설정
     a.style.display = "none";
+    
+    // 주어진 링크를 href 속성에 할당
     a.href = link;
+    
+    // 링크를 새 탭에서 열기 위해 target 속성을 "_blank"로 설정
     a.setAttribute("target", "_blank");
+
+    // 앵커 요소를 DOM에 추가. 이는 요소가 실제로 존재해야 클릭 이벤트가 발생하기 때문
     document.body.appendChild(a);
+    
+    // 링크를 자동으로 클릭하여 새 탭에서 열기
     a.click();
+    
+    // 클릭 후에는 앵커 요소를 DOM에서 제거하여 메모리 누수를 방지
     document.body.removeChild(a);
   }
-  
+
+  /**
+   * selfHref 메서드는 주어진 링크로 현재 창의 주소를 변경합니다.
+   * 즉, 링크를 현재 창에서 엽니다.
+   *
+   * @param {string} link - 현재 창에서 열고자 하는 링크 URL.
+   */
   public static selfHref = (link: string) => {
-    window.location.assign(link);
+    // window.location.assign을 사용하여 링크로 이동
+    window.location.assign(link); // 현재 창의 주소를 주어진 링크로 변경
   }
 
+  /**
+   * styleInjection 메서드는 주어진 스타일 객체를 HTML 또는 SVG 요소에 적용하는 역할을 합니다.
+   * Object.defineProperty를 사용하여 스타일 속성을 정의하고, 해당 속성은 변경 가능하게 설정됩니다.
+   * 
+   * @param {HTMLElement | SVGElement} dom - 스타일을 적용할 DOM 요소.
+   * @param {Dictionary} styleObj - 적용할 스타일 정보가 담긴 객체. 속성-값 쌍으로 구성됨.
+   */
   public static styleInjection = (dom: HTMLElement | SVGElement, styleObj: Dictionary) => {
+    // styleObj 객체의 각 속성(key)에 대해 반복문 실행
     for (let i in styleObj) {
+      // Object.defineProperty를 사용하여 DOM 요소의 스타일 속성을 정의
       Object.defineProperty(dom.style, i, {
-        value: styleObj[i],
-        writable: true,
+        value: styleObj[i], // 스타일 속성 값 설정
+        writable: true, // 속성을 변경 가능하게 설정
       });
     }
   }
 
+  /**
+   * cssInjection 메서드는 주어진 CSS 문자열을 <style> 태그에 추가합니다.
+   * 만약 문서에 <style> 태그가 이미 존재하면, 해당 태그에 CSS를 추가합니다.
+   *
+   * @param {string} cssString - 추가할 CSS 코드 문자열.
+   */
   public static cssInjection = (cssString: string) => {
+    // 문서에서 <style> 태그를 선택
     const style: HTMLStyleElement | null = document.querySelector("style");
+
+    // <style> 태그가 존재하는 경우, 주어진 CSS 코드를 끝에 삽입
     if (style !== null) {
-      style.insertAdjacentHTML("beforeend", cssString);
+      style.insertAdjacentHTML("beforeend", cssString); // CSS 문자열을 <style> 태그 안에 추가
     }
   }
   
+  /**
+   * uniqueValue 메서드는 고유한 값을 생성하는 함수입니다.
+   * 'type'에 따라 숫자, 문자열 또는 16진수 문자열을 반환합니다.
+   * 
+   * @param {string} [type="number"] - 반환할 고유 값의 유형. "number", "string", "hex" 중 하나.
+   * @returns {any} - 고유한 값. type에 따라 숫자, 문자열 또는 16진수 문자열.
+   */
   public static uniqueValue = (type: string = "number"): any => {
+    // type이 "number"인 경우, 현재 시간과 무작위 숫자를 결합하여 고유 숫자 반환
     if (type === "number") {
       return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));
+    
+    // type이 "string"인 경우, 현재 시간과 무작위 숫자를 결합하여 고유 문자열 반환
     } else if (type === "string") {
       return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+    
+    // type이 "hex"인 경우, 고유한 16진수 문자열을 생성하여 반환
     } else if (type === "hex") {
-      const x = 16;
-      const length = 11;
-      const uniqueNumber = (new Date()).valueOf();
-      const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ];
-      const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ];
+      const x = 16; // 16진수에서 사용하는 숫자
+      const length = 11; // 추가로 생성할 16진수 문자열의 길이
+      const uniqueNumber = (new Date()).valueOf(); // 현재 시간 값을 기준으로 고유한 숫자 생성
+      const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ]; // 16진수 문자 배열
+      const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; // 랜덤 키워드로 사용될 문자 배열
+
+      // 고유 숫자를 복사한 변수 및 필요한 최대 지수를 계산하기 위한 변수 초기화
       let uniqueNumber_copied: number;
       let maxExponent: number;
-      let cArr: List;
+      let cArr: List; // 16진수 자리값을 저장할 배열
       let temp: number;
       let hexString: string;
-      uniqueNumber_copied = uniqueNumber;
+
+      uniqueNumber_copied = uniqueNumber; // 고유 숫자를 복사
       maxExponent = 0;
+
+      // 고유 숫자보다 작은 16의 최대 지수를 계산
       while (Math.pow(x, maxExponent) <= uniqueNumber) {
         maxExponent++;
       }
-      cArr = [];
+
+      cArr = []; // 16진수 변환을 위한 배열 초기화
       for (let i = 0; i < maxExponent; i++) {
+        // 현재 자리값의 16진수 계산
         temp = ((uniqueNumber_copied / Math.pow(x, i)) % x);
-        cArr.push(temp);
-        uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i));
+        cArr.push(temp); // 계산된 값을 배열에 추가
+        uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i)); // 처리된 부분을 고유 숫자에서 차감
       }
+
+      // 16진수 자리값 배열을 문자로 변환하여 문자열로 만듦
       hexString = cArr.map((index) => { return hexChars[index] }).join('');
+
+      // 추가로 고유한 16진수 문자열을 생성
       for (let i = 0; i < length; i++) {
         hexString += hexChars[Math.floor(hexChars.length * Math.random())];
       }
-      return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
+
+      // 최종 16진수 문자열을 반환 (랜덤 키워드와 고유 숫자, 추가 문자열로 구성)
+      return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] +
+            randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] +
+            hexChars[Math.floor(hexChars.length * Math.random())] +
+            randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] +
+            String(uniqueNumber) + 'A' + hexString;
+
+    // type이 지정되지 않거나 다른 값인 경우, 기본적으로 문자열 형태의 고유 값을 반환
     } else {
       return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
     }
   }
   
+  /**
+   * `copyText` 메서드는 전달받은 문자열을 사용자의 클립보드에 복사하는 기능을 담당합니다.
+   * 이 메서드는 `window.navigator.clipboard` API를 사용하여 브라우저의 클립보드에 접근합니다.
+   * 비동기 방식으로 동작하며, 클립보드 작업 중 오류가 발생할 수 있기 때문에 `try-catch` 문을 통해 예외를 처리합니다.
+   *
+   * @param {string} str - 클립보드에 복사할 문자열입니다.
+   * @returns {Promise<any>} 클립보드 복사 작업이 완료된 후 값을 반환하지 않습니다.
+   */
   public static copyText = async (str: string): Promise<any> => {
+    
+    // 비동기 처리를 시작합니다. 사용자의 클립보드에 문자열을 복사하는 작업이 수행됩니다.
     try {
+      // `window.navigator.clipboard` API를 사용하여 클립보드에 텍스트(`str`)를 저장합니다.
+      // 이 API는 보안상 사용자 권한이 필요한 작업이므로, 비동기적으로 처리되고 Promise를 반환합니다.
       await window.navigator.clipboard.writeText(str);
+
     } catch (e) {
+      // 클립보드에 텍스트를 복사하는 도중 예외가 발생할 수 있으며,
+      // 예외가 발생할 경우 해당 오류(`e`)를 콘솔에 출력합니다.
       console.log(e);
     }
-  }
+  };
 
+  /**
+   * `isMac` 메서드는 사용자가 Mac 운영체제를 사용하는지 여부를 확인하는 역할을 합니다.
+   * 이 메서드는 정규 표현식을 사용하여 `window.navigator.userAgent` 값을 검사하고, 
+   * 해당 값에 'Windows' 문자열이 포함되어 있는지 확인합니다.
+   * Mac을 사용하고 있지 않으면 `true`를 반환하고, Windows 운영체제인 경우에는 `false`를 반환합니다.
+   * 
+   * @returns {boolean} 사용자가 Mac을 사용하고 있다면 `true`, 아니라면 `false`를 반환합니다.
+   */
   public static isMac = (): boolean => {
+    // 정규 표현식을 사용하여 `window.navigator.userAgent`에서 'Windows'라는 단어가 있는지 검사합니다.
+    // 'Windows'가 포함되어 있지 않으면 true를 반환합니다.
     return !/Windows/gi.test(window.navigator.userAgent);
   }
-  
+
+  /**
+   * `isIphone` 메서드는 사용자가 iPhone 기기를 사용하는지 여부를 확인하는 기능을 담당합니다.
+   * 정규 표현식을 사용하여 `window.navigator.userAgent` 값을 검사하고, 
+   * 해당 값에 'iPhone' 문자열이 포함되어 있는지 확인합니다.
+   * iPhone을 사용하고 있다면 `true`를 반환하고, 그렇지 않으면 `false`를 반환합니다.
+   * 
+   * @returns {boolean} 사용자가 iPhone을 사용하고 있다면 `true`, 그렇지 않으면 `false`를 반환합니다.
+   */
   public static isIphone = (): boolean => {
+    // 정규 표현식을 사용하여 `window.navigator.userAgent`에서 'iPhone'이라는 단어가 있는지 확인합니다.
+    // 'iPhone'이 포함되어 있으면 true를 반환합니다.
     return /iPhone/gi.test(window.navigator.userAgent);
   }
 
+  /**
+   * `cleanChildren` 메서드는 DOM 요소 또는 요소 목록에서 모든 자식 노드를 제거하는 역할을 합니다.
+   * 주어진 요소가 단일 DOM 요소이든 배열로 주어진 여러 요소이든, 그 자식 노드를 모두 제거합니다.
+   * 이 메서드는 HTML 요소나 SVG 요소와 호환됩니다.
+   * 
+   * @param {List | HTMLElement | SVGElement} dom - 자식 노드를 제거할 대상 DOM 요소 또는 DOM 요소의 배열입니다.
+   * 배열로 주어질 경우 각 요소에 대해 자식 노드를 반복적으로 제거합니다.
+   */
   public static cleanChildren = (dom: List | HTMLElement | SVGElement) => {
+    
+    // 먼저 주어진 `dom`이 배열인지 확인합니다.
     if (Array.isArray(dom)) {
+      // `dom`이 배열일 경우, 배열의 각 요소에 대해 반복 작업을 수행합니다.
       for (let d of dom) {
+        // 해당 DOM 요소의 자식 노드가 존재하는 동안 반복문을 실행하여 모든 자식 노드를 제거합니다.
         while (d.firstChild !== null && d.firstChild !== undefined) {
+          // 첫 번째 자식 노드를 제거합니다.
           d.removeChild(d.firstChild);
         }
       }
     } else {
+      // `dom`이 배열이 아닌 단일 DOM 요소일 경우
+      // 해당 요소의 자식 노드가 존재하는 동안 반복문을 실행하여 자식 노드를 모두 제거합니다.
       while (dom.firstChild !== null && dom.firstChild !== undefined) {
+        // 첫 번째 자식 노드를 제거합니다.
         dom.removeChild(dom.firstChild);
       }
     }
   }
   
+  /**
+   * `objectDeepCopy` 메서드는 전달된 객체나 배열을 깊은 복사하는 기능을 담당합니다.
+   * 깊은 복사란, 원본 객체나 배열과 복사된 객체나 배열이 서로 다른 참조를 가지는 것을 의미합니다.
+   * 이 메서드는 JSON 문자열로 변환한 후, `AbstractNode.equalJson` 메서드를 호출하여 해당 문자열을 다시 객체로 변환하는 방식으로 깊은 복사를 수행합니다.
+   *
+   * @param {Dictionary | List} obj - 깊은 복사를 수행할 객체 또는 배열입니다.
+   * @returns {Dictionary | List} 복사된 객체 또는 배열을 반환합니다.
+   */
   public static objectDeepCopy = (obj: Dictionary | List): Dictionary | List => {
+    // 객체를 JSON 문자열로 변환한 후 `AbstractNode.equalJson`을 통해 다시 객체로 변환하여 깊은 복사를 수행합니다.
+    // JSON.stringify는 객체를 문자열로 변환하며, 이것을 다시 객체로 변환함으로써 깊은 복사를 수행합니다.
     return AbstractNode.equalJson(JSON.stringify(obj));
   }
-  
+
+  /**
+   * `pixelUnit` 메서드는 숫자를 픽셀 단위의 문자열로 변환하는 기능을 합니다.
+   * 이는 숫자 뒤에 'px'라는 단위를 추가하여 CSS에서 사용할 수 있는 픽셀 단위의 값을 반환합니다.
+   *
+   * @param {number} num - 변환할 숫자입니다.
+   * @returns {string} 'px' 단위가 추가된 문자열을 반환합니다.
+   */
   public static pixelUnit = (num: number): string => {
+    // 숫자를 문자열로 변환한 후 'px' 단위를 추가하여 반환합니다.
     return `${String(num)}px`;
   }
-  
+
+  /**
+   * `eaUnit` 메서드는 숫자 뒤에 'ea'라는 단위를 추가하는 기능을 합니다.
+   * 여기서 'ea'는 미리 정의된 미디어 단위로, `AbstractNode.mediaEa` 메서드를 호출하여 동적으로 가져옵니다.
+   * 
+   * @param {number} num - 변환할 숫자입니다.
+   * @returns {string} 'ea' 단위가 추가된 문자열을 반환합니다.
+   */
   public static eaUnit = (num: number): string => {
+    // `AbstractNode.mediaEa` 메서드를 호출하여 현재 'ea' 단위를 가져옵니다.
     const thisEa: string = AbstractNode.mediaEa();
+    // 숫자를 문자열로 변환한 후 'ea' 단위를 추가하여 반환합니다.
     return `${String(num)}${thisEa}`;
   }
 
+  /**
+   * `percent` 메서드는 숫자를 퍼센트(%) 단위의 문자열로 변환하는 기능을 합니다.
+   * 인자로 숫자를 받으며, 숫자가 제공되지 않거나 잘못된 값이 들어오면 기본적으로 100%를 반환합니다.
+   * 
+   * @param {number} [num] - 변환할 숫자입니다. 선택적 파라미터이며, 숫자가 전달되지 않으면 100%를 기본값으로 사용합니다.
+   * @returns {string} '%' 단위가 추가된 문자열을 반환합니다. 숫자가 없으면 '100%'를 반환합니다.
+   */
   public static percent = (num?: number): string => {
+    // 전달된 인자가 없거나 숫자가 아닌 경우 100%를 반환합니다.
     if (num === undefined || typeof num !== "number") {
       return `100%`;
     } else {
+      // 숫자가 올바르게 전달된 경우 해당 숫자에 '%' 단위를 추가하여 반환합니다.
       return `${String(num)}%`;
     }
   }
 
+  /**
+   * `hexaJson` 메서드는 함수나 객체를 인코딩 또는 디코딩하여 문자열로 변환하거나 다시 복원하는 역할을 합니다.
+   * 함수는 `toHex` 메서드를 통해 16진수 문자열로 변환되고, 이를 다시 디코딩하여 복원할 수 있습니다.
+   * JSON 객체의 경우, 중첩된 함수까지 모두 변환하여 문자열로 직렬화할 수 있으며, 다시 디코딩할 수 있습니다.
+   * 
+   * @param {any} input - 처리할 입력값입니다. 함수, 객체, 또는 문자열일 수 있습니다.
+   * @param {boolean} [middleMode=false] - 중간 모드를 활성화할지 여부입니다. 활성화되면 JSON으로 직렬화하지 않고 객체 그대로 반환합니다.
+   * @returns {Promise<any>} 인코딩된 문자열 또는 복원된 함수나 객체를 반환합니다.
+   */
   public static hexaJson = async (input: any, middleMode: boolean = false) => {
+    
+    // 비동기 함수의 생성자를 가져옵니다. 이 생성자를 사용하여 문자열로부터 함수를 복원할 수 있습니다.
     const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+
+    // 함수의 시작과 끝을 구분하는 토큰을 정의합니다. 이를 통해 함수 문자열의 경계를 확인할 수 있습니다.
     const tokenStart: string = "__hexaFunctionStart__<<<";
     const tokenEnd: string = ">>>__hexaFunctionEnd__";
+
+    // hexaFunction은 입력값이 함수일 경우 16진수로 인코딩하고, 그 외에는 디코딩하는 역할을 수행합니다.
     const hexaFunction = async (input: any) => {
       try {
+        /**
+         * `hexEncode` 메서드는 문자열을 16진수로 변환합니다.
+         * 각 문자의 유니코드 값을 16진수로 변환하여 문자열로 반환합니다.
+         *
+         * @param {string} str - 16진수로 변환할 문자열입니다.
+         * @returns {string} 변환된 16진수 문자열을 반환합니다.
+         */
         const hexEncode = (str: string): string => {
           let hex: string;
           let result: string = "";
@@ -2684,44 +3966,70 @@ class AbstractNode {
             hex = str.charCodeAt(i).toString(16);
             result += String("000" + hex).slice(-4);
           }
-          return result
+          return result;
         }
+
+        /**
+         * `hexDecode` 메서드는 16진수 문자열을 원래 문자열로 변환합니다.
+         * 4자리씩 분리된 16진수 값을 다시 문자로 변환하여 복원합니다.
+         *
+         * @param {string} hash - 원래 문자열로 변환할 16진수 문자열입니다.
+         * @returns {string} 복원된 문자열을 반환합니다.
+         */
         const hexDecode = (hash: string): string => {
           let hexes: List = (hash.match(/.{1,4}/g) || []);
           let back: string = "";
-          for(let j = 0; j < hexes.length; j++) {
+          for (let j = 0; j < hexes.length; j++) {
             back += String.fromCharCode(parseInt(hexes[j], 16));
           }
           return back;
         }
+
+        /**
+         * `toHex` 메서드는 문자열을 16진수로 변환하는 비동기 함수입니다.
+         *
+         * @param {string} str - 변환할 문자열입니다.
+         * @returns {Promise<any>} 16진수로 변환된 문자열을 반환하는 Promise입니다.
+         */
         const toHex = (str: string): Promise<any> => {
           return new Promise((resolve, reject) => {
             resolve(hexEncode(str));
           });
         }
+
+        /**
+         * `toFunction` 메서드는 16진수 문자열을 다시 함수로 복원하는 비동기 함수입니다.
+         *
+         * @param {string} hash - 복원할 16진수 문자열입니다.
+         * @returns {Promise<any>} 복원된 함수를 반환하는 Promise입니다.
+         */
         const toFunction = (hash: string): Promise<any> => {
           return new Promise((resolve, reject) => {
             resolve(hexDecode(hash));
           });
         }
+
+        // 함수 문자열과 인자 문자열, 디코딩된 함수 등의 변수를 선언합니다.
         let functionString: string, functionString_copied: string;
         let argString: string;
         let argArr: List;
         let decodeFunction: any;
         let asyncBoo: boolean;
-  
+
+        // 입력값이 함수일 경우, 이를 16진수로 인코딩하여 반환합니다.
         if (typeof input === "function") {
-  
           return tokenStart + (await toHex(input.toString())) + tokenEnd;
-  
+
+        // 입력값이 문자열일 경우, 이를 16진수로 인코딩된 함수 문자열인지 확인하고, 복원합니다.
         } else if (typeof input === "string") {
-  
           if ((new RegExp('^' + tokenStart)).test(input) && (new RegExp(tokenEnd + '$')).test(input)) {
             input = input.replace(new RegExp('^' + tokenStart), '').replace(new RegExp(tokenEnd + '$'), '');
             functionString = await toFunction(input);
             functionString_copied = String(functionString).trim();
             argString = '';
             asyncBoo = /^async/.test(functionString_copied);
+            
+            // 함수가 비동기 함수인지 일반 함수인지에 따라 인자를 추출하고 복원합니다.
             if (/^(async function|function)/i.test(functionString_copied)) {
               functionString_copied.replace(/^(async function|function) [^\(]*\(([^\)]*)\)[ ]*\{/, (match, p1, p2) => {
                 argString = p2.trim();
@@ -2733,22 +4041,29 @@ class AbstractNode {
                 return '';
               });
             }
+
+            // 인자에 기본값이 설정된 경우 이를 제거하고 배열로 변환합니다.
             argString = argString.replace(/[ ]*\=[ ]*[\{\[][^\=]*[\}\]]/gi, '');
             argString = argString.replace(/[ ]*\=[ ]*[^,]+/gi, '');
             argArr = argString.split(',').map((str) => { return str.trim(); });
+
+            // 인자 이름에 공백이 포함되어 있으면 오류를 발생시킵니다.
             if (argArr.some((str) => { return / /gi.test(str); })) {
               throw new Error("invaild argument name");
             }
+
+            // 함수의 비동기 여부에 따라 비동기 함수 또는 일반 함수로 복원합니다.
             if (asyncBoo) {
               decodeFunction = new AsyncFunction(...argArr, functionString.trim().replace(/^(async function [^\(]*\([^\)]*\)[ ]*\{|async \([^\)]*\)[ ]*\=\>[ ]*\{)/, '').replace(/\}$/, ''));
             } else {
               decodeFunction = new Function(...argArr, functionString.trim().replace(/^(function [^\(]*\([^\)]*\)[ ]*\{|\([^\)]*\)[ ]*\=\>[ ]*\{)/, '').replace(/\}$/, ''));
             }
+
             return decodeFunction;
           } else {
             return input;
           }
-  
+
         } else {
           throw new Error("invaild input");
         }
@@ -2756,9 +4071,13 @@ class AbstractNode {
         console.log(e);
       }
     }
+
     try {
+      // 입력값이 함수일 경우 hexaFunction을 호출하여 16진수로 인코딩합니다.
       if (typeof input === "function") {
         return await hexaFunction(input);
+      
+      // 입력값이 객체일 경우, 재귀적으로 내부의 함수를 모두 16진수로 변환합니다.
       } else if (typeof input === "object") {
         if (input === null) {
           return null;
@@ -2783,6 +4102,8 @@ class AbstractNode {
             return await toJson(input);
           }
         }
+
+      // 입력값이 문자열일 경우, 이를 함수로 복원하거나 16진수로 변환합니다.
       } else if (typeof input === "string") {
         if ((new RegExp('^' + tokenStart)).test(input)) {
           return await hexaFunction(input);
@@ -2812,42 +4133,80 @@ class AbstractNode {
     }
   }
   
+  /**
+   * `autoComma` 메서드는 숫자 또는 문자열에 자동으로 쉼표(,)를 추가하여 3자리마다 구분하는 기능을 합니다.
+   * 만 단위로 변환하는 옵션도 제공하며, 음수일 경우에도 정상적으로 처리됩니다.
+   *
+   * @param {number | string} str - 쉼표를 추가할 숫자 또는 문자열입니다.
+   * @param {boolean} [manVersion=false] - 만 단위로 변환할지 여부를 지정하는 선택적 파라미터입니다. 기본값은 false입니다.
+   * @returns {string} 쉼표가 추가된 문자열을 반환합니다. 만 단위 옵션이 활성화되면 '만'이 추가된 문자열을 반환합니다.
+   */
   public static autoComma = (str: number | string, manVersion: boolean = false): string => {
+    
+    // 음수를 나타내는 기호를 저장할 변수를 선언합니다.
     let minus: string;
+
+    // 숫자 그룹을 나눌 카운트와 이를 저장할 배열을 선언합니다.
     let count: number;
     let countArr: List;
+
+    // 정규 표현식의 실행 결과를 저장할 변수를 선언합니다.
     let execResult: RegExpExecArray | null;
+
+    // 임시로 값을 저장할 변수와 배열을 선언합니다.
     let temp: any, tempArr: List;
+
+    // 입력값이 숫자일 경우, 문자열로 변환합니다. 소수점 이하 값은 제거합니다.
     if (typeof str === "number") {
       str = String(Math.floor(str));
     }
+
+    // 지수 표기법이 포함된 값은 처리할 수 없으므로 오류를 던집니다.
     if (/e/gi.test(str)) {
       throw new Error("is too heavy");
     }
+
+    // 음수 여부를 확인하여 '-' 기호를 저장합니다.
     execResult = /\-/g.exec(str);
     if (execResult !== null) {
       minus = execResult[0];
     } else {
       minus = "";
     }
+
+    // 숫자 외의 문자는 모두 제거합니다.
     str = str.replace(/[^0-9]/g, '');
+
+    // 숫자 값이 유효하지 않으면 오류를 던집니다.
     if (str === '') {
       throw new Error("invaild number");
     }
+
+    // `manVersion`이 true일 경우, 만 단위로 변환하여 10000으로 나눈 값을 사용합니다.
     if (manVersion) {
       str = String(Math.floor(Number(str) / 10000));
     }
+
+    // 입력 문자열의 길이를 3으로 나누어 그룹의 개수를 계산합니다.
     count = Math.ceil(str.length / 3);
+
+    // 각 그룹의 시작과 끝 인덱스를 저장할 배열을 초기화합니다.
     countArr = [];
     for (let i = 0; i < count; i++) {
       countArr.push([ 3 * i, 3 * (i + 1) ]);
     }
+
+    // 그룹이 생성되지 않았으면 오류를 던집니다.
     if (countArr.length === 0) {
       throw new Error("invaild number");
     }
+
+    // 각 그룹의 숫자를 저장할 임시 배열을 초기화합니다.
     tempArr = [];
     for (let arr of countArr) {
       temp = '';
+      
+      // 각 그룹에 속하는 숫자를 추출하여 임시 배열에 저장합니다.
       for (let i = arr[0]; i < arr[1]; i++) {
         if (str.length - 1 - i < 0) {
           temp += '';
@@ -2855,36 +4214,82 @@ class AbstractNode {
           temp = str[str.length - 1 - i] + temp;
         }
       }
+
+      // 그룹이 비어 있지 않으면 배열의 앞쪽에 추가합니다.
       if (temp !== '') {
         tempArr.unshift(temp);
       }
     }
-  
+
+    // 만 단위로 변환된 경우 '만'을 추가하여 반환합니다.
     if (manVersion) {
       return (minus + tempArr.join(',')) + "만";
     } else {
+      // 만 단위로 변환되지 않은 경우 쉼표가 추가된 숫자를 반환합니다.
       return (minus + tempArr.join(','));
     }
   }
-
+  
+  /**
+   * `dateToString` 메서드는 날짜 객체를 문자열로 변환하는 기능을 담당합니다.
+   * 기본적으로 `YYYY-MM-DD` 형식으로 변환되며, `detail` 및 `dayOption` 파라미터에 따라
+   * 시간과 요일 정보까지 포함된 상세 형식으로 변환할 수 있습니다.
+   * 
+   * @param {Date} date - 변환할 날짜 객체입니다.
+   * @param {boolean} [detail=false] - 상세 정보(시간, 초)를 포함할지 여부입니다. 기본값은 `false`입니다.
+   * @param {boolean} [dayOption=false] - 요일 정보를 포함할지 여부입니다. 기본값은 `false`입니다.
+   * @returns {string} 변환된 날짜 문자열을 반환합니다. 날짜가 비어있거나 미래일 경우 특정 문자열("해당 없음", "예정")을 반환합니다.
+   */
   public static dateToString = (date: Date, detail: boolean = false, dayOption: boolean = false): string => {
+    
+    // 요일을 문자열로 나타내는 배열을 선언합니다. 0: 일요일, 1: 월요일, ..., 6: 토요일
     const dayday: Array<string> = [ '일', '월', '화', '수', '목', '금', '토' ];
+
+    // `detail` 값이 명시적으로 전달되지 않았을 경우 기본값으로 `false`를 설정합니다.
     if (detail === undefined || detail === null) {
       detail = false;
     }
-    const zeroAddition = (num: number): string => { return (num < 10) ? `0${String(num)}` : String(num); }
+
+    /**
+     * `zeroAddition` 메서드는 숫자가 한 자릿수일 경우 앞에 0을 추가하여 두 자릿수로 반환합니다.
+     * 날짜나 시간이 1~9일 경우 '01', '02' 등의 형식으로 반환합니다.
+     * 
+     * @param {number} num - 두 자릿수로 변환할 숫자입니다.
+     * @returns {string} 두 자릿수로 변환된 문자열을 반환합니다.
+     */
+    const zeroAddition = (num: number): string => { 
+      return (num < 10) ? `0${String(num)}` : String(num); 
+    }
+
+    // 비어 있는 날짜(1900년 1월 1일)의 기준 값입니다.
     const emptyDateValue = (new Date(1900, 0, 1)).valueOf();
+
+    // 미래 날짜(3000년 1월 1일)의 기준 값입니다.
     const futureDateValue = (new Date(3000, 0, 1)).valueOf();
+
+    // 날짜 값이 비어 있거나 1900년 1월 1일 이전일 경우 "해당 없음"을 반환합니다.
     if (date.valueOf() <= emptyDateValue) {
       return "해당 없음";
+
+    // 날짜 값이 3000년 1월 1일 이후일 경우 "예정"을 반환합니다.
     } else if (date.valueOf() >= futureDateValue) {
       return "예정";
+
+    // 일반적인 날짜 범위일 경우
     } else {
+      
+      // 상세 정보를 포함하지 않는 경우 `YYYY-MM-DD` 형식으로 변환하여 반환합니다.
       if (!detail) {
         return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
+
+      // 상세 정보가 포함된 경우
       } else {
+
+        // `dayOption`이 true일 경우, 요일 정보까지 포함하여 반환합니다.
         if (dayOption) {
           return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())} ${dayday[date.getDay()]}요일`;
+
+        // 요일 정보를 포함하지 않고 시간 정보만 포함하여 반환합니다.
         } else {
           return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
         }
@@ -2892,92 +4297,162 @@ class AbstractNode {
     }
   }
   
+  /**
+   * `dateToHangul` 메서드는 주어진 날짜를 한국어 형식의 날짜 문자열로 변환하는 역할을 합니다.
+   * `YYYY년 MM월 DD일` 형식으로 변환되며, 연도를 두 자리로 표현할지 여부를 `shortYear` 파라미터로 지정할 수 있습니다.
+   *
+   * @param {Date} date - 변환할 날짜 객체입니다.
+   * @param {boolean} [shortYear=false] - 연도를 두 자리로 나타낼지 여부를 지정하는 선택적 파라미터입니다. 기본값은 `false`입니다.
+   * @returns {string} 한국어 형식의 날짜 문자열을 반환합니다. 날짜가 비어있거나 미래일 경우 특정 문자열("해당 없음", "예정")을 반환합니다.
+   */
   public static dateToHangul = (date: Date, shortYear: boolean = false): string => {
+
+    // 비어 있는 날짜(1900년 1월 1일)의 기준 값입니다.
     const emptyDateValue: number = (new Date(1900, 0, 1)).valueOf();
+
+    // 미래 날짜(3000년 1월 1일)의 기준 값입니다.
     const futureDateValue: number = (new Date(3000, 0, 1)).valueOf();
+
+    // 날짜 값이 비어 있거나 1900년 1월 1일 이전일 경우 "해당 없음"을 반환합니다.
     if (date.valueOf() <= emptyDateValue) {
       return "해당 없음";
+
+    // 날짜 값이 3000년 1월 1일 이후일 경우 "예정"을 반환합니다.
     } else if (date.valueOf() >= futureDateValue) {
       return "예정";
+
+    // 일반적인 날짜 범위일 경우 한국어 형식의 날짜 문자열로 변환하여 반환합니다.
     } else {
+
+      // 연도를 두 자리로 나타낼 경우 `shortYear`가 true일 때 실행됩니다.
       if (shortYear) {
         return `${String(date.getFullYear()).slice(2)}년 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
+
+      // 연도를 네 자리로 나타낼 경우 (기본값)
       } else {
         return `${String(date.getFullYear())}년 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
       }
     }
   }
-  
+
+  /**
+   * `zeroAddition` 메서드는 숫자가 한 자릿수일 경우 앞에 0을 추가하여 두 자릿수로 변환하는 기능을 합니다.
+   * 주로 날짜나 시간 값을 처리할 때 사용되며, 1~9의 숫자를 '01', '02'와 같은 형식으로 변환합니다.
+   * 
+   * @param {number} num - 두 자릿수로 변환할 숫자입니다.
+   * @returns {string} 두 자릿수로 변환된 문자열을 반환합니다.
+   */
   public static zeroAddition = (num: number): string => {
+    // 숫자가 10보다 작으면 앞에 '0'을 붙여 두 자릿수로 만듭니다. 그렇지 않으면 그대로 반환합니다.
     return ((num < 10) ? `0${String(num)}` : String(num));
   }
 
+  /**
+   * `stringToDate` 메서드는 문자열, 숫자, 또는 Date 객체를 실제 날짜 객체로 변환하는 기능을 합니다.
+   * 다양한 형식의 날짜 문자열을 처리하며, 특정 문자열은 특수 날짜 값(예: "없음"은 1800년, "예정"은 3800년)으로 변환됩니다.
+   *
+   * @param {any} str - 변환할 값으로, 문자열, 숫자, 또는 Date 객체일 수 있습니다.
+   * @returns {Date} 변환된 Date 객체를 반환합니다. 유효하지 않은 입력의 경우 오류가 발생합니다.
+   */
   public static stringToDate = (str: any): Date => {
+
+    // 입력 값이 Date 객체인 경우, 그대로 반환합니다.
     if (str instanceof Date) {
       return str;
     }
+
+    // 입력 값이 숫자인 경우, 밀리초로 간주하고 Date 객체로 변환하여 반환합니다.
     if (typeof str === "number") {
       return new Date(str);
     }
+
+    // 입력 값이 문자열이 아닌 경우, 오류를 던집니다.
     if (typeof str !== "string") {
       throw new Error("invaild input");
     }
+
+    // 입력 문자열이 빈 문자열이거나 '-', 또는 '없음'을 포함하는 경우, 1800년 1월 1일을 반환합니다.
     if (str.trim() === '' || str.trim() === '-' || /없음/gi.test(str)) {
       return (new Date(1800, 0, 1));
     }
+
+    // 입력 값이 '예정', '진행중', 또는 '미정'인 경우, 3800년 1월 1일을 반환합니다.
     if (str.trim() === "예정" || str.trim() === "진행중" || str.trim() === "미정") {
       return (new Date(3800, 0, 1));
     }
-  
-    const zeroAddition = function (num: number): string { return (num < 10) ? `0${String(num)}` : String(num); };
+
+    // 숫자가 한 자리일 경우, 앞에 0을 추가하는 함수입니다.
+    const zeroAddition = function (num: number): string {
+      return (num < 10) ? `0${String(num)}` : String(num);
+    };
+
     let tempArr: List, tempArr2: List, tempArr3: List, tempArr4: List;
     let tempArr5: List;
+
+    // 입력 문자열에서 '~' 및 탭 문자를 제거하고 앞뒤 공백을 제거합니다.
     str = str.trim().replace(/[\~\t]/gi, '').trim();
-  
+
+    // ISO 8601 형식(T/Z 포함)의 날짜 문자열인지 확인하고, 유효한 경우 Date 객체로 변환하여 반환합니다.
     if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
       if (!Number.isNaN((new Date(str)).getTime())) {
         return new Date(str);
       }
     }
-  
+
+    // 다양한 형식의 날짜 문자열을 처리합니다.
     if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
+
+      // 예시: '20-01-01' 형식을 '2020-01-01'로 변환합니다.
       if (/^[0-9][0-9][ ]*\-[ ]*[0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
-        str = str.split("-").map((s: string) => { return s.trim() }).join("-");
+        str = str.split("-").map((s: string) => s.trim()).join("-");
         str = "20" + str;
+
+      // 예시: '2020-01' 형식을 '2020-01-01'로 변환합니다.
       } else if (/^[0-9][0-9][0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
-        str = str.split("-").map((s: string) => { return s.trim() }).join("-");
+        str = str.split("-").map((s: string) => s.trim()).join("-");
         str = str + "-01";
+
+      // 예시: '20-01' 형식을 '2020-01-01'로 변환합니다.
       } else if (/^[0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
-        str = str.split("-").map((s: string) => { return s.trim() }).join("-");
+        str = str.split("-").map((s: string) => s.trim()).join("-");
         str = "20" + str + "-01";
+
+      // 예시: '20년 1월 1일' 형식을 '2020-01-01'로 변환합니다.
       } else if (/^[0-9][0-9][ ]*[년][ ]*[0-9]/.test(str)) {
-        tempArr = str.split("년").map((s: string) => { return s.trim(); });
+        tempArr = str.split("년").map((s: string) => s.trim());
         if (/월/gi.test(str)) {
           tempArr4 = tempArr[1].trim().split("월");
           if (/일/gi.test(str)) {
             str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
-          } else {  
+          } else {
             str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
           }
         } else {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
         }
+
+      // 예시: '2020년 1월 1일' 형식을 '2020-01-01'로 변환합니다.
       } else if (/^[0-9][0-9][0-9][0-9][ ]*[년][ ]*[0-9]/.test(str)) {
-        tempArr = str.split("년").map((s: string) => { return s.trim(); });
+        tempArr = str.split("년").map((s: string) => s.trim());
         if (/월/gi.test(str)) {
           tempArr4 = tempArr[1].trim().split("월");
           if (/일/gi.test(str)) {
             str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
-          } else {  
+          } else {
             str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
           }
         } else {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
         }
-      } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
+
+      // 예시: 'YYYYMMDD' 형식을 'YYYY-MM-DD'로 변환합니다.
+      } else if (/^[0-9]{8}$/.test(str.trim())) {
         str = str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
-      } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
+
+      // 예시: 'YYMMDD' 형식을 '20YY-MM-DD'로 변환합니다.
+      } else if (/^[0-9]{6}$/.test(str.trim())) {
         str = "20" + str.slice(0, 2) + "-" + str.slice(2, 4) + "-" + str.slice(4);
+
       } else if (/^[0-9][0-9][ ]*\-[ ]*[0-9]$/.test(str)) {
         str = str.split("-").map((s: string) => { return s.trim() }).join("-");
         tempArr5 = str.split("-");
@@ -3171,42 +4646,82 @@ class AbstractNode {
       }
     }
   
-    if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+    // 기본적으로 'YYYY-MM-DD' 형식의 문자열을 Date 객체로 변환하여 반환합니다.
+    if (/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/.test(str)) {
       tempArr = str.split('-');
-      return (new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2])));
+      return new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2]));
+
+    // 'YYYY-MM-DD HH:MM:SS' 형식의 문자열을 시간까지 포함하여 Date 객체로 변환하여 반환합니다.
     } else {
       tempArr = str.split(' ');
       tempArr2 = tempArr[0].split('-');
       tempArr3 = tempArr[1].split(':');
-      return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]), Number(tempArr3[1]), Number(tempArr3[2])));
+      return new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]), Number(tempArr3[1]), Number(tempArr3[2]));
     }
   }
   
+  /**
+   * `rangeToDate` 메서드는 주어진 문자열을 날짜 범위로 변환하는 기능을 담당합니다.
+   * 날짜 범위는 "YYYY-MM-DD ~ YYYY-MM-DD" 형식의 문자열로 표현되며, 해당 형식을 DateRange 객체로 변환하여 반환합니다.
+   * 문자열의 형식이 올바르지 않을 경우 오류를 발생시킵니다.
+   * 
+   * @param {string} str - 날짜 범위를 나타내는 문자열입니다. "YYYY-MM-DD ~ YYYY-MM-DD" 형식이어야 합니다.
+   * @returns {DateRange} 변환된 DateRange 객체를 반환합니다.
+   * @throws {Error} 입력 값이 올바른 형식이 아닐 경우 오류를 던집니다.
+   */
   public static rangeToDate = (str: string): DateRange => {
+
+    // 입력 문자열에 " ~ " 패턴이 없을 경우, 올바르지 않은 입력으로 간주하고 오류를 던집니다.
     if (!/ ~ /gi.test(str)) {
       throw new Error("invalid input");
     }
-    const [ start, end ] = str.split(" ~ ").map((s: string) => { return s.trim() }).map((s) => { return AbstractNode.stringToDate(s) });
+
+    // " ~ "로 구분된 두 날짜 값을 분리한 후 양쪽 공백을 제거합니다.
+    // 첫 번째 `map`은 문자열의 앞뒤 공백을 제거하고, 두 번째 `map`은 각각을 Date 객체로 변환합니다.
+    // 여기서 AbstractNode의 `stringToDate` 메서드를 사용하여 문자열을 Date 객체로 변환합니다.
+    const [start, end] = str.split(" ~ ")               // " ~ "로 구분된 문자열을 배열로 변환
+                            .map((s: string) => {       // 배열의 각 요소에 대해 공백을 제거
+                              return s.trim();
+                            })
+                            .map((s) => {               // 문자열을 Date 객체로 변환
+                              return AbstractNode.stringToDate(s);
+                            });
+
+    // 변환된 두 날짜 객체를 사용하여 DateRange 객체를 생성하고 반환합니다.
     return (new DateRange(start, end));
   }
 
+  /**
+   * `linkToString` 메서드는 주어진 링크 문자열을 변환하여 특수 문자를 토큰으로 대체하고, URL을 인코딩하는 역할을 합니다.
+   * 주로 URL을 안전하게 다루기 위해 특수 문자를 치환합니다.
+   *
+   * @param {string} link - 변환할 링크 문자열입니다. http 프로토콜이 포함된 링크일 수도 있고 아닐 수도 있습니다.
+   * @returns {string} 변환된 링크 문자열로, 특정 문자가 토큰으로 대체된 문자열을 반환합니다.
+   * @throws {Error} 입력된 링크가 올바르지 않거나, http 프로토콜이 포함되지 않은 경우 오류를 던집니다.
+   */
   public static linkToString = (link: string): string => {
-    const nameToToken = (name: string): string => { return `_____${name}_____` } 
+
+    // 주어진 문자열을 토큰으로 변환하는 내부 함수입니다.
+    const nameToToken = (name: string): string => { return `_____${name}_____` }
+
+    // 토큰을 미리 정의한 사전 객체로, 특정 문자를 각각 대응하는 토큰으로 대체할 때 사용합니다.
     const tokens: Dictionary = {
-      equal: nameToToken("equal"),
-      amp: nameToToken("amp"),
-      question: nameToToken("question"),
-      hypen: nameToToken("hypen"),
-      slash: nameToToken("slash"),
-      colon: nameToToken("colon"),
-      back: nameToToken("back"),
-      sharp: nameToToken("sharp"),
-      plus: nameToToken("plus"),
-      percent: nameToToken("percent"),
-      dot: nameToToken("dot"),
-      wave: nameToToken("wave"),
-      hat: nameToToken("hat"),
+      equal: nameToToken("equal"),        // '=' 문자에 대응하는 토큰
+      amp: nameToToken("amp"),            // '&' 문자에 대응하는 토큰
+      question: nameToToken("question"),  // '?' 문자에 대응하는 토큰
+      hypen: nameToToken("hypen"),        // '-' 문자에 대응하는 토큰
+      slash: nameToToken("slash"),        // '/' 문자에 대응하는 토큰
+      colon: nameToToken("colon"),        // ':' 문자에 대응하는 토큰
+      back: nameToToken("back"),          // '\' 문자에 대응하는 토큰
+      sharp: nameToToken("sharp"),        // '#' 문자에 대응하는 토큰
+      plus: nameToToken("plus"),          // '+' 문자에 대응하는 토큰
+      percent: nameToToken("percent"),    // '%' 문자에 대응하는 토큰
+      dot: nameToToken("dot"),            // '.' 문자에 대응하는 토큰
+      wave: nameToToken("wave"),          // '~' 문자에 대응하는 토큰
+      hat: nameToToken("hat"),            // '^' 문자에 대응하는 토큰
     }
+
+    // 링크 처리에 사용될 여러 변수들을 정의합니다.
     let linkArr: List;
     let protocol: string;
     let host: string;
@@ -3214,46 +4729,51 @@ class AbstractNode {
     let search: string;
     let getObj: Dictionary;
     let filteredLink: string;
-  
+
+    // 링크가 http 프로토콜로 시작하지 않는 경우, 링크를 URL 인코딩하여 필터링합니다.
     if (!/^http/.test(link)) {
-  
-      pathName = link;
+      pathName = link;  // 프로토콜 없이 링크를 처리할 경우, 해당 링크를 그대로 사용
+      // 각 경로를 URL 인코딩 처리한 후 "/"로 다시 조합하여 필터링된 링크를 만듭니다.
       pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
       filteredLink = pathName;
-  
+
     } else {
-  
-      linkArr = link.split("/");
+      // 링크가 http 프로토콜을 포함하는 경우, 프로토콜과 호스트, 경로 및 검색 문자열을 분리하여 처리합니다.
+      linkArr = link.split("/");  // "/"를 기준으로 링크를 분리
       if (linkArr.length < 3) {
-        throw new Error("invalid link");
+        throw new Error("invalid link");  // 링크가 너무 짧으면 오류를 던집니다.
       }
-      protocol = linkArr[0].replace(/[\:]/gi, '');
-      host = linkArr[2];
-      pathName = "/" + linkArr.slice(3).join("/");
-    
+      protocol = linkArr[0].replace(/[\:]/gi, '');  // 프로토콜에서 ":" 문자를 제거
+      host = linkArr[2];  // 호스트명 추출
+      pathName = "/" + linkArr.slice(3).join("/");  // 경로 추출
+
+      // 경로에 "?"가 있는지 확인하여 검색 문자열(search)을 분리합니다.
       if (/[\?]/gi.test(pathName)) {
-        search = pathName.split("?")[1];
-        pathName = pathName.split("?")[0];
+        search = pathName.split("?")[1];  // 경로에서 검색 문자열을 분리
+        pathName = pathName.split("?")[0];  // 검색 문자열을 제외한 경로만 남김
       } else {
-        search = "";
+        search = "";  // 검색 문자열이 없으면 빈 문자열로 설정
       }
-    
+
+      // 검색 문자열을 처리하여 key-value 형식의 객체로 변환
       if (search !== "") {
         getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
       } else {
         getObj = [];
       }
-    
+
+      // 경로를 URL 인코딩하여 안전하게 처리
       pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
-    
+
+      // 필터링된 링크를 프로토콜, 호스트 및 경로, 검색 문자열을 조합하여 구성합니다.
       if (getObj.map((obj: Dictionary) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
         filteredLink = protocol + "://" + host + pathName;
       } else {
         filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj: Dictionary) => { return `${obj.key}=${obj.value}` }).join("&");
       }
-
     }
-  
+
+    // 필터링된 링크 문자열에서 특정 문자를 정의된 토큰으로 대체합니다.
     filteredLink = filteredLink.replace(/[\=]/gi, tokens.equal);
     filteredLink = filteredLink.replace(/[\&]/gi, tokens.amp);
     filteredLink = filteredLink.replace(/[\?]/gi, tokens.question);
@@ -3267,61 +4787,93 @@ class AbstractNode {
     filteredLink = filteredLink.replace(/[\.]/gi, tokens.dot);
     filteredLink = filteredLink.replace(/[\~]/gi, tokens.wave);
     filteredLink = filteredLink.replace(/[\^]/gi, tokens.hat);
-  
+
+    // 토큰이 적용된 필터링된 링크 문자열을 반환합니다.
     return filteredLink;
   }
 
+  /**
+   * `promiseTogether` 메서드는 주어진 Promise 배열을 동시에 처리하여, 모든 Promise가 완료되면 이를 처리하는 역할을 합니다.
+   * 모든 Promise가 완료되기 전까지는 완료되지 않으며, 하나의 Promise라도 실패할 경우 즉시 오류를 던집니다.
+   * 
+   * @param {List} promiseArr - Promise 객체들의 배열입니다. 배열 안에 모든 요소는 Promise 객체여야 합니다.
+   * @returns {Promise<any>} 모든 Promise가 완료되면 true를 반환하는 Promise를 반환합니다.
+   * @throws {Error} 배열 안의 요소 중 하나라도 Promise가 아닌 경우 오류를 던집니다.
+   */
   public static promiseTogether = (promiseArr: List): Promise<any> => {
+
+    // 배열의 모든 요소가 Promise 객체인지 검사합니다. 하나라도 Promise가 아니면 오류를 던집니다.
     if (!promiseArr.every((obj) => { return obj instanceof Promise })) {
-      throw new Error("invaild input");
+      throw new Error("invaild input"); // Promise가 아닌 요소가 있으면 입력이 잘못된 것으로 간주
     }
+
+    // 새로운 Promise를 반환합니다. 모든 작업이 완료되면 resolve(true) 됩니다.
     return new Promise((resolve, reject) => {
-      const workLength: number = promiseArr.length;
-      let promiseTong: List, interval: any, timeout: any;
-  
-      promiseTong = [];
-  
+      const workLength: number = promiseArr.length; // 작업할 Promise의 개수를 저장
+      let promiseTong: List, interval: any, timeout: any; // Promise 상태를 기록할 배열과 타이머 변수들
+
+      promiseTong = []; // 각 Promise의 완료 상태를 저장할 배열입니다.
+
+      // 각 Promise를 순차적으로 처리합니다.
       for (let i = 0; i < workLength; i++) {
+        // 각 Promise가 성공적으로 완료되면 promiseTong에 true를 추가
         promiseArr[i].then(() => {
-          promiseTong.push(true);
+          promiseTong.push(true); // 작업이 성공하면 true를 추가
         }).catch((err) => {
-          reject(err);
-        })
+          reject(err); // 하나라도 실패하면 reject를 호출하여 오류를 반환
+        });
       }
-  
+
+      // 정기적으로 Promise의 완료 상태를 확인하는 인터벌을 설정합니다.
       interval = setInterval(() => {
+        // 모든 Promise가 완료된 경우 처리
         if (promiseTong.length >= workLength) {
+          // 바로 resolve 처리하기 위한 timeout을 설정
           timeout = setTimeout(() => {
-            resolve(true);
-            clearTimeout(timeout);
+            resolve(true); // 모든 작업이 완료되었을 때 resolve(true)를 호출
+            clearTimeout(timeout); // timeout을 클리어하여 불필요한 호출을 방지
           }, 0);
-          clearInterval(interval);
+          clearInterval(interval); // 인터벌을 중지하여 더 이상 반복하지 않도록 처리
         }
-      }, 100);
+      }, 100); // 100ms마다 상태를 확인
     });
   }
 
+  /**
+   * `stringToLink` 메서드는 주어진 문자열에서 토큰으로 변환된 특정 문자를 다시 원래의 특수 문자로 복원하는 역할을 합니다.
+   * 주로 `linkToString` 메서드에서 사용된 토큰을 다시 원래 문자로 변환할 때 사용됩니다.
+   *
+   * @param {string} string - 변환할 문자열입니다. 토큰이 포함된 문자열이어야 합니다.
+   * @returns {string} 변환된 링크 문자열을 반환합니다. 원래의 특수 문자가 복원됩니다.
+   */
   public static stringToLink = (string: string): string => {
-    const nameToToken = (name: string): string => { return `_____${name}_____` } 
+
+    // 특정 문자열을 토큰 형식으로 변환하는 함수입니다.
+    const nameToToken = (name: string): string => { return `_____${name}_____` }
+
+    // 토큰과 원래의 특수 문자를 매핑하는 객체입니다.
     const tokens = {
-      equal: nameToToken("equal"),
-      amp: nameToToken("amp"),
-      question: nameToToken("question"),
-      hypen: nameToToken("hypen"),
-      slash: nameToToken("slash"),
-      colon: nameToToken("colon"),
-      back: nameToToken("back"),
-      sharp: nameToToken("sharp"),
-      plus: nameToToken("plus"),
-      percent: nameToToken("percent"),
-      dot: nameToToken("dot"),
-      wave: nameToToken("wave"),
-      hat: nameToToken("hat"),
+      equal: nameToToken("equal"),        // '=' 문자를 토큰으로 치환한 것
+      amp: nameToToken("amp"),            // '&' 문자를 토큰으로 치환한 것
+      question: nameToToken("question"),  // '?' 문자를 토큰으로 치환한 것
+      hypen: nameToToken("hypen"),        // '-' 문자를 토큰으로 치환한 것
+      slash: nameToToken("slash"),        // '/' 문자를 토큰으로 치환한 것
+      colon: nameToToken("colon"),        // ':' 문자를 토큰으로 치환한 것
+      back: nameToToken("back"),          // '\' 문자를 토큰으로 치환한 것
+      sharp: nameToToken("sharp"),        // '#' 문자를 토큰으로 치환한 것
+      plus: nameToToken("plus"),          // '+' 문자를 토큰으로 치환한 것
+      percent: nameToToken("percent"),    // '%' 문자를 토큰으로 치환한 것
+      dot: nameToToken("dot"),            // '.' 문자를 토큰으로 치환한 것
+      wave: nameToToken("wave"),          // '~' 문자를 토큰으로 치환한 것
+      hat: nameToToken("hat"),            // '^' 문자를 토큰으로 치환한 것
     }
+
     let filteredLink: string;
-  
+
+    // 필터링할 링크 문자열을 그대로 초기화합니다.
     filteredLink = string;
-  
+
+    // 토큰을 실제 문자로 복원하는 과정입니다.
     filteredLink = filteredLink.replace(new RegExp(tokens.equal, "gi"), "=");
     filteredLink = filteredLink.replace(new RegExp(tokens.amp, "gi"), "&");
     filteredLink = filteredLink.replace(new RegExp(tokens.question, "gi"), "?");
@@ -3335,107 +4887,173 @@ class AbstractNode {
     filteredLink = filteredLink.replace(new RegExp(tokens.dot, "gi"), ".");
     filteredLink = filteredLink.replace(new RegExp(tokens.wave, "gi"), "~");
     filteredLink = filteredLink.replace(new RegExp(tokens.hat, "gi"), "^");
-  
+
+    // 복원된 링크 문자열을 반환합니다.
     return filteredLink;
   }
 
+  /**
+   * `xyConverting` 메서드는 2차원 배열(행렬)의 행과 열을 서로 바꾸는 역할을 합니다.
+   * 주어진 입력이 배열인지, 그리고 배열 안의 각 요소들이 배열인지 검사하여 유효한 행렬인지 확인한 후, 행렬을 변환하여 반환합니다.
+   *
+   * @param {List} original - 변환할 2차원 배열입니다. 행렬 형태여야 합니다.
+   * @returns {List} 변환된 행렬(열과 행이 바뀐 행렬)을 반환합니다.
+   * @throws {Error} 입력이 배열이 아니거나, 각 요소들이 배열이 아닌 경우 오류를 던집니다.
+   */
   public static xyConverting = (original: List): List => {
+
+    // 입력값이 배열이 아닌 경우 오류를 던집니다.
     if (!Array.isArray(original)) {
-      throw new Error("input must be array");
+      throw new Error("input must be array"); // 입력값은 반드시 배열이어야 합니다.
     }
+
+    // 배열이 비어있지 않은 경우, 배열의 각 요소가 배열인지 검사합니다.
     if (original.length > 0) {
+      // 각 요소가 배열인지 검사하고, 배열이 아닌 요소가 하나라도 있으면 오류를 던집니다.
       if (!original.every((arr) => { return Array.isArray(arr); })) {
-        throw new Error("input must be matrix");
+        throw new Error("input must be matrix"); // 입력값은 반드시 행렬 형태여야 합니다.
       }
     }
+
     let converted: List, tempArr: List;
-  
-    converted = [];
+
+    converted = []; // 변환된 행렬을 저장할 배열을 초기화합니다.
+
+    // 입력값이 비어있지 않은 경우에만 행렬 변환을 시작합니다.
     if (original.length > 0) {
+      // 입력 행렬의 열 크기만큼 반복합니다.
       for (let i = 0; i < original[0].length; i++) {
-        tempArr = [];
+        tempArr = []; // 각 열을 저장할 임시 배열을 초기화합니다.
+
+        // 각 행을 순차적으로 순회하며, 해당 열의 값을 임시 배열에 추가합니다.
         for (let arr of original) {
-          tempArr.push(arr[i]);
+          tempArr.push(arr[i]); // i번째 열의 값을 임시 배열에 추가합니다.
         }
-        converted.push(tempArr);
+
+        // 임시 배열을 변환된 배열에 추가합니다.
+        converted.push(tempArr); // 한 열이 완성되면 변환된 배열에 추가합니다.
       }
     }
-  
+
+    // 변환된 행렬을 반환합니다.
     return converted;
   }
 
+  /**
+   * `cssCalc` 메서드는 두 값을 주어진 연산자(mode)를 사용하여 CSS에서 사용할 수 있는 `calc()` 함수를 생성하는 역할을 합니다.
+   * 이 메서드는 주어진 값 x와 y를 문자열이나 숫자로 받아, CSS 계산식으로 변환합니다.
+   *
+   * @param {any} x - 첫 번째 피연산자입니다. 숫자 또는 문자열로 입력되며, 숫자일 경우 적절한 단위가 추가됩니다.
+   * @param {string} mode - 연산 방식입니다. "plus", "minus", "multiple", "divide" 또는 각각의 기호(+,-,*,/)로 입력됩니다.
+   * @param {any} y - 두 번째 피연산자입니다. x와 마찬가지로 숫자 또는 문자열이 될 수 있습니다.
+   * @returns {string} CSS에서 사용할 수 있는 `calc()` 함수로 변환된 문자열을 반환합니다.
+   * @throws {Error} mode가 문자열이 아니거나 지원되지 않는 연산 방식일 경우, 또는 x와 y가 유효한 값이 아닐 경우 오류를 던집니다.
+   */
   public static cssCalc = (x: any, mode: string, y: any): string => {
+    
+    // mode 값이 문자열인지 확인하고, 문자열이 아니면 오류를 던집니다.
     if (typeof mode !== "string") {
       throw new Error("invalid mode => plus, minus, multiple, divide");
     }
+
+    // CSS 단위 처리를 위한 'ea' 값을 가져옵니다. 이는 AbstractNode의 `mediaEa()` 메서드를 호출하여 얻습니다.
     const thisEa: string = AbstractNode.mediaEa();
-    let targetX: any, targetY: any;
-    let resultString: string;
     
+    let targetX: any, targetY: any; // x와 y 값을 저장할 변수
+    let resultString: string;       // 최종 결과를 저장할 변수
+
+    // x의 타입에 따라 처리
     if (typeof x === "string") {
-      targetX = x;
+      targetX = x; // 문자열일 경우 그대로 사용
     } else if (typeof x === "number") {
-      targetX = String(x) + thisEa;
+      targetX = String(x) + thisEa; // 숫자일 경우 단위를 붙여서 처리
     } else {
-      throw new Error("invalid input x");
+      throw new Error("invalid input x"); // x가 유효하지 않은 값일 경우 오류 던짐
     }
-  
+
+    // y의 타입에 따라 처리
     if (typeof y === "string") {
-      targetY = y;
+      targetY = y; // 문자열일 경우 그대로 사용
     } else if (typeof y === "number") {
+      // 나누기(/) 또는 곱하기(*) 연산인 경우 단위를 추가하지 않음
       if (mode === "divide" || mode === "/" || mode === "multiple" || mode === "*") {
         targetY = String(y);
       } else {
-        targetY = String(y) + thisEa;
+        targetY = String(y) + thisEa; // 그 외의 경우에는 단위를 추가
       }
     } else {
-      throw new Error("invalid input y");
+      throw new Error("invalid input y"); // y가 유효하지 않은 값일 경우 오류 던짐
     }
-  
+
+    // 결과 문자열을 calc()로 시작
     resultString = "calc(";
-  
+
+    // 연산 방식에 따라 적절한 CSS 계산식을 생성합니다.
     if (mode === "plus" || mode === "add" || mode === "+" || mode === "addition") {
-      resultString += targetX + " + " + targetY + ")";    
+      resultString += targetX + " + " + targetY + ")";  // 덧셈 연산
     } else if (mode === "minus" || mode === "-") {
-      resultString += targetX + " - " + targetY + ")";    
+      resultString += targetX + " - " + targetY + ")";  // 뺄셈 연산
     } else if (mode === "multiple" || mode === "*") {
-      resultString += targetX + " * " + targetY + ")";    
+      resultString += targetX + " * " + targetY + ")";  // 곱셈 연산
     } else if (mode === "divide" || mode === "/") {
-      resultString += targetX + " / " + targetY + ")";    
+      resultString += targetX + " / " + targetY + ")";  // 나눗셈 연산
     } else {
-      throw new Error("invalid mode");
+      throw new Error("invalid mode"); // 지원되지 않는 연산 방식일 경우 오류 던짐
     }
-  
+
+    // 최종 계산식을 반환
     return resultString;
   }
 
+  /**
+   * `jsonToString` 메서드는 주어진 JSON 객체 또는 문자열을 특정 토큰으로 변환하는 역할을 합니다.
+   * 이 메서드는 JSON 형식의 데이터를 안전하게 처리하기 위해, 특정 특수 문자를 미리 정의된 토큰으로 변환합니다.
+   *
+   * @param {any} json - 변환할 JSON 객체 또는 문자열입니다. 객체 또는 문자열이 아니면 오류를 발생시킵니다.
+   * @returns {string} 변환된 문자열로, JSON의 특수 문자가 토큰으로 대체됩니다.
+   * @throws {Error} 입력이 null이거나, 객체 또는 문자열이 아닌 경우 오류를 던집니다.
+   */
   public static jsonToString = (json: any): string => {
+
+    // 입력된 json 값이 문자열이나 객체가 아니면 오류를 던집니다.
     if (typeof json !== "string" && typeof json !== "object") {
-      throw new Error("invalid input");
+      throw new Error("invalid input"); // 유효하지 않은 입력에 대한 오류
     }
+
+    // 입력이 null인 경우 오류를 던집니다.
     if (json === null) {
-      throw new Error("invalid input2");
+      throw new Error("invalid input2"); // null 값에 대한 오류
     }
+
+    // 입력이 객체일 경우 JSON 문자열로 변환하는 작업을 수행
     if (typeof json === "object") {
+      // 객체에 `_id` 속성이 있는 경우 해당 속성을 삭제합니다.
       if (json._id !== undefined) {
-        delete json._id;
+        delete json._id; // MongoDB와 같은 데이터에서 _id는 불필요하므로 제거
       }
-      json = JSON.stringify(json);
+      json = JSON.stringify(json); // JSON 객체를 문자열로 변환
     }
-    const nameToToken = (name: string) => { return `_____${name}_____` } 
+
+    // 주어진 이름을 토큰 형식으로 변환하는 함수
+    const nameToToken = (name: string) => { return `_____${name}_____` }
+
+    // JSON 문자열 내에서 특수 문자를 토큰으로 변환하기 위한 객체입니다.
     const tokens = {
-      colon: nameToToken("colon"),
-      middler: nameToToken("middler"),
-      middlel: nameToToken("middlel"),
-      bigr: nameToToken("bigr"),
-      bigl: nameToToken("bigl"),
-      back: nameToToken("back"),
-      double: nameToToken("double"),
+      colon: nameToToken("colon"),         // ':' 문자를 토큰으로 치환
+      middler: nameToToken("middler"),     // '}' 문자를 토큰으로 치환
+      middlel: nameToToken("middlel"),     // '{' 문자를 토큰으로 치환
+      bigr: nameToToken("bigr"),           // ']' 문자를 토큰으로 치환
+      bigl: nameToToken("bigl"),           // '[' 문자를 토큰으로 치환
+      back: nameToToken("back"),           // '\' 문자를 토큰으로 치환
+      double: nameToToken("double"),       // '"' 문자를 토큰으로 치환
     }
+
     let filteredJson: string;
-  
+
+    // 필터링할 JSON 문자열을 그대로 초기화합니다.
     filteredJson = json;
-  
+
+    // JSON 문자열 내에서 특수 문자를 미리 정의된 토큰으로 변환합니다.
     filteredJson = filteredJson.replace(/[\:]/gi, tokens.colon);
     filteredJson = filteredJson.replace(/[\}]/gi, tokens.middler);
     filteredJson = filteredJson.replace(/[\{]/gi, tokens.middlel);
@@ -3443,25 +5061,41 @@ class AbstractNode {
     filteredJson = filteredJson.replace(/[\[]/gi, tokens.bigl);
     filteredJson = filteredJson.replace(/[\\]/gi, tokens.back);
     filteredJson = filteredJson.replace(/[\"]/gi, tokens.double);
-  
+
+    // 변환된 JSON 문자열을 반환합니다.
     return filteredJson;
   }
 
+  /**
+   * `stringToJson` 메서드는 주어진 문자열에서 토큰으로 변환된 특수 문자를 다시 원래의 특수 문자로 복원한 뒤, 이를 JSON으로 파싱하는 역할을 합니다.
+   * `jsonToString` 메서드로 토큰화된 문자열을 다시 JSON 객체로 복원할 때 사용됩니다.
+   *
+   * @param {string} string - JSON 문자열로 변환할 토큰화된 문자열입니다.
+   * @returns {any} 변환된 JSON 객체를 반환하거나, JSON으로 파싱되지 않을 경우 원본 문자열을 반환합니다.
+   * @throws {Error} JSON 파싱이 실패할 경우 오류 없이 문자열을 반환합니다.
+   */
   public static stringToJson = (string: string): any => {
-    const nameToToken = (name: string) => { return `_____${name}_____` } 
+
+    // 주어진 이름을 토큰 형식으로 변환하는 함수입니다.
+    const nameToToken = (name: string) => { return `_____${name}_____` }
+
+    // 토큰과 원래의 특수 문자를 매핑하는 객체입니다.
     const tokens = {
-      colon: nameToToken("colon"),
-      middler: nameToToken("middler"),
-      middlel: nameToToken("middlel"),
-      bigr: nameToToken("bigr"),
-      bigl: nameToToken("bigl"),
-      back: nameToToken("back"),
-      double: nameToToken("double"),
+      colon: nameToToken("colon"),         // ':' 문자를 토큰으로 치환
+      middler: nameToToken("middler"),     // '}' 문자를 토큰으로 치환
+      middlel: nameToToken("middlel"),     // '{' 문자를 토큰으로 치환
+      bigr: nameToToken("bigr"),           // ']' 문자를 토큰으로 치환
+      bigl: nameToToken("bigl"),           // '[' 문자를 토큰으로 치환
+      back: nameToToken("back"),           // '\' 문자를 토큰으로 치환
+      double: nameToToken("double"),       // '"' 문자를 토큰으로 치환
     }
+
     let filteredJson: string;
-  
+
+    // 토큰화된 문자열을 그대로 복원할 변수에 초기화합니다.
     filteredJson = string;
-  
+
+    // 토큰을 다시 원래의 특수 문자로 복원하는 작업을 수행합니다.
     filteredJson = filteredJson.replace(new RegExp(tokens.colon, "gi"), ":");
     filteredJson = filteredJson.replace(new RegExp(tokens.middler, "gi"), "}");
     filteredJson = filteredJson.replace(new RegExp(tokens.middlel, "gi"), "{");
@@ -3469,64 +5103,97 @@ class AbstractNode {
     filteredJson = filteredJson.replace(new RegExp(tokens.bigl, "gi"), "[");
     filteredJson = filteredJson.replace(new RegExp(tokens.back, "gi"), "\\");
     filteredJson = filteredJson.replace(new RegExp(tokens.double, "gi"), "\"");
-  
+
     try {
-      JSON.parse(filteredJson);
+      // 복원된 문자열을 JSON으로 파싱 시도
+      JSON.parse(filteredJson); 
+      // AbstractNode의 equalJson 메서드를 사용하여 JSON 비교 작업을 처리 (equalJson은 JSON 파싱된 객체를 반환함)
       return AbstractNode.equalJson(filteredJson);
     } catch {
+      // JSON 파싱이 실패할 경우 원본 문자열을 그대로 반환
       return filteredJson;
     }
   }
 
+  /**
+   * `findByAttribute` 메서드는 주어진 DOM 요소에서 특정 속성(attribute) 이름과 속성 값을 통해 원하는 요소를 찾아 반환하는 역할을 합니다.
+   * 이 메서드는 단일 또는 다중 속성(attribute name)과 그에 해당하는 값을 사용하여 DOM 요소를 검색합니다.
+   *
+   * @param {any} dom - 탐색할 DOM 요소 집합 또는 클래스 이름입니다. 문자열 또는 객체를 받을 수 있습니다.
+   * @param {string | List} attributeName - 검색할 속성 이름입니다. 문자열 또는 속성 이름의 배열을 받을 수 있습니다.
+   * @param {string | List} attributeValue - 속성에 해당하는 값입니다. 문자열 또는 속성 값의 배열을 받을 수 있습니다.
+   * @returns {HTMLElement | null} 주어진 조건에 맞는 첫 번째 DOM 요소를 반환하거나, 조건에 맞는 요소가 없을 경우 `null`을 반환합니다.
+   * @throws {Error} 유효하지 않은 입력 값이 주어졌을 경우, 상세한 오류 메시지와 함께 오류를 던집니다.
+   */
   public static findByAttribute = (dom: any, attributeName: string | List, attributeValue: string | List) => {
+
+    // dom이 문자열 또는 객체가 아닌 경우 오류를 던집니다.
     if (typeof dom !== "string" && typeof dom !== "object") {
       throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
     }
+
+    // attributeName이 문자열이 아니거나 배열이 아닌 경우 오류를 던집니다.
     if (typeof attributeName !== "string" && !Array.isArray(attributeName)) {
       throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
     }
+
+    // attributeValue가 문자열이 아니고 배열도 아닌 경우, 문자열로 변환합니다.
     if (typeof attributeValue !== "string" && !Array.isArray(attributeValue)) {
       attributeValue = String(attributeValue);
     }
+
+    // attributeName이 배열일 경우 추가적인 검증을 수행합니다.
     if (Array.isArray(attributeName)) {
+      // attributeName이 배열일 경우, attributeValue도 배열이어야 합니다.
       if (!Array.isArray(attributeValue)) {
         throw new Error("if multiple attribute name, attribute value must be same array");
       }
+      // attributeName과 attributeValue 배열의 길이가 다르면 오류를 던집니다.
       if (attributeName.length !== attributeValue.length) {
         throw new Error("if multiple attribute name, attribute value must be same array");
       }
+      // attributeName 배열의 모든 요소가 문자열인지 확인합니다.
       if (!attributeName.every((s) => { return typeof s === "string"; })) {
         throw new Error("invalid attribute name array");
       }
+      // attributeValue 배열의 모든 요소가 문자열인지 확인하고, 그렇지 않으면 문자열로 변환합니다.
       if (!attributeValue.every((s) => { return typeof s === "string"; })) {
         attributeValue = attributeValue.map((i) => { return String(i); });
       }
     }
+
+    // dom이 문자열일 경우, 클래스 이름인지 확인하고 해당 요소들을 쿼리 선택자로 가져옵니다.
     if (typeof dom === "string") {
-      if (!/^\./.test(dom)) {
+      if (!/^\./.test(dom)) { // 문자열이 클래스 이름이 아니면 오류를 던집니다.
         throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
       } else {
-        dom = document.querySelectorAll(dom);
+        dom = document.querySelectorAll(dom); // 클래스 이름일 경우 해당 요소를 가져옵니다.
       }
     } else {
+      // dom이 HTML 컬렉션일 경우, 자식 요소들을 가져옵니다.
       if (dom[Symbol.iterator] === undefined) {
         dom = dom.children;
       }
     }
+
     let targets: List, resultDom: any;
-  
+
+    // dom 요소들을 배열로 변환하여 처리할 수 있도록 합니다.
     targets = [ ...dom ];
-  
+
+    // attributeName이 배열일 경우, 각각의 속성 이름과 값에 대해 필터링하여 일치하는 요소를 찾습니다.
     if (Array.isArray(attributeName)) {
       for (let i = 0; i < attributeName.length; i++) {
         targets = targets.filter((d) => { return d.getAttribute(attributeName[i]) === attributeValue[i]; });
       }
+      // 필터링된 결과가 있으면 첫 번째 요소를 반환하고, 없으면 null을 반환합니다.
       if (targets.length !== 0) {
         return targets[0];
       } else {
         return null;
       }
     } else {
+      // attributeName이 배열이 아닌 경우, 단일 속성 이름과 값으로 요소를 찾습니다.
       resultDom = targets.find((d) => { return d.getAttribute(attributeName) === attributeValue; });
       if (resultDom === undefined) {
         return null;
@@ -3536,63 +5203,94 @@ class AbstractNode {
     }
   }
 
+  /**
+   * `appendQuery` 메서드는 현재 URL에 주어진 쿼리 파라미터를 추가하는 역할을 합니다.
+   * 파라미터는 객체로 전달되며, 객체의 키-값 쌍이 쿼리 파라미터로 변환됩니다.
+   *
+   * @param {Dictionary} obj - 쿼리 파라미터로 추가할 객체입니다. 모든 값은 문자열이어야 합니다.
+   * @throws {Error} 입력 객체의 값이 문자열이 아닐 경우 오류를 던집니다.
+   */
   public static appendQuery = (obj: Dictionary) => {
+
+    // 객체의 모든 값이 문자열인지 확인합니다. 그렇지 않으면 오류를 던집니다.
     if (!Object.values(obj).every((str) => { return typeof str === "string" })) {
-      throw new Error("invaild object factor, must be string");
+      throw new Error("invalid object factor, must be string");
     }
+
     let now: Date;
     let title: string;
     let original: string;
-  
+
+    // 현재 시간을 생성하여 타이틀로 사용합니다.
     now = new Date();
     title = String(now.valueOf()) + String(Math.round(Math.random() * 10000));
     original = window.location.href;
-  
+
+    // URL에 쿼리 파라미터가 이미 있는지 확인하고, 적절히 처리합니다.
     if (/\?/gi.test(original)) {
       if (/\=/gi.test(original)) {
+        // URL의 끝에 '&' 문자가 없으면 추가합니다.
         if (!/\&$/gi.test(original)) {
           original += '&';
         }
       }
     } else {
+      // URL에 '?' 문자가 없으면 '?'를 추가합니다.
       original += '?';
     }
-  
+
+    // 객체의 키-값 쌍을 쿼리 파라미터로 추가합니다.
     for (let key in obj) {
       original += key;
       original += '=';
       original += String(obj[key]);
       original += '&';
     }
-  
+
+    // 마지막에 '&'가 남아있으면 제거합니다.
     if (/\&$/gi.test(original)) {
       original = original.slice(0, -1);
     }
-  
+
+    // 히스토리를 업데이트하여 새로운 URL을 설정합니다.
     window.history.replaceState({}, title, original);
   }
 
+  /**
+   * `removeQuery` 메서드는 주어진 키에 해당하는 쿼리 파라미터를 현재 URL에서 제거하는 역할을 합니다.
+   *
+   * @param {string} key - 제거할 쿼리 파라미터의 키입니다.
+   */
   public static removeQuery = (key: string) => {
     const decode = function (str: string) { return decodeURIComponent(str.split("+").join(" ")); };
+
     let now: Date;
     let title: string;
     let original: string;
     let obj: Dictionary;
     let newUrl: string;
-  
+
+    // 현재 시간을 기반으로 새로운 타이틀을 생성합니다.
     now = new Date();
     title = String(now.valueOf()) + String(Math.round(Math.random() * 10000));
+
+    // 현재 URL의 쿼리 문자열을 가져옵니다.
     original = window.location.search;
+
+    // 새로운 URL을 생성합니다.
     newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?";
-  
+
+    // 쿼리 파라미터가 있을 경우 처리합니다.
     if (/\?/gi.test(original)) {
-  
+
       obj = {};
+      // 현재 쿼리 문자열을 파싱하여 객체로 변환합니다.
       original.replace(/\??(?:([^=]+)=([^&]*)&?)/g, (origin, name, value) => {
         obj[decode(name)] = decode(value);
         return "";
       });
-  
+
+      // 주어진 키를 제외한 나머지 파라미터들을 새로운 URL에 추가합니다.
       for (let str in obj) {
         if (str !== key) {
           newUrl += str;
@@ -3601,51 +5299,74 @@ class AbstractNode {
           newUrl += '&';
         }
       }
-  
+
+      // 마지막에 '&'가 남아있으면 제거합니다.
       if (/\&$/gi.test(newUrl)) {
         newUrl = newUrl.slice(0, -1);
       }
-  
+
+      // 히스토리를 업데이트하여 새로운 URL을 설정합니다.
       window.history.replaceState({}, title, newUrl);
-  
     }
   }
 
+  /**
+   * `hasQuery` 메서드는 현재 URL에 주어진 쿼리 파라미터가 존재하는지 여부를 확인합니다.
+   *
+   * @param {string} key - 확인할 쿼리 파라미터의 키입니다.
+   * @returns {boolean} 해당 키가 존재하면 `true`, 그렇지 않으면 `false`를 반환합니다.
+   */
   public static hasQuery = (key: string): boolean => {
     let original: string;
     let obj: Dictionary;
     let keys: Array<string>;
-  
+
+    // 현재 URL의 쿼리 문자열을 가져옵니다.
     original = window.location.search;
-  
+
+    // 쿼리 문자열이 비어 있으면 false를 반환합니다.
     if (original === '') {
       return false;
     } else {
-  
       original = original.slice(1);
-  
+
       obj = {};
+      // 쿼리 문자열을 객체로 변환합니다.
       original.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function (origin, name, value) {
         let decode = function (str: string) { return decodeURIComponent(str.split("+").join(" ")); }
         obj[decode(name)] = decode(value);
         return "";
       });
-  
+
+      // 객체에서 주어진 키를 확인합니다.
       keys = Object.keys(obj);
-  
+
       return keys.includes(key);
     }
   }
-  
+
+  /**
+   * `setQuery` 메서드는 주어진 객체의 키-값 쌍을 현재 URL에 설정합니다.
+   * 기존에 동일한 키가 존재하면 해당 쿼리 파라미터를 제거하고 새로 설정합니다.
+   *
+   * @param {Dictionary} obj - 설정할 쿼리 파라미터의 객체입니다.
+   * @returns {boolean} 성공적으로 설정되면 `true`, 오류가 발생하면 `false`를 반환합니다.
+   */
   public static setQuery = (obj: Dictionary): boolean => {
     let keyList: string[];
+
+    // 객체의 모든 키를 가져옵니다.
     keyList = Object.keys(obj);
+
     try {
+      // 키가 이미 존재하는 경우 제거하고 새로 추가합니다.
       for (let k of keyList) {
         if (AbstractNode.hasQuery(k)) {
           AbstractNode.removeQuery(k)
         }
       }
+
+      // 새 쿼리 파라미터를 추가합니다.
       AbstractNode.appendQuery(obj);
       return true;
     } catch (e) {
@@ -3654,1911 +5375,175 @@ class AbstractNode {
     }
   }
   
-  public static confirm = (message: string) => {
-    return window.confirm(message);
-  }
-  
-  public static prompt = (message: string, preValue: string = ''): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea: string = "px";
-    const promptAsideClassName: string = "promptAsideClassName";
-    const mobile: boolean = window.innerWidth <= 900;
-    const desktop: boolean = !mobile;
-    let whiteTongBase;
-    let whiteTong;
-    let whiteWidth, whiteHeight;
-    let paddingTop, paddingLeft;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let loadingDom;
-    let loadingStyle;
-    let loadingTop, loadingLeft, loadingWidth;
-  
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 19;
-    paddingLeft = 23;
-    paddingBottom = 60;
-    size0 = 15;
-    size1 = 16;
-    inputSize = 14;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 30;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    loadingTop = 22;
-    loadingLeft = 21;
-    loadingWidth = 15;
-    wordingVisual = AbstractNode.isMac() ? 0 : 1;
-  
-    greenBarHeight = 0;
-
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(paddingBottom) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    loadingDom = AbstractNode.returnLoadingIcon();
-    loadingStyle = {
-      display: "inline-block",
-      position: "absolute",
-      top: String(loadingTop) + ea,
-      left: String(loadingLeft) + ea,
-      width: String(loadingWidth) + ea,
-      height: String(loadingWidth) + ea,
-    };
-    for (let i in loadingStyle) {
-      Object.defineProperty(loadingDom.style, i, {
-        value: loadingStyle[i],
-        writable: true,
-      })
-    }
-    whiteTong.appendChild(loadingDom);
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(600),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual) + ea,
-        left: String(paddingLeft + marginLeft) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorExtended.gray1,
-      }
-    });
-  
-    input = createNode({
-      mother: whiteTong,
-      mode: "input",
-      attribute: {
-        type: "text",
-      },
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
-        left: String(paddingLeft + marginLeft + inputIndent) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
-        height: String(inputBoxHeight) + ea,
-        background: "transparent",
-        fontSize: String(inputSize) + ea,
-        fontWeight: String(400),
-        color: colorExtended.black,
-        border: String(0),
-        outline: String(0),
-      }
-    }) as HTMLInputElement;
-  
-    input.value = (typeof preValue === "string" ? preValue : "");
-    input.focus();
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(null);
-      });
-  
-      input.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-          const finalValue = this.value.trim();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(finalValue);
-        }
-      });
-  
-      if (mobile) {
-        input.addEventListener("blur", function (e) {
-          if (document.querySelector('.' + promptAsideClassName) !== null) {
-            const finalValue = this.value.trim();
-            const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-            for (let z = 0; z < targets.length; z++) {
-              try {
-                targets[z].remove();
-              } catch {}
-            }
-            resolve(finalValue === '' ? null : finalValue);
-          }
-        });
-      } else {
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Tab") {
-            e.preventDefault();
-            const finalValue = this.value.trim();
-            const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-            for (let z = 0; z < targets.length; z++) {
-              try {
-                targets[z].remove();
-              } catch {}
-            }
-            resolve(finalValue);
-          }
-        });
-      }
-  
-    });
-  }
-  
-  public static alert = (message: string, blackMode: boolean = false, skipMode: boolean = false) => {
-    const { createNode, colorExtended, withOut, setQueue, removeByClass, createDom } = AbstractNode;
-    const ea = "px";
-    const px = "px";
-    const promptAsideClassName = "promptAsideClassName";
-    const generalJsAlertSkipModeTimeOutStactName = "generalJsAlertSkipModeTimeOutStactName";
-    const delta = 1600;
-    const mobile = window.innerWidth <= 900;
-    const desktop = !mobile;
-    let whiteTongBase: HTMLElement;
-    let whiteTong: HTMLElement;
-    let whiteWidth: number, whiteHeight: number;
-    let paddingTop: number, paddingLeft: number;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let thisBox;
-    let maxHeight;
-    let maxWidthVw;
-  
-    whiteWidth = 320;
-    whiteHeight = 150;
-    paddingTop = desktop ? 11 : 9;
-    paddingLeft = desktop ? 23 : 17;
-    paddingBottom = desktop ? 13 : 10;
-    size0 = desktop ? 14 : 12;
-    size1 = desktop ? 15 : 13;
-    inputSize = 13;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 30;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 2;
-    maxHeight = 50;
-    maxWidthVw = 90;
-  
-    greenBarHeight = 0;
-
-    if (!skipMode) {
-      whiteTongBase = createDom({
-        mode: "aside",
-        mother: document.body,
-        class: [ promptAsideClassName ],
-        event: {
-          contextmenu: (e: any) => { e.stopPropagation(); },
-          dblclick: (e: any) => { e.stopPropagation(); },
-          drop: (e: any) => { e.stopPropagation(); },
-          keyup: (e: any) => { e.stopPropagation(); },
-          keydown: (e: any) => { e.stopPropagation(); },
-          keypress: (e: any) => { e.stopPropagation(); },
-        },
-        style: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "fixed",
-          top: String(0) + "vh",
-          left: String(1) + "vw",
-          width: String(98) + "vw",
-          height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-          background: "transparent",
-          zIndex: String(900)
-        }
-      });
-    
-      whiteTong = createDom({
-        mother: whiteTongBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          paddingTop: String(paddingTop) + ea,
-          paddingBottom: String(paddingBottom) + ea,
-          paddingLeft: String(paddingLeft) + ea,
-          paddingRight: String(paddingLeft) + ea,
-          borderRadius: String(5) + "px",
-          boxShadow: !blackMode ? "0px 3px 15px -9px " + colorExtended.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
-          background: !blackMode ? colorExtended.white : colorExtended.darkDarkBlack,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-        }
-      });
-    
-      createNode({
-        mother: whiteTong,
-        text: message,
-        style: {
-          position: "relative",
-          fontSize: String(size1) + ea,
-          fontWeight: String(700),
-          color: !blackMode ? colorExtended.black : colorExtended.white,
-          lineHeight: String(lineHeight),
-          top: String(wordingVisual) + ea,
-        }
-      });
-    
-      return new Promise((resolve, reject) => {
-    
-        whiteTongBase.addEventListener("click", function (e: any) {
-          e.stopPropagation();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(null);
-        });
-    
-      });
-    } else {
-    
-      if (document.querySelector('.' + promptAsideClassName) === null) {
-  
-        whiteTong = createDom({
-          mode: "aside",
-          mother: document.body,
-          class: [ promptAsideClassName ],
-          style: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "fixed",
-            top: withOut(50, maxHeight / 2, px),
-            left: String((100 - maxWidthVw) / 2) + "vw",
-            width: String(maxWidthVw) + "vw",
-            height: String(maxHeight) + px,
-            background: "transparent",
-            zIndex: String(900)
-          },
-          child: {
-            style: {
-              display: "flex",
-              position: "relative",
-              paddingTop: String(paddingTop) + ea,
-              paddingBottom: String(paddingBottom) + ea,
-              paddingLeft: String(paddingLeft) + ea,
-              paddingRight: String(paddingLeft) + ea,
-              borderRadius: String(5) + "px",
-              boxShadow: !blackMode ? "0px 3px 15px -9px " + colorExtended.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
-              background: !blackMode ? colorExtended.white : colorExtended.darkDarkBlack,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              opacity: String(0),
-              transition: "all 0s ease",
-              transform: "translateY(10px)",
-              width: String(2000) + px,
-            },
-            child: {
-              text: message,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(size1) + ea,
-                fontWeight: String(700),
-                color: !blackMode ? colorExtended.black : colorExtended.white,
-                lineHeight: String(lineHeight),
-                top: String(wordingVisual) + ea,
-              }
-            }
-          },
-        });
-        if (whiteTong.firstChild !== null) {
-          const firstTarget = whiteTong.firstChild as HTMLElement;
-          firstTarget.style.width = "";
-          firstTarget.style.animation = "fadeuplite 0.4s ease forwards";
-    
-          AbstractNode.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
-            firstTarget.style.animation = "fadedownlite 0.4s ease forwards";
-            setQueue(() => {
-              removeByClass(promptAsideClassName);
-            }, 400);
-          }, 400 + delta);
-        }
-  
-      } else {
-  
-        clearTimeout(AbstractNode.stacks[generalJsAlertSkipModeTimeOutStactName]);
-        if (document.querySelector('.' + promptAsideClassName) !== null) {
-          const donwTarget = document.querySelector('.' + promptAsideClassName) as HTMLElement;
-          donwTarget.style.animation = "fadedownlite 0.4s ease forwards";
-        }
-        setQueue(() => {
-          removeByClass(promptAsideClassName);
-  
-          whiteTong = createDom({
-            mode: "aside",
-            mother: document.body,
-            class: [ promptAsideClassName ],
-            style: {
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "fixed",
-              top: withOut(50, maxHeight / 2, px),
-              left: String((100 - maxWidthVw) / 2) + "vw",
-              width: String(maxWidthVw) + "vw",
-              height: String(maxHeight) + px,
-              background: "transparent",
-              zIndex: String(900)
-            },
-            child: {
-              style: {
-                display: "flex",
-                position: "relative",
-                paddingTop: String(paddingTop) + ea,
-                paddingBottom: String(paddingBottom) + ea,
-                paddingLeft: String(paddingLeft) + ea,
-                paddingRight: String(paddingLeft) + ea,
-                borderRadius: String(5) + "px",
-                boxShadow: !blackMode ? "0px 3px 15px -9px " + colorExtended.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
-                background: !blackMode ? colorExtended.white : colorExtended.darkDarkBlack,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: String(0),
-                transition: "all 0s ease",
-                transform: "translateY(10px)",
-                width: String(2000) + px,
-              },
-              child: {
-                text: message,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(size1) + ea,
-                  fontWeight: String(700),
-                  color: !blackMode ? colorExtended.black : colorExtended.white,
-                  lineHeight: String(lineHeight),
-                  top: String(wordingVisual) + ea,
-                }
-              }
-            },
-          });
-
-          if (whiteTong.firstChild !== null) {
-            const firstTarget = whiteTong.firstChild as HTMLElement;
-            firstTarget.style.width = "";
-            firstTarget.style.animation = "fadeuplite 0.4s ease forwards";
-      
-            AbstractNode.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
-              firstTarget.style.animation = "fadedownlite 0.4s ease forwards";
-              setQueue(() => {
-                removeByClass(promptAsideClassName);
-              }, 400);
-            }, 400 + delta);
-          }
-  
-        }, 400);
-  
-      }
-  
-    }
-  
-  }
-  
-  public static promptLong = (message: string, preValue: string = ''): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea = "px";
-    const promptAsideClassName = "promptAsideClassName";
-    const mobile = window.innerWidth <= 900;
-    const desktop = !mobile;
-    let whiteTongBase: HTMLElement | SVGElement;
-    let whiteTong: HTMLElement | SVGElement;
-    let whiteWidth, whiteHeight;
-    let paddingTop, paddingLeft;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let textareaVisual;
-    let buttonBetween;
-    let buttonTop;
-    let buttonRight;
-    let buttonHeight;
-    let buttonPadding;
-    let buttonWidth;
-    let size2;
-    let textTop;
-    let toTextButton;
-  
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 17;
-    paddingLeft = 23;
-    paddingBottom = 152;
-    size0 = 14;
-    size1 = 15;
-    inputSize = 13;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 120;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 2;
-    textareaVisual = 5;
-    buttonBetween = 4;
-    buttonTop = 20;
-    buttonRight = 23;
-    buttonHeight = 19;
-    buttonPadding = 7;
-    buttonWidth = 49;
-    size2 = desktop ? 9 : 9;
-    textTop = AbstractNode.isMac() ? -1 : 1;
-  
-    greenBarHeight = 0;
-
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(paddingBottom) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      text: "Q",
-      style: {
-        fontSize: String(size0) + ea,
-        fontWeight: String(400),
-        color: colorExtended.blue,
-        fontFamily: "graphik",
-        position: "absolute",
-        top: String(paddingTop) + ea,
-        left: String(paddingLeft) + ea,
-        lineHeight: String(lineHeight),
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(700),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    toTextButton = createNode({
-      mother: whiteTong,
-      style: {
-        display: "inline-flex",
-        textAlign: "center",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        top: String(buttonTop) + ea,
-        right: String(buttonRight) + ea,
-        height: String(buttonHeight) + ea,
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        background: colorExtended.gradientGreen,
-        borderRadius: String(5) + "px",
-        zIndex: String(1),
-      },
-      child: {
-        text: "확인",
-        style: {
-          position: "relative",
-          fontSize: String(size2) + ea,
-          fontWeight: String(700),
-          color: colorExtended.white,
-          top: String(textTop) + ea,
-        }
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual) + ea,
-        left: String(paddingLeft + marginLeft) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorExtended.gray1,
-      }
-    });
-  
-    input = createNode({
-      mother: whiteTong,
-      mode: "textarea",
-      attribute: {
-        type: "text",
-      },
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
-        left: String(paddingLeft + marginLeft + inputIndent) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
-        height: String(inputBoxHeight - textareaVisual) + ea,
-        background: "transparent",
-        fontSize: String(inputSize) + ea,
-        fontWeight: String(400),
-        color: colorExtended.black,
-        border: String(0),
-        outline: String(0),
-        lineHeight: String(1.7),
-      }
-    }) as HTMLInputElement;
-  
-    input.value = (typeof preValue === "string" ? preValue : "");
-    input.focus();
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(input.value.trim());
-      });
-  
-      toTextButton.addEventListener("click", function (e) {
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(input.value.trim());
-      });
-  
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Tab") {
-          e.preventDefault();
-          const finalValue = this.value.trim();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(finalValue);
-        }
-      });
-  
-      if (mobile) {
-        input.addEventListener("blur", function (e) {
-          if (document.querySelector('.' + promptAsideClassName) !== null) {
-            const finalValue = this.value.trim();
-            const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-            for (let z = 0; z < targets.length; z++) {
-              try {
-                targets[z].remove();
-              } catch {}
-            }
-            resolve(finalValue === '' ? null : finalValue);
-          }
-        });
-      }
-  
-    });
-  }
-  
-  public static promptWithButton = (message: string, progressName: string = "NULL", preValue: string = ''): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea = "px";
-    const promptAsideClassName = "promptAsideClassName";
-    const mobile = window.innerWidth <= 900;
-    const desktop = !mobile;
-    let whiteTongBase: HTMLElement | SVGElement;
-    let whiteTong: HTMLElement | SVGElement;
-    let whiteWidth, whiteHeight;
-    let paddingTop, paddingLeft;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let toTextButton: HTMLElement | SVGElement;
-    let buttonBetween;
-    let buttonTop;
-    let buttonRight;
-    let buttonHeight;
-    let buttonPadding;
-    let buttonWidth;
-    let size2;
-    let textTop;
-    let processButtonBoo;
-    
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 17;
-    paddingLeft = 23;
-    paddingBottom = 62;
-    size0 = 14;
-    size1 = 15;
-    inputSize = 13;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 30;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 2;
-    buttonBetween = 4;
-    buttonTop = 20;
-    buttonRight = 23;
-    buttonHeight = 19;
-    buttonPadding = 7;
-    buttonWidth = 49;
-    size2 = desktop ? 9 : 9;
-    textTop = AbstractNode.isMac() ? -1 : 1;
-    processButtonBoo = (typeof progressName === "string" && !/null/gi.test(progressName));
-  
-    greenBarHeight = 0;
-
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(paddingBottom) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      text: "Q",
-      style: {
-        fontSize: String(size0) + ea,
-        fontWeight: String(400),
-        color: colorExtended.blue,
-        fontFamily: "graphik",
-        position: "absolute",
-        top: String(paddingTop) + ea,
-        left: String(paddingLeft) + ea,
-        lineHeight: String(lineHeight),
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(700),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    if (processButtonBoo) {
-      toTextButton = createNode({
-        mother: whiteTong,
-        style: {
-          display: "inline-flex",
-          textAlign: "center",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "absolute",
-          top: String(buttonTop) + ea,
-          right: String(buttonRight) + ea,
-          height: String(buttonHeight) + ea,
-          paddingLeft: String(buttonPadding) + ea,
-          paddingRight: String(buttonPadding) + ea,
-          background: colorExtended.gradientGreen,
-          borderRadius: String(5) + "px",
-          zIndex: String(1),
-        },
-        child: {
-          text: progressName,
-          style: {
-            position: "relative",
-            fontSize: String(size2) + ea,
-            fontWeight: String(700),
-            color: colorExtended.white,
-            top: String(textTop) + ea,
-          }
-        }
-      });
-    }
-  
-    createNode({
-      mother: whiteTong,
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual) + ea,
-        left: String(paddingLeft + marginLeft) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorExtended.gray1,
-      }
-    });
-  
-    input = createNode({
-      mother: whiteTong,
-      mode: "input",
-      attribute: {
-        type: "text",
-      },
-      style: {
-        position: "absolute",
-        bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
-        left: String(paddingLeft + marginLeft + inputIndent) + ea,
-        width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
-        height: String(inputBoxHeight) + ea,
-        background: "transparent",
-        fontSize: String(inputSize) + ea,
-        fontWeight: String(400),
-        color: colorExtended.black,
-        border: String(0),
-        outline: String(0),
-      }
-    }) as HTMLInputElement;
-  
-    input.value = (typeof preValue === "string" ? preValue : "");
-    input.focus();
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(null);
-      });
-  
-      input.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-          const finalValue = this.value.trim();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(finalValue);
-        }
-      });
-  
-      if (processButtonBoo) {
-  
-        toTextButton.addEventListener("click", function (e) {
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(progressName);
-        });
-  
-        if (mobile) {
-          input.addEventListener("blur", function (e) {
-            setTimeout(() => {
-              if (document.querySelector('.' + promptAsideClassName) !== null) {
-                const finalValue = this.value.trim();
-                const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-                for (let z = 0; z < targets.length; z++) {
-                  try {
-                    targets[z].remove();
-                  } catch {}
-                }
-                resolve(finalValue === '' ? null : finalValue);
-              }
-            }, 500);
-          });
-        }
-  
-      } else {
-        if (mobile) {
-          input.addEventListener("blur", function (e) {
-            if (document.querySelector('.' + promptAsideClassName) !== null) {
-              const finalValue = this.value.trim();
-              const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-              for (let z = 0; z < targets.length; z++) {
-                try {
-                  targets[z].remove();
-                } catch {}
-              }
-              resolve(finalValue === '' ? null : finalValue);
-            }
-          });
-        }
-      }
-  
-    });
-  }
-  
-  public static promptButtons = (message: string, buttons: Array<string>, customColor: any = null): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea = "px";
-    const promptAsideClassName = "promptAsideClassName";
-    const mobile = window.innerWidth <= 900;
-    const desktop = !mobile;
-    let whiteTongBase;
-    let whiteTong;
-    let whiteWidth, whiteHeight;
-    let paddingTop, paddingLeft;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let buttonsBaseTong;
-    let buttonBetween;
-    let num;
-    let buttonSize;
-    let textTop;
-    let buttonsChildren;
-    let buttonsBaseTongMarginTop;
-    let buttonPaddingLeft;
-    let loadingDom;
-    let loadingStyle;
-    let loadingTop, loadingLeft, loadingWidth;
-  
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 19;
-    paddingLeft = 23;
-    paddingBottom = 60;
-    size0 = 15;
-    size1 = 16;
-    inputSize = 14;
-    buttonSize = 15;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 32;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 1;
-    textTop = AbstractNode.isMac() ? 0 : 1;
-    buttonBetween = 4;
-    buttonsBaseTongMarginTop = 10;
-    buttonPaddingLeft = 12;
-    loadingTop = 22;
-    loadingLeft = 21;
-    loadingWidth = 15;
-  
-    greenBarHeight = 0;
-  
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(buttons.length <= 3 ? paddingBottom : (paddingLeft - buttonBetween)) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    loadingDom = AbstractNode.returnLoadingIcon();
-    loadingStyle = {
-      display: "inline-block",
-      position: "absolute",
-      top: String(loadingTop) + ea,
-      left: String(loadingLeft) + ea,
-      width: String(loadingWidth) + ea,
-      height: String(loadingWidth) + ea,
-    };
-    for (let i in loadingStyle) {
-      Object.defineProperty(loadingDom.style, i, {
-        value: loadingStyle[i],
-        writable: true,
-      })
-    }
-    whiteTong.appendChild(loadingDom);
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(700),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    if (buttons.length <= 3) {
-  
-      buttonsBaseTong = createNode({
-        mother: whiteTong,
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "absolute",
-          bottom: String(paddingTop + bottomVisual) + ea,
-          left: String(paddingLeft + marginLeft) + ea,
-          width: withOut((paddingLeft * 2) + marginLeft, ea),
-          height: String(inputBoxHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorExtended.white,
-          justifyContent: "start",
-          alignItems: "start",
-        }
-      });
-  
-      num = 0;
-      for (let text of buttons) {
-        createNode({
-          mother: buttonsBaseTong,
-          attribute: { value: text },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "calc(calc(100% - " + String(buttonBetween * (buttons.length - 1)) + ea + ") / " + String(buttons.length) + ")",
-            height: String(inputBoxHeight) + ea,
-            marginRight: num === buttons.length - 1 ? "" : String(buttonBetween) + ea,
-            background: customColor === null ? AbstractNode.colorExtended.blueDark : customColor,
-            borderRadius: String(5) + "px",
-          },
-          child: {
-            text,
-            style: {
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(600),
-              color: colorExtended.white,
-              position: "relative",
-              top: String(textTop) + ea,
-            }
-          }
-        });
-        num++;
-      }
-  
-    } else {
-  
-      buttonsBaseTong = createNode({
-        mother: whiteTong,
-        style: {
-          display: "block",
-          position: "relative",
-          marginTop: String(buttonsBaseTongMarginTop) + ea,
-          width: withOut(0, ea),
-          height: "auto",
-          borderRadius: String(5) + "px",
-          background: colorExtended.white,
-        }
-      });
-  
-      num = 0;
-      for (let text of buttons) {
-        createNode({
-          mother: buttonsBaseTong,
-          attribute: { value: text },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            height: String(inputBoxHeight) + ea,
-            marginRight: String(buttonBetween) + ea,
-            marginBottom: String(buttonBetween) + ea,
-            background: customColor === null ? AbstractNode.colorExtended.blueDark : customColor,
-            borderRadius: String(5) + "px",
-            paddingLeft: String(buttonPaddingLeft) + ea,
-            paddingRight: String(buttonPaddingLeft) + ea,
-          },
-          child: {
-            text,
-            style: {
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(700),
-              color: colorExtended.white,
-              position: "relative",
-              top: String(textTop) + ea,
-            }
-          }
-        });
-        num++;
-      }
-  
-    }
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", (e: any) => {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(null);
-      });
-  
-      buttonsChildren = [ ...buttonsBaseTong.children ];
-      for (let dom of buttonsChildren) {
-        dom.addEventListener("click", (e: any) => {
-          e.stopPropagation();
-          const thisValue = e.target.getAttribute("value").trim();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(thisValue);
-        });
-      }
-  
-    });
-  }
-  
+  /**
+   * `querySetting` 메서드는 전달된 객체를 URL의 쿼리 파라미터로 설정하는 역할을 합니다.
+   * 이 메서드는 내부적으로 `AbstractNode.setQuery` 메서드를 호출하여 쿼리 파라미터를 설정합니다.
+   * 
+   * @param {Dictionary} obj - 설정할 쿼리 파라미터의 객체입니다.
+   * @returns {boolean} 쿼리 설정이 성공하면 `true`, 실패하면 `false`를 반환합니다.
+   */
   public static querySetting = (obj: Dictionary) => {
+    // AbstractNode의 setQuery 메서드를 호출하여 객체의 키-값 쌍을 쿼리 파라미터로 설정합니다.
     return AbstractNode.setQuery(obj);
   }
 
-  public static promptLongButtons = (message: string, buttons: Array<string>): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea = "px";
-    const promptAsideClassName = "promptAsideClassName";
-    const mobile = window.innerWidth <= 900;
-    const desktop = !mobile;
-    let whiteTongBase;
-    let whiteTong;
-    let whiteWidth, whiteHeight;
-    let paddingTop, paddingLeft;
-    let paddingBottom;
-    let size0, size1;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let buttonsBaseTong;
-    let buttonBetween;
-    let num;
-    let buttonSize;
-    let textTop;
-    let buttonsChildren;
-    let buttonsBaseTongMarginTop;
-    let buttonPaddingLeft;
-    let loadingDom;
-    let loadingStyle;
-    let loadingTop, loadingLeft, loadingWidth;
-  
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 19;
-    paddingLeft = 23;
-    paddingBottom = 60;
-    size0 = 15;
-    size1 = 16;
-    inputSize = 14;
-    buttonSize = 15;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 32;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 1;
-    textTop = AbstractNode.isMac() ? 0 : 1;
-    buttonBetween = 4;
-    buttonsBaseTongMarginTop = 10;
-    buttonPaddingLeft = 12;
-    loadingTop = 22;
-    loadingLeft = 21;
-    loadingWidth = 15;
-  
-    greenBarHeight = 0;
-
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(paddingLeft - buttonBetween) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    loadingDom = AbstractNode.returnLoadingIcon();
-    loadingStyle = {
-      display: "inline-block",
-      position: "absolute",
-      top: String(loadingTop) + ea,
-      left: String(loadingLeft) + ea,
-      width: String(loadingWidth) + ea,
-      height: String(loadingWidth) + ea,
-    };
-    for (let i in loadingStyle) {
-      Object.defineProperty(loadingDom.style, i, {
-        value: loadingStyle[i],
-        writable: true
-      });
-    }
-    whiteTong.appendChild(loadingDom);
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(700),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    buttonsBaseTong = createNode({
-      mother: whiteTong,
-      style: {
-        display: "block",
-        position: "relative",
-        marginTop: String(buttonsBaseTongMarginTop) + ea,
-        width: withOut(0, ea),
-        height: "auto",
-        borderRadius: String(5) + "px",
-        background: colorExtended.white,
-      }
-    });
-  
-    num = 0;
-    for (let text of buttons) {
-      createNode({
-        mother: buttonsBaseTong,
-        attribute: { value: text },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          justifyContent: "center",
-          alignItems: "center",
-          height: String(inputBoxHeight) + ea,
-          width: withOut(buttonPaddingLeft * 2, ea),
-          marginBottom: String(buttonBetween) + ea,
-          background: AbstractNode.colorExtended.blueDark,
-          borderRadius: String(5) + "px",
-          paddingLeft: String(buttonPaddingLeft) + ea,
-          paddingRight: String(buttonPaddingLeft) + ea,
-        },
-        child: {
-          text,
-          style: {
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(700),
-            color: colorExtended.white,
-            position: "relative",
-            top: String(textTop) + ea,
-          }
-        }
-      });
-      num++;
-    }
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(null);
-      });
-  
-      buttonsChildren = [ ...buttonsBaseTong.children ];
-      for (let dom of buttonsChildren) {
-        dom.addEventListener("click", (e: any) => {
-          e.stopPropagation();
-          const thisValue = e.target.getAttribute("value").trim();
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          resolve(thisValue);
-        });
-      }
-  
-    });
-  }
-  
-  public static promptFile = (message: string): Promise<any> => {
-    const { createNode, colorExtended, withOut, setQueue } = AbstractNode;
-    const ea: string = "px";
-    const promptAsideClassName: string = "promptAsideClassName";
-    const tempHiddenFileInputClassName: string = "tempHiddenFileInputClassName" + String(Math.round(Math.random() * 10000)) + String((new Date()).valueOf());
-    const mobile: boolean = window.innerWidth <= 900;
-    const desktop: boolean = !mobile;
-    let whiteTongBase: HTMLElement | SVGElement;
-    let whiteTong: HTMLElement | SVGElement;
-    let whiteWidth: number, whiteHeight: number;
-    let paddingTop: number, paddingLeft: number;
-    let paddingBottom: number;
-    let size0: number, size1: number;
-    let marginLeft;
-    let bottomVisual;
-    let inputBoxHeight;
-    let input;
-    let inputIndent;
-    let inputBottomVisual;
-    let greenBarHeight;
-    let lineHeight;
-    let wordingVisual;
-    let finalEvent;
-    let inputSize;
-    let buttonsBaseTong;
-    let buttonBetween;
-    let num;
-    let buttonSize;
-    let textTop;
-    let buttonsChildren;
-    let buttonsBaseTongMarginTop;
-    let buttonPaddingLeft;
-    let grayBoxMarginTop;
-    let extractArrowWidth, extractArrowMargin;
-    let fileHiddenInput;
-  
-    whiteWidth = 380;
-    whiteHeight = 150;
-    paddingTop = 17;
-    paddingLeft = 23;
-    paddingBottom = 62;
-    size0 = 14;
-    size1 = 15;
-    inputSize = 13;
-    buttonSize = 12;
-    marginLeft = 18;
-    bottomVisual = 7;
-    inputBoxHeight = 100;
-    inputIndent = 9;
-    inputBottomVisual = 0;
-    lineHeight = 1.5;
-    wordingVisual = AbstractNode.isMac() ? 0 : 2;
-    textTop = AbstractNode.isMac() ? -1 : 1;
-    buttonBetween = 4;
-    buttonsBaseTongMarginTop = 10;
-    buttonPaddingLeft = 10;
-    grayBoxMarginTop = 10;
-    extractArrowWidth = 14;
-    extractArrowMargin = 4;
-  
-    greenBarHeight = 0;
-  
-    whiteTongBase = createNode({
-      mode: "aside",
-      mother: document.body,
-      class: [ promptAsideClassName ],
-      event: {
-        contextmenu: (e: any) => { e.stopPropagation(); },
-        dblclick: (e: any) => { e.stopPropagation(); },
-        drop: (e: any) => { e.stopPropagation(); },
-        keyup: (e: any) => { e.stopPropagation(); },
-        keydown: (e: any) => { e.stopPropagation(); },
-        keypress: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        top: String(0) + "vh",
-        left: String(1) + "vw",
-        width: String(98) + "vw",
-        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
-        background: "transparent",
-        zIndex: String(900)
-      }
-    });
-  
-    whiteTong = createNode({
-      mother: whiteTongBase,
-      event: {
-        click: (e: any) => { e.stopPropagation(); },
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(whiteWidth - (paddingLeft * 2)) + ea,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(paddingLeft) + ea,
-        paddingLeft: String(paddingLeft) + ea,
-        paddingRight: String(paddingLeft) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorExtended.shadow,
-        background: colorExtended.white,
-        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
-      }
-    });
-  
-    fileHiddenInput = createNode({
-      mother: whiteTong,
-      class: [ tempHiddenFileInputClassName ],
-      mode: "input",
-      attribute: {
-        type: "file",
-        name: "tempfile",
-      },
-      style: {
-        display: "none",
-      }
-    }) as HTMLInputElement;
-  
-    createNode({
-      mother: whiteTong,
-      text: "Q",
-      style: {
-        fontSize: String(size0) + ea,
-        fontWeight: String(400),
-        color: colorExtended.blue,
-        fontFamily: "graphik",
-        position: "absolute",
-        top: String(paddingTop) + ea,
-        left: String(paddingLeft) + ea,
-        lineHeight: String(lineHeight),
-      }
-    });
-  
-    createNode({
-      mother: whiteTong,
-      text: message,
-      style: {
-        position: "relative",
-        marginLeft: String(marginLeft) + ea,
-        fontSize: String(size1) + ea,
-        fontWeight: String(700),
-        color: colorExtended.black,
-        lineHeight: String(lineHeight),
-        top: String(wordingVisual) + ea,
-      }
-    });
-  
-    buttonsBaseTong = createNode({
-      mother: whiteTong,
-      event: {
-        click: function (e: any) {
-          e.stopPropagation();
-          fileHiddenInput.click();
-        },
-        dragenter: function (e: any) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.style.background = colorExtended.whiteGreen;
-        },
-        dragover: function (e: any) {
-          e.preventDefault();
-          e.stopPropagation();
-        },
-        dragleave: function (e: any) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.style.background = colorExtended.gray1;
-        },
-      },
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorExtended.gray1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(grayBoxMarginTop) + ea,
-        border: "1px dashed " + colorExtended.gray4,
-      },
-      child: {
-        text: desktop ? "클릭 또는 드래그하여 파일을 업로드..." : "터치하여 파일을 업로드...",
-        style: {
-          position: "relative",
-          fontSize: String(size1) + ea,
-          fontWeight: String(400),
-          color: colorExtended.deactive,
-          top: String(wordingVisual) + ea,
-        },
-        previous: {
-          mode: "svg",
-          source: AbstractNode.svgMaker.extractArrow(colorExtended.deactive),
-          style: {
-            position: "relative",
-            width: String(extractArrowWidth) + ea,
-            marginBottom: String(extractArrowMargin) + ea,
-          }
-        }
-      }
-    });
-  
-    return new Promise((resolve, reject) => {
-  
-      whiteTongBase.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
-        }
-        resolve(null);
-      });
-  
-      fileHiddenInput.addEventListener("change", async function (e) {
-        e.stopPropagation();
-        let formData: FormData;
-        let thisExe: string;
-        let targets: List;
-        try {
-          if (this.files !== null) {
-            if (this.files.length === 1) {
-              formData = new FormData();
-      
-              thisExe = this.files[0].name.split(".")[this.files[0].name.split(".").length - 1];
-      
-              formData.append("uploadedFile0", this.files[0]);
-              formData.append("exe", thisExe);
-    
-              targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-              for (let z = 0; z < targets.length; z++) {
-                try {
-                  targets[z].remove();
-                } catch {}
-              }
-    
-              resolve(formData);
-    
-            } else {
-    
-              targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-              for (let z = 0; z < targets.length; z++) {
-                try {
-                  targets[z].remove();
-                } catch {}
-              }
-    
-              resolve(null);
-            }
-          }
-        } catch (e) {
-          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          console.log(e);
-          resolve(null);
-        }
-      });
-  
-      buttonsBaseTong.addEventListener("drop", async function (e: any) {
-        e.stopPropagation();
-        e.preventDefault();
-        let formData;
-        let thisExe;
-        let targets;
-        try {
-          if (e.dataTransfer.files.length >= 1) {
-            formData = new FormData();
-    
-            thisExe = e.dataTransfer.files[0].name.split(".")[e.dataTransfer.files[0].name.split(".").length - 1];
-    
-            formData.append("uploadedFile0", e.dataTransfer.files[0]);
-            formData.append("exe", thisExe);
-  
-            targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-            for (let z = 0; z < targets.length; z++) {
-              try {
-                targets[z].remove();
-              } catch {}
-            }
-  
-            resolve(formData);
-  
-          } else {
-  
-            targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-            for (let z = 0; z < targets.length; z++) {
-              try {
-                targets[z].remove();
-              } catch {}
-            }
-  
-            resolve(null);
-          }
-        } catch (e) {
-          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-          console.log(e);
-          resolve(null);
-        }
-      });
-  
-    });
-  }
-
+  /**
+   * `setCookie` 메서드는 쿠키를 설정하거나 삭제하는 역할을 합니다.
+   * 
+   * @param {Dictionary} obj - 설정할 쿠키의 이름과 값을 포함한 객체입니다.
+   * @param {boolean | number} [day=730] - 쿠키의 유효기간(일 단위)입니다. 삭제할 경우 `true`로 설정됩니다.
+   * @param {boolean} [del=false] - 쿠키를 삭제할지 여부를 나타냅니다. 기본값은 `false`입니다.
+   */
   public static setCookie = (obj: Dictionary, day: boolean | number = 730, del: boolean = false) => {
+    
+    // day가 boolean인 경우, 이는 쿠키 삭제를 의미하므로 del을 true로 설정하고 day를 730일로 초기화합니다.
     if (typeof day === "boolean") {
       del = day;
       day = 730;
     }
+
+    // 현재 날짜와 시간을 today 변수에 저장합니다.
     const today = new Date();
     let totalString: string, expires: string;
-  
+
+    // 쿠키의 유효기간을 설정하기 위해 현재 시간에 지정된 일수를 더한 후 UTC 형식으로 설정합니다.
     today.setTime(today.getTime() + (day * 24 * 60 * 60 * 1000));
+
+    // del이 false일 경우, 쿠키의 만료 시간을 설정합니다.
     if (!del) {
       expires = "expires=" + today.toUTCString();
     } else {
+      // del이 true일 경우, 쿠키를 삭제하기 위한 만료일을 1970년 1월 1일로 설정합니다.
       expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
     }
-  
+
+    // 입력받은 객체의 각 키-값 쌍을 쿠키로 설정합니다.
     for (let i in obj) {
       totalString = '';
+      
+      // 쿠키 이름을 인코딩하여 유효하지 않은 문자들을 제거하고, 값을 추가합니다.
       totalString += encodeURIComponent(i.replace(/\=\;/g, ''));
       totalString += '=';
+      
+      // 쿠키 값을 인코딩하여 유효하지 않은 문자들을 제거합니다.
       totalString += encodeURIComponent(String(obj[i]).replace(/\=\;/g, ''));
+      
+      // 쿠키의 유효기간과 경로를 설정합니다.
       totalString += ';';
       totalString += expires + ";path=/";
+      
+      // document.cookie를 통해 쿠키를 설정합니다.
       document.cookie = totalString;
     }
   }
 
-  public static getCookiesAll = () => {
+  /**
+   * `getCookiesAll` 메서드는 현재 설정된 모든 쿠키를 가져와 객체로 반환하는 역할을 합니다.
+   * 
+   * @returns {Dictionary} 현재 브라우저에 설정된 모든 쿠키를 키-값 쌍의 객체로 반환합니다.
+   */
+  public static getCookiesAll = (): Dictionary => {
+    
+    // 브라우저에 저장된 쿠키 문자열을 디코딩하여 가져옵니다.
     const cookies = window.decodeURIComponent(document.cookie);
+    
     let tempArr0: List, tempArr1: List;
     let resultObj: Dictionary;
+    
+    // 쿠키를 저장할 빈 객체를 생성합니다.
     resultObj = {};
+
+    // 쿠키 문자열을 ';'로 구분하여 배열로 변환합니다.
     tempArr0 = cookies.split(';');
+
+    // 각 쿠키를 '='로 나누어 키와 값을 추출합니다.
     for (let i of tempArr0) {
       tempArr1 = i.split('=');
+
+      // 쿠키가 올바른 형식(키와 값이 존재)일 경우, 결과 객체에 저장합니다.
       if (tempArr1.length > 1) {
         resultObj[tempArr1[0].trim()] = tempArr1[1].trim();
       }
     }
+
+    // 모든 쿠키를 담은 객체를 반환합니다.
     return resultObj;
   }
 
+  /**
+   * `getCookieById` 메서드는 특정 쿠키 키를 사용하여 해당 쿠키 값을 반환하는 역할을 합니다.
+   * 만약 해당 키에 해당하는 쿠키가 존재하지 않으면 `null`을 반환합니다.
+   *
+   * @param {string} key - 가져오고자 하는 쿠키의 이름(키)입니다.
+   * @returns {any} 쿠키 값이 존재하면 해당 값을 반환하고, 존재하지 않으면 `null`을 반환합니다.
+   */
   public static getCookieById = (key: string): any => {
+    
+    // 모든 쿠키를 가져오는 AbstractNode.getCookiesAll 메서드를 호출하여 쿠키 객체를 가져옵니다.
     const cookiesObj = AbstractNode.getCookiesAll();
+
+    // 가져온 쿠키 객체에서 모든 쿠키 이름(키)의 배열을 생성합니다.
     const cookiesKey = Object.keys(cookiesObj);
+    
+    // 만약 주어진 키가 쿠키 객체에 포함되어 있다면 해당 값을 반환합니다.
     if (cookiesKey.includes(key)) {
       return cookiesObj[key];
     } else {
+      // 주어진 키가 존재하지 않으면 null을 반환합니다.
       return null;
     }
   }
 
+  /**
+   * `setMetaData` 메서드는 웹 페이지의 메타 데이터를 설정하는 역할을 합니다. 
+   * 주로 제목, 설명, 이미지 등의 메타 데이터를 업데이트하며, 주어진 객체의 값을 메타 태그에 반영합니다.
+   *
+   * @param {Dictionary} obj - 제목, 설명, 이미지 정보를 포함하는 객체입니다.
+   * @returns {string} 메타 데이터가 성공적으로 설정되었을 때 "success" 문자열을 반환합니다.
+   * @throws {Error} 만약 객체에 유효한 문자열 값이 포함되어 있지 않거나, HTML 메타 설정이 잘못된 경우 오류를 발생시킵니다.
+   */
   public static setMetaData = (obj: Dictionary): string => {
+
+    // obj 객체 내에 title, description, image가 모두 문자열인지 확인합니다. 아니면 오류를 발생시킵니다.
     if (typeof obj.title !== "string" || typeof obj.description !== "string" || typeof obj.image !== "string") {
       throw new Error("invaild input");
     }
+
+    // <head> 태그를 가져옵니다. 만약 head 태그가 없다면 새로운 HTMLElement를 생성합니다.
     const head: HTMLElement = document.querySelector("head") || new HTMLElement();
+
+    // head 태그 내의 모든 메타 태그를 배열로 변환합니다.
     const metas: List = [ ...head.querySelectorAll("meta") ];
+
+    // 메타 태그가 3개 미만이라면 오류를 발생시킵니다.
     if (metas.length < 3) {
       throw new Error("invalid html");
     }
+
+    // Open Graph 제목 메타 태그를 찾습니다.
     const title = metas.find((dom) => { return dom.getAttribute("property") === "og:title" });
+    
+    // 문서의 <title> 태그를 가져옵니다.
     const title2 = document.querySelector("title");
+
+    // Open Graph 설명 메타 태그를 찾습니다.
     const description = metas.find((dom) => { return dom.getAttribute("property") === "og:description" });
+
+    // 일반적인 메타 설명 태그를 찾습니다.
     const description2 = metas.find((dom) => { return dom.getAttribute("name") === "description" });
+
+    // Open Graph 이미지 메타 태그를 찾습니다.
     const image = metas.find((dom) => { return dom.getAttribute("property") === "og:image" });
+
+    // 만약 필수 메타 태그가 누락되어 있다면 오류를 발생시킵니다.
     if (title === undefined || title2 === null || description === undefined || description2 === undefined || image === undefined) {
       throw new Error("invalid meta setting");
     }
+
     let description3: any;
     let firstTarget: HTMLElement;
 
+    // body 태그의 첫 번째 자식 요소를 확인합니다. 특정 조건에 따라 description3 변수에 값을 할당합니다.
     if (document.body.firstChild !== null) {
       firstTarget = document.body.children[0] as HTMLElement;
       if (firstTarget.id !== "totalcontents" && firstTarget.style.display === "none") {
@@ -5569,79 +5554,154 @@ class AbstractNode {
     } else {
       description3 = null;
     }
+
+    // Open Graph 제목 메타 태그의 content 속성을 업데이트합니다.
     title.setAttribute("content", obj.title);
+
+    // <title> 태그의 텍스트 콘텐츠를 업데이트합니다.
     title2.textContent = obj.title;
+
+    // Open Graph 설명 메타 태그의 content 속성을 업데이트합니다.
     description.setAttribute("content", obj.description);
+
+    // 일반적인 메타 설명 태그의 content 속성을 업데이트합니다.
     description2.setAttribute("content", obj.description);
+
+    // 조건에 따라 description3의 텍스트 콘텐츠를 업데이트합니다.
     if (description3 !== null) {
       description3.textContent = obj.description;
     }
+
+    // Open Graph 이미지 메타 태그의 content 속성을 업데이트합니다.
     image.setAttribute("content", obj.image);
+
+    // 성공적으로 모든 메타 데이터를 설정하면 "success" 문자열을 반환합니다.
     return "success";
   }
 
+  /**
+   * `injectVideo` 메서드는 주어진 DOM 요소에 YouTube 비디오를 삽입합니다. 
+   * 입력 객체에 비디오의 ID와 DOM 요소를 포함하며, 해당 요소에 iframe 형식으로 비디오가 삽입됩니다.
+   *
+   * @param {Dictionary} obj - 비디오 삽입에 필요한 정보를 담고 있는 객체. `dom`과 `id`가 필요합니다.
+   * @returns {HTMLElement | SVGElement} 비디오가 삽입된 DOM 요소를 반환합니다.
+   * @throws {Error} 입력 값이 유효하지 않거나 DOM 요소의 크기가 잘못되었을 경우 오류를 발생시킵니다.
+   */
   public static injectVideo = (obj: Dictionary): HTMLElement | SVGElement => {
+
+    // 입력된 객체에서 `dom`이 객체, `id`가 문자열, 그리고 `dom.style.width`, `dom.style.height`가 문자열인지 확인합니다.
+    // 이 조건을 만족하지 않으면 오류를 발생시킵니다.
     if (typeof obj.dom !== "object" || typeof obj.id !== "string" || typeof obj.dom.style.width !== "string" || typeof obj.dom.style.height !== "string") {
       throw new Error("invaild input");
     }
+
+    // 객체에서 id와 dom 값을 구조 분해 할당합니다.
     const { id, dom } = obj;
+
+    // iframe 삽입을 위한 HTML 문자열, 타겟 DOM 변수 선언
     let htmlString: string, targetDom: HTMLElement | SVGElement;
+
+    // DOM의 스타일에서 너비와 높이 정보를 추출합니다.
     let width: number, height: number, ea: string;
     let widthStr: string, heightStr: string;
-  
+
+    // DOM에서 width와 height 값을 문자열로 추출합니다.
     widthStr = dom.style.width;
     heightStr = dom.style.height;
+
+    // 숫자 값을 추출하여 width와 height에 할당합니다.
     width = Number(widthStr.replace(/[^0-9\-\.]/gi, ''));
     height = Number(heightStr.replace(/[^0-9\-\.]/gi, ''));
+
+    // 단위 (ea: px, %, em 등)를 추출합니다.
     ea = widthStr.replace(/[0-9\-\.]/gi, '')
-  
+
+    // 만약 단위가 없거나, width나 height 값이 유효하지 않으면 오류를 발생시킵니다.
     if (ea === '' || Number.isNaN(width) || Number.isNaN(height)) {
       throw new Error("invalid width, height value");
     }
-  
+
+    // AbstractNode의 `createNode` 메서드를 사용하여 DOM 요소를 생성합니다.
     targetDom = AbstractNode.createNode(dom);
+
+    // 생성된 DOM 요소의 스타일을 설정하여 비디오가 중앙에 오도록 합니다.
     targetDom.style.display = "inline-flex";
     targetDom.style.position = "relative";
     targetDom.style.overflow = "hidden";
     targetDom.style.justifyContent = "center";
     targetDom.style.alignItems = "center";
-  
+
+    // px 단위가 아닌 경우, 실제 크기를 getBoundingClientRect를 통해 계산합니다.
     if (ea !== "px") {
       width = targetDom.getBoundingClientRect().width;
       height = targetDom.getBoundingClientRect().height;
     }
-  
+
+    // 비디오 크기를 약간 확장하여 width, height를 다시 설정합니다.
     width = width + 10;
     height = height + (10 * (height / width));
-  
+
+    // YouTube iframe 삽입을 위한 HTML 문자열을 만듭니다.
     htmlString = `<iframe width="${String(width)}" height="${String(height)}" src="https://www.youtube.com/embed/${id}?controls=1&autoplay=1&mute=1&modestbranding=1&amp;playlist=${id}&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+
+    // 생성된 DOM 요소에 iframe을 추가합니다.
     targetDom.insertAdjacentHTML("beforeend", htmlString);
-  
+
+    // 비디오가 삽입된 DOM 요소를 반환합니다.
     return targetDom;
   }
 
+  /**
+   * `removeByClass` 메서드는 주어진 클래스 이름을 가진 모든 요소를 DOM에서 제거합니다.
+   *
+   * @param {string} className - 제거하려는 클래스 이름.
+   * @returns {void} 반환 값이 없습니다. 해당 클래스의 DOM 요소들이 삭제됩니다.
+   */
   public static removeByClass = (className: string): void => {
+    // querySelectorAll을 사용하여 주어진 클래스 이름을 가진 모든 DOM 요소를 선택하고, 배열로 변환합니다.
     const targets: Array<Element> = [ ...document.querySelectorAll('.' + className) ];
+
+    // 선택된 각 DOM 요소를 반복하며 삭제합니다.
     for (let dom of targets) {
-      dom.remove();
+      dom.remove(); // DOM에서 해당 요소를 제거합니다.
     }
   }
 
+  /**
+   * `selectByClass` 메서드는 주어진 클래스 이름을 가진 요소들을 선택하여 반환합니다.
+   * 기본적으로 `document` 범위에서 찾지만, 지정된 영역 내에서 검색할 수 있습니다.
+   *
+   * @param {any} className - 검색할 클래스 이름(문자열 또는 문자열 배열 가능).
+   * @param {Document | HTMLElement} [areaMother=document] - 검색을 실행할 범위, 기본값은 `document`.
+   * @returns {List} 검색된 요소들의 리스트를 반환합니다. 요소가 없으면 빈 배열을 반환합니다.
+   * @throws {Error} 유효하지 않은 클래스 이름이 입력되었을 때 오류를 발생시킵니다.
+   */
   public static selectByClass = (className: any, areaMother: Document | HTMLElement = document): List => {
+    // 클래스 이름을 검색할 영역을 설정합니다. 기본값은 document입니다.
     let targets: List;
     let thisMother: Document | HTMLElement;
     thisMother = areaMother;
+
+    // 결과를 담을 배열 초기화.
     targets = [];
+
+    // 만약 className이 문자열인 경우, 해당 클래스를 가진 모든 요소를 선택합니다.
     if (typeof className === "string") {
       targets = [ ...thisMother.querySelectorAll('.' + className) ];
-    } else if (Array.isArray(className)) {
+    }
+    // 만약 className이 배열인 경우, 각 클래스 이름을 반복하며 해당 요소들을 검색해 결합합니다.
+    else if (Array.isArray(className)) {
       targets = [];
       for (let c of className) {
         targets = targets.concat([ ...thisMother.querySelectorAll('.' + c) ]);
       }
-    } else {
+    }
+    // 입력값이 유효하지 않으면 오류를 발생시킵니다.
+    else {
       throw new Error("invalid input");
     }
+
+    // 검색된 요소들이 존재하면 그 목록을 반환하고, 그렇지 않으면 빈 배열을 반환합니다.
     if (targets.length > 0) {
       return targets;
     } else {
@@ -5649,70 +5709,130 @@ class AbstractNode {
     }
   }
 
+  /**
+   * `setArray` 메서드는 주어진 문자열 배열에서 중복된 값을 제거하고 유일한 값들로 구성된 배열을 반환합니다.
+   *
+   * @param {StringList} [targetList=[]] - 중복을 제거할 문자열 배열. 기본값은 빈 배열.
+   * @returns {StringList} 중복이 제거된 문자열 배열을 반환.
+   * @throws {Error} 만약 `targetList`가 배열이 아니거나, 배열에 문자열 이외의 값이 포함되어 있으면 오류를 발생시킵니다.
+   */
   public static setArray = (targetList: StringList = []): StringList => {
+    // 입력 값이 배열이 아닌 경우 오류를 발생시킵니다.
     if (!Array.isArray(targetList)) {
       throw new Error("invalid input");
     }
+
+    // 배열의 모든 요소가 문자열인지 확인. 문자열이 아닌 요소가 있으면 오류 발생.
     if (!targetList.every((s) => { return typeof s === "string" })) {
       throw new Error("invalid input 2");
     }
+
+    // 중복을 제거하기 위해 Set을 사용하고 배열로 변환합니다.
     const resultArr: StringList = [ ...new Set(targetList) ];
+
+    // 중복이 제거된 배열을 반환합니다.
     return resultArr;
   }
 
+  /**
+   * `findStringToArr` 메서드는 주어진 정규 표현식을 사용하여 문자열에서 일치하는 모든 값을 배열로 반환합니다.
+   * 옵션으로 중복 제거 모드를 설정할 수 있습니다.
+   *
+   * @param {RegExp} regex - 문자열에서 일치 항목을 찾을 정규 표현식.
+   * @param {string} targetString - 검색할 대상 문자열.
+   * @param {boolean} [setMode=true] - true일 경우 중복된 결과를 제거한 배열을 반환, false일 경우 중복 허용.
+   * @returns {StringList} 정규 표현식과 일치하는 값들의 배열을 반환.
+   */
   public static findStringToArr = (regex: RegExp, targetString: string, setMode: boolean = true): StringList => {
+    // targetString에서 정규 표현식을 사용하여 일치하는 값을 찾습니다.
     let matchResult: IterableIterator<RegExpExecArray>;
     let matchList: List;
 
+    // matchAll 메서드를 사용해 정규 표현식에 맞는 모든 결과를 반복 가능한 객체로 반환.
     matchResult = targetString.matchAll(regex);
+
+    // 각 일치 결과에서 첫 번째 매칭된 문자열을 추출하여 배열로 변환.
     matchList = [ ...matchResult ].map((a) => { return a[0] });
 
+    // setMode가 true인 경우 중복을 제거한 배열을 반환, false면 중복 포함.
     if (setMode) {
-      return [ ...new Set(matchList) ];
+      return [ ...new Set(matchList) ];  // Set을 사용해 중복된 항목을 제거하고 배열로 변환.
     } else {
-      return matchList;
+      return matchList;  // 중복을 허용한 채로 배열을 반환.
     }
   }
   
+  /**
+   * 특정 DOM 요소에 이벤트를 발생시키는 메서드입니다.
+   *
+   * @param {any} dom - 이벤트를 발생시킬 대상 DOM 요소.
+   * @param {string} eventName - 발생시킬 이벤트의 이름. 클릭, 포커스, 블러 등의 이벤트를 지원.
+   */
   public static fireEvent = (dom: any, eventName: string) => {
+    // dom이 객체이고 null이 아닌지 확인.
     if (typeof dom === "object" && dom !== null) {
+      // eventName이 "click", "focus", "blur"가 아닌 경우 일반적인 이벤트를 발생시킴.
       if (eventName !== "click" && eventName !== "focus" && eventName !== "blur") {
+        // 이벤트를 전파(bubbles)하는 방식으로 이벤트를 생성하고 dispatchEvent로 발생시킴.
         dom.dispatchEvent(new Event(eventName, { bubbles: true }));
-      } else if (eventName === "click") {
+      } 
+      // eventName이 "click"일 경우 click 메서드를 직접 호출.
+      else if (eventName === "click") {
         dom.click();
-      } else if (eventName === "blur") {
+      } 
+      // eventName이 "blur"일 경우 blur 이벤트를 전파하고, dom.blur() 메서드가 있으면 실행.
+      else if (eventName === "blur") {
         dom.dispatchEvent(new Event(eventName, { bubbles: true }));
         if (typeof dom.blur === "function") {
           dom.blur();
         }
-      } else if (eventName === "focus") {
+      } 
+      // eventName이 "focus"일 경우 dom.focus() 메서드를 직접 호출하여 포커스 설정.
+      else if (eventName === "focus") {
         dom.focus();
       }
     }
   }
 
+  /**
+   * 주어진 DOM 요소의 실제 박스 모델 크기와 위치 정보를 계산하는 메서드입니다.
+   *
+   * @param {HTMLElement | SVGElement} dom - 박스 모델을 측정할 DOM 요소.
+   * @param {string | Dictionary} [original="attribute"] - 요소의 원래 스타일을 복원할지 여부. "attribute"이면 DOM 속성 값을 복원.
+   * @returns {Dictionary} 박스의 크기와 위치 정보를 담은 객체를 반환.
+   */
   public static getRealBox = (dom: HTMLElement | SVGElement, original: string | Dictionary = "attribute"): Dictionary => {
+    // 현재 디바이스가 모바일인지 여부를 판단하여 true/false 값을 할당.
     const mobile: boolean = window.innerWidth <= 900;
+    // desktop 여부는 mobile의 반대.
     const desktop: boolean = !mobile;
+    // 요소의 박스 모델 정보가 저장될 객체.
     let box: Dictionary;
+    // 데스크탑 환경에서 시각적인 너비 비율 설정. Mac인지 아닌지에 따라 값이 달라짐.
     let widthVisual: number;
-  
+
+    // 데스크탑일 경우 화면 비율 설정. Mac에서는 0.97, 일반 데스크탑은 0.84.
     if (desktop) {
       widthVisual = AbstractNode.isMac() ? 0.97 : 0.84;
     } else {
+      // 모바일일 경우 비율은 1로 설정.
       widthVisual = 1;
     }
-  
+
+    // DOM 요소의 스타일을 일시적으로 'inline-block', 'relative', 'auto'로 설정.
     dom.style.display = "inline-block";
     dom.style.position = "relative";
     dom.style.width = "auto";
     dom.style.height = "auto";
     
+    // getBoundingClientRect 메서드로 DOM의 박스 모델 정보를 얻고 JSON으로 복사.
     box = dom.getBoundingClientRect();
     box = JSON.parse(JSON.stringify(box));
-  
+
+    // 요소의 시각적인 너비 비율을 반영.
     box.width = box.width * widthVisual;
-  
+
+    // original이 객체이면, 그 객체에 있는 스타일 속성들을 복원.
     if (original !== null && typeof original === "object") {
       if (typeof original.display === "string") {
         dom.style.display = original.display;
@@ -5726,7 +5846,9 @@ class AbstractNode {
       if (typeof original.height === "string") {
         dom.style.height = original.height;
       }
-    } else if (original === "attribute") {
+    } 
+    // original이 "attribute"이면, DOM 요소의 속성에서 스타일을 복원.
+    else if (original === "attribute") {
       if (dom.getAttribute("display") !== null) {
         dom.style.display = dom.getAttribute("display") || "";
       }
@@ -5740,462 +5862,462 @@ class AbstractNode {
         dom.style.height = dom.getAttribute("height") || "";
       }
     }
+
+    // 박스 모델 정보를 담은 객체를 반환.
     return box;
   }
 
+  /**
+   * 주어진 문자열의 첫 번째 문자를 대문자로 변환하는 메서드입니다.
+   *
+   * @param {string} str - 대문자로 변환할 문자열.
+   * @returns {string} 첫 번째 문자가 대문자로 변환된 문자열을 반환합니다.
+   * @throws {Error} 문자열이 아닌 입력값이 들어왔을 경우 에러를 발생시킵니다.
+   */
   public static capitalizeString = (str: string): string => {
+    // 입력값이 문자열인지 확인. 아니면 에러 발생.
     if (typeof str !== "string") {
       throw new Error("invalid input");
     }
+    // 문자열의 길이가 0이거나 1인 경우 처리.
     if (str.length === 0 || str.length === 1) {
+      // 길이가 0일 경우 빈 문자열 반환.
       if (str.length === 0) {
         return "";
       }
+      // 길이가 1인 경우 해당 문자를 대문자로 변환하여 반환.
       return str.toUpperCase();
     } else {
+      // 첫 번째 문자를 대문자로 변환하고 나머지 부분을 그대로 결합하여 반환.
       return str.slice(0, 1).toUpperCase() + str.slice(1);
     }
   }
 
+  /**
+   * 주어진 Promise 배열을 모두 실행하고 결과를 반환하는 메서드입니다.
+   *
+   * @param {List} promiseArr - Promise 객체가 담긴 배열.
+   * @returns {Promise<any>} 모든 Promise가 완료되면 그 결과들을 반환합니다.
+   */
   public static arrayPromise = (promiseArr: List): Promise<any> => {
+    // 새로운 Promise를 반환.
     return new Promise((resolve, reject) => {
-      Promise.all(promiseArr).then((values) => {
-        resolve(values);
-      }).catch((err) => {
-        reject(err);
-      })
+      // Promise.all로 모든 Promise를 실행하고 그 결과를 처리.
+      Promise.all(promiseArr)
+        .then((values) => {
+          // 모든 Promise가 성공적으로 완료되면 그 결과들을 resolve로 반환.
+          resolve(values);
+        })
+        .catch((err) => {
+          // 하나라도 실패하면 해당 에러를 reject로 반환.
+          reject(err);
+        })
     });
   }
 
+  /**
+   * 드롭된 파일을 처리하고 파일 정보를 반환하는 메서드입니다.
+   * 
+   * @param {any} e - 드롭 이벤트 객체입니다.
+   * @returns {Promise<Dictionary>} 파일과 관련된 정보를 담은 객체를 반환합니다.
+   * @throws {Error} 파일 처리 중 오류가 발생할 경우 로그를 출력하고 빈 객체를 반환합니다.
+   */
   public static dropToFiles = async (e: any): Promise<Dictionary> => {
     try {
+      // 드래그 앤 드롭 이벤트에서 브라우저 기본 동작을 방지합니다.
       e.preventDefault();
+      
+      // 파일 시스템 핸들러를 읽어올 변수를 선언합니다.
       let readDroppedItems;
       let promiseArr: List, resultArr: List;
       let result: Dictionary;
-  
+
+      // Promise 배열을 초기화합니다.
       promiseArr = [];
+
+      // dataTransfer.items에서 드롭된 항목들을 비동기적으로 순회합니다.
       for await (const item of e.dataTransfer.items) {
+        // 각 항목의 파일 시스템 핸들러를 배열에 추가합니다.
         promiseArr.push(item.getAsFileSystemHandle());
       }
-  
+
+      // 각 항목에 대한 Promise 배열을 처리하고 결과를 받습니다.
       resultArr = await AbstractNode.arrayPromise(promiseArr);
+
+      /**
+       * 드롭된 항목들을 읽어오는 함수입니다.
+       * 
+       * @param {any} items - 드롭된 파일 시스템 핸들들.
+       * @returns {Promise<any[]>} 폴더와 파일 정보를 포함한 배열을 반환합니다.
+       */
       readDroppedItems = async (items: any) => {
         try {
-          let tong;
-          let handle;
-          let fileEntry;
-  
+          let tong;  // 결과를 저장할 배열.
+          let handle; // 파일 또는 폴더를 처리하는 핸들러.
+          let fileEntry; // 파일 엔트리 객체.
+
+          // 파일 목록을 저장할 배열 초기화.
           tong = [];
+
+          /**
+           * 폴더의 내용을 재귀적으로 읽어들이는 함수입니다.
+           * 
+           * @param {any} entry - 파일 또는 폴더 엔트리.
+           * @param {string | null} motherName - 폴더 경로를 위한 상위 폴더 이름.
+           */
           const readFolderRecursively = async (entry: any, motherName: any | null = null) => {
             let motherStart;
+
+            // 파일일 경우 파일 정보를 읽습니다.
             if (entry.kind === "file") {
               const file = await entry.getFile();
               if (file !== null) {
+                // 시스템 파일 제외 (예: .DS_Store).
                 if (file.name !== ".DS_Store") {
-                  file.relativePath = motherName + "/" + file.name;
-                  file.motherFolder = file.relativePath.split("/").slice(0, -1).join("/");
-                  tong.push(file);
+                  file.relativePath = motherName + "/" + file.name; // 상대 경로 설정.
+                  file.motherFolder = file.relativePath.split("/").slice(0, -1).join("/"); // 상위 폴더 경로 설정.
+                  tong.push(file); // 파일을 결과 배열에 추가.
                 }
               }
-            } else if (entry.kind === "directory") {
-              if (motherName !== null) {
-                motherStart = motherName + "/" + entry.name;
-              } else {
-                motherStart = "/" + entry.name;
-              }
+            } else if (entry.kind === "directory") { // 폴더일 경우
+              // 상위 폴더 경로를 계산.
+              motherStart = motherName !== null ? motherName + "/" + entry.name : "/" + entry.name;
               const values = entry.values();
+              
+              // 폴더 내 모든 파일과 폴더에 대해 재귀적으로 처리.
               for await (const handle of values) {
                 await readFolderRecursively(handle, motherStart);
               }
             }
-          }
-  
+          };
+
+          // 드롭된 항목들 처리.
           for (const handle of items) {
             try {
               if (handle.kind === "file") {
+                // 파일일 경우 파일 정보 처리.
                 fileEntry = await handle.getFile();
-                if (fileEntry !== null) {
-                  if (fileEntry.name !== ".DS_Store") {
-                    fileEntry.relativePath = "/" + fileEntry.name;
-                    fileEntry.motherFolder = fileEntry.relativePath.split("/").slice(0, -1).join("/");
-                    tong.push(fileEntry);
-                  }
+                if (fileEntry !== null && fileEntry.name !== ".DS_Store") {
+                  fileEntry.relativePath = "/" + fileEntry.name; // 상대 경로 설정.
+                  fileEntry.motherFolder = fileEntry.relativePath.split("/").slice(0, -1).join("/"); // 상위 폴더 설정.
+                  tong.push(fileEntry); // 파일을 결과 배열에 추가.
                 }
               } else if (handle.kind === "directory") {
+                // 폴더일 경우 재귀적으로 폴더 내용 처리.
                 await readFolderRecursively(handle);
               }
             } catch {}
           }
-  
-          return tong;
+
+          return tong; // 최종 결과 반환.
         } catch (e) {
-          console.log(e);
-          return null;
+          console.log(e); // 에러 발생 시 로그 출력.
+          return null; // 에러 시 null 반환.
         }
-      }
-  
+      };
+
+      // 결과 객체를 초기화합니다.
       result = {};
+      
+      // 드롭된 항목을 읽어들인 후 결과 배열로 저장합니다.
       result.fromArray = await readDroppedItems(resultArr);
-      result.toArray = result.fromArray.map((obj: Dictionary) => { return obj.motherFolder + "/" + obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
-  
-      return result;
+
+      // 각 파일의 상대 경로 및 이름을 수정하여 새로운 배열을 생성합니다.
+      result.toArray = result.fromArray.map((obj: Dictionary) => {
+        return obj.motherFolder + "/" + obj.name.replace(/ /gi, "_")
+          .replace(/\n/gi, "_").replace(/\t/gi, "_")
+          .replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); 
+      });
+
+      return result; // 최종 결과 반환.
     } catch (e) {
-      console.log(e);
-      return {};
+      console.log(e); // 에러 발생 시 로그 출력.
+      return {}; // 에러 발생 시 빈 객체 반환.
     }
   }
 
+  /**
+   * 드롭된 파일들을 폼 데이터(FormData)로 변환하여 반환하는 메서드입니다.
+   * 
+   * @param {any} e - 드롭 이벤트 객체입니다.
+   * @param {string | null} motherPath - 파일의 상대 경로 앞에 붙일 상위 경로입니다. 기본값은 null입니다.
+   * @returns {Promise<FormData>} 폼 데이터를 담은 Promise 객체를 반환합니다.
+   * @throws {Error} 파일 처리 중 오류가 발생할 경우 로그를 출력하고 빈 FormData 객체를 반환합니다.
+   */
   public static dropToForm = async (e: any, motherPath: string | null = null): Promise<FormData> => {
     try {
+      // 업로드할 파일의 접두사를 설정합니다.
       const uploadKeyword: string = "upload";
+
+      // FormData 객체를 생성합니다.
       let formData: FormData, files: any, toArr: List;
-  
+
       formData = new FormData();
+
+      // 드롭된 파일을 dropToFiles 메서드를 통해 처리합니다.
       files = await AbstractNode.dropToFiles(e);
-  
+
+      // 드롭된 파일을 순회하면서 FormData에 파일을 추가합니다.
       for (let i = 0; i < files.fromArray.length; i++) {
-        formData.append("upload" + String(i), files.fromArray[i]);
+        formData.append(uploadKeyword + String(i), files.fromArray[i]);
       }
+
+      // 파일 경로 배열을 초기화합니다.
       toArr = [];
+
+      // 각 파일의 경로를 생성하여 toArr 배열에 추가합니다.
       for (let i = 0; i < files.fromArray.length; i++) {
         toArr.push((motherPath === null ? "" : motherPath) + files.toArray[i]);
       }
+
+      // toArr 배열을 JSON 문자열로 변환하여 FormData에 추가합니다.
       formData.append("toArr", JSON.stringify(toArr));
-  
+
+      // 완성된 FormData 객체를 반환합니다.
       return formData;
-  
+
     } catch (e) {
+      // 오류가 발생할 경우 로그를 출력하고 빈 FormData 객체를 반환합니다.
       console.log(e);
       return (new FormData());
     }
   }
 
+  /**
+   * 특정 HTMLElement에 대해 일시적으로 스크롤을 금지하는 메서드입니다.
+   * 
+   * @param {HTMLElement} scrollBanTarget - 스크롤을 금지할 대상 HTMLElement입니다.
+   * 
+   * @description 
+   * - DOMMouseScroll, wheel, mousewheel, touchmove 이벤트에 대해
+   *   __temporaryPreventDefaultEvent 콜백을 통해 스크롤을 막습니다.
+   */
   public static tempScrollBan = (scrollBanTarget: HTMLElement) => {
+    // DOMMouseScroll 이벤트를 감지하고 스크롤을 방지하는 콜백을 추가합니다.
     scrollBanTarget.addEventListener("DOMMouseScroll", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // wheel 이벤트를 감지하고 스크롤을 방지하는 콜백을 추가합니다.
     scrollBanTarget.addEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // mousewheel 이벤트를 감지하고 스크롤을 방지하는 콜백을 추가합니다.
     scrollBanTarget.addEventListener("mousewheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // 터치 이동 이벤트를 감지하고 스크롤을 방지하는 콜백을 추가합니다.
     scrollBanTarget.addEventListener("touchmove", AbstractNode.stacks.__temporaryPreventDefaultEvent);
   }
-  
+
+  /**
+   * 특정 HTMLElement에 대해 적용된 일시적인 스크롤 금지를 해제하는 메서드입니다.
+   * 
+   * @param {HTMLElement} scrollBanTarget - 스크롤 금지를 해제할 대상 HTMLElement입니다.
+   * 
+   * @description 
+   * - DOMMouseScroll, wheel, mousewheel, touchmove 이벤트에 대해
+   *   추가된 __temporaryPreventDefaultEvent 콜백을 제거하여 스크롤을 해제합니다.
+   */
   public static tempScrollRelease = (scrollBanTarget: HTMLElement) => {
+    // DOMMouseScroll 이벤트에 추가된 스크롤 방지 콜백을 제거합니다.
     scrollBanTarget.removeEventListener("DOMMouseScroll", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // wheel 이벤트에 추가된 스크롤 방지 콜백을 제거합니다.
     scrollBanTarget.removeEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // mousewheel 이벤트에 추가된 스크롤 방지 콜백을 제거합니다.
     scrollBanTarget.removeEventListener("mousewheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
+
+    // 터치 이동 이벤트에 추가된 스크롤 방지 콜백을 제거합니다.
     scrollBanTarget.removeEventListener("touchmove", AbstractNode.stacks.__temporaryPreventDefaultEvent);
   }
 
-  public static blackAlert = async (message: string): Promise<any> => {
-    try {
-      const { mediaNumber, mediaString, mediaEa } = AbstractNode;
-      let div_clone: HTMLElement, div_clone2: HTMLElement;
-      let ea: string;
-      let margin: number;
-      let wordWidth: number, width: number;
-      let borderRadius: number;
-      let blackHeight: number;
-      let textSize: number, textTop: number;
-      let boxBottom: number;
-  
-      if (AbstractNode.timeouts["blackAlertLevel0_TimeOut"] !== undefined && AbstractNode.timeouts["blackAlertLevel0_TimeOut"] !== null) {
-        AbstractNode.stacks["blackAlert_blackBox"].style.animation = "fadedowndelay 0.4s ease forwards";
-        await AbstractNode.sleep(401);
-        document.body.removeChild(AbstractNode.stacks["blackAlert_blackBox"]);
-        clearTimeout(AbstractNode.timeouts["blackAlertLevel1_TimeOut"]);
-        clearTimeout(AbstractNode.timeouts["blackAlertLevel0_TimeOut"]);
-        AbstractNode.timeouts["blackAlertLevel1_TimeOut"] = null;
-        AbstractNode.timeouts["blackAlertLevel0_TimeOut"] = null;
-      }
-  
-      ea = mediaEa();
-      margin = mediaNumber(20, 20, 16, 14, 2);
-      borderRadius = mediaNumber(15, 15, 14, 12, 3);
-      blackHeight = mediaNumber(36, 36, 32, 28, 4);
-      textSize = mediaNumber(16, 16, 14, 13, 3.5);
-      textTop = mediaNumber(-1, -1, -1, -1, -0.1);
-      boxBottom = mediaNumber(30, 30, 26, 24, 4);
-  
-      div_clone = AbstractNode.createDom({
-        mother: document.body,
-        style: {
-          position: "fixed",
-          background: AbstractNode.colorExtended.darkBlack,
-          borderRadius: borderRadius,
-          height: blackHeight,
-          bottom: boxBottom,
-          boxShadow: "0px 5px 12px -8px " + AbstractNode.colorExtended.gray4,
-          opacity: 0,
-          width: 2000,
-          transition: "all 0s ease",
-          zIndex: 400,
-        }
-      });
-  
-      div_clone2 = AbstractNode.createDom({
-        mother: div_clone,
-        style: {
-          justifyContent: "center",
-          alignItems: "center",
-          position: "absolute",
-          textAlign: "center",
-          color: AbstractNode.colorExtended.white,
-          height: AbstractNode.withOut(0),
-          fontSize: textSize,
-          fontWeight: 400,
-          top: textTop,
-        }
-      });
-  
-      div_clone2.textContent = message;
-      wordWidth = div_clone2.getBoundingClientRect().width;
-      width = wordWidth + (Number(margin) * 2);
-  
-      div_clone.style.width = String(width) + ea;
-      div_clone.style.left = "calc(50% - " + String(width / 2) + ea + ")";
-      div_clone2.style.width = String(100) + '%';
-      div_clone.style.animation = "fadeupdelay 0.5s ease forwards";
-  
-      AbstractNode.timeouts["blackAlertLevel0_TimeOut"] = setTimeout(function () {
-        div_clone.style.animation = "fadedowndelay 0.4s ease forwards";
-        AbstractNode.timeouts["blackAlertLevel1_TimeOut"] = setTimeout(function () {
-          div_clone.removeChild(div_clone2);
-          document.body.removeChild(div_clone);
-          clearTimeout(AbstractNode.timeouts["blackAlertLevel1_TimeOut"]);
-          AbstractNode.timeouts["blackAlertLevel1_TimeOut"] = null;
-          clearTimeout(AbstractNode.timeouts["blackAlertLevel0_TimeOut"]);
-          AbstractNode.timeouts["blackAlertLevel0_TimeOut"] = null;
-        }, 410);
-      }, 2400);
-  
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
+  /**
+   * 로딩 아이콘을 반환하는 메서드입니다.
+   * 
+   * @param {string} color - 첫 번째 색상, 기본값은 AbstractNode.colorExtended.darkShadow입니다.
+   * @param {string} color2 - 두 번째 색상, 기본값은 AbstractNode.colorExtended.black입니다.
+   * 
+   * @returns {SVGElement} - 생성된 로딩 아이콘의 SVG 요소를 반환합니다.
+   * 
+   * @description 
+   * - 주어진 색상(color, color2)을 사용하여 로딩 아이콘을 SVG 형식으로 생성합니다.
+   * - SvgTong.stringParsing을 통해 SVG를 파싱하여 SVGElement로 변환합니다.
+   * - 변환된 SVG 요소에 "loading" 클래스를 추가하여 스타일을 적용합니다.
+   */
   public static returnLoadingIcon = (color: string = AbstractNode.colorExtended.darkShadow, color2: string = AbstractNode.colorExtended.black): SVGElement => {
+    // SvgTong의 stringParsing을 사용하여 SVG를 파싱한 후 SVGElement로 변환합니다.
     let icon: SVGElement = SvgTong.stringParsing(AbstractNode.svgMaker.returnLoading(color, color2));
+    
+    // 생성된 SVG 요소에 "loading" 클래스를 추가합니다.
     icon.classList.add("loading");
+    
+    // 로딩 아이콘(SVGElement)을 반환합니다.
     return icon;
   }
-  
-  public static generalCss = (fontFamily: string): string => {
-    const styleTag: HTMLStyleElement | null = document.querySelector("style");
-    const css: string = `html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale;-ms-touch-action: manipulation;touch-action: manipulation;}
-    *{margin:0;padding:0;transition:all 0.3s ease;font-family:${fontFamily};-webkit-tap-highlight-color: transparent;}
-    *::-webkit-scrollbar{display:none;}
-    input::placeholder {color: ${AbstractNode.colorExtended.black};opacity:0.6;}
-    textarea::placeholder {color: ${AbstractNode.colorExtended.black};opacity:0.6;}
-    body,div{font-size:0;color:${AbstractNode.colorExtended.black};margin:0;font-family:${fontFamily};}
-    a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
-    textarea{resize:none}
-    b,strong{font-weight:inherit;display:inline;}
-    img{border:0}
-    button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}
-    button,html input[type=button],input[type=submit]{-webkit-appearance:button;cursor:pointer;box-sizing:border-box;white-space: normal}
-    input[type=text],input[type=password],textarea{-webkit-appearance:none;appearance: none;box-sizing:border-box;background-color:${AbstractNode.colorExtended.white}}
-    input{line-height:normal}
-    input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}
-    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
-    input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
-    iframe{border:0;outline:0}
-    p{overflow:hidden;}
-    b{color:${AbstractNode.colorExtended.grayDeactive};}
-    label{cursor:pointer}
-    article,section{margin:0;}
-    #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%;background-color:${AbstractNode.colorExtended.white};}
-    .hiddenobject{display: none;position: absolute; opacity: 0;font-size:0px}
-    .hoverDefault_lite{cursor:pointer;opacity:1}
-    .hoverDefault_lite:hover{opacity:0.75;}
-    .hoverDefault{cursor:pointer;opacity:1}
-    .hoverDefault:hover{opacity:0.5;}
-    .hoverdefault_reverse{opacity: 0;transition:all 0.5s ease;cursor: pointer;}
-    .hoverdefault_reverse:hover{opacity: 0.4;}
-    .hoverdefault_lite_reverse{opacity: 0.7;transition:all 0.5s ease;cursor: pointer;}
-    .hoverdefault_lite_reverse:hover{opacity: 0.95;}
-    .backblurdefault {-webkit-backdrop-filter: blur(10px);backdrop-filter: blur(10px);}
-    .backblurdefault_lite {-webkit-backdrop-filter: blur(5px);backdrop-filter: blur(5px);}
-    .backblurwhite {-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px);background: rgb(255, 255, 255, 0.8);}
-    .backblurwhite_lite {-webkit-backdrop-filter: blur(5px);backdrop-filter: blur(5px);background: rgb(255, 255, 255, 0.82);}
-    .backblurgray {-webkit-backdrop-filter: blur(10px);backdrop-filter: blur(10px);background: rgb(236, 236, 236, 0.9);}
-    .backblurtransparent {-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px);background: rgb(255, 255, 255, 0.3);}
-    .backblurblack {-webkit-backdrop-filter: blur(5px);backdrop-filter: blur(5px);background: linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%);}
-    @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fa{from{opacity:0;}to{opacity:1;}}
-    @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
-    @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
-    @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
-    @keyframes justfadeinnine{from{opacity:0;}to{opacity:0.9;}}
-    @keyframes justfadeoutnine{from{opacity:0.9;}to{opacity:0;}}
-    @keyframes justfadeineight{from{opacity:0;}to{opacity:0.8;}}
-    @keyframes justfadeouteight{from{opacity:0.8;}to{opacity:0;}}
-    @keyframes justfadeinseven{from{opacity:0;}to{opacity:0.7;}}
-    @keyframes justfadeoutseven{from{opacity:0.7;}to{opacity:0;}}
-    @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
-    @keyframes justfadeoutmiddle{from{opacity:0.6;}to{opacity:0;}}
-    @keyframes justfadeinsmall{from{opacity:0;}to{opacity:0.4;}}
-    @keyframes justfadeoutsmall{from{opacity:0.4;}to{opacity:0;}}
-    @keyframes justfadeinmini{from{opacity:0;}to{opacity:0.12;}}
-    @keyframes justfadeoutmini{from{opacity:0.12;}to{opacity:0;}}
-    @keyframes justfadein{from{opacity:0;}to{opacity:0.3;}}
-    @keyframes justfadeout{from{opacity:0.3;}to{opacity:0;}}
-    @keyframes invisible{from{opacity:0;}to{opacity:0;}}
-    @keyframes fadedown{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(20px);}}
-    @keyframes fadeup{from{opacity:0;transform:translateY(20px);}to{opacity:0.95;transform:translateY(0px);}}
-    @keyframes fadeuporiginal{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes justfadeindelay{from,33%{opacity:0;}to{opacity:0.3;}}
-    @keyframes justfadeoutdelay{from,33%{opacity:0.3;}to{opacity:0;}}
-    @keyframes justfadeouttiny{from{opacity:0.3;}to{opacity:0;}}
-    @keyframes fadeupentire{from{transform:translateY(100%);}to{transform:translateY(0%);}}
-    @keyframes fadedownentire{from{transform:translateY(0%);}to{transform:translateY(100%);}}
-    @keyframes fadeinslide{from{opacity:0;transform:translateX(-15px);}to{opacity:1;transform:translateX(0px);}}
-    @keyframes fadeoutslide{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(15px);}}
-    @keyframes fadeinslidereverse{from{opacity:0;transform:translateX(15px);}to{opacity:1;transform:translateX(0px);}}
-    @keyframes fadeoutslidereverse{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-15px);}}
-    @keyframes fadeupdelay{from,30%{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadeupdelaymiddle{from,30%{opacity:0;transform:translateY(10px);}to{opacity:0.4;transform:translateY(0px);}}
-    @keyframes fadeupdelay2{from,30%{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadeuplitereverse{from{opacity:0;transform:translateY(-10px);}to{opacity:0.95;transform:translateY(0px);}}
-    @keyframes fadeuplite{from{opacity:0;transform:translateY(10px);}to{opacity:0.95;transform:translateY(0px);}}
-    @keyframes fadeupnine{from{opacity:0;transform:translateY(5px);}to{opacity:0.91;transform:translateY(0px);}}
-    @keyframes fadeuphard{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadedownlite{from{opacity:0.95;transform:translateY(0px);}to{opacity:0;transform:translateY(10px);}}
-    @keyframes fadeupmini{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadedownmini{from{opacity:0.95;transform:translateY(0px);}to{opacity:0;transform:translateY(5px);}}
-    @keyframes fadeupmiddle{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadedownmiddle{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(10px);}}
-    @keyframes fadeupbacklite{from{opacity:0;transform:translateY(5px);}to{opacity:0.2;transform:translateY(0px);}}
-    @keyframes loginfadeup0{from{opacity:0;}to{opacity:0.1;}}
-    @keyframes loginfadeup1{from{opacity:0;backdrop-filter: blur(0px);}to{opacity:0.6;backdrop-filter: blur(4px);}}
-    @keyframes loginfadedown0{from{opacity:0.1;}to{opacity:0;}}
-    @keyframes loginfadedown1{from{opacity:0.6;backdrop-filter: blur(4px);}to{opacity:0;backdrop-filter: blur(0px);}}
-    @keyframes profilefadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes communicationfadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
-    @keyframes fadedowndelay{from{opacity:1;transform:translateY(0px);}70%,to{opacity:0;transform:translateY(-5px);}}
-    @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
-    @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
-    @keyframes fadeoutlite{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-20px);}}
-    @keyframes fadeoutlite2{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(20px);}}
-    @keyframes fadeinlite{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0px);}}
-    @keyframes fadeinlite2{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0px);}}
-    @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-    @keyframes fadecancel{from{opacity:0}to{opacity:0.2}}
-    @keyframes twinkle {from {opacity: 1;}49% {opacity: 1;}50% {opacity: 0;}99% {opacity: 0;}to {opacity: 1;}}
-    @keyframes focusProgress {from {transform: scale(0deg);opacity: 1;}25% {transform: scale(0.92);opacity: 0.9;}50% {transform: scale(1.08);opacity: 1;}75% {transform: scale(0.92);opacity: 0.9;}to {transform: scale(1);opacity: 1;}}
-    @keyframes blackToBlack {from {background-color: ${AbstractNode.colorExtended.darkBlack};opacity: 1;}25% {background-color: ${AbstractNode.colorExtended.ultimateBlack};opacity: 1;}50% {background-color: ${AbstractNode.colorExtended.darkBlack};opacity: 1;}75% {background-color: ${AbstractNode.colorExtended.ultimateBlack};opacity: 1;}to {background-color: ${AbstractNode.colorExtended.darkBlack};opacity: 1;}}
-    @keyframes garoProgress {from {transform: scaleX(0);}to {transform: scaleX(1);}}
-    @keyframes rotateProgress {from {transform: rotate(0deg);opacity: 1;}25% {transform: rotate(90deg);}50% {transform: rotate(180deg);opacity: 0.92;}75% {transform: rotate(270deg);}to {transform: rotate(360deg);opacity: 1;}}
-    @keyframes rotateProgress2 {from {transform: rotate(0deg);opacity: 1;}25% {transform: rotate(90deg);}50% {transform: rotate(180deg);opacity: 0.8;}75% {transform: rotate(270deg);}to {transform: rotate(360deg);opacity: 1;}}
-    @keyframes opacityProgress {from {opacity: 1;}50% {opacity: 0.85;}to {opacity: 1;}}
-    .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
-    .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
-    .justfadein{animation:justfadein 0.3s ease forwards;}
-    .justfadeout{animation:justfadeout 0.3s ease forwards;}
-    .fadeout{animation:fadeout 0.3s ease forwards;}
-    .fadein{animation:fadein 0.3s ease forwards;}
-    .fadedown{animation:fadedown 0.3s ease forwards;}
-    .fadeup{animation:fadeup 0.3s ease forwards;}
-    .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear infinite;mix-blend-mode: multiply}`;
-    if (styleTag !== null) {
-      styleTag.insertAdjacentHTML(`beforeend`, css);
-    } else {
-      const styleDummy: HTMLStyleElement = window.document.createElement("STYLE") as HTMLStyleElement;
-      window.document.head.appendChild(styleDummy);
-      styleDummy.insertAdjacentHTML(`beforeend`, css);
-    }
-    return css;
-  }
-  
+
+  /**
+   * 로딩 아이콘을 화면에 추가하고 스타일을 적용하는 비동기 메서드입니다.
+   * 
+   * @returns {Promise<SVGElement>} - 로딩 아이콘의 SVG 요소를 Promise로 반환합니다.
+   * 
+   * @description 
+   * - 로딩 아이콘을 화면 중앙에 고정된 위치로 배치합니다.
+   * - px 단위를 사용하여 너비와 높이를 지정하고, 스타일을 적용한 후 body에 추가합니다.
+   */
   public static loadingRun = (): Promise<SVGElement> => {
     let loading: SVGElement;
     let style: Dictionary;
     let ea: string;
     let width: number, height: number;
-  
+
+    // CSS에서 사용할 단위는 px로 설정합니다.
     ea = "px";
+
+    // 로딩 아이콘을 가져옵니다.
     loading = AbstractNode.returnLoadingIcon();
+
+    // 로딩 아이콘의 너비와 높이를 50px로 설정합니다.
     width = 50;
     height = 50;
+
+    // 아이콘의 위치를 화면 중앙에 배치하기 위한 스타일 설정입니다.
     style = {
-      position: "fixed",
-      width: String(width) + ea,
-      height: String(height) + ea,
-      top: "calc(calc(100vh - " + String(0) + ea + ") / 2 - " + String(Number(width) / 2) + ea + ")",
-      left: "calc(50vw - " + String(Number(height) / 2) + ea + ")",
+      position: "fixed", // 화면에 고정된 위치로 설정합니다.
+      width: String(width) + ea, // 너비를 설정합니다.
+      height: String(height) + ea, // 높이를 설정합니다.
+      top: "calc(calc(100vh - " + String(0) + ea + ") / 2 - " + String(Number(width) / 2) + ea + ")", // 세로 중앙에 배치
+      left: "calc(50vw - " + String(Number(height) / 2) + ea + ")", // 가로 중앙에 배치
     };
+
+    // 설정한 스타일을 로딩 아이콘에 적용합니다.
     for (let i in style) {
       Object.defineProperty(loading.style, i, {
-        value: style[i],
-        writable: true,
-      })
+        value: style[i], // 스타일 값 설정
+        writable: true, // 값이 수정 가능하도록 설정
+      });
     }
-  
+
+    // 로딩 아이콘을 문서의 body에 추가하여 화면에 표시합니다.
     document.body.appendChild(loading);
-  
+
+    // 로딩 아이콘의 SVGElement를 Promise로 반환합니다.
     return new Promise((resolve, reject) => {
-      resolve(loading);
+      resolve(loading); // 성공 시 로딩 아이콘을 반환
     });
   }
   
+  /**
+   * 회색 배경의 로딩 화면을 생성하는 메서드입니다.
+   * 
+   * @param {HTMLElement | null} mother - 로딩 화면이 삽입될 부모 요소, 기본값은 document.body입니다.
+   * @param {boolean} whiteMode - 배경이 투명할지 여부를 설정합니다. 기본값은 false이며, 배경이 검은색입니다.
+   * 
+   * @returns {GrayLoading} - 생성된 로딩 화면과 취소 버튼을 포함한 GrayLoading 객체를 반환합니다.
+   * 
+   * @description
+   * - 이 메서드는 회색 배경과 로딩 아이콘을 화면에 표시하는 데 사용됩니다.
+   * - 로딩 화면이 삽입될 부모 요소(mother)가 지정되지 않으면 기본적으로 `document.body`에 삽입됩니다.
+   * - `whiteMode`가 true이면 배경이 투명, false이면 검은색이 됩니다.
+   */
   public static grayLoading = (mother: HTMLElement | null = null, whiteMode: boolean = false) => {
+    // 필요한 AbstractNode 메서드 및 상수를 구조 분해 할당으로 가져옵니다.
     const { createNode, colorExtended, withOut, mediaNumber, mediaEa, createDom } = AbstractNode;
+    
     let width: number, ea: string;
     let cancel: HTMLElement, loading: HTMLElement;
-  
+    
+    // CSS 단위로 사용할 값은 'px'입니다.
     ea = "px";
+    
+    // 로딩 아이콘의 너비를 설정하는데, 각 미디어 환경에서 동일한 값을 반환하도록 설정합니다.
     width = mediaNumber(50, 50, 50, 50, 50);
-  
-    class GrayLoading {
-      public cancel;
-      public loading;
 
-      constructor (cancel: any, loading: any) {
+    /**
+     * GrayLoading 클래스
+     * 
+     * - 로딩화면과 취소 버튼을 포함하며, 이들을 제거하는 메서드도 포함된 객체입니다.
+     */
+    class GrayLoading {
+      public cancel;  // 취소 버튼을 저장하는 속성
+      public loading; // 로딩 화면을 저장하는 속성
+
+      /**
+       * 생성자
+       * @param cancel - 취소 버튼 요소
+       * @param loading - 로딩 화면 요소
+       */
+      constructor(cancel: any, loading: any) {
         this.cancel = cancel;
         this.loading = loading;
       }
+
+      /**
+       * 로딩 화면과 취소 버튼을 제거하는 메서드입니다.
+       * @description 부모 요소에서 로딩과 취소 버튼을 제거합니다.
+       */
       remove = () => {
-        this.loading.parentElement.removeChild(this.loading);
-        this.cancel.parentElement.removeChild(this.cancel);
+        this.loading.parentElement.removeChild(this.loading); // 로딩 요소 제거
+        this.cancel.parentElement.removeChild(this.cancel);   // 취소 버튼 요소 제거
       }
     }
-  
+
+    // mother가 null이거나 undefined면 document.body를 기본값으로 설정합니다.
     if (mother === null || mother === undefined) {
       mother = document.body;
     }
-  
+
+    // 취소 버튼 요소 생성 및 스타일 설정
     cancel = createDom({
       mother,
       style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: !whiteMode ? colorExtended.black : "transparent",
-        zIndex: String(300),
-        opacity: String(0.3),
+        position: "fixed",         // 화면에 고정
+        top: String(0),            // 상단 고정
+        left: String(0),           // 좌측 고정
+        width: String(100) + '%',  // 화면 가로 크기 100%
+        height: String(100) + '%', // 화면 세로 크기 100%
+        background: !whiteMode ? colorExtended.black : "transparent", // 배경 색상 설정 (투명 또는 검은색)
+        zIndex: String(300),       // z-index 설정으로 다른 요소 위에 표시
+        opacity: String(0.3),      // 불투명도 설정
       }
     });
-  
+
+    // 로딩 아이콘 요소 생성 및 스타일 설정
     loading = createDom({
       mother,
-      mode: "svg",
-      source: AbstractNode.svgMaker.returnLoading(),
-      class: [ "loading" ],
+      mode: "svg",                 // SVG 요소로 생성
+      source: AbstractNode.svgMaker.returnLoading(), // 로딩 아이콘 가져오기
+      class: [ "loading" ],        // 'loading' 클래스 추가
       style: {
-        position: "fixed",
-        top: withOut(50, Number(width) / 2, ea),
-        left: withOut(50, Number(width) / 2, ea),
-        width: String(width) + ea,
-        height: String(width) + ea,
-        zIndex: 300,
+        position: "fixed",          // 화면에 고정
+        top: withOut(50, Number(width) / 2, ea), // 화면 세로 중앙에 배치
+        left: withOut(50, Number(width) / 2, ea), // 화면 가로 중앙에 배치
+        width: String(width) + ea,  // 아이콘의 너비 설정
+        height: String(width) + ea, // 아이콘의 높이 설정
+        zIndex: 300,                // z-index 설정
       }
     });
-  
+
+    // 생성된 GrayLoading 객체 반환 (취소 버튼과 로딩 아이콘 포함)
     return (new GrayLoading(cancel, loading));
   }
   
+  /**
+   * 하얀 배경과 진행 상황을 보여주는 로딩 화면을 생성하는 메서드입니다.
+   *
+   * @param {HTMLElement | null} mother - 로딩 화면이 삽입될 부모 요소. 기본값은 document.body입니다.
+   * @param {boolean} emptyProgress - 진행 상황 텍스트를 숨길지 여부를 결정하는 플래그입니다. 기본값은 false입니다.
+   * @param {boolean} transparentBackground - 배경을 투명하게 할지 여부를 결정하는 플래그입니다. 기본값은 false입니다.
+   *
+   * @returns {WhiteLoading} - 생성된 로딩 화면, 취소 버튼, 진행 상황 상자를 포함한 WhiteLoading 객체를 반환합니다.
+   * 
+   * @description
+   * - 이 메서드는 하얀 배경 또는 투명 배경과 함께 로딩 아이콘 및 진행 상황을 화면에 표시하는 데 사용됩니다.
+   * - 로딩 화면이 삽입될 부모 요소(mother)가 지정되지 않으면 기본적으로 `document.body`에 삽입됩니다.
+   * - `emptyProgress` 플래그가 true이면 진행 상황 텍스트가 숨겨집니다.
+   * - `transparentBackground` 플래그가 true이면 배경이 투명해집니다.
+   */
   public static whiteProgressLoading = (mother: HTMLElement | null = null, emptyProgress: boolean = false, transparentBackground: boolean = false) => {
+    // 필요한 AbstractNode 메서드 및 상수를 구조 분해 할당으로 가져옵니다.
     const { createNode, colorExtended, withOut, mediaNumber, mediaEa, createDom } = AbstractNode;
+
     let width: number;
     let ea: string;
     let cancel: HTMLElement, loading: HTMLElement, progressBox: HTMLElement;
@@ -6205,301 +6327,454 @@ class AbstractNode {
     let progressWeight: number;
     let progressHeight: number;
     let progressPadding: number;
-  
+
+    // z-index 설정, 로딩 화면과 관련된 요소가 최상단에 표시되도록 설정합니다.
     zIndex = 300;
-  
+
+    // 미디어 환경에 맞는 단위 설정 ('px', 'em' 등)
     ea = mediaEa();
+    
+    // 각종 크기와 패딩, 폰트 크기 및 무게 등을 미디어에 맞춰 동적으로 계산합니다.
     width = mediaNumber(50, 50, 48, 40, 10);
     progressWidth = mediaNumber(200, 200, 200, 200, 20);
     progressHeight = mediaNumber(40, 40, 36, 32, 4);
     progressSize = mediaNumber(17, 17, 17, 15, 3.5);
     progressWeight = mediaNumber(400, 400, 400, 400, 400);
     progressPadding = mediaNumber(20, 20, 20, 17, 3.9);
-  
-    class WhiteLoading {
-      public cancel;
-      public loading;
-      public progress;
 
-      constructor (cancel: any, loading: any, progress: any) {
+    /**
+     * WhiteLoading 클래스
+     * 
+     * - 로딩화면과 취소 버튼, 진행 상황 상자를 포함한 객체입니다.
+     * - 로딩 화면과 관련된 요소들을 제거하는 메서드가 포함되어 있습니다.
+     */
+    class WhiteLoading {
+      public cancel;  // 취소 버튼을 저장하는 속성
+      public loading; // 로딩 화면을 저장하는 속성
+      public progress; // 진행 상황 상자를 저장하는 속성
+
+      /**
+       * 생성자
+       * @param cancel - 취소 버튼 요소
+       * @param loading - 로딩 화면 요소
+       * @param progress - 진행 상황 상자 요소
+       */
+      constructor(cancel: any, loading: any, progress: any) {
         this.cancel = cancel;
         this.loading = loading;
         this.progress = progress;
       }
 
+      /**
+       * 로딩 화면, 취소 버튼, 진행 상황 상자를 제거하는 메서드입니다.
+       * @description 부모 요소에서 이들 요소를 제거합니다.
+       */
       remove = () => {
-        this.loading.parentElement.removeChild(this.loading);
-        this.cancel.parentElement.removeChild(this.cancel);
-        this.progress.parentElement.removeChild(this.progress);
+        this.loading.parentElement.removeChild(this.loading);  // 로딩 화면 제거
+        this.cancel.parentElement.removeChild(this.cancel);    // 취소 버튼 제거
+        this.progress.parentElement.removeChild(this.progress); // 진행 상황 상자 제거
       }
     }
-  
+
+    // mother가 null이거나 undefined면 document.body를 기본값으로 설정합니다.
     if (mother === null || mother === undefined) {
       mother = document.body;
     }
-  
+
+    // 취소 버튼 요소 생성 및 스타일 설정
     cancel = createDom({
       mother,
       style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: transparentBackground ? "transparent" : colorExtended.white,
-        zIndex: zIndex,
-        opacity: 0.7,
+        position: "fixed",                      // 화면에 고정
+        top: String(0),                         // 상단 고정
+        left: String(0),                        // 좌측 고정
+        width: String(100) + '%',               // 화면 가로 크기 100%
+        height: String(100) + '%',              // 화면 세로 크기 100%
+        background: transparentBackground ? "transparent" : colorExtended.white, // 배경 색상 설정 (투명 또는 흰색)
+        zIndex: zIndex,                         // z-index 설정으로 다른 요소 위에 표시
+        opacity: 0.7,                           // 불투명도 설정
       }
     });
-  
+
+    // 로딩 아이콘 요소 생성 및 스타일 설정
     loading = createDom({
       mother,
-      mode: "svg",
-      source: AbstractNode.svgMaker.returnLoading(),
-      class: [ "loading" ],
+      mode: "svg",                          // SVG 요소로 생성
+      source: AbstractNode.svgMaker.returnLoading(),  // 로딩 아이콘 가져오기
+      class: [ "loading" ],                 // 'loading' 클래스 추가
       style: {
-        position: "fixed",
-        top: withOut(50, (Number(width) / 2) + Number(progressPadding)),
-        left: withOut(50, Number(width) / 2),
-        width: width,
-        height: width,
-        zIndex: zIndex,
+        position: "fixed",                  // 화면에 고정
+        top: withOut(50, (Number(width) / 2) + Number(progressPadding)), // 화면 세로 중앙에 배치
+        left: withOut(50, Number(width) / 2), // 화면 가로 중앙에 배치
+        width: width,                       // 아이콘의 너비 설정
+        height: width,                      // 아이콘의 높이 설정
+        zIndex: zIndex,                     // z-index 설정
       }
     });
-  
+
+    // 진행 상황 상자 요소 생성 및 스타일 설정
     progressBox = createDom({
       mother,
       style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "fixed",
-        height: progressHeight,
-        width: progressWidth,
-        top: withOut(50, (Number(progressHeight) / 2) - Number(progressPadding)),
-        left: withOut(50, Number(progressWidth) / 2),
-        zIndex: zIndex,
+        display: "flex",                    // 플렉스 박스로 정렬
+        justifyContent: "center",           // 가로 방향 중앙 정렬
+        alignItems: "center",               // 세로 방향 중앙 정렬
+        position: "fixed",                  // 화면에 고정
+        height: progressHeight,             // 진행 상자의 높이 설정
+        width: progressWidth,               // 진행 상자의 너비 설정
+        top: withOut(50, (Number(progressHeight) / 2) - Number(progressPadding)), // 세로 방향 배치
+        left: withOut(50, Number(progressWidth) / 2), // 가로 방향 배치
+        zIndex: zIndex,                     // z-index 설정
       },
       child: {
-        text: "0%",
+        text: "0%",                         // 초기 텍스트는 "0%"로 설정
         style: {
-          display: emptyProgress ? "none" : "inline-block",
-          position: "relative",
-          fontSize: progressSize,
-          fontWeight: progressWeight,
-          fontFamily: "bergen",
-          color: colorExtended.black,
+          display: emptyProgress ? "none" : "inline-block",  // emptyProgress가 true면 텍스트 숨기기
+          position: "relative",             // 상대적 위치 설정
+          fontSize: progressSize,           // 폰트 크기 설정
+          fontWeight: progressWeight,       // 폰트 굵기 설정
+          fontFamily: "bergen",             // 폰트 패밀리 설정
+          color: colorExtended.black,       // 텍스트 색상 설정 (검정색)
         }
       }
-    })
-  
+    });
+
+    // 생성된 WhiteLoading 객체 반환 (취소 버튼, 로딩 아이콘, 진행 상황 상자 포함)
     return (new WhiteLoading(cancel, loading, progressBox));
   }
   
+  /**
+   * 데이터를 일정한 간격으로 서버에 요청하는 폴링(polling)을 설정하는 메서드입니다.
+   *
+   * @param {Dictionary} data - 서버로 전송할 데이터 객체입니다.
+   * @param {string} url - 요청할 서버의 URL입니다.
+   * @param {number} interval - 요청을 반복할 간격(ms)입니다.
+   * @param {(response: any) => any} callback - 서버로부터 받은 응답을 처리하는 콜백 함수입니다.
+   * 
+   * @description
+   * - 이 메서드는 웹 워커를 생성하여 백그라운드에서 일정 시간마다 서버에 데이터를 요청하고, 응답을 받아 처리합니다.
+   * - 워커는 일정한 간격으로 서버에 AJAX 요청을 보내며, 받은 응답을 콜백 함수에 전달합니다.
+   * - AJAX 요청은 `ajaxJson` 함수로 처리되며, 콜백 함수는 응답 데이터를 받아 추가적인 처리를 할 수 있습니다.
+   */
   public static setPolling = (data: Dictionary, url: string, interval: number, callback: (response: any) => any) => {
-    let worker: Worker;
-    let workerJsString: string;
-    let blob: Blob;
-    let blobUrl: string;
+    let worker: Worker;  // Web Worker 객체를 저장할 변수입니다.
+    let workerJsString: string;  // Web Worker에 사용할 JavaScript 코드를 문자열로 저장할 변수입니다.
+    let blob: Blob;  // JavaScript 코드로 Blob 객체를 생성하여 워커에 전달합니다.
+    let blobUrl: string;  // Blob URL을 저장하여 Worker 객체를 생성할 때 사용합니다.
 
+    // 네트워크 관련 설정 문자열을 반환하는 AbstractNode의 메서드 호출
     workerJsString = AbstractNode.networkSetString();
+
+    // 워커 코드의 시작 부분을 네트워크 설정 문자열 뒤에 추가합니다.
     workerJsString += "\n\n";
     workerJsString += String(`
-    const thisHost = "${window.location.protocol + "//" + window.location.host}";
+    const thisHost = "${window.location.protocol + "//" + window.location.host}"; // 현재 호스트 주소를 저장
     const main = async function () {
       try {
-        onmessage = async function (e) {
+        onmessage = async function (e) { // 메인 메시지 리스너
           try {
             if (e.data.data === undefined || e.data.url === undefined || e.data.interval === undefined) {
-              throw new Error("invalid post message");
+              throw new Error("invalid post message"); // 데이터가 누락되었을 경우 에러 처리
             }
-            const { data, url, interval } = equalJson(JSON.stringify(e.data));
-            let finalUrl;
-            let response;
+            // 전달받은 데이터를 JSON으로 변환하여 저장
+            const { data, url, interval } = equalJson(JSON.stringify(e.data)); 
+            let finalUrl;  // 요청할 최종 URL
+            let response;  // 서버 응답 데이터를 저장할 변수
 
+            // URL이 '/'로 시작하면 현재 호스트 주소를 기준으로 절대 경로로 설정
             if (/^\\//.test(url)) {
               finalUrl = thisHost + url;
             } else {
               finalUrl = url;
             }
 
+            // 일정한 간격으로 서버에 데이터를 요청하는 setInterval 설정
             setInterval(async () => {
               try {
-                response = await ajaxJson(data, finalUrl);
-                postMessage(JSON.stringify({ response }));
+                response = await ajaxJson(data, finalUrl); // ajaxJson을 통해 데이터 요청
+                postMessage(JSON.stringify({ response })); // 응답을 메인 스레드로 전송
               } catch (e) {
-                console.log(e);
+                console.log(e); // 에러 처리
               }
             }, Number(interval));
-            response = await ajaxJson(data, finalUrl);
-            postMessage(JSON.stringify({ response }));
+            response = await ajaxJson(data, finalUrl); // 초기 데이터 요청
+            postMessage(JSON.stringify({ response })); // 응답을 메인 스레드로 전송
 
           } catch (e) {
-            console.log(e);
+            console.log(e); // 에러 처리
           }
         }
       } catch (e) {
-        console.log(e);
+        console.log(e); // 에러 처리
       }
     }
-    main().catch((err) => { console.log(err); });
+    main().catch((err) => { console.log(err); }); // main 함수 실행
     `).split("\n").map((s) => { return s.trim() }).join("\n");
 
+    // JavaScript 코드를 Blob 객체로 생성합니다.
     blob = new Blob([ workerJsString ], { type: "application/javascript" });
+
+    // Blob URL을 생성하여 Web Worker에 전달합니다.
     blobUrl = window.URL.createObjectURL(blob);
 
+    // Web Worker 생성 및 Blob URL을 사용하여 워커를 초기화합니다.
     worker = new Worker(blobUrl);
+
+    // 워커로부터 메시지를 받았을 때의 이벤트 리스너 설정
     worker.addEventListener("message", async (e) => {
       try {
+        // 받은 데이터를 JSON으로 변환하여 처리
         const { response } = AbstractNode.equalJson(e.data) as Dictionary;
-        await callback(response);
+        await callback(response); // 콜백 함수에 응답 데이터를 전달
       } catch (e) {
-        console.log(e);
+        console.log(e); // 에러 처리
       }
     });
+
+    // 워커에서 에러가 발생했을 때의 이벤트 리스너 설정
     worker.addEventListener("error", (e) => {
-      console.log(e);
-    })
+      console.log(e); // 에러 로그 출력
+    });
+
+    // 워커에 메시지를 전달하여 데이터, URL, 간격을 설정합니다.
     worker.postMessage({ data, url, interval });
   }
   
+  /**
+   * 서버로부터의 SSE(EventSource) 이벤트를 백그라운드에서 처리하는 메서드입니다.
+   *
+   * @param {string} url - SSE 요청을 보낼 서버의 URL입니다.
+   * @param {(response: any) => any} callback - 서버로부터 받은 응답을 처리하는 콜백 함수입니다.
+   * 
+   * @description
+   * - 이 메서드는 웹 워커(Web Worker)를 사용하여 백그라운드에서 서버로부터 이벤트 스트림을 지속적으로 수신합니다.
+   * - SSE(EventSource)는 서버에서 지속적으로 데이터를 전송할 수 있는 기술로, 이 데이터를 Web Worker를 통해 받아 처리합니다.
+   * - 받은 데이터를 메인 스레드로 전달하고, 콜백 함수에서 그 데이터를 처리하게 됩니다.
+   */
   public static backgroundSse = (url: string, callback: (response: any) => any) => {
-    let worker: Worker;
-    let workerJsString: string;
-    let blob: Blob;
-    let blobUrl: string;
+    let worker: Worker;  // Web Worker 객체를 저장할 변수입니다.
+    let workerJsString: string;  // Web Worker에 사용할 JavaScript 코드를 문자열로 저장할 변수입니다.
+    let blob: Blob;  // JavaScript 코드로 Blob 객체를 생성하여 워커에 전달합니다.
+    let blobUrl: string;  // Blob URL을 저장하여 Worker 객체를 생성할 때 사용합니다.
 
+    // 네트워크 관련 설정 문자열을 반환하는 AbstractNode의 메서드 호출
     workerJsString = AbstractNode.networkSetString();
+
+    // 워커 코드의 시작 부분을 네트워크 설정 문자열 뒤에 추가합니다.
     workerJsString += "\n\n";
     workerJsString += String(`
-    const thisHost = "${window.location.protocol + "//" + window.location.host}";
+    const thisHost = "${window.location.protocol + "//" + window.location.host}"; // 현재 호스트 주소를 저장
     const main = async function () {
       try {
-        onmessage = async function (e) {
+        onmessage = async function (e) { // 메시지 수신 리스너
           try {
+            // 메시지로 받은 URL이 없으면 에러 처리
             if (e.data.url === undefined) {
               throw new Error("invalid post message");
             }
-            const { url } = e.data;
-            let finalUrl;
+            const { url } = e.data;  // 전달받은 데이터에서 URL 추출
+            let finalUrl;  // 최종 요청할 URL을 저장할 변수
 
+            // URL이 '/'로 시작하면 현재 호스트 주소를 기준으로 절대 경로로 설정
             if (/^\\//.test(url)) {
               finalUrl = thisHost + url;
             } else {
               finalUrl = url;
             }
 
-            const sseSrouce = new EventSource(finalUrl);
-            sseSrouce.addEventListener("message", (e) => {
+            // EventSource 객체를 사용하여 서버에서 스트리밍 데이터를 받기 시작
+            const sseSource = new EventSource(finalUrl);
+            // 서버로부터 메시지를 수신하면 해당 데이터를 메인 스레드로 전달
+            sseSource.addEventListener("message", (e) => {
               postMessage(e.data);
             });
-            sseSrouce.addEventListener("error", (e) => {
+            // SSE 연결에서 에러가 발생하면 콘솔에 출력
+            sseSource.addEventListener("error", (e) => {
               console.log(e);
             });
             
           } catch (e) {
-            console.log(e);
+            console.log(e); // 에러 처리
           }
         }
       } catch (e) {
-        console.log(e);
+        console.log(e); // 에러 처리
       }
     }
-    main().catch((err) => { console.log(err); });
+    main().catch((err) => { console.log(err); }); // main 함수 실행
     `).split("\n").map((s) => { return s.trim() }).join("\n");
 
+    // JavaScript 코드를 Blob 객체로 생성합니다.
     blob = new Blob([ workerJsString ], { type: "application/javascript" });
+
+    // Blob URL을 생성하여 Web Worker에 전달합니다.
     blobUrl = window.URL.createObjectURL(blob);
 
+    // Web Worker 생성 및 Blob URL을 사용하여 워커를 초기화합니다.
     worker = new Worker(blobUrl);
+
+    // 워커로부터 메시지를 받았을 때의 이벤트 리스너 설정
     worker.addEventListener("message", async (e) => {
       try {
+        // 받은 데이터를 JSON으로 변환하여 처리
         const response = AbstractNode.equalJson(e.data);
-        await callback(response);
+        await callback(response); // 콜백 함수에 응답 데이터를 전달
       } catch (e) {
-        console.log(e);
+        console.log(e); // 에러 처리
       }
     });
+
+    // 워커에서 에러가 발생했을 때의 이벤트 리스너 설정
     worker.addEventListener("error", (e) => {
-      console.log(e);
-    })
+      console.log(e); // 에러 로그 출력
+    });
+
+    // 워커에 메시지를 전달하여 URL을 설정합니다.
     worker.postMessage({ url });
   }
   
+  /**
+   * 서버로 GET 요청을 보내고, 콜백 함수로 응답을 처리하는 메서드입니다.
+   *
+   * @param {string} url - 데이터를 요청할 서버의 URL입니다.
+   * @param {(response: any) => any} callback - 서버로부터의 응답을 처리할 콜백 함수입니다.
+   * 
+   * @description
+   * - 이 메서드는 `XMLHttpRequest` 객체를 사용하여 비동기적으로 서버에 GET 요청을 보내고 응답을 처리합니다.
+   * - 요청이 성공하면 콜백 함수에 응답 데이터를 전달하고, 특정 오류 발생 시 사용자에게 경고를 표시한 후 페이지를 새로고침합니다.
+   */
   public static request = (url: string, callback: (response: any) => any) => {
+    // 새로운 XMLHttpRequest 객체 생성
     const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+    // 서버로 보낼 GET 요청을 초기화
     xhr.open("GET", url);
+
+    // 요청에 대한 응답을 처리하는 함수
     xhr.onload = function () {
+      // readyState가 4가 아닌 경우, 요청이 완료되지 않았으므로 중단
       if (xhr.readyState !== 4) { return; }
+
+      // HTTP 상태 코드가 200번대인 경우(성공적인 요청)
       if (xhr.status >= 200 && xhr.status < 300) {
-        let response = xhr.response;
+        let response = xhr.response;  // 서버에서 받은 응답 데이터를 저장
+
+        // 응답 내용에 "Exception occur" 문자열이 포함되지 않았는지 확인
         if (!/Exception occur/g.test(response)) {
+          // 콜백 함수를 호출하여 응답 데이터를 처리
           callback(response);
         } else {
+          // 예외 발생 시 경고 메시지 출력 후 페이지 새로고침
           alert("오류가 발생하였습니다. 다시 시도해주세요!");
           window.location.reload();
         }
-      } else if (xhr.status >= 500) {
+      } else if (xhr.status >= 500) {  // 서버 오류인 경우
         alert("오류가 발생하였습니다. 다시 시도해주세요!");
         window.location.reload();
-      } else if (xhr.status >= 402 && xhr.status <= 420) {
+      } else if (xhr.status >= 402 && xhr.status <= 420) {  // 클라이언트 오류인 경우
         alert("오류가 발생하였습니다. 다시 시도해주세요!");
         window.location.reload();
-      } else if(xhr.status === 400 || xhr.status === 401) {
+      } else if (xhr.status === 400 || xhr.status === 401) {  // 인증 또는 권한 문제
         alert("오류가 발생하였습니다. 다시 시도해주세요!");
         window.location.reload();
       }
     }
+
+    // 요청 처리 중 오류가 발생한 경우 처리
     xhr.onerror = function () {
       alert("오류가 발생하였습니다. 다시 시도해주세요!");
       window.location.reload();
     }
+
+    // 서버로 GET 요청을 보냄
     xhr.send();
   }
 
-  public static scrollTo = (from: HTMLElement | Window, valueOrTo: HTMLElement | number, visualSpecific: number = 0, noSmoothMode: boolean = false, callback: () => Promise<any> = async () => {}) => {
+  /**
+   * 특정 요소 또는 윈도우 객체를 기준으로 스크롤을 이동시키는 메서드입니다.
+   *
+   * @param {HTMLElement | Window} from - 스크롤을 시작하는 기준 요소입니다. HTML 요소나 Window 객체일 수 있습니다.
+   * @param {HTMLElement | number} valueOrTo - 스크롤하려는 목표 위치입니다. 숫자나 요소로 전달될 수 있습니다.
+   * @param {number} [visualSpecific=0] - 스크롤 시 상단에서 조정할 픽셀 수입니다.
+   * @param {boolean} [noSmoothMode=false] - true로 설정하면 부드러운 스크롤 효과 없이 바로 이동합니다.
+   * @param {() => Promise<any>} [callback=async () => {}] - 스크롤 완료 후 실행될 콜백 함수입니다.
+   * 
+   * @description
+   * 이 메서드는 지정된 위치로 스크롤을 이동시킵니다. 대상이 `HTMLElement`인 경우와 `Window`인 경우에 따라 다른 방식으로 처리되며,
+   * `noSmoothMode`를 통해 부드러운 스크롤을 비활성화할 수 있습니다. 스크롤이 완료되면 콜백 함수가 호출됩니다.
+   */
+  public static scrollTo = (
+    from: HTMLElement | Window, 
+    valueOrTo: HTMLElement | number, 
+    visualSpecific: number = 0, 
+    noSmoothMode: boolean = false, 
+    callback: () => Promise<any> = async () => {}
+  ) => {
 
+    // 스크롤 기준이 HTML 요소일 경우 처리
     if (from instanceof HTMLElement) {
+      // 목표 위치가 숫자가 아닌 경우 처리
       if (typeof valueOrTo !== "number") {
         if (typeof valueOrTo === "object") {
+          // valueOrTo가 객체일 경우 해당 요소의 상대적 위치를 계산하여 스크롤 이동
           let thisValueNumber: number;
           thisValueNumber = from.scrollTop + valueOrTo.getBoundingClientRect().top;
-          from.scrollTop = thisValueNumber - visualSpecific;
+          from.scrollTop = thisValueNumber - visualSpecific;  // 시각적 조정 값을 뺀 후 스크롤 위치 설정
         } else {
           throw new Error("invaild input");
         }
       } else {
+        // 목표 위치가 숫자인 경우 지정된 위치로 스크롤 이동
         from.scrollTop = valueOrTo - visualSpecific;
       }
     } else {
+      // 스크롤 기준이 Window 객체일 경우 처리
       if (typeof valueOrTo === "number") {
         if (!noSmoothMode) {
+          // 부드러운 스크롤 모드
           window.scroll({ top: valueOrTo - visualSpecific, left: 0, behavior: "smooth" });
         } else {
+          // 즉시 스크롤 모드
           window.scroll({ top: valueOrTo - visualSpecific, left: 0 });
         }
       } else {
         if (!noSmoothMode) {
-          window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0, behavior: "smooth" });
+          // 목표가 요소인 경우 그 위치를 계산하여 부드럽게 스크롤
+          window.scroll({
+            top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific,
+            left: 0,
+            behavior: "smooth"
+          });
         } else {
-          window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0 });
+          // 목표가 요소인 경우 그 위치를 계산하여 즉시 스크롤
+          window.scroll({
+            top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific,
+            left: 0
+          });
         }
       }
     }
-  
+
+    // 스크롤이 최상단으로 이동하고 부드러운 모드일 때 추가 처리
     if (from === window && valueOrTo === 0 && !noSmoothMode) {
       const tempEventName: string = "__tempScrollYOberserEventFromScrollTo__";
       const tempTimeoutScrollToName: string = "__tempTimeoutScrollToNameScrollTo__";
       const tempTimeoutScrollCallBack: string = "__tempTimeoutScrollCallBack__";
-      const delta: number = 800;
-      const scrollDelta: number = 8;
+      const delta: number = 800;  // 스크롤 완료 후 콜백 실행 대기 시간
+      const scrollDelta: number = 8;  // 스크롤 감지 간격
+
+      // 이전에 설정된 타임아웃이 있으면 초기화
       if (AbstractNode.stacks[tempTimeoutScrollToName] !== undefined) {
         clearTimeout(AbstractNode.stacks[tempTimeoutScrollToName]);
       }
+      // 이전에 설정된 스크롤 이벤트 리스너 제거
       if (AbstractNode.stacks[tempEventName] !== undefined) {
         window.removeEventListener("scroll", AbstractNode.stacks[tempEventName]);
       }
+
       AbstractNode.stacks[tempTimeoutScrollCallBack] = 0;
+
+      // 스크롤이 0이 아니면 스크롤을 0으로 이동하고 콜백 실행
       if (Math.floor(window.scrollY) !== 0) {
         AbstractNode.stacks[tempTimeoutScrollToName] = setTimeout(async () => {
           window.scroll({ top: 0, left: 0, behavior: "smooth" });
@@ -6510,6 +6785,7 @@ class AbstractNode {
           window.removeEventListener("scroll", AbstractNode.stacks[tempEventName]);
         }, delta);
       } else {
+        // 이미 스크롤이 0일 경우 콜백 실행
         if (AbstractNode.stacks[tempTimeoutScrollCallBack] === 0) {
           callback().catch((err) => { console.log(err) });
         }
@@ -6518,60 +6794,154 @@ class AbstractNode {
     }
   }
 
+  /**
+   * 큐 방식으로 함수를 실행하는 메서드입니다. 일정 시간이 지나면 콜백 함수가 실행됩니다.
+   * 
+   * @param {() => any} callback - 실행할 함수입니다.
+   * @param {number} [delay=0] - 함수 실행 전 대기 시간(ms)입니다.
+   * 
+   * @throws {Error} - 콜백 함수가 아닌 값이 전달되었을 때 오류를 발생시킵니다.
+   * 
+   * @description
+   * 이 메서드는 큐 방식으로 특정 시간 후 콜백 함수를 실행합니다. 'setTimeout'을 사용하여 지연된 실행을 구현하며, 지정된 시간이 지난 후 
+   * 콜백이 호출되고 타임아웃이 제거됩니다.
+   */
   public static setQueue = (callback: () => any, delay?: number) => {
+    // 콜백 함수가 아닌 경우 오류 발생
     if (typeof callback !== "function") {
-      throw new Error("invaild input");
+      throw new Error("invalid input");
     }
+    
+    // delay가 숫자가 아니면 0으로 기본값 설정
     if (typeof delay !== "number") {
       delay = 0;
     }
+
+    // 임시 타임아웃 이름을 생성. 시간과 난수를 결합하여 고유한 이름 생성
     let propertyName: string;
     propertyName = "tempQueue_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+
+    // 타임아웃을 설정하고 지정된 시간이 지나면 콜백 함수 실행
     AbstractNode.timeouts[propertyName] = setTimeout(() => {
+      // 콜백 함수 호출
       callback();
+      // 타임아웃 해제 및 타임아웃 값 제거
       clearTimeout(AbstractNode.timeouts[propertyName]);
       AbstractNode.timeouts[propertyName] = null;
     }, delay);
   }
-  
+
+  /**
+   * 디바운스 방식으로 함수를 실행하는 메서드입니다. 연속된 호출을 일정 시간 동안 제한하여 마지막 호출만 실행합니다.
+   * 
+   * @param {() => any} callback - 실행할 함수입니다.
+   * @param {string} [name="__null__"] - 디바운스 타임아웃을 식별하기 위한 이름입니다.
+   * @param {number} [delay=300] - 디바운스 지연 시간(ms)입니다.
+   * 
+   * @description
+   * 이 메서드는 디바운스 방식으로 연속된 함수 호출을 제한합니다. 특정 시간 동안 함수가 반복해서 호출되면 마지막 호출만 유효하게 처리됩니다.
+   * 기존 타임아웃을 지우고 새로운 타임아웃을 설정합니다.
+   */
   public static setDebounce = (callback: () => any, name: string = "__null__", delay: number = 300) => {
+    // 동일한 이름의 타임아웃이 있으면 해당 타임아웃을 초기화하여 이전 호출을 무효화
     if (AbstractNode.timeouts[name] !== null || AbstractNode.timeouts[name] !== undefined) {
       clearTimeout(AbstractNode.timeouts[name]);
     }
+
+    // 새로운 타임아웃을 설정하고 지정된 시간이 지나면 콜백 함수 실행
     AbstractNode.timeouts[name] = setTimeout(() => {
+      // 콜백 함수 호출
       callback();
+      // 타임아웃 해제 및 타임아웃 값 제거
       clearTimeout(AbstractNode.timeouts[name]);
       AbstractNode.timeouts[name] = null;
     }, delay);
   }
   
+  /**
+   * 특정 시간(ms) 동안 콜백 함수를 한 번만 실행하도록 제한하는 스로틀(throttle) 함수입니다.
+   * 
+   * @param {() => any} callback - 실행할 함수입니다.
+   * @param {number} [ms=100] - 함수를 호출한 후 대기할 시간(ms)입니다.
+   * @returns {() => any} - 콜백 함수를 실행하는 함수입니다.
+   * 
+   * @description
+   * 스로틀은 지정된 시간(ms) 동안 한 번만 함수를 실행하도록 제한하는 기능입니다. 연속된 호출을 방지하고, 주어진 시간이 지난 후에
+   * 다시 실행할 수 있도록 설정됩니다.
+   */
   public static setThrottle = (callback: () => any, ms: number = 100): () => any => {
+    // 타임아웃 ID를 저장할 변수
     let timeout: any;
+    // 기다리는 상태를 저장하는 변수 (처음에는 false로 설정)
     let waiting: boolean;
     waiting = false;
+    
+    // 함수가 반환되고 이 함수가 호출되면 실행됨
     return function () {
+      // 대기 상태가 아닌 경우에만 콜백 함수 실행
       if (!waiting) {
+        // 콜백 함수 실행
         callback();
+        // 대기 상태를 true로 설정하여 중복 호출 방지
         waiting = true;
+        // 지정된 ms 이후에 대기 상태를 해제
         timeout = setTimeout(function () {
+          // 대기 상태를 false로 변경
           waiting = false;
+          // 타임아웃을 해제
           clearTimeout(timeout);
         }, ms);
       }
     }
   }
-  
+
+  /**
+   * 연속된 호출을 지연하여 마지막 호출만 실행하도록 설정하는 딜레이 런칭(delay launching) 함수입니다.
+   * 
+   * @param {() => any} callback - 실행할 함수입니다.
+   * @param {number} [ms=100] - 지연 시간(ms)입니다.
+   * @returns {() => any} - 콜백 함수를 지연 후 실행하는 함수입니다.
+   * 
+   * @description
+   * 이 메서드는 특정 시간 동안 호출이 발생하면 해당 시간을 다시 카운트하여 마지막 호출만 실행되도록 합니다. 
+   * 즉, 지정된 시간 안에 발생한 여러 호출 중 마지막 호출만 처리됩니다.
+   */
   public static delayLaunching = (callback: () => any, ms: number = 100): () => any => {
+    // 타이머 ID를 저장할 변수
     let timer: any = 0;
+    
+    // 반환된 함수가 호출되면 실행됨
     return function () {
+      // 타이머가 0이 아닌 경우 기존 타이머를 초기화
       if (timer !== 0) {
         clearTimeout(timer);
       }
+      // 새로운 타이머를 설정하여 ms 후에 콜백 함수 실행
       timer = setTimeout(callback, ms);
     }
   }
 
-  public static swipePatch = (direction: string | Dictionary, callback = function (e: any) {}, dom: Document | HTMLElement = document, stackConst: string = "swipeStack_", scrollBanTarget: HTMLElement | SVGElement | Document | Window | null = null, conditionFunc = () => { return true }) => {
+  /**
+   * 터치 스와이프 이벤트를 등록하는 함수입니다.
+   * 사용자가 화면을 스와이프 할 때 발생하는 동작을 설정합니다.
+   * 
+   * @param {string | Dictionary} direction - 스와이프 방향을 나타내는 문자열이나 콜백을 담은 객체입니다. (up, down, left, right)
+   * @param {function} callback - 스와이프 발생 시 호출할 콜백 함수입니다.
+   * @param {Document | HTMLElement} dom - 스와이프 이벤트가 발생할 DOM 요소입니다.
+   * @param {string} stackConst - 스와이프 관련 이벤트를 AbstractNode 스택에 저장할 때 사용할 기본 키입니다.
+   * @param {HTMLElement | SVGElement | Document | Window | null} scrollBanTarget - 스와이프 시 스크롤을 방지할 타겟 요소입니다.
+   * @param {function} conditionFunc - 스와이프가 유효한지 여부를 판단하는 함수입니다.
+   */
+  public static swipePatch = (
+    direction: string | Dictionary, 
+    callback = function (e: any) {}, 
+    dom: Document | HTMLElement = document, 
+    stackConst: string = "swipeStack_", 
+    scrollBanTarget: HTMLElement | SVGElement | Document | Window | null = null, 
+    conditionFunc = () => { return true }
+  ) => {
+    
+    // 스와이프 시 초기 위치와 차이를 저장할 스택 키들 정의
     const xDown: string = "xDown";
     const yDown: string = "yDown";
     const xDiff: string = "xDiff";
@@ -6581,14 +6951,18 @@ class AbstractNode {
     const handleTouchEnd: string = "handleTouchEnd";
     const handleTouchStart: string = "handleTouchStart";
     const handleTouchMove: string = "handleTouchMove";
+
+    // 지정된 엘리먼트의 상위 노드를 탐색하여 특정 속성 값을 찾는 함수
     const getNearestAttribute = function (el: HTMLElement | SVGElement | Document | null, attributeName: string, defaultValue: string) {
       let attributeValue: string | null;
+      // 지정된 엘리먼트가 `document.documentElement`에 도달할 때까지 부모 요소로 이동
       while (el && el !== document.documentElement) {
         if (el instanceof HTMLElement || el instanceof SVGElement) {
           attributeValue = el.getAttribute(attributeName);
         } else {
           attributeValue = null;
         }
+        // 속성 값이 존재하면 반환
         if (attributeValue) {
           return attributeValue;
         }
@@ -6596,16 +6970,22 @@ class AbstractNode {
       }
       return defaultValue;
     }
-  
+
+    // 방향이 문자열인 경우
     if (typeof direction === "string") {
+      // 유효한 방향 값인지 확인
       if (!([ "up", "down", "left", "right" ].includes(direction))) {
         throw new Error("must be direction: [ up, down, left, right ]");
       }
+      // 콜백 함수인지 확인
       if (typeof callback !== "function") {
         throw new Error("must be function input");
       }
+      // 스택에 콜백 함수 바인딩
       AbstractNode.stacks[stackConst + direction] = callback.bind(dom);
-    } else if (typeof direction === "object") {
+    } 
+    // 방향이 객체인 경우
+    else if (typeof direction === "object") {
       for (let i in direction) {
         if (!([ "up", "down", "left", "right" ].includes(i))) {
           throw new Error("must be direction: [ up, down, left, right ]");
@@ -6613,12 +6993,16 @@ class AbstractNode {
         if (typeof direction[i] !== "function") {
           throw new Error("must be function input");
         }
+        // 각 방향에 해당하는 콜백을 스택에 저장
         AbstractNode.stacks[stackConst + i] = direction[i].bind(dom);
       }
-    } else {
+    } 
+    // 그 외의 입력은 에러 처리
+    else {
       throw new Error("invaild input");
     }
-  
+
+    // 이전에 등록된 이벤트 리스너 제거
     if (typeof AbstractNode.stacks[stackConst + handleTouchStart] === "function") {
       dom.removeEventListener("touchstart", AbstractNode.stacks[stackConst + handleTouchStart]);
     }
@@ -6628,23 +7012,28 @@ class AbstractNode {
     if (typeof AbstractNode.stacks[stackConst + handleTouchEnd] === "function") {
       dom.removeEventListener("touchend", AbstractNode.stacks[stackConst + handleTouchEnd]);
     }
-  
+
+    // 스택 초기화
     AbstractNode.stacks[stackConst + xDown] = null;
     AbstractNode.stacks[stackConst + yDown] = null;
     AbstractNode.stacks[stackConst + xDiff] = null;
     AbstractNode.stacks[stackConst + yDiff] = null;
     AbstractNode.stacks[stackConst + timeDown] = null;
     AbstractNode.stacks[stackConst + startElement] = null;
-  
+
+    // 터치 시작 시 처리 함수 정의
     AbstractNode.stacks[stackConst + handleTouchStart] = function (e: any) {
+      // 조건이 충족될 때만 실행
       if (conditionFunc()) {
+        // 터치 시작 시 초기 값 설정
         AbstractNode.stacks[stackConst + startElement] = e.target;
         AbstractNode.stacks[stackConst + timeDown] = Date.now();
         AbstractNode.stacks[stackConst + xDown] = e.touches[0].clientX;
         AbstractNode.stacks[stackConst + yDown] = e.touches[0].clientY;
         AbstractNode.stacks[stackConst + xDiff] = 0;
         AbstractNode.stacks[stackConst + yDiff] = 0;
-    
+
+        // 스크롤 방지 이벤트 추가
         if (scrollBanTarget !== null) {
           scrollBanTarget.addEventListener("DOMMouseScroll", AbstractNode.stacks.__temporaryPreventDefaultEvent);
           scrollBanTarget.addEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
@@ -6655,41 +7044,42 @@ class AbstractNode {
         dom.addEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
         dom.addEventListener("mousewheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
         dom.addEventListener("touchmove", AbstractNode.stacks.__temporaryPreventDefaultEvent);
-  
       }
     }
+
+    // 터치 이동 시 처리 함수 정의
     AbstractNode.stacks[stackConst + handleTouchMove] = function (e: any) {
       const thresholdKey = "data-swipe-threshold";
       const thresholdValue = 2;
       let swipeThreshold: number;
       let direction: string | null;
+
+      // 조건이 충족될 때만 실행
       if (conditionFunc()) {
-  
+        // 터치 시 가장 가까운 엘리먼트에서 스와이프 임계값 가져오기
         swipeThreshold = parseInt(getNearestAttribute(AbstractNode.stacks[stackConst + startElement], thresholdKey, String(thresholdValue)), 10);
-  
+
+        // 터치 시작 좌표가 없으면 종료
         if (!AbstractNode.stacks[stackConst + xDown] || !AbstractNode.stacks[stackConst + yDown]) {
           return;
         }
+        // 좌우 및 상하의 이동 차이 계산
         AbstractNode.stacks[stackConst + xDiff] = AbstractNode.stacks[stackConst + xDown] - e.touches[0].clientX;
         AbstractNode.stacks[stackConst + yDiff] = AbstractNode.stacks[stackConst + yDown] - e.touches[0].clientY;
-  
+
         direction = null;
+        // 가로 스와이프 감지
         if (Math.abs(AbstractNode.stacks[stackConst + xDiff]) > Math.abs(AbstractNode.stacks[stackConst + yDiff])) {
           if (Math.abs(AbstractNode.stacks[stackConst + xDiff]) > swipeThreshold) {
-            if (AbstractNode.stacks[stackConst + xDiff] > 0) {
-              direction = "left";
-            } else {
-              direction = "right";
-            }
+            direction = AbstractNode.stacks[stackConst + xDiff] > 0 ? "left" : "right";
           }
-        } else if (Math.abs(AbstractNode.stacks[stackConst + yDiff]) > swipeThreshold) {
-          if (AbstractNode.stacks[stackConst + yDiff] > 0) {
-            direction = "up";
-          } else {
-            direction = "down";
-          }
+        } 
+        // 세로 스와이프 감지
+        else if (Math.abs(AbstractNode.stacks[stackConst + yDiff]) > swipeThreshold) {
+          direction = AbstractNode.stacks[stackConst + yDiff] > 0 ? "up" : "down";
         }
-  
+
+        // 스와이프가 감지되었을 경우 스크롤 방지 해제
         if (direction !== null) {
           if (typeof AbstractNode.stacks[stackConst + direction] !== "function") {
             if (scrollBanTarget !== null) {
@@ -6704,12 +7094,14 @@ class AbstractNode {
             dom.removeEventListener("touchmove", AbstractNode.stacks.__temporaryPreventDefaultEvent);
           }
         }
-        
       }
     }
+
+    // 터치 종료 시 처리 함수 정의
     AbstractNode.stacks[stackConst + handleTouchEnd] = function (e: any) {
       if (conditionFunc()) {
-  
+
+        // 스크롤 방지 해제
         if (scrollBanTarget !== null) {
           scrollBanTarget.removeEventListener("DOMMouseScroll", AbstractNode.stacks.__temporaryPreventDefaultEvent);
           scrollBanTarget.removeEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
@@ -6720,45 +7112,42 @@ class AbstractNode {
         dom.removeEventListener("wheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
         dom.removeEventListener("mousewheel", AbstractNode.stacks.__temporaryPreventDefaultEvent);
         dom.removeEventListener("touchmove", AbstractNode.stacks.__temporaryPreventDefaultEvent);
-    
+
+        // 스와이프 시작 시 클릭된 엘리먼트와 터치 종료 시 클릭된 엘리먼트가 다르면 종료
         if (AbstractNode.stacks[stackConst + startElement] !== e.target) {
           return;
         }
+
+        // 스와이프 임계값 및 제한 시간 계산
         const thresholdKey = "data-swipe-threshold";
         const timeoutKey = "data-swipe-timeout";
         const thresholdValue = 20;
         const timeoutValue = 500;
-        const delta = 1.2;
-        const gamma = 0.8;
         let swipeThreshold: number, swipeTimeout: number;
         let timeDiff: any;
         let direction: string | null;
         let changedTouches: any;
         let eventData: Dictionary;
-    
+
         swipeThreshold = parseInt(getNearestAttribute(AbstractNode.stacks[stackConst + startElement], thresholdKey, String(thresholdValue)), 10);
         swipeTimeout = parseInt(getNearestAttribute(AbstractNode.stacks[stackConst + startElement], timeoutKey, String(timeoutValue)), 10);
-    
+
         timeDiff = Date.now() - AbstractNode.stacks[stackConst + timeDown];
         changedTouches = e.changedTouches || e.touches || [];
-    
+
         direction = null;
+        // 가로 스와이프 확인
         if (Math.abs(AbstractNode.stacks[stackConst + xDiff]) > Math.abs(AbstractNode.stacks[stackConst + yDiff])) {
           if (Math.abs(AbstractNode.stacks[stackConst + xDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
-            if (AbstractNode.stacks[stackConst + xDiff] > 0) {
-              direction = "left";
-            } else {
-              direction = "right";
-            }
+            direction = AbstractNode.stacks[stackConst + xDiff] > 0 ? "left" : "right";
           }
-        } else if (Math.abs(AbstractNode.stacks[stackConst + yDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
-          if (AbstractNode.stacks[stackConst + yDiff] > 0) {
-            direction = "up";
-          } else {
-            direction = "down";
-          }
+        } 
+        // 세로 스와이프 확인
+        else if (Math.abs(AbstractNode.stacks[stackConst + yDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
+          direction = AbstractNode.stacks[stackConst + yDiff] > 0 ? "up" : "down";
         }
-    
+
+        // 스와이프 감지 시 이벤트 데이터 생성 및 호출
         if (direction !== null) {
           eventData = {
             direction,
@@ -6773,486 +7162,170 @@ class AbstractNode {
             (AbstractNode.stacks[stackConst + direction])(eventData);
           }
         }
+
+        // 스와이프 관련 스택 값 초기화
         AbstractNode.stacks[stackConst + xDown] = null;
         AbstractNode.stacks[stackConst + yDown] = null;
         AbstractNode.stacks[stackConst + timeDown] = null;
       }
     }
-  
+
+    // DOM에 이벤트 리스너 등록
     dom.addEventListener("touchstart", AbstractNode.stacks[stackConst + handleTouchStart], false);
     dom.addEventListener("touchmove", AbstractNode.stacks[stackConst + handleTouchMove], false);
     dom.addEventListener("touchend", AbstractNode.stacks[stackConst + handleTouchEnd], false);
   }
 
+  /**
+   * 주어진 길이만큼의 배열을 생성하고, 각 배열의 요소를 콜백 함수의 결과로 채워 넣는 함수입니다.
+   * 
+   * @param {number} length - 생성할 배열의 길이입니다.
+   * @param {(i: number) => any} [callback=(i) => i] - 각 인덱스를 기준으로 배열에 값을 채울 콜백 함수입니다. 기본값은 인덱스를 그대로 반환합니다.
+   * @returns {List} - 생성된 배열입니다.
+   * 
+   * @throws {Error} - `length`가 숫자가 아니면 오류를 발생시킵니다.
+   * 
+   * @description
+   * 이 함수는 주어진 길이만큼 배열을 생성하고, 각 요소에 대해 콜백 함수를 적용하여 값을 채워 넣습니다.
+   * 만약 콜백 함수를 제공하지 않으면, 기본적으로 각 인덱스가 그 자리에 그대로 저장됩니다.
+   */
   public static variableArray = (length: number, callback: (i: number) => any = (i) => i): List => {
+    
+    // length가 숫자가 아닌 경우 오류를 발생시킴
     if (typeof length !== "number") {
-      throw new Error("invaild input")
+      throw new Error("invalid input")
     }
+
+    // 결과를 저장할 빈 배열을 초기화
     let targetArray: List = [];
+
+    // 0부터 length까지 루프를 돌면서 각 인덱스에 값을 채움
     for (let i = 0; i < length; i++) {
+      // 콜백 함수가 함수일 경우 해당 함수를 통해 값을 배열에 추가
       if (typeof callback === "function") {
         targetArray.push(callback(i));
       } else {
+        // 콜백이 함수가 아니면 인덱스 자체를 배열에 추가
         targetArray.push(i);
       }
     }
+
+    // 완성된 배열을 반환
     return targetArray;
   }
 
-  public mediaConditionToArray (): List {
-    return AbstractNode.mediaConditionToArray();
-  }
-  
-  public mediaQuery (code: string): Dictionary {
-    return AbstractNode.mediaQuery(code);
-  }
-  
-  public mediaNumber (bigDesktop: number, desktop: number, smallDesktop: number, tablet: number, mobile: number): number {
-    return AbstractNode.mediaNumber(bigDesktop, desktop, smallDesktop, tablet, mobile);
-  }
-  
-  public mediaString (bigDesktop: string, desktop: string, smallDesktop: string, tablet: string, mobile: string): string {
-    return AbstractNode.mediaString(bigDesktop, desktop, smallDesktop, tablet, mobile);
-  }
-  
-  public mediaBoolean (bigDesktop: boolean, desktop: boolean, smallDesktop: boolean, tablet: boolean, mobile: boolean): boolean {
-    return AbstractNode.mediaBoolean(bigDesktop, desktop, smallDesktop, tablet, mobile);
-  }
-  
-  public mediaEa (): string {
-    return AbstractNode.mediaEa();
-  }
-  
-  public colorParsing (str: string | Array<number>) {
-    return AbstractNode.colorParsing(str);
-  }
-  
-  public async ajaxPromise (data: Dictionary, url: string, option: Dictionary = {}): Promise<any> {
-    return await AbstractNode.ajaxPromise(data, url, option);
-  }
-  
-  public async ajaxForm (data: FormData, url: string, loadingDom: HTMLElement | null = null): Promise<any> {
-    return await AbstractNode.ajaxForm(data, url, loadingDom);
-  }
-  
-  public async ajaxJson (data: Dictionary, url: string, option: Dictionary = {}): Promise<any> {
-    return await AbstractNode.ajaxJson(data, url, option);
-  }
-  
-  public equalJson (jsonString: string | Dictionary | List): Dictionary | List {
-    return AbstractNode.equalJson(jsonString);
-  }
-  
-  public networkSetString (): string {
-    return AbstractNode.networkSetString();
-  }
-  
-  public async ajaxMultiple (matrix: List): Promise<List> {
-    return await AbstractNode.ajaxMultiple(matrix);
-  }
-  
-  public async requestPromise (url: string): Promise<any> {
-    return await AbstractNode.requestPromise(url);
-  }
-  
-  public async downloadFile (url: string, forceName: string | null = null, loadingDom: HTMLElement | null = null): Promise<any> {
-    return await AbstractNode.downloadFile(url, forceName, loadingDom);
-  }
-  
-  public createNode (mode: string | Dictionary, source?: string | HTMLElement | Element | SVGElement, style?: Dictionary, mother?: HTMLElement | Element | SVGElement | null): HTMLElement | SVGElement {
-    return AbstractNode.createNode(mode, source, style, mother);
-  }
-  
-  public createNodes (arr: Array<Dictionary>): Array<HTMLElement | SVGElement> {
-    return AbstractNode.createNodes(arr);
-  }
-  
-  public createDom (domCommandObject: Dictionary): HTMLElement {
-    return AbstractNode.createDom(domCommandObject);
-  }
-  
-  public createSvg (domCommandObject: Dictionary): SVGElement {
-    return AbstractNode.createSvg(domCommandObject);
-  }
-  
-  public async nodeQueue (obj: Dictionary): Promise<HTMLElement | SVGElement> {
-    return await AbstractNode.nodeQueue(obj);
-  }
-  
-  public withOut (percent: number, num?: string | number, ea?: string): string {
-    return AbstractNode.withOut(percent, num, ea);
-  }
-  
-  public vwConvert (num: number): number {
-    return AbstractNode.vwConvert(num);
-  }
-  
-  public autoHypenPhone (m: string): string {
-    return AbstractNode.autoHypenPhone(m);
-  }
-  
-  public returnGet (): Dictionary {
-    return AbstractNode.returnGet();
-  }
-  
-  public parseRatio (options: Dictionary): number | string {
-    return AbstractNode.parseRatio(options);
-  }
-  
-  public addHrefEvent (dom: HTMLElement | SVGElement, to: string) {
-    return AbstractNode.addHrefEvent(dom, to);
-  }
-  
-  public addScrollXEvent (node: HTMLElement, name: string = "") {
-    return AbstractNode.addScrollXEvent(node, name);
-  }
-  
-  public getDateMatrix (year: any, month: any): DateMatrix {
-    return AbstractNode.getDateMatrix(year, month);
-  }
-  
-  public async sleep (time: number): Promise<string> {
-    return await AbstractNode.sleep(time);
-  }
-  
-  public downloadString (text: string, fileName: string, fileType: string = "plain") {
-    return AbstractNode.downloadString(text, fileName, fileType);
-  }
-  
-  public blankHref (link: string) {
-    return AbstractNode.blankHref(link);
-  }
-  
-  public selfHref (link: string) {
-    return AbstractNode.selfHref(link);
-  }
-  
-  public styleInjection (dom: HTMLElement | SVGElement, styleObj: Dictionary) {
-    return AbstractNode.styleInjection(dom, styleObj);
-  }
-  
-  public cssInjection (cssString: string) {
-    return AbstractNode.cssInjection(cssString);
-  }
-  
-  public uniqueValue (type: string = "number"): any {
-    return AbstractNode.uniqueValue(type);
-  }
-  
-  public async copyText (str: string): Promise<any> {
-    return await AbstractNode.copyText(str);
-  }
-  
-  public isMac (): boolean {
-    return AbstractNode.isMac();
-  }
-  
-  public isIphone (): boolean {
-    return AbstractNode.isIphone();
-  }
-  
-  public cleanChildren (dom: List | HTMLElement | SVGElement) {
-    return AbstractNode.cleanChildren(dom);
-  }
-  
-  public objectDeepCopy (obj: Dictionary | List): Dictionary | List {
-    return AbstractNode.objectDeepCopy(obj);
-  }
-  
-  public pixelUnit (num: number): string {
-    return AbstractNode.pixelUnit(num);
-  }
-  
-  public eaUnit (num: number): string {
-    return AbstractNode.eaUnit(num);
-  }
-  
-  public percent (num?: number): string {
-    return AbstractNode.percent(num);
-  }
-  
-  public async hexaJson (input: any, middleMode: boolean = false) {
-    return AbstractNode.hexaJson(input, middleMode);
-  }
-  
-  public autoComma (str: number | string, manVersion: boolean = false): string {
-    return AbstractNode.autoComma(str, manVersion);
-  }
-  
-  public dateToString (date: Date, detail: boolean = false, dayOption: boolean = false): string {
-    return AbstractNode.dateToString(date, detail, dayOption);
-  }
-  
-  public dateToHangul (date: Date, shortYear: boolean = false): string {
-    return AbstractNode.dateToHangul(date, shortYear);
-  }
-  
-  public zeroAddition (num: number): string {
-    return AbstractNode.zeroAddition(num);
-  }
-  
-  public stringToDate (str: any): Date {
-    return AbstractNode.stringToDate(str);
-  }
-  
-  public rangeToDate (str: string): DateRange {
-    return AbstractNode.rangeToDate(str);
-  }
-  
-  public linkToString (link: string): string {
-    return AbstractNode.linkToString(link);
-  }
-  
-  public async promiseTogether (promiseArr: List): Promise<any> {
-    return await AbstractNode.promiseTogether(promiseArr);
-  }
-  
-  public stringToLink (string: string): string {
-    return AbstractNode.stringToLink(string);
-  }
-  
-  public xyConverting (original: List): List {
-    return AbstractNode.xyConverting(original);
-  }
-  
-  public cssCalc (x: any, mode: string, y: any): string {
-    return AbstractNode.cssCalc(x, mode, y);
-  }
-  
-  public jsonToString (json: any): string {
-    return AbstractNode.jsonToString(json);
-  }
-  
-  public stringToJson (string: string): any {
-    return AbstractNode.stringToJson(string);
-  }
-  
-  public findByAttribute (dom: any, attributeName: string | List, attributeValue: string | List) {
-    return AbstractNode.findByAttribute(dom, attributeName, attributeValue);
-  }
-  
-  public appendQuery (obj: Dictionary) {
-    return AbstractNode.appendQuery(obj);
-  }
-  
-  public removeQuery (key: string) {
-    return AbstractNode.removeQuery(key);
-  }
-  
-  public hasQuery (key: string): boolean {
-    return AbstractNode.hasQuery(key);
-  }
-  
-  public setQuery (obj: Dictionary): boolean {
-    return AbstractNode.setQuery(obj);
-  }
-  
-  public confirm (message: string) {
-    return AbstractNode.confirm(message);
-  }
-  
-  public async prompt (message: string, preValue: string = ''): Promise<any> {
-    return await AbstractNode.prompt(message, preValue);
-  }
-  
-  public alert (message: string, blackMode: boolean = false, skipMode: boolean = false) {
-    return AbstractNode.alert(message, blackMode, skipMode);
-  }
-  
-  public async promptLong (message: string, preValue: string = ''): Promise<any> {
-    return await AbstractNode.promptLong(message, preValue);
-  }
-  
-  public async promptWithButton (message: string, progressName: string = "NULL", preValue: string = ''): Promise<any> {
-    return await AbstractNode.promptWithButton(message, progressName, preValue);
-  }
-  
-  public async promptButtons (message: string, buttons: Array<string>, customColor: any = null): Promise<any> {
-    return await AbstractNode.promptButtons(message, buttons, customColor);
-  }
-  
-  public querySetting (obj: Dictionary) {
-    return AbstractNode.querySetting(obj);
-  }
-  
-  public async promptLongButtons (message: string, buttons: Array<string>): Promise<any> {
-    return await AbstractNode.promptLongButtons(message, buttons);
-  }
-  
-  public async promptFile (message: string): Promise<any> {
-    return await AbstractNode.promptFile(message);
-  }
-  
-  public setCookie (obj: Dictionary, day: boolean | number = 730, del: boolean = false) {
-    return AbstractNode.setCookie(obj, day, del);
-  }
-  
-  public getCookiesAll () {
-    return AbstractNode.getCookiesAll();
-  }
-  
-  public getCookieById (key: string): any {
-    return AbstractNode.getCookieById(key);
-  }
-  
-  public setMetaData (obj: Dictionary): string {
-    return AbstractNode.setMetaData(obj);
-  }
-  
-  public injectVideo (obj: Dictionary): HTMLElement | SVGElement {
-    return AbstractNode.injectVideo(obj);
-  }
-  
-  public removeByClass (className: string): void {
-    return AbstractNode.removeByClass(className);
-  }
-  
-  public selectByClass (className: any, areaMother: Document | HTMLElement = document): List {
-    return AbstractNode.selectByClass(className, areaMother);
-  }
-  
-  public fireEvent (dom: any, eventName: string) {
-    return AbstractNode.fireEvent(dom, eventName);
-  }
-  
-  public getRealBox (dom: HTMLElement | SVGElement, original: string | Dictionary = "attribute"): Dictionary {
-    return AbstractNode.getRealBox(dom, original);
-  }
-  
-  public capitalizeString (str: string): string {
-    return AbstractNode.capitalizeString(str);
-  }
-  
-  public async arrayPromise (promiseArr: List): Promise<any> {
-    return await AbstractNode.arrayPromise(promiseArr);
-  }
-  
-  public async dropToFiles (e: any): Promise<Dictionary> {
-    return await AbstractNode.dropToFiles(e);
-  }
-  
-  public async dropToForm (e: any, motherPath: string | null = null): Promise<FormData> {
-    return await AbstractNode.dropToForm(e, motherPath);
-  }
-  
-  public tempScrollBan (scrollBanTarget: HTMLElement) {
-    return AbstractNode.tempScrollBan(scrollBanTarget);
-  }
-  
-  public tempScrollRelease (scrollBanTarget: HTMLElement) {
-    return AbstractNode.tempScrollRelease(scrollBanTarget);
-  }
-  
-  public async blackAlert (message: string): Promise<any> {
-    return await AbstractNode.blackAlert(message);
-  }
-  
-  public returnLoadingIcon (color: string = AbstractNode.colorExtended.darkShadow, color2: string = AbstractNode.colorExtended.black): SVGElement {
-    return AbstractNode.returnLoadingIcon(color, color2);
-  }
-  
-  public generalCss (fontFamily: string): string {
-    return AbstractNode.generalCss(fontFamily);
-  }
-  
-  public async loadingRun (): Promise<SVGElement> {
-    return await AbstractNode.loadingRun();
-  }
-  
-  public grayLoading (mother: HTMLElement | null = null, whiteMode: boolean = false) {
-    return AbstractNode.grayLoading(mother, whiteMode);
-  }
-  
-  public whiteProgressLoading (mother: HTMLElement | null = null, emptyProgress: boolean = false, transparentBackground: boolean = false) {
-    return AbstractNode.whiteProgressLoading(mother, emptyProgress, transparentBackground);
-  }
-  
-  public setPolling (data: Dictionary, url: string, interval: number, callback: (response: any) => any) {
-    return AbstractNode.setPolling(data, url, interval, callback);
-  }
-
-  public backgroundSse (url: string, callback: (response: any) => any) {
-    return AbstractNode.backgroundSse(url, callback);
-  }
-
-  public request (url: string, callback: (response: any) => any) {
-    return AbstractNode.request(url, callback);
-  }
-
-  public scrollTo (from: HTMLElement | Window, valueOrTo: HTMLElement | number, visualSpecific: number = 0, noSmoothMode: boolean = false, callback: () => Promise<any> = async () => {}) {
-    return AbstractNode.scrollTo(from, valueOrTo, visualSpecific, noSmoothMode, callback);
-  }
-
-  public setQueue (callback: () => any, delay?: number) {
-    return AbstractNode.setQueue(callback, delay);
-  }
-
-  public setDebounce (callback: () => any, name: string = "__null__", delay: number = 300) {
-    return AbstractNode.setDebounce(callback, name, delay);
-  }
-
-  public setThrottle (callback: () => any, ms: number = 100): () => any {
-    return AbstractNode.setThrottle(callback, ms);
-  }
-
-  public delayLaunching (callback: () => any, ms: number = 100): () => any {
-    return AbstractNode.delayLaunching(callback, ms);
-  }
-
-  public swipePatch (direction: string | Dictionary, callback = function (e: any) {}, dom: Document | HTMLElement = document, stackConst: string = "swipeStack_", scrollBanTarget: HTMLElement | SVGElement | Document | Window | null = null, conditionFunc = () => { return true }) {
-    return AbstractNode.swipePatch(direction, callback, dom, stackConst, scrollBanTarget, conditionFunc);
-  }
-
-  public variableArray (length: number, callback: (i: number) => any = (i) => i): List {
-    return AbstractNode.variableArray(length, callback);
-  }
-
+  /**
+   * 화면의 전반적인 프로퍼티들을 설정하는 함수입니다. 이 함수는 다양한 미디어 조건에 따라 레이아웃을 설정합니다.
+   * 
+   * @description
+   * - `totalContents` 요소와 사용자 이름 토큰, 현재 모드(화면 크기)를 설정합니다.
+   * - `ea`, `standardWidth`, `sero`, `modeMinus`, `naviHeight` 등 다양한 화면 특성 값을 설정합니다.
+   * - 미디어 조건에 따라 적절한 레이아웃 값을 설정하고, `subBoxMargin` 객체를 정의합니다.
+   * - 화면의 첫 방문 시간을 기록합니다.
+   * - `totalContents`의 높이를 `auto`로 설정합니다.
+   */
   public setGeneralProperties () {
+    
+    // 현재 인스턴스를 변수로 저장
     const instance = this;
+    
+    // AbstractNode에서 가져온 유틸리티 함수들을 구조 분해 할당으로 할당
     const { mediaEa, mediaCondition, mediaNumber, mediaString, mediaBoolean, mediaConditionToArray } = AbstractNode;
 
+    // HTML에서 `totalcontents`라는 id를 가진 요소를 가져와 인스턴스에 저장
     instance.totalContents = document.getElementById("totalcontents") as HTMLElement;
+
+    // 사용자 이름 토큰을 인스턴스에 저장
     instance.userNameToken = "____userName____";
+
+    // 화면 크기에 따른 모드를 설정. 큰 데스크탑, 작은 데스크탑, 태블릿, 모바일 등으로 나눔
     instance.mode = mediaString("bigDesktop", "smallDesktop", "tablet", "tablet", "mobile");
+
+    // 미디어에 따라 단위(ea)를 설정
     instance.ea = mediaEa();
+
+    // 표준 너비를 미디어 조건에 따라 다르게 설정
     instance.standardWidth = mediaNumber(1400, 1050, 900, 720, 90);
+
+    // 화면 세로 여부를 설정, 모바일에서만 true
     instance.sero = mediaBoolean(false, false, false, false, true);
+
+    // 화면 크기에 따른 모드 차이 값을 설정
     instance.modeMinus = mediaNumber(0, 1, 1, 1, 1);
+
+    // 네비게이션 바의 높이를 미디어 조건에 따라 설정
     instance.naviHeight = mediaNumber(72, 72, 66, 60, 45);
+
+    // 백그라운드 높이 설정
     instance.backHeight = mediaNumber(860, 830, 670, 640, 80);
+
+    // 화면의 여백 설정 (기본값에서 modeMinus를 뺀 값)
     instance.margin = 20 - instance.modeMinus;
 
+    // 서브 박스의 여백 설정
     const subBoxMargin: Dictionary = {};
     subBoxMargin.top = mediaNumber(30, 30, 26, 20, 10.5);
     subBoxMargin.bottom = mediaNumber(31, 31, 27, 26, 31);
     subBoxMargin.left = mediaNumber(30, 30, 30, 24, 4.5);
 
+    // 서브 박스 여백을 인스턴스에 저장
     instance.subBoxMargin = subBoxMargin;
+
+    // 미디어 조건 배열 설정
     instance.media = mediaConditionToArray(true);
+
+    // 첫 페이지 뷰 시간을 저장
     instance.firstPageViewTime = new Date();
 
+    // `totalContents` 요소가 있을 경우 그 높이를 'auto'로 설정
     if (instance.totalContents !== null) {
       instance.totalContents.style.height = "auto";
     }
   }
-  
+
+  /**
+   * 기본적인 화면 레이아웃을 설정하는 함수입니다. 
+   * 미디어 조건에 따라 화면의 레이아웃을 다르게 적용하며, baseTong 요소를 설정합니다.
+   * 
+   * @param {number | null} selfBaseTop - 수동으로 설정할 `baseTop` 값입니다. 기본적으로 `null`입니다.
+   * 
+   * @description
+   * - 미디어 조건에 따라 화면의 `baseTop`을 설정하고, `baseTong` 요소를 생성합니다.
+   * - `totalContents` 요소를 기준으로 레이아웃을 설정하고, `baseTop`과 `baseTong`을 인스턴스에 저장합니다.
+   */
   public setBaseTong = (selfBaseTop: number | null = null) => {
-    const childInstnace = this;
-    const { ea, media, totalContents, standardWidth, naviHeight } = childInstnace;
+
+    // 현재 인스턴스를 변수로 저장
+    const childInstance = this;
+
+    // 현재 인스턴스에서 필요한 속성을 구조 분해 할당으로 할당
+    const { ea, media, totalContents, standardWidth, naviHeight } = childInstance;
+
+    // AbstractNode에서 필요한 유틸리티 함수들을 구조 분해 할당으로 할당
     const { createNode, createNodes, colorExtended, withOut, mediaNumber, mediaEa, createDom } = AbstractNode;
+
+    // 모바일 여부를 확인
     const mobile = media[4];
+
+    // 데스크탑 여부를 확인
     const desktop = !mobile;
-    let baseTong: HTMLElement;
+
+    // 기본적으로 baseTong의 상단 위치값 설정
     let baseTop: number;
-  
     baseTop = mediaNumber(200, 200, 170, 140, 10);
+
+    // 화면 높이가 960보다 작으면 baseTop 값을 변경
     if (window.innerHeight < 960) {
       baseTop = mediaNumber(180, 180, 165, 140, 10);
     }
+
+    // 수동으로 baseTop을 설정할 경우 해당 값을 사용
     if (selfBaseTop !== null) {
       baseTop = selfBaseTop;
     }
-    baseTong = createDom({
+
+    // `baseTong` 요소를 생성하고 `totalContents` 내부에 삽입
+    const baseTong: HTMLElement = createDom({
       mother: totalContents,
       style: {
         position: "relative",
@@ -7262,35 +7335,10 @@ class AbstractNode {
         animation: mobile ? "" : "fadeupdelay 0.5s ease forwards",
       }
     });
-  
-    childInstnace.baseTop = baseTop;
-    childInstnace.baseTong = baseTong;
-  } 
 
-  public async main (): Promise<void> {
-    const instance = this;
-    instance.generalCss('"bergen", "pretendard"');
-    instance.setGeneralProperties();
-  }
-
-  public async launching (): Promise<boolean> {
-    const instance = this;
-    try {
-      window.document.addEventListener("DOMContentLoaded", async (e: any) => {
-        await instance.main();
-      });
-      
-      window.document.addEventListener("error", (e: any) => {
-        window.localStorage.clear();
-        window.location.reload();
-        console.log(e);
-      });
-
-      return true;
-    } catch (e: any) {
-      console.log(e);
-      return false;
-    }
+    // baseTop과 baseTong을 인스턴스에 저장
+    childInstance.baseTop = baseTop;
+    childInstance.baseTong = baseTong;
   }
 
 }
