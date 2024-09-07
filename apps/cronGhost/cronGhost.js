@@ -731,7 +731,7 @@ CronGhost.prototype.cronServer = async function () {
    * Mother 클래스의 여러 유틸리티 메서드를 비구조화 할당으로 추출합니다.
    * @type {Function}
    */
-  const { shellExec, fileSystem, messageSend, requestSystem, pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
+  const { shellExec, fileSystem, messageSend, requestSystem, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
 
   /**
    * 서버가 사용할 포트를 설정합니다.

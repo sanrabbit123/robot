@@ -48,7 +48,7 @@ const bar = "============================================================"; // �
 // 여러 유틸리티 메서드와 Mother의 메서드를 가져옴
 const { errorLog, alertLog, cronLog, aliveLog, emergencyAlarm, expressLog, errorLogSync, mysqlQuery, leafParsing, processSystem, linkToString, ghostFileUpload, jsonToString, tempReplaceImage } = mother;
 const { diskReading, aliveMongo, equalJson, dateToString, serviceParsing, stringToDate, requestSystem, db, fileSystem, shellExec, shellLink, messageLog, zeroAddition, objectDeepCopy, messageSend, shell, homeliaisonAnalytics, sleep, stringToLink, autoHypenPhone, autoComma, mongo, mongoconsoleinfo, cryptoString, decryptoHash, ipParsing, uniqueValue, setQueue, binaryRequest, generalFileUpload } = mother;
-const { consoleQ, copyToClipboard, http2InNode, orderSystem, stringToJson, chromeOpen, curlRequest, ajaxJson, getDateMatrix, promiseTimeout, headRequest, treeParsing, appleScript, copyJson, pythonExecute, ipCheck, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, localUnique, sha256Hmac, variableArray, designerCareer, mediaQuery, getHoliday, capitalizeString } = mother;
+const { consoleQ, copyToClipboard, http2InNode, orderSystem, stringToJson, chromeOpen, curlRequest, ajaxJson, getDateMatrix, promiseTimeout, headRequest, treeParsing, appleScript, copyJson, pythonExecute, ipCheck, s3FileDelete, sendMessage, hexaJson, promiseTogether, localUnique, sha256Hmac, variableArray, designerCareer, mediaQuery, getHoliday, capitalizeString } = mother;
 
 /**
  * 로그와 에러 처리 관련 유틸리티 클래스

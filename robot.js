@@ -46,43 +46,6 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
-Robot.prototype.spawnHuman = async function () {
-  try {
-    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
-    const spawn = new SpawnHuman();
-    console.log(await spawn.spawnLaunching(false));
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.constructConnect = async function () {
-  try {
-    const ConstructLounge = require(process.cwd() + "/apps/constructLounge/constructLounge.js");
-    const app = new ConstructLounge();
-    await app.constructConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.reverseHuman = async function () {
-  try {
-    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
-    const spawn = new SpawnHuman();
-    console.log(await spawn.reverseUpdate());
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.diskTest = function () {
-  const instance = this;
-  const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
-  const app = new CronGhost();
-  app.diskTest().catch((err) => { console.log(err); });
-}
-
 Robot.prototype.infoObj = async function () {
   try {
     await this.back.setInfoObj({ getMode: false });
@@ -115,23 +78,16 @@ Robot.prototype.memberUpdate = async function () {
   }
 }
 
-Robot.prototype.dataConsole = function (noStatic = false) {
+Robot.prototype.dataConsole = function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  app.connect(noStatic).catch((err) => { console.log(err); });
+  app.connect().catch((err) => { console.log(err); });
 }
 
 Robot.prototype.renderFrontPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
   await app.renderFrontPhp();
-}
-
-Robot.prototype.renderTestFrontPhp = async function () {
-  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
-  const app = new DataConsole();
-  await app.renderFrontPhp();
-  await app.renderDesignerPhp();
 }
 
 Robot.prototype.renderDesignerPhp = async function () {
@@ -234,14 +190,6 @@ Robot.prototype.proposalMaker = function (button, arg) {
   });
 }
 
-Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designerName, pid = "g0") {
-  const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
-  let app = new PortfolioFilter(clientName, apartName, designerName, pid);
-  if (boo === "portfolio") {
-    app.total_make();
-  }
-}
-
 Robot.prototype.transferConnect = async function () {
   try {
     const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
@@ -257,16 +205,6 @@ Robot.prototype.staticConnect = async function () {
     const StaticLounge = require(process.cwd() + "/apps/staticLounge/staticLounge.js");
     const app = new StaticLounge();
     await app.staticConnect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.recordCloud = async function (sw, boo = true) {
-  try {
-    const RecordCloud = require(`${process.cwd()}/apps/recordCloud/recordCloud.js`);
-    const app = new RecordCloud();
-    await app.recordServerLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -330,121 +268,11 @@ Robot.prototype.proposalToClient = async function () {
   }
 }
 
-Robot.prototype.staticInSync = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  try {
-    const home = process.env.HOME;
-    const homeDir = await fileSystem("readDir", [ home ]);
-    const staticName = "static";
-    const driveName = "drive";
-    const diskName = "disk";
-    const ssdName = "ssd";
-    const ssdNumber = 2;
-    let order = '';
-
-    if (!homeDir.includes(driveName)) {
-      shell.exec(`mkdir ${shellLink(home + "/" + driveName)}`);
-    }
-
-    order = "scp -r ";
-    order += this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + shellLink(this.address.officeinfo.ghost.file.static);
-    order += " ";
-    order += shellLink(home + "/" + driveName);
-    console.log(order);
-    shell.exec(order);
-
-    for (let i = 0; i < ssdNumber; i++) {
-      order = "cp -rf ";
-      order += shellLink(home + "/" + driveName + "/" + staticName);
-      order += " ";
-      order += shellLink(home + "/" + diskName + "/" + ssdName + String(i + 1));
-      console.log(order);
-      shell.exec(order);
-    }
-
-    console.log("static sync done");
-    return home + "/" + driveName;
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.sayHello = async function (message = null) {
-  const instance = this;
-  try {
-    let text, channel;
-    channel = "#error_log";
-    if (message === null || typeof message !== "string") {
-      text = "안녕?";
-    } else {
-      text = message;
-    }
-    await this.mother.messageSend({ text, channel });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.consoleHello = async function () {
-  const instance = this;
-  try {
-    setTimeout(() => {
-      console.log("hello : " + instance.mother.uniqueValue("hex"));
-    }, 3000 + (10 * 1000 * Math.random()));
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.designerCalculation = async function () {
   try {
     const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
     const work = new BackWorker();
     await work.designerCalculation();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.publicSector = async function () {
-  try {
-    const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
-    const sector = new PublicSector();
-    await sector.spawnSector();
-    await sector.staticRender();
-    await sector.pythonServer();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.spawnSector = async function (install = false) {
-  try {
-    const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
-    const app = new PublicSector();
-    await app.spawnSector(install);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.positionWatch = async function () {
-  try {
-    const GraphicBot = require(`${process.cwd()}/apps/graphicBot/graphicBot.js`);
-    const app = new GraphicBot();
-    app.positionWatch();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.graphicServer = async function () {
-  try {
-    const GraphicBot = require(`${process.cwd()}/apps/graphicBot/graphicBot.js`);
-    const app = new GraphicBot();
-    app.botServer();
   } catch (e) {
     console.log(e);
   }
@@ -480,145 +308,6 @@ Robot.prototype.taxBill = async function () {
   }
 }
 
-Robot.prototype.localLog = async function () {
-  const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
-  try {
-
-    const PureServer = pureServer("class");
-    const app = new PureServer();
-
-    app.get("/", async (req, res) => {
-      try {
-        res.send(JSON.stringify({ message: "It works!" }));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    app.post("/log", async (req, res) => {
-      try {
-        const colorLog = function (mode, text) {
-          const colors = {
-            red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
-            yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
-            cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
-          };
-          const now = new Date();
-          const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
-          let timeWording;
-
-          timeWording = '';
-          timeWording += String(now.getFullYear());
-          timeWording += '.';
-          timeWording += zeroAddition(now.getMonth() + 1);
-          timeWording += '.';
-          timeWording += zeroAddition(now.getDate());
-          timeWording += ' ';
-          timeWording += zeroAddition(now.getHours());
-          timeWording += ':';
-          timeWording += zeroAddition(now.getMinutes());
-          timeWording += ':';
-          timeWording += zeroAddition(now.getSeconds());
-
-          console.log(colors[mode], timeWording, text);
-        }
-
-        colorLog("yellow", req.body.message);
-
-        res.send(JSON.stringify({ message: "done" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    });
-
-    pureServer("listen", app, 3000);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.arpScan = async function () {
-  const instance = this;
-  const address = this.address;
-  const { shellExec, dateToString } = this.mother;
-  try {
-    setInterval(async () => {
-      try {
-        const bar = "=======================================";
-        const self = "bc:5f:f4:93:ca:ed";
-        const interface = [
-          "enp3s0",
-          "wlx705dccfbea68"
-        ];
-        let res;
-        let targets;
-        let matrix;
-        let index;
-        let tong;
-
-        tong = {};
-        for (let obj of address.officeinfo.map) {
-          tong[obj.name] = self === obj.mac;
-        }
-
-        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
-        for (let i of interface) {
-          res = await shellExec(`arp-scan --interface=${i} --localnet`);
-          targets = res.split("\n").slice(res.split("\n").findIndex((str) => { return /^1/.test(str) }), res.split("\n").findIndex((str) => { return str.trim() === '' }));
-          matrix = targets.map((str) => { return str.split("\t") });
-          for (let [ ip, mac ] of matrix) {
-            index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac })
-            if (index !== -1) {
-              tong[address.officeinfo.map[index].name] = true;
-            }
-          }
-        }
-
-        for (let name in tong) {
-          console.log(tong[name] ? "\x1b[0m%s \x1b[33m%s" : "\x1b[0m%s \x1b[31m%s", name, tong[name] ? "alive" : "death");
-        }
-        console.log("\x1b[33m%s\x1b[0m%s", dateToString(new Date(), true) + " " + bar, "");
-      } catch (e) {
-        console.log(e);
-      }
-    }, 5 * 60 * 1000);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.designerTendencySync = async function () {
-  try {
-    const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-    const work = new BackWorker();
-    await work.designerTendencySync();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.abstractRabbit = async function () {
-  try {
-    const AbstractRabbit = require(`${process.cwd()}/apps/abstractRabbit/abstractRabbit.js`);
-    const rabbit = new AbstractRabbit();
-    await rabbit.connect();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.launching = async function () {
-  const instance = this;
-  const { consoleQ } = this.mother;
-  try {
-    process.exit();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 // EXE --------------------------------------------------------------------------------------
 
 const robot = new Robot();
@@ -645,25 +334,7 @@ const MENU = {
   },
   back: async function () {
     try {
-      if (/nostatic/gi.test(process.argv[3])) {
-        robot.dataConsole(true);
-      } else {
-        robot.dataConsole(false);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  recordCloud: async function () {
-    try {
-      await robot.recordCloud();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  analyticsParsing: async function () {
-    try {
-      await robot.analyticsParsing();
+      robot.dataConsole();
     } catch (e) {
       console.log(e);
     }
@@ -734,15 +405,6 @@ const MENU = {
       console.log(e);
     }
   },
-  calendarSync: async function () {
-    try {
-      const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
-      const dev = new DevContext();
-      await dev.calendarSync();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   clientActionSyncLocal: async function () {
     try {
       const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -768,37 +430,9 @@ const MENU = {
       console.log(e);
     }
   },
-  staticInSync: async function () {
-    try {
-      await robot.staticInSync();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   designerCalculation: async function () {
     try {
       await robot.designerCalculation();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  publicSector: async function () {
-    try {
-      await robot.publicSector();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  positionWatch: async function () {
-    try {
-      await robot.positionWatch();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  graphicServer: async function () {
-    try {
-      await robot.graphicServer();
     } catch (e) {
       console.log(e);
     }
@@ -866,20 +500,6 @@ const MENU = {
       console.log(e);
     }
   },
-  consoleHello: async function () {
-    try {
-      await robot.consoleHello();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  diskTest: async function () {
-    try {
-      robot.diskTest();
-    } catch (e) {
-      console.log(e);
-    }
-  },
   trans: async function () {
     try {
       await robot.transferConnect();
@@ -898,7 +518,7 @@ const MENU = {
 let launchingFunc;
 
 if (process.argv[2] === undefined) {
-  robot.launching().catch((err) => { console.log(err); });
+  // pass
 } else {
   launchingFunc = MENU[process.argv[2]];
   if (launchingFunc !== undefined) {

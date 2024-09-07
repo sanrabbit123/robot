@@ -426,7 +426,7 @@ GoogleCalendar.prototype.listEvents = async function (from, search = null) {
 
     // 조회 결과가 배열이 아닌 경우, 에러를 발생시킵니다.
     if (!Array.isArray(items)) {
-      throw new Error("google calendar error : python error(listEvents)");
+      throw new Error("google calendar error : python error(listEvents) " + String(items));
     }
 
     // CalendarEvents 객체를 생성하여 결과 객체에 할당합니다.
@@ -441,8 +441,7 @@ GoogleCalendar.prototype.listEvents = async function (from, search = null) {
 
   } catch (e) {
     // 오류 발생 시 에러 로그를 기록하고, 콘솔에 오류 메시지를 출력한 후 빈 배열을 반환합니다.
-    await errorLog("google calendar api error(listEvents) : " + e.message);
-    console.log(e);
+    await errorLog(e);
     return [];
   }
 }
@@ -475,8 +474,7 @@ GoogleCalendar.prototype.listEventsNonePast = async function (from, search = nul
 
     // 조회 결과가 배열이 아닌 경우, 오류 메시지를 출력하고 에러를 발생시킵니다.
     if (!Array.isArray(items)) {
-      console.log(items);  // 배열이 아닌 경우 결과를 콘솔에 출력합니다.
-      throw new Error("google calendar error : python error(listEvents)");  // 오류 발생
+      throw new Error("google calendar error : python error(listEvents) " + String(items));  // 오류 발생
     }
 
     // CalendarEvents 객체를 생성하여 결과 객체에 할당합니다.
@@ -491,7 +489,7 @@ GoogleCalendar.prototype.listEventsNonePast = async function (from, search = nul
 
   } catch (e) {
     // 오류 발생 시 에러 로그를 기록하고, 콘솔에 오류 메시지를 출력한 후 빈 배열을 반환합니다.
-    await errorLog("google calendar api error(listEvents) : " + e.message);
+    await errorLog(e);
     console.log(e);
     return [];
   }
